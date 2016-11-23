@@ -1,3 +1,18 @@
+############################
+Login Details to view THEME
+############################
+
+Username: admin@admin.com
+
+Password: password
+
+##################################
+JF Claim Management Installation
+##################################
+
+Please pull code from here and import database from "DB" folder
+
+
 ###################
 What is CodeIgniter
 ###################
