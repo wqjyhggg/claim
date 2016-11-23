@@ -1,0 +1,203 @@
+/**************/
+/** Custom CSS **/
+/**************/
+
+/* General Customize */
+html { background-color: #d9e9ef; }
+body { position: relative; max-width: 1500px; margin: 0 auto!important; }
+.form-control-label {
+ padding: .375rem .75rem; margin-bottom: 0; }
+footer { background-color: #080808; padding: 10px; color: #fff; position: absolute; bottom: 0; right: 0; width: 100%; }
+footer.inner { background-color: #fff; padding: 10px; color: #777b83; position: relative; bottom: 0; right: 0; width: 100%; }
+footer p { margin: 0; }
+.alert { padding: 10px; margin-bottom: 10px; text-align: left; font-size: 12px; }
+.text-element { background-color: #f6f6f6; padding: 15px; margin: 20px auto; }
+.text-element>p { margin-bottom: 0; }
+#uploadFile,
+.uploadFile { height: 30px; }
+.fileUpload { position: relative; overflow: hidden; margin: 4px 3px 3px; display: inline-block; vertical-align: middle; }
+.fileUpload input.upload { position: absolute; top: 0; right: 0; margin: 0; padding: 0; font-size: 20px; cursor: pointer; opacity: 0; filter: alpha(opacity=0); }
+/* General Customize End */
+
+/* Header */
+.hlogo>img { margin: 15px auto; max-width: 390px; width: auto; max-height: 70px; }
+.navbar-form .form-control { border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
+/* Header End*/
+
+/* Login Page */
+.login-form {
+  background-color: rgba(254, 255, 254, 0.43);
+  border-radius: 6px;
+  box-shadow: 0 0 5px -4px rgba(51, 51, 51, 0.5);
+  display: block;
+  margin: 5% auto;
+  max-width:470px;
+  padding:30px;
+  position: relative;
+  text-align: center;
+}
+.login-form .btn.btn-primary:hover{ background-color:#222a17;}
+.login-form .btn.btn-primary {
+  background-color:#323c24;
+  border: 0 none;
+  border-radius: 5px; 
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 200;
+  height: 50px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  width: 150px;
+}
+h3.login-title {
+  color: rgb(76, 68, 66);
+  font-weight: 300;
+  text-transform: uppercase;
+}
+.login-title { margin-bottom: 8%; }
+/* Login Page End */
+
+/* Home page not logined */
+@media(min-width: 768px) {
+.contact-left { text-align: right; border-right: 1px solid #ccc; }
+.contact-left,
+.contact-right { padding: 0 30px !important; }
+}
+@media(max-width: 767px) {
+.contact-right,
+.contact-left { text-align: center; }
+}
+.h-topdiv,
+.lh-topdiv { position: relative; }
+.h-top,
+.lh-top { color: #fff; top: 0; right: 0; background: rgba(0,0,0,0.2); height: 100%; }
+ @media(min-width: 1500px) {
+.lh-top { position: absolute; width: 60%; padding: 4% 8%; }
+}
+@media(max-width: 1499px) and (min-width: 1250px) {
+.lh-top { position: absolute; width: 65%; padding: 2% 4%; }
+.lh-top>h1 { font-size: 28px; }
+}
+@media(max-width: 1249px) {
+.lh-top { position: relative; width: 100%; padding: 3% 5%; }
+.lh-top>h1 { font-size: 24px; }
+.lh-topdiv>img { display: none; }
+}
+/*
+@media(max-width: 1059px) and (min-width: 768px){
+    .lh-top{      
+        position:absolute;
+        width:100%;
+        padding:3% 5%;
+    } 
+}
+@media(max-width: 767px){
+    .lh-top{      
+        width:100%;
+        padding:3% 5%;
+    } 
+}
+*/
+@media(min-width: 1400px) {
+.h-top { position: absolute; width: 50%; padding: 3% 8%; }
+.h-top>p { font-size: 16px; }
+}
+@media(max-width: 1399px) and (min-width: 1200px) {
+.h-top { position: absolute; width: 50%; padding: 3% 5%; }
+.h-top>p { font-size: 15px; }
+}
+@media(max-width: 1199px) and (min-width: 1060px) {
+.h-top { position: absolute; width: 65%; padding: 2% 5%; }
+.h-top>h1 { font-size: 30px }
+.h-top>p { font-size: 15px; }
+}
+@media(max-width: 1059px) and (min-width: 768px) {
+.h-top { position: absolute; width: 80%; padding: 2% 3%; }
+.h-top>h1 { font-size: 26px; }
+.h-top>p { font-size: 14px; }
+}
+@media(max-width: 767px) and (min-width: 615px) {
+.h-top { position: relative; width: 100%; padding: 3% 5%; }
+.h-top>h1 { font-size: 24px; }
+.h-topdiv>img { display: none; }
+}
+@media(max-width: 614px) {
+.h-top { width: 100%; padding: 3% 5%; }
+.h-top>h1 { font-size: 24px; }
+.h-topdiv>img { display: none; }
+}
+.img-title { border: 1px solid #ddd; padding: 5px; border-radius: 4px; }
+/* Home page not logined End*/
+
+/* Plan Detail Page */
+.p-detail .row { background-color: #e8f5f9; border: 1px solid #96c8d8; }
+.p-detail label { margin-top: 5px; }
+.p-detail [class*="col-"] { border: 1px solid #fff; }
+/* End Plan Detail Page */
+
+/* Manage download file page */
+.mdfile { float: none !important; }
+@media(max-width: 400px) {
+.uploadFile { width: 100%; }
+}
+.df-row:hover { background-color: #eee; }
+/* End Manage download file page */
+
+/* Download file page */
+.dfile-list a { padding: 5px 15px 5px 0; text-decoration: underline; }
+.dfile-list a:hover { color: #04c; }
+.dfile-list .nofile { color: #ccc; text-decoration: none; }
+.dfile-list .nofile:hover { color: #ccc; }
+.dfile-list .d_brochure { color: #16c4cb; }
+.dfile-list .d_benefit { color: #16c4cb; }
+.dfile-list .d_claimf { color: #16c4cb; }
+.dfile-list .d_claimp { color: #16c4cb; }
+.dfile-list .d_consent { color: #16c4cb; }
+.dfile-list .d_policy { color: #16c4cb; }
+/* End download file page */
+/* pop window*/
+.show-pop { background: rgb(255, 255, 255); position: fixed; z-index: 999; border-radius: 12px; box-shadow: 0px 0px 6px 1px #73879C; border: 1px solid #73879C; margin: 0 14%; top: 30%; }
+.show-pop span { width: 123px; display: inline-block; vertical-align: middle; font-weight: bold; }
+.popForm { max-width: 390px; padding: 15px; }
+.pop-close { width: 31px !important; height: 31px; border: 1px solid #ddd; padding: 4px 7px; border-radius: 12px; float: right; background: #73879c; }
+.pop-close i { font-size: 20px; color: #fff; cursor: pointer; }
+#popRdiv h2 { margin-top: 25px; }
+/* End pop window */
+
+/* New PDF option */
+.spdf-option { border: 1px solid #5bc0de; padding: 0px 3px 0px 11px; border-left: none; margin-left: -6px; border-bottom-right-radius: 4px; border-top-right-radius: 4px; font-size: 10px; }
+.withlogobox,
+.withpricebox { vertical-align: bottom; margin: 0 !important; }
+/* New PDF option */
+
+/* Myhome */
+
+.logo-img { border: 1px solid #ccc; border-radius: 6px;/*width: 100px;*/
+}
+.bg-img { border: 1px solid #ccc; border-radius: 6px; width: 500px; }
+/***************/
+
+
+.custom-file-upload { display: block; width: auto; font-size: 16px; margin-top: 30px; }
+.custom-file-upload + label { display: block; margin-bottom: 5px; }
+.file-upload-wrapper { position: relative; margin-bottom: 5px; }
+.file-upload-input { padding: 6px 12px; border: 1px solid #ccc; float: left; width: 58.589%; max-width: 200px;/* IE 9 Fix */
+}
+.file-upload-button { cursor: pointer; display: inline-block; color: #fff; padding: 7px; border: none; margin-left: -1px; background-color: #5bc0de; width: 40%; max-width: 120px; }
+.file-upload-button:hover { background-color: #31b0d5; }
+/***************/
+.form_text_show { padding-left: 12px; }
+/* generated by BR */
+body.body-bg {
+  background-image: url("../img/background.jpg");
+  background-size: cover;
+  max-width: 100%;
+}
+
+.login-form label {
+  color: rgb(23, 18, 15);
+  font-size: 16px;
+  font-weight: 200;
+  text-transform: lowercase;
+}
+html,body{ height:100%;}
