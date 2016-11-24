@@ -13,6 +13,13 @@ if($error = validation_errors()) {
 	</div>
 	<?php
 }
+if($error = $this->ion_auth->errors()) {
+	?>
+	<div class="alert-error">
+		<p><?php echo $error; ?></p>
+	</div>
+	<?php
+}
 if($success = $this->session->flashdata("success")) {
 ?>
 	<div class="alert-success">

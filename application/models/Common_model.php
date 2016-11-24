@@ -175,7 +175,7 @@ class Common_model extends CI_Model
      * @param       $value string
      * @param       $dropdown boolean
     */
-    public function get_ref($table,$key,$value,$dropdown=false)
+    public function get_ref($table,$key,$value,$dropdown=false, $empty = "Please Select")
     {
         $this->db->from($table);
         $this->db->order_by($value);
@@ -183,7 +183,7 @@ class Common_model extends CI_Model
 
         $array = array();
         if ($dropdown)
-            $array = array("" => "Please Select");
+            $array = array("" => $empty);
 
         if($result->num_rows() > 0) 
         {

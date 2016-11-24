@@ -201,3 +201,6 @@ body.body-bg {
   text-transform: lowercase;
 }
 html,body{ height:100%;}
+.form_checkbox{
+  cursor: pointer;
+}

@@ -6,6 +6,23 @@ Username: admin@admin.com
 
 Password: password
 
+
+######################
+Nov, 24 2016 update:-
+######################
+
+- Users management - done
+
+- add user / edit user / activate user / inactivate user - done
+
+- assign multiple group to user - done
+
+- users group login - done
+
+- group access security - done
+
+
+
 ##################################
 JF Claim Management Installation
 ##################################

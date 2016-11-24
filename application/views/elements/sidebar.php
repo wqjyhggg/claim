@@ -1,4 +1,7 @@
 <ul class="nav side-menu" style="">
+	<?php if ($this->ion_auth->is_admin()): ?>
+		<li> <?php echo anchor("auth/users", '<i class="fa fa-users"></i>Users Management</a>', array("class"=>'leftmeun')) ?> </li>
+	<?php endif; ?>
 	<li> <a href="#" class="leftmeun"><i class="fa fa-briefcase"></i>My task</a> </li>
 
 	<li> <a href="#" class="leftmeun"><i class="fa fa-briefcase"></i>Emergency assistance</a> </li>

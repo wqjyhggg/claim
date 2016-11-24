@@ -880,17 +880,6 @@ class Ion_auth_model extends CI_Model
 			return FALSE;
 		}
 
-		// check if the default set in config exists in database
-		$query = $this->db->get_where($this->tables['groups'],array('name' => $this->config->item('default_group', 'ion_auth')),1)->row();
-		if( !isset($query->id) && empty($groups) )
-		{
-			$this->set_error('account_creation_invalid_default_group');
-			return FALSE;
-		}
-
-		// capture default group details
-		$default_group = $query;
-
 		// IP Address
 		$ip_address = $this->_prepare_ip($this->input->ip_address());
 		$salt       = $this->store_salt ? $this->salt() : FALSE;
@@ -921,21 +910,6 @@ class Ion_auth_model extends CI_Model
 		$this->db->insert($this->tables['users'], $user_data);
 
 		$id = $this->db->insert_id();
-
-		// add in groups array if it doesn't exists and stop adding into default group if default group ids are set
-		if( isset($default_group->id) && empty($groups) )
-		{
-			$groups[] = $default_group->id;
-		}
-
-		if (!empty($groups))
-		{
-			// add to groups
-			foreach ($groups as $group)
-			{
-				$this->add_to_group($group, $id);
-			}
-		}
 
 		$this->trigger_events('post_register');
 
@@ -1247,7 +1221,7 @@ class Ion_auth_model extends CI_Model
 	 * @return object Users
 	 * @author Ben Edmunds
 	 **/
-	public function users($groups = NULL)
+	public function users($groups = NULL, $search = "")
 	{
 		$this->trigger_events('users');
 
@@ -1269,6 +1243,8 @@ class Ion_auth_model extends CI_Model
 			    $this->tables['users'].'.id as user_id'
 			));
 		}
+		if($search)
+			$this->_ion_where = array("concat_ws(' ', ".$this->tables['users'].".first_name, ".$this->tables['users'].".last_name) like '%$search%'");
 
 		// filter by group id(s) if passed
 		if (isset($groups))
