@@ -46,9 +46,9 @@
                      <div class="col-sm-12">
                         <div class="main">
                            <div class="login-form">
-                              <?php 
+                              <?php
                               echo heading('Login', 3, array("class"=>'login-title'));
-                              $this->load->view("elements/notifications");
+                              echo $message;
                               ?>
                               <?php echo form_open("auth/login", array("method"=>'post')) ?>
                                  <div class="form-group row">
@@ -99,13 +99,13 @@
                $('.scrollToTop').fadeOut();
             }
          });
-         
+
          //Click event to scroll to top
          $('.scrollToTop').click(function(){
             $('html, body').animate({scrollTop : 0},800);
             return false;
          });
-         
+
       </script>
       <!-- Bootstrap -->
       <!-- FastClick -->
@@ -139,7 +139,7 @@
       <script src="<?php echo base_url(); ?>assets/js/starrr.js"></script>
       <!-- Build Custom Theme Scripts -->
       <script src="<?php echo base_url(); ?>assets/js/custom.js"></script>
-      
+
    </body>
 </html>
 

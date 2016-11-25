@@ -5,13 +5,13 @@
       </div>
    </div>
    <div class="clearfix"></div>
-   <?php $this->load->view("elements/notifications") ?>
+   <?php echo $message ?>
 
    <!-- search section -->
-   <div class="row">                
+   <div class="row">
      <div class="col-md-12 col-sm-12 col-xs-12">
        <div class="x_panel">
-         <div class="x_content">        
+         <div class="x_content">
            <?php echo form_open("auth/users", array('class'=>'form-horizontal', 'method'=>'get')); ?>
              <div class="row">
                <div class="form-group col-sm-3">
@@ -26,7 +26,7 @@
                <div class="col-sm-3">
                   <?php echo form_submit("Search", "Search", array("class"=>'btn btn-primary', "type"=>'submit')) ?>
                   <?php echo anchor("auth/users", "Reset", array('class'=>'btn btn-info')) ?>
-               </div> 
+               </div>
              </div>
            <?php echo form_close(); ?>
          </div>
@@ -40,7 +40,7 @@
    <div class="row">
       <div class="col-md-12 col-sm-12 col-xs-12">
          <div class="x_panel">
-            <div class="x_title">   
+            <div class="x_title">
                <h2>Users List<small></small></h2><?php echo anchor("auth/create_user", 'Add', array("class"=>'btn btn-primary pull-right')) ;?>
                <div class="clearfix"></div>
             </div>
@@ -60,7 +60,7 @@
                      </thead>
                      <tbody>
                      <?php foreach ($users as $user):?>
-                        <tr>                           
+                        <tr>
                            <td><?php echo htmlspecialchars($user->first_name,ENT_QUOTES,'UTF-8');?></td>
                            <td><?php echo htmlspecialchars($user->last_name,ENT_QUOTES,'UTF-8');?></td>
                            <td><?php echo htmlspecialchars($user->email,ENT_QUOTES,'UTF-8');?></td>
@@ -71,8 +71,8 @@
                            </td>
                            <td><?php echo ($user->active) ? anchor("auth/deactivate/".$user->id, lang('index_active_link')) : anchor("auth/activate/". $user->id, lang('index_inactive_link'));?></td>
                            <td><?php echo anchor("auth/edit_user/".$user->id, 'Edit') ;?></td>
-                        </tr>                        
-                     <?php endforeach;?>     
+                        </tr>
+                     <?php endforeach;?>
                      </tbody>
                   </table>
                </div>

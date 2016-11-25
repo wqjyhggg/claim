@@ -2,9 +2,9 @@
 	<?php if ($this->ion_auth->is_admin()): ?>
 		<li> <?php echo anchor("auth/users", '<i class="fa fa-users"></i>Users Management</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
-	<li> <a href="#" class="leftmeun"><i class="fa fa-briefcase"></i>My task</a> </li>
+	<li> <?php echo anchor("auth/mytasks", '<i class="fa fa-briefcase"></i>My Tasks</a>', array("class"=>'leftmeun')) ?> </li>
 
-	<li> <a href="#" class="leftmeun"><i class="fa fa-briefcase"></i>Emergency assistance</a> </li>
+	<li> <?php echo anchor("emergency_assistance", '<i class="fa fa-briefcase"></i>Emergency assistance</a>', array("class"=>'leftmeun')) ?> </li>
 
 	<li> <a href="#" class="leftmeun"><i class="fa fa-list-ul"></i>Case management</a> </li>
 

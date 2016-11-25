@@ -16,7 +16,7 @@ class Auth extends CI_Controller {
 		$this->lang->load('auth');
 	}
 
-	// redirect if needed, otherwise display the user list
+	// redirect if needed, otherwise display the products list
 	public function index()
 	{
 
@@ -29,6 +29,25 @@ class Auth extends CI_Controller {
 		{
         	$this->template->write('title', SITE_TITLE.' - Our Products', TRUE);
 	        $this->template->write_view('content', 'auth/index');
+	        $this->template->render();        
+		}
+	}
+
+	// redirect if needed, otherwise display the my tasks list
+	public function mytasks()
+	{
+
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+			// show the flash data error message if there is one
+			$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
+        	$this->template->write('title', SITE_TITLE.' - My Tasks', TRUE);
+	        $this->template->write_view('content', 'auth/mytasks', $this->data);
 	        $this->template->render();        
 		}
 	}
@@ -52,7 +71,7 @@ class Auth extends CI_Controller {
 				//if the login is successful
 				//redirect them back to the home page
 				$this->session->set_flashdata('success', $this->ion_auth->messages());
-				redirect('/', 'refresh');
+				redirect('auth/mytasks', 'refresh');
 			}
 			else
 			{
@@ -65,6 +84,7 @@ class Auth extends CI_Controller {
 		else
 		{
 			// the user is not logging in so display the login page
+			$this->data['message'] = $this->_message;
 			$this->data['identity'] = array('name' => 'identity',
 				'id'    => 'identity',
 				'type'  => 'text',
@@ -80,6 +100,8 @@ class Auth extends CI_Controller {
 
 			);
 
+			// show the flash data error message if there is one
+			$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
 			$this->_render_page('auth/login', $this->data);
 		}
 	}
@@ -109,6 +131,8 @@ class Auth extends CI_Controller {
 				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
 			}
 
+			// show the flash data error message if there is one
+			$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
 			$this->template->write('title', SITE_TITLE.' - Manage Users', TRUE);
 	        $this->template->write_view('content', 'auth/users', $this->data);
 	        $this->template->render();    
@@ -242,6 +266,8 @@ class Auth extends CI_Controller {
             );
             $this->data['groups'] = $groups;
 
+			// show the flash data error message if there is one
+			$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
 			$this->template->write('title', SITE_TITLE.' - Create User', TRUE);
 	        $this->template->write_view('content', 'auth/create_user', $this->data);
 	        $this->template->render();    
@@ -267,7 +293,7 @@ class Auth extends CI_Controller {
 		$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required');
 		$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required');
 	
-		if (isset($_POST) && !empty($_POST))
+		if ($this->input->post())
 		{
 			// do we have a valid request?
 			if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id'))
@@ -399,6 +425,8 @@ class Auth extends CI_Controller {
 			'type' => 'password'
 		);
 
+		// show the flash data error message if there is one
+		$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
 		$this->template->write('title', SITE_TITLE.' - Edit User', TRUE);
         $this->template->write_view('content', 'auth/edit_user', $this->data);
         $this->template->render();    
@@ -422,8 +450,8 @@ class Auth extends CI_Controller {
 		if ($this->form_validation->run() == false)
 		{
 			// display the form
-			// set the flash data error message if there is one
-			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+			// show the flash data error message if there is one
+			$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
 
 			$this->data['min_password_length'] = $this->config->item('min_password_length', 'ion_auth');
 			$this->data['old_password'] = array(

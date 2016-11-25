@@ -1244,7 +1244,7 @@ class Ion_auth_model extends CI_Model
 			));
 		}
 		if($search)
-			$this->_ion_where = array("concat_ws(' ', ".$this->tables['users'].".first_name, ".$this->tables['users'].".last_name) like '%$search%'");
+			$this->_ion_where = array("(concat_ws(' ', ".$this->tables['users'].".first_name, ".$this->tables['users'].".last_name) like '%$search%' OR ".$this->tables['users'].".email like '%$search%') ");
 
 		// filter by group id(s) if passed
 		if (isset($groups))
@@ -1334,7 +1334,6 @@ class Ion_auth_model extends CI_Model
 		}
 
 		$this->response = $this->db->get($this->tables['users']);
-
 		return $this;
 	}
 
