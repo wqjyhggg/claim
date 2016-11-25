@@ -8,6 +8,16 @@ Password: password
 
 
 ######################
+Nov, 25 2016 update:-
+######################
+
+- My task page (layout) - done
+
+- Emergency assistance page (layout and js implementation) - done
+* please provide api to search policies, products etc...
+ 
+
+######################
 Nov, 24 2016 update:-
 ######################
 
