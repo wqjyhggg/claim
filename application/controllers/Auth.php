@@ -84,7 +84,6 @@ class Auth extends CI_Controller {
 		else
 		{
 			// the user is not logging in so display the login page
-			$this->data['message'] = $this->_message;
 			$this->data['identity'] = array('name' => 'identity',
 				'id'    => 'identity',
 				'type'  => 'text',

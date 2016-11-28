@@ -28,4 +28,38 @@ class Emergency_assistance extends CI_Controller {
 	        $this->template->render();        
 		}
 	}
+
+	// redirect if needed, otherwise display the create case page
+	public function create_case()
+	{
+
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+        	$this->template->write('title', SITE_TITLE.' - Create Case', TRUE);
+	        $this->template->write_view('content', 'emergency_assistance/create_case');
+	        $this->template->render();        
+		}
+	}
+
+	// redirect if needed, otherwise display the create policy page
+	public function create_policy()
+	{
+
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+        	$this->template->write('title', SITE_TITLE.' - Create Case', TRUE);
+	        $this->template->write_view('content', 'emergency_assistance/create_policy');
+	        $this->template->render();        
+		}
+	}
 }

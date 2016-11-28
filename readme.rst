@@ -8,6 +8,16 @@ Password: password
 
 
 ######################
+Nov, 28 2016 update:-
+######################
+
+- Emergency assistance page: New case layout - done
+
+- New policy page layout - done
+* ---- please provide api to search policies
+
+
+######################
 Nov, 25 2016 update:-
 ######################
 

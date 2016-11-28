@@ -2,6 +2,13 @@
    <div class="page-title">
       <div class="title_left">
          <h3>View Edit Emergency Assistance Case</h3>
+
+         <?php echo anchor("emergency_assistance/create_case", '<i class="fa fa-plus-circle"></i> New Case', array("class"=>'btn btn-primary')) ?>
+
+         <?php echo anchor("emergency_assistance/create_policy", '<i class="fa fa-plus-circle"></i> New Policy', array("class"=>'btn btn-primary')) ?>
+
+         <a href="#" class="btn btn-primary"><i class="fa fa-plus-circle"></i> New Provider</a>
+         
       </div>
    </div>
    <div class="clearfix"></div>
