@@ -8,6 +8,17 @@ Password: password
 
 
 ######################
+Nov, 29 2016 update:-
+######################
+
+- Create InTake Form layout - done
+- Create InTake list layout - done
+- Create Provider Form layout - done
+- Search Provider Form layout - done
+
+
+
+######################
 Nov, 28 2016 update:-
 ######################
 

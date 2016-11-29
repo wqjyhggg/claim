@@ -92,7 +92,9 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 | This is the custom constants made by bhawani
 |
 */
-defined('EXT')      OR define('EXT', ".php");
+defined('EXT')      			OR define('EXT', ".php");
 
-defined('SITE_TITLE')      OR define('SITE_TITLE', "JF Group");
+defined('SITE_TITLE')      		OR define('SITE_TITLE', "JF Group");
+
+defined('GOOGLE_MAP_KEY')      	OR define('GOOGLE_MAP_KEY', "AIzaSyBVmYIVgT_xIlNCTdobpKWHH1F9H6x9-fg");
 

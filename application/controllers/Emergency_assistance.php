@@ -62,4 +62,55 @@ class Emergency_assistance extends CI_Controller {
 	        $this->template->render();        
 		}
 	}
+
+	// redirect if needed, otherwise display the create provider page
+	public function create_provider()
+	{
+
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+        	$this->template->write('title', SITE_TITLE.' - Create Provider', TRUE);
+	        $this->template->write_view('content', 'emergency_assistance/create_provider');
+	        $this->template->render();        
+		}
+	}
+
+	// redirect if needed, otherwise display the search provider page
+	public function search_provider()
+	{
+
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+        	$this->template->write('title', SITE_TITLE.' - Search Provider', TRUE);
+	        $this->template->write_view('content', 'emergency_assistance/search_provider');
+	        $this->template->render();        
+		}
+	}
+
+	// redirect if needed, otherwise display the create intake page
+	public function create_intakeform()
+	{
+
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+        	$this->template->write('title', SITE_TITLE.' - Create IntakeForm', TRUE);
+	        $this->template->write_view('content', 'emergency_assistance/create_intakeform');
+	        $this->template->render();        
+		}
+	}
 }

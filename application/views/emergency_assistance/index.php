@@ -7,7 +7,7 @@
 
          <?php echo anchor("emergency_assistance/create_policy", '<i class="fa fa-plus-circle"></i> New Policy', array("class"=>'btn btn-primary')) ?>
 
-         <a href="#" class="btn btn-primary"><i class="fa fa-plus-circle"></i> New Provider</a>
+         <?php echo anchor("emergency_assistance/create_provider", '<i class="fa fa-plus-circle"></i> New Provider', array("class"=>'btn btn-primary')) ?>
          
       </div>
    </div>
