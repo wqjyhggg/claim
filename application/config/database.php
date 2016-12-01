@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '123456',
-	'database' => 'jf_claim_management',
+	'hostname' => DB_HOST,
+	'username' => DB_USER,
+	'password' => DB_PASSWORD,
+	'database' => DB_NAME,
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

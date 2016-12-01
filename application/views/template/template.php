@@ -38,6 +38,7 @@
          <div class="container" style="padding:0;">
             <div class="hlogo">
                <img class="img-responsive" src="<?php echo base_url(); ?>assets/img/logo.png" alt="JF Insurance">
+               <a href="" class="pull-right-custom"><i class="fa fa-question-circle"></i> Help</a>
             </div>
          </div>
       </header>

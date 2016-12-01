@@ -7,6 +7,17 @@ Username: admin@admin.com
 Password: password
 
 
+##################################
+Nov, 30 and Dec, 01 2016 update:-
+##################################
+
+- Worked on providers page - done
+- Create Provider function - done
+- Search provider page and function - done
+- Google map integration - done
+- Search nearest provider via lat-lng - done
+
+
 ######################
 Nov, 29 2016 update:-
 ######################

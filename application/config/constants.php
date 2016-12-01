@@ -92,9 +92,23 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 | This is the custom constants made by bhawani
 |
 */
-defined('EXT')      			OR define('EXT', ".php");
+defined('EXT')      				OR define('EXT', ".php");
+defined('SITE_TITLE')      			OR define('SITE_TITLE', "JF Group");
+defined('GOOGLE_MAP_KEY')      		OR define('GOOGLE_MAP_KEY', "AIzaSyBVmYIVgT_xIlNCTdobpKWHH1F9H6x9-fg");
+defined('NEAREST_PROVIDERS_RANGE')  OR define('NEAREST_PROVIDERS_RANGE', 60); /*in miles*/
+if($_SERVER['SERVER_NAME'] == '192.168.1.253') 
+{
+	defined('DB_HOST')    			OR define('DB_HOST', "localhost");
+	defined('DB_USER')     			OR define('DB_USER', "root");
+	defined('DB_PASSWORD')			OR define('DB_PASSWORD', "123456");
+	defined('DB_NAME')      		OR define('DB_NAME', "jf_claim_management");
+}
+else
+{
+	defined('DB_HOST')    			OR define('DB_HOST', "localhost");
+	defined('DB_USER')     			OR define('DB_USER', "BrdbUserm");
+	defined('DB_PASSWORD')			OR define('DB_PASSWORD', "BrDB!34*908m");
+	defined('DB_NAME')      		OR define('DB_NAME', "jf_claim_management");
+}
 
-defined('SITE_TITLE')      		OR define('SITE_TITLE', "JF Group");
-
-defined('GOOGLE_MAP_KEY')      	OR define('GOOGLE_MAP_KEY', "AIzaSyBVmYIVgT_xIlNCTdobpKWHH1F9H6x9-fg");
 

@@ -14,6 +14,9 @@ class Auth extends CI_Controller {
 		$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
 
 		$this->lang->load('auth');
+
+		// show the flash data error message if there is one
+		$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
 	}
 
 	// redirect if needed, otherwise display the products list
@@ -44,8 +47,6 @@ class Auth extends CI_Controller {
 		}
 		else
 		{
-			// show the flash data error message if there is one
-			$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
         	$this->template->write('title', SITE_TITLE.' - My Tasks', TRUE);
 	        $this->template->write_view('content', 'auth/mytasks', $this->data);
 	        $this->template->render();        
@@ -98,9 +99,6 @@ class Auth extends CI_Controller {
 				'placeholder'=>'Password'
 
 			);
-
-			// show the flash data error message if there is one
-			$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
 			$this->_render_page('auth/login', $this->data);
 		}
 	}
@@ -130,8 +128,6 @@ class Auth extends CI_Controller {
 				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
 			}
 
-			// show the flash data error message if there is one
-			$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
 			$this->template->write('title', SITE_TITLE.' - Manage Users', TRUE);
 	        $this->template->write_view('content', 'auth/users', $this->data);
 	        $this->template->render();    
@@ -265,8 +261,6 @@ class Auth extends CI_Controller {
             );
             $this->data['groups'] = $groups;
 
-			// show the flash data error message if there is one
-			$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
 			$this->template->write('title', SITE_TITLE.' - Create User', TRUE);
 	        $this->template->write_view('content', 'auth/create_user', $this->data);
 	        $this->template->render();    
@@ -424,8 +418,6 @@ class Auth extends CI_Controller {
 			'type' => 'password'
 		);
 
-		// show the flash data error message if there is one
-		$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
 		$this->template->write('title', SITE_TITLE.' - Edit User', TRUE);
         $this->template->write_view('content', 'auth/edit_user', $this->data);
         $this->template->render();    
@@ -449,9 +441,6 @@ class Auth extends CI_Controller {
 		if ($this->form_validation->run() == false)
 		{
 			// display the form
-			// show the flash data error message if there is one
-			$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
-
 			$this->data['min_password_length'] = $this->config->item('min_password_length', 'ion_auth');
 			$this->data['old_password'] = array(
 				'name' => 'old',
