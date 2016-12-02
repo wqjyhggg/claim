@@ -7,6 +7,41 @@
 CREATE DATABASE IF NOT EXISTS `jf_claim_management` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `jf_claim_management`;
 
+CREATE TABLE IF NOT EXISTS `case` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `case_no` varchar(64) NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `street_no` varchar(10) DEFAULT NULL,
+  `street_name` varchar(30) DEFAULT NULL,
+  `city` varchar(40) DEFAULT NULL,
+  `province` varchar(40) DEFAULT NULL,
+  `country` varchar(40) DEFAULT NULL,
+  `country2` varchar(40) DEFAULT NULL,
+  `post_code` varchar(10) DEFAULT NULL,
+  `assign_to` int(11) NOT NULL,
+  `reason` varchar(30) NOT NULL,
+  `first_name` varchar(20) NOT NULL,
+  `last_name` varchar(20) DEFAULT NULL,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `email` varchar(200) DEFAULT NULL,
+  `relations` varchar(40) DEFAULT NULL,
+  `diagnosis` varchar(40) DEFAULT NULL,
+  `treatment` varchar(40) DEFAULT NULL,
+  `third_party_recovery` enum('Y','N') NOT NULL DEFAULT 'N',
+  `policy_no` varchar(20) DEFAULT NULL,
+  `insured_name` varchar(50) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `case_manager` int(10) NOT NULL,
+  `priority` varchar(10) NOT NULL,
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+/*!40000 ALTER TABLE `case` DISABLE KEYS */;
+INSERT INTO `case` (`id`, `case_no`, `created_by`, `street_no`, `street_name`, `city`, `province`, `country`, `country2`, `post_code`, `assign_to`, `reason`, `first_name`, `last_name`, `phone_number`, `email`, `relations`, `diagnosis`, `treatment`, `third_party_recovery`, `policy_no`, `insured_name`, `dob`, `case_manager`, `priority`, `created`) VALUES
+	(1, '000000001', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'Canada', '302014', 1, 'AD&D', 'bhawani', 'shankar', '424242424', 'developer@brsoftech.com', 'Father', 'test', 'sodala', 'N', '99098908', 'bhawani', '2000-05-30', 2, 'HIGH', '2016-12-02 11:39:34');
+/*!40000 ALTER TABLE `case` ENABLE KEYS */;
+
 CREATE TABLE IF NOT EXISTS `country` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
@@ -89,6 +124,43 @@ INSERT INTO `province` (`id`, `country_id`, `name`) VALUES
 	(5, 1, 'British Columbia');
 /*!40000 ALTER TABLE `province` ENABLE KEYS */;
 
+CREATE TABLE IF NOT EXISTS `reasons` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+/*!40000 ALTER TABLE `reasons` DISABLE KEYS */;
+INSERT INTO `reasons` (`id`, `name`) VALUES
+	(1, 'AD&D'),
+	(2, 'Assistance Only'),
+	(3, 'Collision'),
+	(4, 'Cost Containment'),
+	(5, 'Dental'),
+	(6, 'Flight Accident'),
+	(7, 'General, Inpatient'),
+	(8, 'Outpatient'),
+	(9, 'Prescription Drug'),
+	(10, 'Roadside Assistance'),
+	(11, 'Trip Cancellation'),
+	(12, 'Other');
+/*!40000 ALTER TABLE `reasons` ENABLE KEYS */;
+
+CREATE TABLE IF NOT EXISTS `relations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+/*!40000 ALTER TABLE `relations` DISABLE KEYS */;
+INSERT INTO `relations` (`id`, `name`) VALUES
+	(1, 'Brother'),
+	(2, 'Sister'),
+	(3, 'Mother'),
+	(4, 'Father'),
+	(5, 'Me');
+/*!40000 ALTER TABLE `relations` ENABLE KEYS */;
+
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ip_address` varchar(45) NOT NULL,
@@ -112,8 +184,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`) VALUES
-	(1, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1480590505, 1, 'Admin', 'istrator', NULL, '2132132132'),
-	(2, '192.168.1.29', 'a@xx.com', '$2y$08$gnsbXPmHtU7SBQko94uf9.VVVzzFhd12fYK3n1FMx4lL8yDPzMvvm', NULL, 'a@xx.com', NULL, NULL, NULL, NULL, 1479881420, 1480055689, 1, 'nn123', 'bb123', NULL, '123131'),
+	(1, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1480673202, 1, 'Admin', 'istrator', NULL, '2132132132'),
+	(2, '192.168.1.29', 'a@xx.com', '$2y$08$gnsbXPmHtU7SBQko94uf9.VVVzzFhd12fYK3n1FMx4lL8yDPzMvvm', NULL, 'a@xx.com', NULL, NULL, NULL, NULL, 1479881420, 1480055689, 0, 'nn123', 'bb123', NULL, '123131'),
 	(5, '192.168.1.29', 'paytm123e@gmail.com', '$2y$08$p84W1BzwM7WslS9PgioW5elSODLU0E0N/p8Q2uyNzOFeHxD48AW3q', NULL, 'paytm123e@gmail.com', NULL, NULL, NULL, NULL, 1479977418, NULL, 1, 'bhawani', 'bb', NULL, '231321322');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
@@ -127,18 +199,18 @@ CREATE TABLE IF NOT EXISTS `users_groups` (
   KEY `fk_users_groups_groups1_idx` (`group_id`),
   CONSTRAINT `fk_users_groups_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `fk_users_groups_groups1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8;
 
 /*!40000 ALTER TABLE `users_groups` DISABLE KEYS */;
 INSERT INTO `users_groups` (`id`, `user_id`, `group_id`) VALUES
-	(51, 1, 1),
-	(52, 1, 2),
-	(53, 1, 3),
-	(54, 1, 4),
-	(55, 1, 5),
-	(56, 1, 6),
-	(57, 1, 7),
-	(58, 2, 7),
+	(61, 1, 1),
+	(62, 1, 2),
+	(63, 1, 3),
+	(64, 1, 5),
+	(65, 1, 6),
+	(66, 1, 7),
+	(59, 2, 4),
+	(60, 2, 7),
 	(50, 5, 2);
 /*!40000 ALTER TABLE `users_groups` ENABLE KEYS */;
 

@@ -16,7 +16,7 @@ Dec, 02 2016 update:-
 - 3. Please change the green color as shown in the picture: The green in the image is rgba(155, 243, 151, 0.44). Or you can use a similar color. The green you use is too bright. - done
 - 6. Make the clickable area for this button bigger. I have to click on the left side of this button to toggle the menu bar, which is incovient. - done
 - 7. Add footer to this system. The footer should always attach the bottom of the screen. Please refer to JF Policy system’s footer and left side bar. - done
-- Create Case function is done
+- Create Case function is done.
 Note* Please update database also.
 
 
