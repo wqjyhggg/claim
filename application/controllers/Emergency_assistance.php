@@ -43,9 +43,59 @@ class Emergency_assistance extends CI_Controller {
 		}
 		else
 		{
-        	$this->template->write('title', SITE_TITLE.' - Create Case', TRUE);
-	        $this->template->write_view('content', 'emergency_assistance/create_case');
-	        $this->template->render();        
+			//validate form input
+			$this->form_validation->set_rules('case_no', "Case No", 'required|is_unique[case.case_no]');
+			$this->form_validation->set_rules('assign_to', 'Assign To', 'required');
+			$this->form_validation->set_rules('reason', 'Reason', 'required');
+			$this->form_validation->set_rules('first_name', 'First Name', 'required');
+			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
+			$this->form_validation->set_rules('priority', 'Priority', 'required');
+
+			if ($this->form_validation->run() == true)
+			{
+				// get lat lng from address
+				$cordinates = $this->lat_lng_finder($this->input->post("address").", ".$this->input->post("postcode"));
+
+				// prepare post data array
+				$data = [];
+				$array = $this->input->post();
+				foreach ($array as $key => $value) 
+				{
+					# code...
+					$data[$key] = $value;
+
+					// for check third party recovery
+					if($key == 'third_party_recovery')
+						$data[$key] = $value ? $value : "N";
+				}
+				$data['created'] = date('Y-m-d H:i:s');
+				$data['created_by'] = $this->ion_auth->user()->row()->id;
+
+				// insert values to database
+				$this->common_model->save("case", $data);
+
+				// send success message
+				$this->session->set_flashdata('success', "Case successfully created");
+
+				// redirect them to the login page
+				redirect('emergency_assistance', 'refresh');
+			}
+			else
+			{	
+				// load dropdowns data
+				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->input->post($field_name));
+				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->input->post($field_name));
+				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->post($field_name));
+				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = $this->input->post($field_name), $group = "eacmanager", $empty = "--Assign To--");
+				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->input->post($field_name), $group = "casemamager", $empty = "--Select Case Manager--");
+				$this->data['reasons'] = $this->common_model->getreasons($field_name = "reason", $selected = $this->input->post($field_name));
+				$this->data['relations'] = $this->common_model->getrelations($field_name = "relations", $selected = $this->input->post($field_name));
+
+				// load view data
+	        	$this->template->write('title', SITE_TITLE.' - Create Case', TRUE);
+		        $this->template->write_view('content', 'emergency_assistance/create_case', $this->data);
+		        $this->template->render();  
+	        }      
 		}
 	}
 
@@ -142,15 +192,15 @@ class Emergency_assistance extends CI_Controller {
 			$params = $this->input->get();
 			$address = trim(implode(" ", array_values($params)));
 
-			// get cordinates
-			$cordinates = $this->lat_lng_finder($address);
-
 			$fields = "*";
 			$having = "";
 
 			// if address is not empty
 			if($address)
 			{
+				// get cordinates
+				$cordinates = $this->lat_lng_finder($address);
+
 				$fields = "*, (
 					    3959 * acos (
 					      cos ( radians(".$cordinates['lat'].") )
@@ -160,7 +210,7 @@ class Emergency_assistance extends CI_Controller {
 					      * sin( radians( lat ) )
 					    )
 					  ) AS distance";
-			  	$having = "distance < ".NEAREST_PROVIDERS_RANGE;
+			  	$having = "distance < " . NEAREST_PROVIDERS_RANGE;
 		  	}
 
 			// get all providers list
@@ -168,10 +218,10 @@ class Emergency_assistance extends CI_Controller {
 			$this->data['records'] = $records;
 
 			// get countries list
-			$this->data['countries'] = $this->getcountries($field_name = "country", $selected = $this->input->get("country"));
+			$this->data['countries'] = $this->common_model->getcountries($field_name = "country", $selected = $this->input->get("country"));
 
 			// get province list
-			$this->data['provinces'] = $this->getprovinces($field_name = "province", $selected = $this->input->get("province"));
+			$this->data['provinces'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->get("province"));
 
 			// load view data
         	$this->template->write('title', SITE_TITLE.' - Search Provider', TRUE);
@@ -208,20 +258,6 @@ class Emergency_assistance extends CI_Controller {
 	        $this->template->write_view('content', 'emergency_assistance/create_intakeform');
 	        $this->template->render();        
 		}
-	}
-
-	// get all countries list
-	public function getcountries($field_name, $selected)
-	{
-		$record = $this->common_model->get_ref($table = "country", $key= "name", $value = "name", $dropdown=true, $empty = "Please Select");
-		return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
-	}
-
-	// get all province list
-	public function getprovinces($field_name, $selected)
-	{
-		$record = $this->common_model->get_ref($table = "province", $key= "name", $value = "name", $dropdown=true, $empty = "Please Select");		
-		return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
 	}
 
 }

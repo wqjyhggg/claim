@@ -175,10 +175,22 @@ class Common_model extends CI_Model
      * @param       $value string
      * @param       $dropdown boolean
     */
-    public function get_ref($table,$key,$value,$dropdown=false, $empty = "Please Select")
+    public function get_ref($table,$key,$value,$dropdown=false, $empty = "Please Select", $conditions = "", $joins = array())
     {
+        $this->db->select("$table.$key, $table.$value");
         $this->db->from($table);
         $this->db->order_by($value);
+
+        // --------place conditions here--------
+        if($conditions)
+            $this->db->where($conditions);
+
+        // --------joins table--------
+        if(!empty($joins))
+            foreach ($joins as $join) {
+                $this->db->join($join['table'], $join['on'], $join['type']);
+            } 
+
         $result = $this->db->get();
 
         $array = array();
@@ -193,5 +205,84 @@ class Common_model extends CI_Model
             }
         }
         return $array;
+    }
+
+    /**
+     * Return a list of countries
+     *
+     * @param       $field_name String
+     * @param       $selected string
+    */
+    public function getcountries($field_name, $selected)
+    {
+        $record = $this->get_ref($table = "country", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Country--");
+        return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
+    }
+    
+    /**
+     * Return a list of provinces
+     *
+     * @param       $field_name String
+     * @param       $selected string
+    */
+    public function getprovinces($field_name, $selected)
+    {
+        $record = $this->get_ref($table = "province", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Province--");       
+        return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
+    }
+    
+    /**
+     * Return a list of provinces
+     *
+     * @param       $field_name String
+     * @param       $selected string
+    */
+    public function getreasons($field_name, $selected)
+    {
+        $record = $this->get_ref($table = "reasons", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Reason--");       
+        return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
+    }
+    
+    /**
+     * Return a list of provinces
+     *
+     * @param       $field_name String
+     * @param       $selected string
+     * @param       $group group name. ex- admin etc
+    */
+    public function getrusers($field_name, $selected, $group = "eacmanager", $empty = "--Assign To--")
+    {
+        // place join to users group table to check user group
+        $join[] = array(
+            'table'=>'users_groups',
+            'on'=>'users_groups.user_id = users.id',
+            'type'=>'INNER'
+            );
+
+        // join groups table to get group name
+        $join[] = array(
+            'table'=>'groups',
+            'on'=>'groups.id = users_groups.group_id',
+            'type'=>'INNER'
+            );
+
+        // to check user type
+        $conditions = "groups.name='$group'";
+
+        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=true, $empty, $conditions, $join);       
+        return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
+    }
+
+    
+    /**
+     * Return a list of provinces
+     *
+     * @param       $field_name String
+     * @param       $selected string
+    */
+    public function getrelations($field_name, $selected)
+    {
+        $record = $this->get_ref($table = "relations", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Relationship--");      
+        return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
 }

@@ -71,7 +71,7 @@
     vertical-align: middle;
 }
 /* Custom End */
-.left_col{background:#4a4a4c}
+.left_col{background:#1f3f20}
 
 .nav-sm .container.body .col-md-3.left_col{
 	width:70px !important;
@@ -147,7 +147,7 @@
 .nav-md .container.body .col-md-3.left_col.menu_fixed{height:100%;position:fixed}
 body .container.body .right_col{background:#F7F7F7}
 .nav-md .container.body .right_col{padding:10px 20px 0;margin-left:230px}
-.nav_title{width:230px;float:left;background:#4a4a4c;border-radius:0;height:57px}
+.nav_title{width:230px;float:left;background:#1f3f20;border-radius:0;height:57px}
 @media (max-width: 991px){
 	.nav-md .container.body .right_col,.nav-md .container.body .top_nav{width:100%;margin:0}
 	.nav-md .container.body .col-md-3.left_col{display:none !important;}
@@ -251,7 +251,7 @@ table.no-margin .progress{margin-bottom:0}
 .row{margin-right:-10px;margin-left:-10px}
 .grid_slider .col-md-6{padding:0 40px}
 h1,.h1,h2,.h2,h3,.h3{margin-top:10px;margin-bottom:10px}
-a{color:#777b83;text-decoration:none}
+a{color:#1f3f20;text-decoration:none}
 a,a:visited,a:focus,a:active,:visited,:focus,:active,.btn:focus,
 .btn:active:focus,.btn.active:focus,.btn.focus,.btn:active.focus,
 .btn.active.focus{outline:0}
@@ -287,7 +287,7 @@ a:hover,a:focus{text-decoration:none}
 .nav li.current-page{background:rgba(255,255,255,0.05)}
 .nav li li li.current-page{background:none}
 .nav li li.current-page a{color:#fff}
-.nav.side-menu>li.active>a{text-shadow:rgba(0,0,0,0.25) 0 -1px 0;background:linear-gradient(#727273, #4a4a4c),#4a4a4c;box-shadow:rgba(0,0,0,0.25) 0 1px 0,inset rgba(255,255,255,0.16) 0 1px 0}
+.nav.side-menu>li.active>a{text-shadow:rgba(0,0,0,0.25) 0 -1px 0;background:linear-gradient(#4b6f4c, #1f3f20),#1f3f20;box-shadow:rgba(0,0,0,0.25) 0 1px 0,inset rgba(255,255,255,0.16) 0 1px 0}
 .nav.side-menu>li.active>a:hover{color:#F7F7F7!important;}
 .navbar-brand,.navbar-nav>li>a{font-weight:500;color:#ECF0F1 !important;margin-left:0 !important;line-height:25px}
 .site_title{text-overflow:ellipsis;overflow:hidden;font-weight:400;font-size:22px;width:100%;color:#ECF0F1 !important;margin-left:0 !important;line-height:59px;display:block;height:55px;margin:0;padding-left:10px}
@@ -311,7 +311,7 @@ a:hover,a:focus{text-decoration:none}
 .line_30{line-height:30px}
 .main_menu_side{padding:0}
 .bs-docs-sidebar .nav>li>a{display:block;padding:4px 6px}
-footer{background:transparent;padding:15px 20px;display:block;z-index: 99999;}
+footer{background:#080808 none repeat scroll 0 0;padding:15px 20px;display:block;z-index: 99999;}
 @media (min-width: 768px){
 footer{/*margin-left:230px*/}
 }

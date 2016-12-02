@@ -1,4 +1,4 @@
-<duv class="main-div">
+<duv >
    <div class="page-title">
       <div class="title_left">
          <h3>Users Management</h3>
@@ -23,9 +23,38 @@
                      <span class="input-group-addon"><span class="fa fa-search"></span></span>
                    </div>
                </div>
-               <div class="col-sm-3">
+               <div class="col-sm-6">
                   <?php echo form_submit("Search", "Search", array("class"=>'btn btn-primary', "type"=>'submit')) ?>
                   <?php echo anchor("auth/users", "Reset", array('class'=>'btn btn-info')) ?>
+                  <a href="javascript:void(0)" class="btn btn-info more_filters">Advanced Search</a>
+               </div>
+             </div>
+             <div class="row more_items" style="display:none"> 
+
+               <div class="form-group col-sm-3">
+                  <?php 
+                    $status = array(
+                      ''=>'All',
+                      '1'=>'Active',
+                      '0'=>'Inactive',
+                    );
+                    echo form_dropdown("status", $status, $this->input->get("status"), array("class"=>'form-control'));
+                  ?>
+               </div>                 
+               <div class="form-group col-sm-3">
+                  <?php          
+                  echo form_input("last_name", $this->input->get("last_name"), array("class"=>"form-control", 'placeholder'=>'Last Name'));
+                  ?>
+               </div> 
+               <div class="form-group col-sm-3">
+                  <?php               
+                  echo form_input("first_name", $this->input->get("first_name"), array("class"=>"form-control", 'placeholder'=>'First Name'));
+                  ?>
+               </div>
+               <div class="form-group col-sm-3">
+                  <?php               
+                  echo form_input("email", $this->input->get("email"), array("class"=>"form-control", 'placeholder'=>'Email'));
+                  ?>
                </div>
              </div>
            <?php echo form_close(); ?>
@@ -84,5 +113,10 @@
       </div>
    </div>
    <!-- End List Section -->
-
 </duv>
+
+<script>
+  $(document).on("click",".more_filters", function(){
+     $(".more_items").toggle();
+  })
+</script>

@@ -1,4 +1,4 @@
-<duv class-"main-div"="">
+<duv >
    <div class="page-title">
       <div class="title_left">
          <h3>My Tasks</h3>
@@ -74,7 +74,7 @@
                            <td>1/12/2015 9:25AM</td>
                            <td>Assistance</td>
                         </tr>
-                        <tr style="background-color:#89ff84">
+                        <tr style="background-color:rgba(155, 243, 151, 0.44)">
                            <td><i class="fa fa-edit"></i></td>
                            <td>4.</td>
                            <td>High</td>

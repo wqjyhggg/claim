@@ -5,7 +5,7 @@
   height: 400px;
 }
 </style>
-<duv class-"main-div"="">
+<duv >
    <div class="page-title">
       <div class="title_left">
          <h3>Search Provider</h3>         
