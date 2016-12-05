@@ -213,3 +213,10 @@ html,body{ height:100%;}
   top: 52px;
   font-size: 18px;
 }
+
+th > .asc::after {
+    content: " \25bc";
+}
+th > .desc::after {
+    content: " \25b2";
+}

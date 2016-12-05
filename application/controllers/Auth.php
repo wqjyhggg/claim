@@ -7,6 +7,9 @@
  */
 class Auth extends CI_Controller {
 
+	// set private properties here
+	private $limit = 10; #no of records per page
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -120,12 +123,64 @@ class Auth extends CI_Controller {
 		else
 		{
 
-			//list the users
+			//list the users group
 			$this->data['groups'] = $this->common_model->get_ref($table = "groups",$key = "id",$value = "description",$dropdown=true, $empty = "Select Group");
-			$this->data['users'] = $this->ion_auth->users($this->input->get('groups'), $this->input->get('keyword'))->result();
+
+			// table settings goes here
+			$table = "users";
+			$fields = "users.first_name, users.last_name, users.email, users.active, users.id"; 
+			$group_by = array("users_groups.user_id");
+
+			// prepare conditions
+			$conditions = [];
+			if($this->input->get("groups")) 
+				$conditions['users_groups.group_id'] = $this->input->get("groups");
+			if($this->input->get("status")) 
+				$conditions['users.active'] = $this->input->get("status");
+			if($this->input->get("last_name")) 
+				$conditions['users.last_name'] = $this->input->get("last_name");
+			if($this->input->get("first_name")) 
+				$conditions['users.first_name'] = $this->input->get("first_name");
+			if($this->input->get("email")) 
+				$conditions['users.email like '] = "%".$this->input->get("email")."%";
+
+			$joins[] = array(
+				'table' => 'users_groups',
+				'on' => 'users_groups.user_id = users.id',
+				'type' => 'LEFT'
+				);
+			$order_by = array(
+				'field' => 'id',
+				'order' => 'desc'
+				);
+
+			// if sorting enabled
+			if($this->input->get("field")) 
+				$order_by = array(
+					'field' => $this->input->get("field"),
+					'order' => $this->input->get("order")
+					);
+			$limit = $this->limit; 
+			$offset = $this->uri->segment(3);
+
+			// get result
+			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table, $fields, $conditions, $joins, $order_by, $group_by, $having = "", $limit, $offset);
+
+			$config['base_url'] = site_url('auth/users');
+			$config['per_page'] = $limit;
+			$config['first_url'] = $config['base_url'].'?'.http_build_query($this->input->get());
+			if (count($this->input->get()) > 0)
+				$config['suffix'] = '?' . http_build_query($this->input->get(), '', "&");
+			$config['total_rows'] = $results['rows'];
+			$this->pagination->initialize($config); // initiaze pagination config
+
+			$this->data['pagination'] = $this->pagination->create_links(); # create pagination links
+			// pagination end here
+
+			$this->data['users'] = $results['records'];
 			foreach ($this->data['users'] as $k => $user)
 			{
-				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
+				$this->data['users'][$k]['groups'] = $this->ion_auth->get_users_groups($user['id'])->result();
 			}
 
 			$this->template->write('title', SITE_TITLE.' - Manage Users', TRUE);
@@ -535,6 +590,22 @@ class Auth extends CI_Controller {
 
 		// redirect them back to the auth page
 		redirect('auth/users', 'refresh');
+	}
+
+	// for autocomplete search
+	public function autocomplete($field)
+	{
+		$query = $this->input->get("query");
+
+		// get search query
+		$table = "users"; 
+		$fields = "users.$field as `value`, users.id as `data`"; 
+		$conditions = "users.$field like '%$query%'";
+		$results = $this->common_model->select($record = "list", $typecast = "object", $table, $fields, $conditions);
+
+		// return result in json format
+		$results = array('suggestions'=>$results);
+		echo json_encode($results);
 	}
 
 	// log the user out

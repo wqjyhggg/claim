@@ -254,9 +254,34 @@ class Emergency_assistance extends CI_Controller {
 		}
 		else
 		{
-        	$this->template->write('title', SITE_TITLE.' - Create IntakeForm', TRUE);
-	        $this->template->write_view('content', 'emergency_assistance/create_intakeform');
-	        $this->template->render();        
+			$this->form_validation->set_rules('intake_notes', 'Intake Notes', 'required');
+
+			if ($this->form_validation->run() == true)
+			{
+
+				// prepare data array
+				$data = array(
+					'notes' => $this->input->post("notes"),
+					'created_by'=> $this->ion_auth->user()->row()->id,
+					'created' => date('Y-m-d H:i:s'),
+					);
+
+				// insert values to database
+				$this->common_model->save("intake_form", $data);
+
+				// send success message
+				$this->session->set_flashdata('success', "Intake form successfully added");
+
+				// redirect them to the login page
+				redirect('emergency_assistance/create_case', 'refresh');
+			}
+			else 
+			{
+				// load view data
+	        	$this->template->write('title', SITE_TITLE.' - Create IntakeForm', TRUE);
+		        $this->template->write_view('content', 'emergency_assistance/create_intakeform');
+		        $this->template->render();        
+		    }
 		}
 	}
 

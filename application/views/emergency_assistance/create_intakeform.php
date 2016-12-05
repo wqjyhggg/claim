@@ -20,26 +20,33 @@
                 <div class="row">
                   <div class="form-group col-sm-6">
                      <?php 
-                        echo form_label('Intake Form #:', 'form_id', array("class"=>'col-sm-12'));                               
-                        echo form_input("form_id", $this->input->post("form_id"), array("class"=>"form-control", 'placeholder'=>'Intake Form #'));
+                        echo form_label('Intake Form #:', 'form_id', array("class"=>'col-sm-12'));
                      ?>
+                     <div class="form-group col-sm-12">
+                        ####
+                     </div>
                   </div>              
                   <div class="form-group col-sm-6">
                      <?php      
-                     echo form_label('Create Date:', 'create_date', array("class"=>'col-sm-12'));        
-                     echo form_input("create_date", date("Y-m-d H:i:s"), array("class"=>"form-control", 'placeholder'=>'Create Date'));
+                     echo form_label('Create Date:', 'create_date', array("class"=>'col-sm-12')); 
                      ?>
+                     <div class="form-group col-sm-12">
+                        <?php       
+                        echo date("Y-m-d");
+                        ?>
+                     </div>
                   </div>
-                  <div class="form-group col-sm-6">
+                  <!-- <div class="form-group col-sm-6">
                      <?php 
                         echo form_label('Create By:', 'create_by', array("class"=>'col-sm-12'));                               
                         echo form_input("create_by", $this->input->post("create_by"), array("class"=>"form-control", 'placeholder'=>'Create By'));
                      ?>
-                  </div>  
+                  </div>  --> 
                   <div class="form-group col-sm-12">
                      <?php 
-                        echo form_label('Intake Notes:', 'intake_notes', array("class"=>'col-sm-12'));                               
+                        echo form_label('Intake Notes:', 'intake_notes', array("class"=>'col-sm-12'));
                         echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class"=>"form-control", 'placeholder'=>'Intake Notes'));
+                        echo form_error("intake_notes");
                      ?>
                   </div>  
                          

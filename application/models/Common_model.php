@@ -15,7 +15,7 @@ class Common_model extends CI_Model
     /**
      * Select all records accoding to selected params
      *
-     * @param       $record String "list/first"
+     * @param       $record String "list/first/paginate"
      * @param       $typecast String "array/object" 
      * @param       $table String
      * @param       $fields String or array
@@ -25,19 +25,22 @@ class Common_model extends CI_Model
      * @param       $group_by array
      * @param       $having String
      * @param       $limit number
-     * @return      record array
+     * @return      $record array
+     * @return      $offset for pagination use
     */
-    public function select($record = "list", $typecast = "array", $table, $fields, $conditions = "", $joins = array(), $order_by = array(), $group_by = array(), $having = "" , $limit = 0)
-    {
+    public function select($record = "list", $typecast = "array", $table, $fields, $conditions = "", $joins = array(), $order_by = array(), $group_by = array(), $having = "" , $limit = 0, $offset = 0)
+    {        
         // --------get all conditions here--------
         if($conditions)
             $this->db->where($conditions);
 
         // --------fields are goes here--------
         if($fields)
-            $this->db->select($fields);
+            $this->db->select("SQL_CALC_FOUND_ROWS " . $fields, FALSE);
 
         // ---------rows limit--------
+        if($offset) 
+             $this->db->limit($limit, $offset);
         if($limit)
             $this->db->limit($limit);
 
@@ -55,11 +58,9 @@ class Common_model extends CI_Model
         if(!empty($having))
             $this->db->having($having);
 
-
         // --------order by query--------
         if(!empty($order_by))
             $this->db->order_by($order_by['field'], $order_by['order']);
-
 
         $q = $this->db->get($table);
         if($q->num_rows() > 0)
@@ -72,15 +73,29 @@ class Common_model extends CI_Model
                 else
                     return $q->result();
             }
-            else
+            else if($record == 'first')
             {
                 if($typecast == 'array')
                     return $q->row_array();
                 else
                     return $q->row();
             }
+            else if($record == 'paginate')
+            {
+                $data_array = [];
+                $data_array['records'] = $q->result_array();
+
+                // get no of records
+                $no_of_rows = $this->db->query("SELECT FOUND_ROWS() as rows");
+                $result = $no_of_rows->row_array();
+                $data_array['rows'] = $result['rows'];
+                return $data_array;
+            }
         }
-        return array();
+        if($record == 'paginate')
+            return array('rows' => 0, 'records' => array());
+        else
+            return array();
     }
 
     /**

@@ -8,6 +8,26 @@ Password: password
 
 
 #####################
+Dec, 05 2016 update:-
+#####################
+
+ 4. User management page, advanced search
+add a ‘advanced search button’ after “Reset button”, after clicking the “advanced search” button, shows more search functions as following. make all search function Fuzzy	search. E.g. I input adm in email, it shows adm@admin.com, admi@test.com, admin@dd.com.
+4.1 add a “search by status” function
+4.2 add a “search by last name” function
+4.3 add a “search by first name” function
+4.4 add a “search by username” function (We don't have an username field, so we have not consider this)
+4.5 add a “search by email” function
+DONE
+
+5. User management page, sort functions.
+please add “sort by first name”, “sort by last name”, “sort by email” function,
+DONE
+
+**Intake form in case management is in progress
+
+
+#####################
 Dec, 02 2016 update:-
 #####################
 

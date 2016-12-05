@@ -1,4 +1,4 @@
-<duv >
+  <duv >
    <div class="page-title">
       <div class="title_left">
          <h3>Users Management</h3>
@@ -17,12 +17,6 @@
                <div class="form-group col-sm-3">
                   <?php echo form_dropdown("groups", $groups, $this->input->get("groups"), array("class"=>'form-control')) ?>
                </div>
-               <div class="form-group col-sm-3">
-                   <div class="input-group date">
-                     <?php echo form_input("keyword", $this->input->get("keyword"), array("class"=>"form-control", 'placeholder'=>'Search by email and name')) ?>
-                     <span class="input-group-addon"><span class="fa fa-search"></span></span>
-                   </div>
-               </div>
                <div class="col-sm-6">
                   <?php echo form_submit("Search", "Search", array("class"=>'btn btn-primary', "type"=>'submit')) ?>
                   <?php echo anchor("auth/users", "Reset", array('class'=>'btn btn-info')) ?>
@@ -30,11 +24,10 @@
                </div>
              </div>
              <div class="row more_items" style="display:none"> 
-
                <div class="form-group col-sm-3">
                   <?php 
                     $status = array(
-                      ''=>'All',
+                      ''=>'Status',
                       '1'=>'Active',
                       '0'=>'Inactive',
                     );
@@ -43,17 +36,17 @@
                </div>                 
                <div class="form-group col-sm-3">
                   <?php          
-                  echo form_input("last_name", $this->input->get("last_name"), array("class"=>"form-control", 'placeholder'=>'Last Name'));
+                  echo form_input("last_name", $this->input->get("last_name"), array("class"=>"form-control autocomplete_field", 'placeholder'=>'Last Name'));
                   ?>
                </div> 
                <div class="form-group col-sm-3">
                   <?php               
-                  echo form_input("first_name", $this->input->get("first_name"), array("class"=>"form-control", 'placeholder'=>'First Name'));
+                  echo form_input("first_name", $this->input->get("first_name"), array("class"=>"form-control autocomplete_field", 'placeholder'=>'First Name'));
                   ?>
                </div>
                <div class="form-group col-sm-3">
                   <?php               
-                  echo form_input("email", $this->input->get("email"), array("class"=>"form-control", 'placeholder'=>'Email'));
+                  echo form_input("email", $this->input->get("email"), array("class"=>"form-control autocomplete_field", 'placeholder'=>'Email'));
                   ?>
                </div>
              </div>
@@ -79,27 +72,27 @@
                   <table class="table table-hover table-bordered">
                      <thead>
                         <tr>
-                           <th>First Name</th>
-                           <th>Last Name</th>
-                           <th>Email Address</th>
+                           <th><?php echo $this->pagination->sort("first_name", "First Name") ?></th>
+                           <th><?php echo $this->pagination->sort("last_name", "Last Name") ?></th>
+                           <th><?php echo $this->pagination->sort("email", "Email Address") ?></th>
                            <th>Group</th>
-                           <th>Status</th>
+                           <th><?php echo $this->pagination->sort("active", "Status") ?></th>
                            <th>Action</th>
                         </tr>
                      </thead>
                      <tbody>
                      <?php foreach ($users as $user):?>
                         <tr>
-                           <td><?php echo htmlspecialchars($user->first_name,ENT_QUOTES,'UTF-8');?></td>
-                           <td><?php echo htmlspecialchars($user->last_name,ENT_QUOTES,'UTF-8');?></td>
-                           <td><?php echo htmlspecialchars($user->email,ENT_QUOTES,'UTF-8');?></td>
+                           <td><?php echo htmlspecialchars($user['first_name'],ENT_QUOTES,'UTF-8');?></td>
+                           <td><?php echo htmlspecialchars($user['last_name'],ENT_QUOTES,'UTF-8');?></td>
+                           <td><?php echo htmlspecialchars($user['email'],ENT_QUOTES,'UTF-8');?></td>
                            <td>
-                           <?php foreach ($user->groups as $group):?>
-                           <?php echo htmlspecialchars($group->description,ENT_QUOTES,'UTF-8'); ?><br />
+                           <?php foreach ($user['groups'] as $group):?>
+                           <?php echo htmlspecialchars($group->description, ENT_QUOTES,'UTF-8'); ?><br />
                            <?php endforeach?>
                            </td>
-                           <td><?php echo ($user->active) ? anchor("auth/deactivate/".$user->id, lang('index_active_link')) : anchor("auth/activate/". $user->id, lang('index_inactive_link'));?></td>
-                           <td><?php echo anchor("auth/edit_user/".$user->id, 'Edit') ;?></td>
+                           <td><?php echo ($user['active']) ? anchor("auth/deactivate/".$user['id'], lang('index_active_link')) : anchor("auth/activate/". $user['id'], lang('index_inactive_link'));?></td>
+                           <td><?php echo anchor("auth/edit_user/".$user['id'], 'Edit') ;?></td>
                         </tr>
                      <?php endforeach;?>
                      </tbody>
@@ -107,7 +100,9 @@
                </div>
                <?php else:?>
                   <center><?php echo heading("No record available", 4); ?></center>
-               <?php endif ?>
+               <?php endif;
+               echo $pagination;
+               ?>
             </div>
          </div>
       </div>
@@ -116,7 +111,28 @@
 </duv>
 
 <script>
+  <?php 
+  if($this->input->get("status") or $this->input->get("last_name") or $this->input->get("first_name") or $this->input->get("email")) 
+  {
+    ?>
+     $(".more_items").show(); 
+    <?php
+  }
+
+  ?>
   $(document).on("click",".more_filters", function(){
      $(".more_items").toggle();
   })
+
+  // fuzzy search
+  $(function() {
+    $(".autocomplete_field").click(function() {
+      var name = $(this).attr("name");
+      $(".autocomplete_field").autocomplete({
+        serviceUrl: "<?php echo base_url()."auth/autocomplete/"; ?>" + name,
+        minLength: 2,
+        dataType: "json",
+      });
+    }) 
+  });
 </script>
