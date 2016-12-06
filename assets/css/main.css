@@ -220,3 +220,6 @@ th > .asc::after {
 th > .desc::after {
     content: " \25b2";
 }
+.row-link{
+  cursor: pointer;
+}

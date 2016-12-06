@@ -34,12 +34,17 @@ CREATE TABLE IF NOT EXISTS `case` (
   `case_manager` int(10) NOT NULL,
   `priority` varchar(10) NOT NULL,
   `created` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `case_no` (`case_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 /*!40000 ALTER TABLE `case` DISABLE KEYS */;
 INSERT INTO `case` (`id`, `case_no`, `created_by`, `street_no`, `street_name`, `city`, `province`, `country`, `country2`, `post_code`, `assign_to`, `reason`, `first_name`, `last_name`, `phone_number`, `email`, `relations`, `diagnosis`, `treatment`, `third_party_recovery`, `policy_no`, `insured_name`, `dob`, `case_manager`, `priority`, `created`) VALUES
-	(1, '000000001', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'Canada', '302014', 1, 'AD&D', 'bhawani', 'shankar', '424242424', 'developer@brsoftech.com', 'Father', 'test', 'sodala', 'N', '99098908', 'bhawani', '2000-05-30', 2, 'HIGH', '2016-12-02 11:39:34');
+	(1, '0000001', 1, '123143', 'sodala1', 'jaipur', 'British Columbia', 'United States', 'Canada', '302015', 1, 'AD&D', 'bhawani', 'shankar', '424242424', 'developer@brsoftech.com', 'Father', 'test', 'sodala', 'Y', '99098908', 'bhawani', '2000-05-30', 2, 'Normal', '2016-12-02 11:39:34'),
+	(2, '0000002', 1, '', '', '', '', '', '', '', 5, 'Roadside Assistance', 'nn123', '', '', '', '', '', '', 'N', '', '', '0000-00-00', 2, 'Normal', '2016-12-06 07:13:43'),
+	(3, '0000003', 1, '', '', '', '', '', '', '', 1, 'AD&D', 'bhawani', '', '', '', '', '', '', 'N', '', '', '0000-00-00', 2, 'Normal', '2016-12-06 07:49:37'),
+	(4, '0000004', 1, '', '', '', '', '', '', '', 1, 'AD&D', 'bhawani', '', '', '', '', '', '', 'N', '', '', '0000-00-00', 2, 'Normal', '2016-12-06 07:51:53'),
+	(5, '0000005', 1, '123143', 'sodala1', 'jaipur', 'British Columbia', 'United States', 'Canada', '302015', 1, 'AD&D', 'bhawani', 'shankar', '424242424', 'developer@brsoftech.com', 'Father', 'test', 'sodala', 'Y', '99098908', 'bhawani', '2000-05-30', 2, 'Normal', '2016-12-06 11:28:53');
 /*!40000 ALTER TABLE `case` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `country` (
@@ -199,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`) VALUES
-	(1, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1480940485, 1, 'Admin', 'istrator', NULL, '2132132132'),
+	(1, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1481027861, 1, 'Admin', 'istrator', NULL, '2132132132'),
 	(2, '192.168.1.29', 'a@xx.com', '$2y$08$gnsbXPmHtU7SBQko94uf9.VVVzzFhd12fYK3n1FMx4lL8yDPzMvvm', NULL, 'a@xx.com', NULL, NULL, NULL, NULL, 1479881420, 1480055689, 0, 'nn123a', 'bb123', NULL, '123131'),
 	(5, '192.168.1.29', 'paytm123e@gmail.com', '$2y$08$p84W1BzwM7WslS9PgioW5elSODLU0E0N/p8Q2uyNzOFeHxD48AW3q', NULL, 'paytm123e@gmail.com', NULL, NULL, NULL, NULL, 1479977418, NULL, 1, 'bhawani', 'bb', NULL, '231321322');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;

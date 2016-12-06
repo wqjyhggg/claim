@@ -7,6 +7,16 @@ Username: admin@admin.com
 Password: password
 
 
+
+#####################
+Dec, 06 2016 update:-
+#####################
+- Search and List case management - done
+- Edit case, assign case - done
+- Clone case - done
+* Intake forms management is in progress...
+
+
 #####################
 Dec, 05 2016 update:-
 #####################

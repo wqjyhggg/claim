@@ -189,16 +189,24 @@ class Common_model extends CI_Model
      * @param       $key string
      * @param       $value string
      * @param       $dropdown boolean
+     * @param       $empty string - used for default title
+     * @param       $conditions array/string
+     * @param       $joins array
+     * @param       $group_by array
     */
-    public function get_ref($table,$key,$value,$dropdown=false, $empty = "Please Select", $conditions = "", $joins = array())
+    public function get_ref($table,$key,$value,$dropdown=false, $empty = "Please Select", $conditions = "", $joins = array(), $group_by = array())
     {
         $this->db->select("$table.$key, $table.$value");
         $this->db->from($table);
-        $this->db->order_by($value);
+        // $this->db->order_by($value);
 
         // --------place conditions here--------
         if($conditions)
             $this->db->where($conditions);
+
+        // group by by given id
+        if(!empty($group_by))
+            $this->db->group_by($group_by);
 
         // --------joins table--------
         if(!empty($joins))
@@ -263,7 +271,7 @@ class Common_model extends CI_Model
      *
      * @param       $field_name String
      * @param       $selected string
-     * @param       $group group name. ex- admin etc
+     * @param       $group group name. string/array ex- 'admin' and array("'admin'", "'manager'")
     */
     public function getrusers($field_name, $selected, $group = "eacmanager", $empty = "--Assign To--")
     {
@@ -282,9 +290,13 @@ class Common_model extends CI_Model
             );
 
         // to check user type
-        $conditions = "groups.name='$group'";
+        if(is_array($group)) // for multiple groups
+            $conditions = "groups.name in(".implode(',' , $group).")";
+        else
+            $conditions = "groups.name='$group'";
+        
 
-        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=true, $empty, $conditions, $join);       
+        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=true, $empty, $conditions, $join, $group_by = array("users.id"));       
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
 
@@ -299,5 +311,16 @@ class Common_model extends CI_Model
     {
         $record = $this->get_ref($table = "relations", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Relationship--");      
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
+    }
+
+    /**
+     * Return a post type data or array data
+     *
+     * @param       $field_name String
+     * @param       $data array data
+    */
+    public function field_val($field_name, $data = array())
+    {
+        return ($this->input->post($field_name)?$this->input->post($field_name):@$data[$field_name]);
     }
 }

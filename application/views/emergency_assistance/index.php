@@ -12,6 +12,7 @@
       </div>
    </div>
    <div class="clearfix"></div>
+   <?php echo $message; ?>
 
    <!-- Policy search and List Section -->
    <div class="row">
@@ -263,7 +264,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("create_date", $this->input->get("create_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Create Date'));
+                     echo form_input("created", $this->input->get("created"), array("class"=>"form-control datepicker", 'placeholder'=>'Create Date'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -271,30 +272,30 @@
 
                <div class="form-group col-sm-3">
                   <?php                 
-                     $assign_to = array(""=>'--Assign To--');
-                     echo form_dropdown("assign_to", $assign_to, $this->input->get("assign_to"), array("class"=>'form-control'));
+                     echo $eacmanagers;
                   ?>
                </div>
                <div class="form-group col-sm-3">
                   <?php                 
-                     $case_manager = array(""=>'--Case Manager--');
-                     echo form_dropdown("case_manager", $case_manager, $this->input->get("case_manager"), array("class"=>'form-control'));
+                     echo $casemamager;
                   ?>
                </div>          
                <div class="col-sm-3">
-                  <button class="btn btn-primary">Search</button>
+                  <button class="btn btn-primary" name="filter" value="case">Search</button>
                </div>
             </div> 
             <?php echo form_close(); ?>
             <!-- search policy filter end -->
             <div class="clearfix"><br/></div>
 
+            <?php if($this->input->get("filter") == 'case'): ?>
             <!-- search results start -->
             <div class="x_title">
                <h2>Search Result<small></small></h2>
                <div class="clearfix"></div>
             </div>
             <div class="x_content">
+               <?php if(!empty($cases)): ?>
                <div class="table-responsive">
                   <table class="table table-hover table-bordered">
                      <thead>
@@ -313,24 +314,30 @@
                         </tr>
                      </thead>
                      <tbody>
-                        <tr>
-                           <td>0000001</td>
-                           <td>2016-09-09</td>
-                           <td>Toronto</td>
-                           <td>Traffic accident</td>
-                           <td>JF00001</td>
-                           <td>Wo</td>
-                           <td>2001-09-11</td>
-                           <td>EAC0001</td>
-                           <td>CM0001</td>
-                           <td>High</td>
-                           <td><a>Clone</a></td>
+                     <?php foreach ($cases as $key => $value): ?>
+                        <tr class="row-link" alt="<?php echo $value['id']; ?>" title="Click to View/Edit">
+                           <td><?php echo $value['case_no']; ?></td>
+                           <td><?php echo $value['created']; ?></td>
+                           <td><?php echo $value['province']; ?></td>
+                           <td><?php echo $value['reason']; ?></td>
+                           <td><?php echo $value['policy_no']; ?> accident</td>
+                           <td><?php echo $value['insured_name']; ?></td>
+                           <td><?php echo $value['dob']; ?></td>
+                           <td><?php echo $value['assign_to_name']; ?></td>
+                           <td><?php echo $value['case_manager_name']; ?></td>
+                           <td><?php echo $value['priority']; ?></td>
+                           <td><?php echo anchor("emergency_assistance/create_case/".$value['id'], "Clone"); ?></td>
                         </tr>
+                     <?php endforeach; ?>
                      </tbody>
                   </table>
                </div>
+               <?php else:?>
+                  <center><?php echo heading("No record available", 4); ?></center>
+               <?php endif;?>
             </div>
             <!-- End Search List Section -->
+            <?php endif;?>
          </div>
       </div>
    </div>
@@ -344,6 +351,10 @@ $(document).ready(function() {
         startDate: '-5y',
         endDate: '+2y',
     });
+   $(".row-link").click(function() {
+      var id = $(this).attr("alt");
+      window.location = "<?php echo base_url("emergency_assistance/edit_case/") ?>"+id;
+   })
 })
 $(document).on("click",".more_filters", function(){
    $(".more_items").toggle();

@@ -26,7 +26,7 @@
                         echo form_label('Case Number:', 'case_no', array("class"=>'col-sm-12'));  
                         ?>
                         <div class="form-group col-sm-12">
-                           #######
+                           <?php echo $case_details['case_no']; ?>
                         </div>
                         <?php
                         echo form_error("case_no");
@@ -35,16 +35,15 @@
                   <div class="form-group col-sm-4">
                      <?php echo form_label('Create Date:', 'created', array("class"=>'col-sm-12')); ?>
                      <div class="form-group col-sm-12">
-                        <?php echo date("Y-m-d"); ?>
+                        <?php echo date("Y-m-d", strtotime($case_details['created'])); ?>
                      </div>
-                  </div>              
-                  <!-- <div class="form-group col-sm-4">
-                     <?php      
-                     echo form_label('Create By:', 'created_by', array("class"=>'col-sm-12'));        
-                     echo form_input("created_by", $this->common_model->field_val("created_by"), array("class"=>"form-control", 'placeholder'=>'Create By'));
-                     echo form_error("created_by");
-                     ?>
-                  </div>  -->
+                  </div> 
+                  <div class="form-group col-sm-4">
+                     <?php echo form_label('Created By:', 'created_by', array("class"=>'col-sm-12')); ?>
+                     <div class="form-group col-sm-12">
+                        <?php echo $case_details['created_by']; ?>
+                     </div>
+                  </div>
                </div> 
              
                <h4>Visiting Address<small></small></h4>
@@ -237,7 +236,7 @@
                   </div>
                   <div class="col-sm-4">
                      <label class="col-sm-12">&nbsp;</label>
-                     <button class="btn btn-primary">Save</button>
+                     <button class="btn btn-primary">Update</button>
                      <?php echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info')); ?>
                   </div>                                          
                </div> 

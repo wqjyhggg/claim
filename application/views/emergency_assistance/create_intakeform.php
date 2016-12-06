@@ -49,11 +49,15 @@
                         echo form_error("intake_notes");
                      ?>
                   </div>  
+
+                  <div class="form-group col-sm-12 files">
+
+                  </div>
                          
                   <div class="col-sm-6">
                      <label class="col-sm-12">&nbsp;</label>
                      <button class="btn btn-primary">Save</button>
-                     <button class="btn btn-primary">Upload Attached</button>
+                     <a href="javascript:void(0)" class="btn btn-primary multiupload">Upload Attached</a>
                      <?php echo anchor("emergency_assistance/create_case", 'Cancel', array("class"=>'btn btn-info')) ?>
                   </div>
                </div> 
@@ -66,19 +70,29 @@
          </div>
       </div>
    </div>
-
 </duv>
 
-<?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
-<script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
-$(document).ready(function() {
-   $(".datepicker").datepicker({
-        startDate: '-5y',
-        endDate: '+2y',
-    });
-})
-$(document).on("click",".more_filters", function(){
-   $(".more_items").toggle();
-})
+// custom script for multi file upload
+$(document).on("click",".multiupload", function(){
+   var count = $("input[type=file]").length;
+
+   // add new file here
+   $(".files").append('<input type="file" name="files[]" id="file'+(count+1)+'" /> <i class="fa fa-trash" id="'+(count+1)+'"></i>');
+
+   // place trigger clicked once file append in files class
+   $('#file'+(count+1)).trigger("click");
+});
+
+// delete file script
+$(document).on("click",".fa-trash", function(){
+   $(this).remove();
+   $("#file"+$(this).attr("id")).remove();
+});
+
+// once auto file clicked
+$(document).on("change","input[type=file]", function(){
+   alert($(this).val());
+});
+
 </script>
