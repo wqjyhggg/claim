@@ -9,6 +9,15 @@ Password: password
 
 
 #####################
+Dec, 07 2016 update:-
+#####################
+- Create design of intake form as client requirement
+- handle multi upload function
+- add function to hold all intake form data/files in "create case" page
+- add intake from edit/detail case is in progress.....
+
+
+#####################
 Dec, 06 2016 update:-
 #####################
 - Search and List case management - done

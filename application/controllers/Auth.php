@@ -42,7 +42,7 @@ class Auth extends CI_Controller {
 	// redirect if needed, otherwise display the my tasks list
 	public function mytasks()
 	{
-
+		
 		if (!$this->ion_auth->logged_in())
 		{
 			// redirect them to the login page

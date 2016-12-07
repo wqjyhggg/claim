@@ -17,7 +17,7 @@
             <div class="x_content"> 
 
                <!-- search policy filter start -->       
-              <?php echo form_open("", array('class'=>'form-horizontal')); ?>
+              <?php echo form_open_multipart("", array('class'=>'form-horizontal')); ?>
 
                <h4>Case Basic Info option<small></small></h4>
                 <div class="row">
@@ -238,9 +238,19 @@
                   <div class="col-sm-4">
                      <label class="col-sm-12">&nbsp;</label>
                      <button class="btn btn-primary">Save</button>
+                     <button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create InTake Form</button>
                      <?php echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info')); ?>
                   </div>                                          
-               </div> 
+               </div>
+
+               <!-- Intake Forms List Section -->
+               <br/>
+               <h4 class="modal-title intake-heading" style="display:none">Intake Froms</h4>
+               <div class="row intake-forms-list col-sm-12">
+
+               </div>
+               <input type="hidden" name="no_of_form" value="0"/> <!-- used to knnow how many forms added in this page -->
+               <!-- end intake forms list  -->
 
                <?php echo form_close(); ?>
                <!-- search policy filter end -->
@@ -249,65 +259,153 @@
          </div>
       </div>
    </div>
+</duv>
 
-   <!-- Intake Forms List Section -->
-   <div class="row">
-      <div class="col-md-12 col-sm-12 col-xs-12">
-         <!-- search results start -->
-         <div class="x_title">
-            <h2>Intake From List<small></small></h2> 
-            <?php echo anchor("emergency_assistance/create_intakeform", '<i class="fa fa-plus-circle"></i> Create InTake Form', array("class"=>'btn btn-info')) ?>
-            <div class="clearfix"></div>
-         </div>
-         <div class="x_content">
-            <div class="table-responsive">
-               <table class="table table-hover table-bordered">
-                  <thead>
-                     <tr>
-                        <th>#</th>
-                        <th>Create Date</th>
-                        <th>Create By</th>
-                        <th>Edit</th>                     
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>1</td>
-                        <td>26-11-2015 10:00 am</td>
-                        <td> Ron </td>
-                        <td>Edit</td>
-                     </tr>
-                     <tr>
-                        <td>2</td>
-                        <td>26-11-2015 05:00 pm</td>
-                        <td> Ron </td>
-                        <td>Edit</td>
-                     </tr>
-                  </tbody>
-               </table>
+<!-- Create Intake Form Modal -->
+<div id="create_intake_form" class="modal fade" role="dialog">
+  <div class="modal-dialog  modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create Intake Form</h4>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-sm-6">
+               <?php 
+                  echo form_label('Intake Form #:', 'form_id', array("class"=>'col-sm-12'));
+               ?>
+               <div class="form-group col-sm-12">
+                  ####
+               </div>
+            </div>              
+            <div class="form-group col-sm-6">
+               <?php      
+               echo form_label('Create Date:', 'create_date', array("class"=>'col-sm-12')); 
+               ?>
+               <div class="form-group col-sm-12">
+                  <?php       
+                  echo date("Y-m-d");
+                  ?>
+               </div>
+            </div>
+            <div class="form-group col-sm-12">
+               <?php 
+                  echo form_label('Intake Notes:', 'intake_notes', array("class"=>'col-sm-12'));
+                  echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class"=>"form-control", 'placeholder'=>'Intake Notes', 'style'=>"height:100px"));
+                  echo form_error("intake_notes");
+               ?>
+            </div>
+            <div class="form-group col-sm-12 files">
+
             </div>
          </div>
-         <!-- End List -->
       </div>
-   </div>
-</duv>
+      <div class="modal-footer">
+         <label class="col-sm-12">&nbsp;</label>
+         <button class="btn btn-primary save-intakeform">Save</button>
+         <a href="javascript:void(0)" class="btn btn-primary multiupload">Upload Attached</a>
+         <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- end intake form model here -->
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
-$(document).ready(function() {
-   $(".datepicker").datepicker({
-        startDate: '-117y',
-        endDate: '+0y',
-    });
+   $(document).ready(function() {
+      $(".datepicker").datepicker({
+           startDate: '-117y',
+           endDate: '+0y',
+       });
 
-   $("select[name=reason]").change(function(){
-      if($(this).val() == 'Outpatient')
-         $(".hospital_info").text("Doctor Info");
-      else if($(this).val() == 'Other')
-         $(".hospital_info").text("Doctor Info/Hospital Info");
-      else
-         $(".hospital_info").text("Hospital Info");
+      $("select[name=reason]").change(function(){
+         if($(this).val() == 'Outpatient')
+            $(".hospital_info").text("Doctor Info");
+         else if($(this).val() == 'Other')
+            $(".hospital_info").text("Doctor Info/Hospital Info");
+         else
+            $(".hospital_info").text("Hospital Info");
+      })
    })
-})
+
+   // once user click over save intake form, we are just hold every value untill case is not submitted
+   $(document).on("click", '.save-intakeform', function(){
+
+      // count no of intake forms
+      var count = $(".intake-forms").length + 1;
+
+      // place no of form in hidden field 
+      $("input[name=no_of_form]").val(count);
+
+      // get notes and files
+      var notes = $("textarea[name=intake_notes]").val();
+      var files = $(".modal-body .files").clone();
+
+      // generate html data
+      var html = '<div class="col-sm-12 intake-forms"><div class=col-sm-12"><input type="hidden" name="notes_'+count+'" value="'+notes+'" />' + notes + '</div><div id="intake-files-'+count+'"></div> <div class=col-sm-3"><i class="fa fa-remove row-link remove-form pull-right"></i></div> <div class="col-sm-12">By: <?php echo $this->ion_auth->user()->row()->first_name; ?> on <i><?php echo date("Y-m-d"); ?></i></div></div>';
+
+      // place every value to intake display area
+      $(".intake-forms-list").append(html);
+
+      // set clone files to that area
+      $("#intake-files-"+count).html(files);
+
+      // close model popup
+      $('#create_intake_form').modal('hide');
+
+      // save intake heading
+      $(".intake-heading").show()
+   })
+
+   // custom script for multi file upload
+   $(document).on("click",".multiupload", function(){
+      var count = $("input[type=file]").length;
+
+      // count no of intake forms
+      var no_of_form = $(".intake-forms").length + 1;
+
+      // add new file here
+      $(".modal-body .files").append('<div class="col-sm-9" style="display:none"><input style="display:none" type="file" name="files_'+no_of_form+'[]" id="file'+(count+1)+'" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
+
+      // place trigger clicked once file append in files class
+      $('#file'+(count+1)).trigger("click");
+   });
+
+   // delete files
+   $(document).on("click",".fa-trash", function(){
+      $(this).parent("div").remove();
+      $("#file"+$(this).attr("id")).remove();
+   });
+
+
+   // delete intake-form
+   $(document).on("click",".fa-remove", function(){
+      $(this).parent("div").parent("div.intake-forms").remove();
+      var count = $(".intake-forms").length;
+      if(!count) {
+         // remove intake heading from here
+         $(".intake-heading").hide();
+      }
+   });
+
+   // once auto file clicked
+   $(document).on("change","input[type=file]", function(){
+      // display file name and delete button
+      $(this).next("span.file-label").text($(this).val()).parent("div.col-sm-9").show();
+   });
+
+   // reset form fields
+   $(document).on("click", ".create_intake_form", function() {
+
+      // reset intake forms field
+      $("textarea[name=intake_notes]").val("");
+      $(".modal-body .files").html("");
+   })
+
 </script>

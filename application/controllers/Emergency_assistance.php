@@ -82,7 +82,6 @@ class Emergency_assistance extends CI_Controller {
 	// redirect if needed, otherwise display the create case page
 	public function create_case($id = 0)
 	{
-
 		if (!$this->ion_auth->logged_in())
 		{
 			// redirect them to the login page
@@ -99,13 +98,17 @@ class Emergency_assistance extends CI_Controller {
 
 			if ($this->form_validation->run() == true)
 			{
+				// echo "<pre>";
+				// print_r($_FILES);
+				// print_r($_POST); die;
 				// prepare post data array
 				$data = [];
 				$array = $this->input->post();
 				foreach ($array as $key => $value) 
 				{
 					# code...
-					$data[$key] = $value;
+					if(!strpos($key, "otes_") && $key <> "no_of_form")
+						$data[$key] = $value;
 
 					// for check third party recovery
 					if($key == 'third_party_recovery')
@@ -119,6 +122,9 @@ class Emergency_assistance extends CI_Controller {
 
 				// update case no(7 length) to table
 				$this->common_model->update("case", array("case_no"=>str_pad($record_id, 7, 0, STR_PAD_LEFT)), array("id"=>$record_id));
+
+				// insert intake forms if exists
+				// $no_of_form = $this
 
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully created");

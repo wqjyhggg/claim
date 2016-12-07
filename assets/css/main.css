@@ -223,3 +223,23 @@ th > .desc::after {
 .row-link{
   cursor: pointer;
 }
+.intake-forms {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 15px;
+    padding: 10px;
+}
+span.file-label {
+    color: #1f3f20;
+}.fa.fa-trash.row-link {
+    color: #f93a3a;font-size: 14px;
+}.fa.fa-trash.row-link:hover {
+    color: #c70909;
+}
+i.fa.fa-remove.row-link.remove-form.pull-right {
+    color: #f93a3a;
+    font-size: 19px;
+}
+i.fa.fa-remove.row-link.remove-form.pull-right:hover {
+    color: #c70909;
+    font-size: 19px;
+}
