@@ -238,7 +238,7 @@
                   <div class="col-sm-4">
                      <label class="col-sm-12">&nbsp;</label>
                      <button class="btn btn-primary">Save</button>
-                     <button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create InTake Form</button>
+                     <button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create InTakeForm</button>
                      <?php echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info')); ?>
                   </div>                                          
                </div>

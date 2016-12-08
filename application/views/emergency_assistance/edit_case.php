@@ -237,9 +237,42 @@
                   <div class="col-sm-4">
                      <label class="col-sm-12">&nbsp;</label>
                      <button class="btn btn-primary">Update</button>
+                     <button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create InTakeForm</button>
                      <?php echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info')); ?>
                   </div>                                          
                </div> 
+
+               <h4 class="modal-title intake-heading" <?php if(!empty($intake_forms)): ?> style="display:none"<?php endif; ?>>Intake Froms</h4>
+               <div class="row intake-forms-list col-sm-12">
+                  <?php if(!empty($intake_forms)): 
+                           foreach ($intake_forms as $key => $value):
+                           ?>
+                            <div class="col-sm-12 intake-forms">
+                                <div class="col-sm-12&quot;"><?php echo $value['notes'] ?></div>
+                                <div id="intake-files-1">
+                                    <div class="form-group col-sm-12 files">
+                                       <?php 
+                                          $files = explode(",", $value['docs']); 
+                                          if(!empty($files)):
+                                             foreach ($files as $file):
+                                                ?>
+                                                 <div class="col-sm-9" style="">
+                                                     <span class="file-label"><?php echo $file; ?></span> <i class="fa fa-trash row-link" id="1"></i>
+                                                 </div>
+                                                 <?php
+                                             endforeach;
+                                          endif;
+                                       ?>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3&quot;"><i class="fa fa-remove row-link remove-form pull-right"></i></div>
+                                <div class="col-sm-12">By: <?php echo $value['created_by'] ?> on <i><?php echo date("Y-m-d", strtotime($value['created'])) ?></i></div>
+                            </div>  
+                           <?php
+                           endforeach;
+                        endif; 
+                     ?>
+               </div>
 
                <?php echo form_close(); ?>
                <!-- search policy filter end -->
@@ -248,65 +281,105 @@
          </div>
       </div>
    </div>
+</duv>
 
-   <!-- Intake Forms List Section -->
-   <div class="row">
-      <div class="col-md-12 col-sm-12 col-xs-12">
-         <!-- search results start -->
-         <div class="x_title">
-            <h2>Intake From List<small></small></h2> 
-            <?php echo anchor("emergency_assistance/create_intakeform", '<i class="fa fa-plus-circle"></i> Create InTake Form', array("class"=>'btn btn-info')) ?>
-            <div class="clearfix"></div>
-         </div>
-         <div class="x_content">
-            <div class="table-responsive">
-               <table class="table table-hover table-bordered">
-                  <thead>
-                     <tr>
-                        <th>#</th>
-                        <th>Create Date</th>
-                        <th>Create By</th>
-                        <th>Edit</th>                     
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>1</td>
-                        <td>26-11-2015 10:00 am</td>
-                        <td> Ron </td>
-                        <td>Edit</td>
-                     </tr>
-                     <tr>
-                        <td>2</td>
-                        <td>26-11-2015 05:00 pm</td>
-                        <td> Ron </td>
-                        <td>Edit</td>
-                     </tr>
-                  </tbody>
-               </table>
+<!-- Create Intake Form Modal -->
+<div id="create_intake_form" class="modal fade" role="dialog">
+  <div class="modal-dialog  modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create Intake Form</h4>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-sm-6">
+               <?php 
+                  echo form_label('Intake Form #:', 'form_id', array("class"=>'col-sm-12'));
+               ?>
+               <div class="form-group col-sm-12">
+                  ####
+               </div>
+            </div>              
+            <div class="form-group col-sm-6">
+               <?php      
+               echo form_label('Create Date:', 'create_date', array("class"=>'col-sm-12')); 
+               ?>
+               <div class="form-group col-sm-12">
+                  <?php       
+                  echo date("Y-m-d");
+                  ?>
+               </div>
+            </div>
+            <div class="form-group col-sm-12">
+               <?php 
+                  echo form_label('Intake Notes:', 'intake_notes', array("class"=>'col-sm-12'));
+                  echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class"=>"form-control", 'placeholder'=>'Intake Notes', 'style'=>"height:100px"));
+                  echo form_error("intake_notes");
+               ?>
+            </div>
+            <div class="form-group col-sm-12 files">
+
             </div>
          </div>
-         <!-- End List -->
       </div>
-   </div>
-</duv>
+      <div class="modal-footer">
+         <label class="col-sm-12">&nbsp;</label>
+         <button class="btn btn-primary save-intakeform">Save</button>
+         <a href="javascript:void(0)" class="btn btn-primary multiupload">Upload Attached</a>
+         <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- end intake form model here -->
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
-$(document).ready(function() {
-   $(".datepicker").datepicker({
-        startDate: '-117y',
-        endDate: '+0y',
-    });
+   $(document).ready(function() {
+      $(".datepicker").datepicker({
+           startDate: '-117y',
+           endDate: '+0y',
+       });
 
-   $("select[name=reason]").change(function(){
-      if($(this).val() == 'Outpatient')
-         $(".hospital_info").text("Doctor Info");
-      else if($(this).val() == 'Other')
-         $(".hospital_info").text("Doctor Info/Hospital Info");
-      else
-         $(".hospital_info").text("Hospital Info");
+      $("select[name=reason]").change(function(){
+         if($(this).val() == 'Outpatient')
+            $(".hospital_info").text("Doctor Info");
+         else if($(this).val() == 'Other')
+            $(".hospital_info").text("Doctor Info/Hospital Info");
+         else
+            $(".hospital_info").text("Hospital Info");
+      })
    })
-})
+
+   // once auto file clicked
+   $(document).on("change","input[type=file]", function(){
+      // display file name and delete button
+      $(this).next("span.file-label").text($(this).val()).parent("div.col-sm-9").show();
+   });
+
+   // custom script for multi file upload
+   $(document).on("click",".multiupload", function(){
+      var count = $("input[type=file]").length;
+
+      // count no of intake forms
+      var no_of_form = $(".intake-forms").length + 1;
+
+      // add new file here
+      $(".modal-body .files").append('<div class="col-sm-9" style="display:none"><input style="display:none" type="file" name="files_'+no_of_form+'[]" id="file'+(count+1)+'" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
+
+      // place trigger clicked once file append in files class
+      $('#file'+(count+1)).trigger("click");
+   });
+
+   // delete files
+   $(document).on("click",".fa-trash", function(){
+      $(this).parent("div").remove();
+      $("#file"+$(this).attr("id")).remove();
+   });
+
 </script>

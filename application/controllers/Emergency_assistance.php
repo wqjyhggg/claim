@@ -123,8 +123,58 @@ class Emergency_assistance extends CI_Controller {
 				// update case no(7 length) to table
 				$this->common_model->update("case", array("case_no"=>str_pad($record_id, 7, 0, STR_PAD_LEFT)), array("id"=>$record_id));
 
+				// load upload class
+				$config['upload_path'] = './assets/uploads/intake_forms/';
+				$config['allowed_types'] = '*';
+				$config['overwrite'] = FALSE;
+				// $config['max_size']     = '*';
+				$this->load->library('upload', $config);
+
+				// initialize upload config
+				$this->upload->initialize($config);
+
 				// insert intake forms if exists
-				// $no_of_form = $this
+				$no_of_form = $array['no_of_form'];
+				if($no_of_form)
+				{
+					// add intake form batch
+					for($i = 1; $i <= $no_of_form; $i++)
+					{
+						// initialize file names array
+						$file_names = [];
+
+						// upload files to server
+						$files = $_FILES['files_'.$i];
+						if(!empty($files))
+						{	foreach ($files['name'] as $key => $value) 
+							{	
+								$_FILES['userfile']['name'] = $files['name'][$key];
+				                $_FILES['userfile']['type'] = $files['type'][$key];
+				                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+				                $_FILES['userfile']['error'] = $files['error'][$key];
+				                $_FILES['userfile']['size'] = $files['size'][$key];
+								
+								$field_name = 'userfile';
+								// upload file to server
+								// $this->upload->do_upload();
+								//echo $this->upload->display_errors();
+								// $file_data = $this->upload->data();
+								// $file_names[] = $file_data['file_name'];
+							}
+						}
+						// generate data array
+						$data_intake = array(
+							'case_id' => $record_id,
+							'created_by' => $this->ion_auth->user()->row()->id,
+							'notes' => $array['notes_'.$i],
+							'created' => date("Y-m-d H:i:s"),
+							'docs' => implode(",", $file_names)
+							);
+
+						// save values to database
+						$this->common_model->save("intake_form", $data_intake);
+					}
+				}
 
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully created");
@@ -229,6 +279,16 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--");
 				$this->data['reasons'] = $this->common_model->getreasons($field_name = "reason", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['relations'] = $this->common_model->getrelations($field_name = "relations", $selected = $this->common_model->field_val($field_name, $case_details));
+
+				// get intake forms
+				$joins = [];
+				$joins[] = array(
+					'table' => 'users u1',
+					'on' => 'u1.id = intake_form.created_by',
+					'type' => 'LEFT'
+					);
+				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('intake_form.case_id'=>$id), $joins);
+
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Edit Case', TRUE);

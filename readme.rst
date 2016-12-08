@@ -9,6 +9,13 @@ Password: password
 
 
 #####################
+Dec, 08 2016 update:-
+#####################
+- Create intake from from add case page - done
+- create intake from edit page is in progress.....
+
+
+#####################
 Dec, 07 2016 update:-
 #####################
 - Create design of intake form as client requirement
