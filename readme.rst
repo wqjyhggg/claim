@@ -6,6 +6,12 @@ Username: admin@admin.com
 
 Password: password
 
+#####################
+Dec, 09 2016 update:-
+#####################
+Add inteke forms form edit case page - done
+Delete intake form - done
+Intake forms functionality - done
 
 
 #####################
