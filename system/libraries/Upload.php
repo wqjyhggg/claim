@@ -1219,7 +1219,7 @@ class CI_Upload {
 		$regexp = '/^([a-z\-]+\/[a-z0-9\-\.\+]+)(;\s.+)?$/';
 
 		// Fileinfo extension - most reliable method
-		$finfo = @finfo_open(FILEINFO_MIME);
+		$finfo = finfo_open(FILEINFO_MIME);
 		if (is_resource($finfo)) // It is possible that a FALSE value is returned, if there is no magic MIME database file found on the system
 		{
 			$mime = @finfo_file($finfo, $file['tmp_name']);

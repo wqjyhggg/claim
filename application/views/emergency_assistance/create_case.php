@@ -337,6 +337,13 @@
    // once user click over save intake form, we are just hold every value untill case is not submitted
    $(document).on("click", '.save-intakeform', function(){
 
+      // check notes field filled or not
+      if(!$("textarea[name=intake_notes]").val())
+      {
+         alert("Please add intake notes first.")
+         return false;
+      }
+
       // count no of intake forms
       var count = $(".intake-forms").length + 1;
 

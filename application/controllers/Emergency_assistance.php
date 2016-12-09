@@ -148,20 +148,24 @@ class Emergency_assistance extends CI_Controller {
 						if(!empty($files))
 						{	foreach ($files['name'] as $key => $value) 
 							{	
-								$_FILES['userfile']['name'] = $files['name'][$key];
-				                $_FILES['userfile']['type'] = $files['type'][$key];
-				                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
-				                $_FILES['userfile']['error'] = $files['error'][$key];
-				                $_FILES['userfile']['size'] = $files['size'][$key];
-								
-								$field_name = 'userfile';
-								// upload file to server
-								// $this->upload->do_upload();
-								//echo $this->upload->display_errors();
-								// $file_data = $this->upload->data();
-								// $file_names[] = $file_data['file_name'];
+								if($files['name'][$key])
+								{
+									$_FILES['userfile']['name'] = $files['name'][$key];
+					                $_FILES['userfile']['type'] = $files['type'][$key];
+					                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+					                $_FILES['userfile']['error'] = $files['error'][$key];
+					                $_FILES['userfile']['size'] = $files['size'][$key];
+									
+									$field_name = 'userfile';
+
+									// upload file to server
+									$this->upload->do_upload();
+									$file_data = $this->upload->data();
+									$file_names[] = $file_data['file_name'];
+								}
 							}
 						}
+
 						// generate data array
 						$data_intake = array(
 							'case_id' => $record_id,
@@ -172,7 +176,18 @@ class Emergency_assistance extends CI_Controller {
 							);
 
 						// save values to database
-						$this->common_model->save("intake_form", $data_intake);
+						$intake_form_id = $this->common_model->save("intake_form", $data_intake);
+
+						// create directory to identify intake files
+						mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+
+						// move all files to that directory
+						if(!empty($file_names))
+							foreach ($file_names as $fname)
+							{
+								copy("./assets/uploads/intake_forms/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
+								unlink("./assets/uploads/intake_forms/$fname");
+							}
 					}
 				}
 
@@ -287,8 +302,10 @@ class Emergency_assistance extends CI_Controller {
 					'on' => 'u1.id = intake_form.created_by',
 					'type' => 'LEFT'
 					);
-				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('intake_form.case_id'=>$id), $joins);
+				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('intake_form.case_id'=>$id), $joins);
 
+				// pass case id to server
+				$this->data['case_id'] = $id;
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Edit Case', TRUE);
@@ -457,22 +474,73 @@ class Emergency_assistance extends CI_Controller {
 
 			if ($this->form_validation->run() == true)
 			{
+				// get app post params
+				$array = $this->input->post();
 
-				// prepare data array
-				$data = array(
-					'notes' => $this->input->post("notes"),
-					'created_by'=> $this->ion_auth->user()->row()->id,
-					'created' => date('Y-m-d H:i:s'),
+				// load upload class
+				$config['upload_path'] = './assets/uploads/intake_forms/';
+				$config['allowed_types'] = '*';
+				$config['overwrite'] = FALSE;
+				$this->load->library('upload', $config);
+
+				// initialize upload config
+				$this->upload->initialize($config);
+
+				// initialize file names array
+				$file_names = [];
+
+				// upload files to server
+				$files = $_FILES['files'];
+				if(!empty($files))
+				{	foreach ($files['name'] as $key => $value) 
+					{	
+						if($files['name'][$key])
+						{
+							$_FILES['userfile']['name'] = $files['name'][$key];
+			                $_FILES['userfile']['type'] = $files['type'][$key];
+			                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+			                $_FILES['userfile']['error'] = $files['error'][$key];
+			                $_FILES['userfile']['size'] = $files['size'][$key];
+							
+							// codeigniter default file name to upload 
+							$field_name = 'userfile';
+
+							// upload file to server
+							$this->upload->do_upload();
+							$file_data = $this->upload->data();
+							$file_names[] = $file_data['file_name'];
+						}
+					}
+				}
+				
+				// generate data array
+				$data_intake = array(
+					'case_id' => $array['case_id'],
+					'created_by' => $this->ion_auth->user()->row()->id,
+					'notes' => $array['intake_notes'],
+					'created' => date("Y-m-d H:i:s"),
+					'docs' => implode(",", $file_names)
 					);
 
-				// insert values to database
-				$this->common_model->save("intake_form", $data);
+				// save values to database
+				$intake_form_id = $this->common_model->save("intake_form", $data_intake);
+
+				// create directory to identify intake files
+				mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+
+				// move all files to that directory
+				if(!empty($file_names))
+					foreach ($file_names as $fname)
+					{
+						copy("./assets/uploads/intake_forms/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
+						unlink("./assets/uploads/intake_forms/$fname");
+					}
 
 				// send success message
 				$this->session->set_flashdata('success', "Intake form successfully added");
 
 				// redirect them to the login page
-				redirect('emergency_assistance/create_case', 'refresh');
+				redirect('emergency_assistance/edit_case/' . $array['case_id'], 'refresh');
 			}
 			else 
 			{
@@ -484,4 +552,26 @@ class Emergency_assistance extends CI_Controller {
 		}
 	}
 
+	// download intake form files
+	public function download($file, $id) {
+		$this->load->helper("download");
+		force_download('./assets/uploads/intake_forms/' . $id . '/' . $file, NULL);
+	}
+
+	// delete intake form here for ajax request
+	public function deleteform($form_id) {
+
+		// load files library to delete file
+		$this->load->helper('file');
+
+		// delete all files of itake form
+		delete_files("./assets/uploads/intake_forms/$form_id/", FALSE);
+		rmdir("./assets/uploads/intake_forms/$form_id");
+
+		// delete intake form
+		$this->common_model->delete('intake_form', array('id' => $form_id));
+
+		echo TRUE;
+
+	}
 }

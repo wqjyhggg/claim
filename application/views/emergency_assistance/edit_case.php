@@ -242,10 +242,11 @@
                   </div>                                          
                </div> 
 
+               <?php if(!empty($intake_forms)):  ?>
                <h4 class="modal-title intake-heading" <?php if(!empty($intake_forms)): ?> style="display:none"<?php endif; ?>>Intake Froms</h4>
                <div class="row intake-forms-list col-sm-12">
-                  <?php if(!empty($intake_forms)): 
-                           foreach ($intake_forms as $key => $value):
+                  <?php 
+                        foreach ($intake_forms as $key => $value):
                            ?>
                             <div class="col-sm-12 intake-forms">
                                 <div class="col-sm-12&quot;"><?php echo $value['notes'] ?></div>
@@ -257,7 +258,8 @@
                                              foreach ($files as $file):
                                                 ?>
                                                  <div class="col-sm-9" style="">
-                                                     <span class="file-label"><?php echo $file; ?></span> <i class="fa fa-trash row-link" id="1"></i>
+                                                     <span class="file-label"><?php echo $file; ?></span>
+                                                     <?php echo anchor("download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>'); ?>                                                     
                                                  </div>
                                                  <?php
                                              endforeach;
@@ -265,15 +267,14 @@
                                        ?>
                                     </div>
                                 </div>
-                                <div class="col-sm-3&quot;"><i class="fa fa-remove row-link remove-form pull-right"></i></div>
+                                <div class="col-sm-3&quot;"><i class="fa fa-remove row-link remove-form pull-right" alt="<?php echo $value['id']; ?>"></i></div>
                                 <div class="col-sm-12">By: <?php echo $value['created_by'] ?> on <i><?php echo date("Y-m-d", strtotime($value['created'])) ?></i></div>
                             </div>  
                            <?php
                            endforeach;
-                        endif; 
                      ?>
                </div>
-
+               <?php endif; ?>
                <?php echo form_close(); ?>
                <!-- search policy filter end -->
                <div class="clearfix"></div>
@@ -293,6 +294,10 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Create Intake Form</h4>
       </div>
+      <?php 
+         echo form_open_multipart("emergency_assistance/create_intakeform", array("id"=>'create_intakeform'));
+         echo form_hidden("case_id", $case_id);
+       ?>
       <div class="modal-body">
           <div class="row">
             <div class="form-group col-sm-6">
@@ -316,7 +321,7 @@
             <div class="form-group col-sm-12">
                <?php 
                   echo form_label('Intake Notes:', 'intake_notes', array("class"=>'col-sm-12'));
-                  echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class"=>"form-control", 'placeholder'=>'Intake Notes', 'style'=>"height:100px"));
+                  echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class"=>"form-control required", 'placeholder'=>'Intake Notes', 'style'=>"height:100px"));
                   echo form_error("intake_notes");
                ?>
             </div>
@@ -327,10 +332,11 @@
       </div>
       <div class="modal-footer">
          <label class="col-sm-12">&nbsp;</label>
-         <button class="btn btn-primary save-intakeform">Save</button>
+         <button class="btn btn-primary save-intakeform" type="submit">Save</button>
          <a href="javascript:void(0)" class="btn btn-primary multiupload">Upload Attached</a>
          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
       </div>
+      <?php echo form_close(); ?>
     </div>
 
   </div>
@@ -339,8 +345,10 @@
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
+<script src="<?php echo base_url() ?>/assets/js/jquery.validate.min.js"></script>
 <script>
    $(document).ready(function() {
+      $("#create_intakeform").validate();
       $(".datepicker").datepicker({
            startDate: '-117y',
            endDate: '+0y',
@@ -370,16 +378,28 @@
       var no_of_form = $(".intake-forms").length + 1;
 
       // add new file here
-      $(".modal-body .files").append('<div class="col-sm-9" style="display:none"><input style="display:none" type="file" name="files_'+no_of_form+'[]" id="file'+(count+1)+'" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
+      $(".modal-body .files").append('<div class="col-sm-9" style="display:none"><input style="display:none" type="file" name="files[]" id="file'+(count+1)+'" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
 
       // place trigger clicked once file append in files class
       $('#file'+(count+1)).trigger("click");
    });
 
-   // delete files
-   $(document).on("click",".fa-trash", function(){
-      $(this).parent("div").remove();
-      $("#file"+$(this).attr("id")).remove();
+   // delete intake form
+   $(document).on("click",".fa.fa-remove.row-link.remove-form.pull-right", function(){
+      var id = $(this).attr("alt");
+
+      if(confirm('Are you sure you want to delete? '))
+      {
+         // remove form area instant to make it visible fast
+         $(this).parent("div").parent("div.intake-forms").remove();
+
+         $.ajax({
+            url: "<?php echo base_url("emergency_assistance/deleteform/") ?>"+id,
+            method: "get"
+         })
+      } else {
+         return false;
+      }
    });
 
 </script>

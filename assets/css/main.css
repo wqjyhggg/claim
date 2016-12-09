@@ -243,3 +243,9 @@ i.fa.fa-remove.row-link.remove-form.pull-right:hover {
     color: #c70909;
     font-size: 19px;
 }
+label.error {
+    background-color: transparent;
+    border-color: transparent;
+    color: rgba(231, 76, 60, 0.88);
+    font-weight: normal;
+}
