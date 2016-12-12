@@ -30,32 +30,31 @@
              <div class="row">
                <div class="form-group col-sm-3">
                   <?php 
-                     echo form_label('Our Product:', 'product', array("class"=>'col-sm-12'));                  
-                     $product = array(""=>'--Select Product--');
-                     echo form_dropdown("product", $product, $this->input->get("product"), array("class"=>'form-control'));
+                     echo form_label('Our Product:', 'product_short', array("class"=>'col-sm-12'));                  
+                     echo $products;
                   ?>
                </div>
                <div class="form-group col-sm-3">
                   <?php
-                  echo form_label('Policy Number:', 'policy_no', array("class"=>'col-sm-12'));                  
-                  echo form_input("policy_no", $this->input->get("policy_no"), array("class"=>"form-control", 'placeholder'=>'Search by email and name'));
+                  echo form_label('Policy Number:', 'policy', array("class"=>'col-sm-12'));                  
+                  echo form_input("policy", $this->input->get("policy"), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
                   ?>
                </div>               
                <div class="col-sm-3">
                   <label class="col-sm-12">&nbsp;</label>
-                  <button class="btn btn-primary">Search</button>
+                  <button class="btn btn-primary"  name="filter" value="policy">Search</button>
                   <a href="javascript:void(0)" class="btn btn-info more_filters">More Filter</a>
                </div>
             </div>            
             <div class="row more_items" style="display:none">               
                <div class="form-group col-sm-3">
                   <?php          
-                  echo form_input("last_name", $this->input->get("last_nane"), array("class"=>"form-control", 'placeholder'=>'Last Name'));
+                  echo form_input("lastname", $this->input->get("lastname"), array("class"=>"form-control", 'placeholder'=>'Last Name'));
                   ?>
                </div> 
                <div class="form-group col-sm-3">
                   <?php               
-                  echo form_input("first_name", $this->input->get("first_name"), array("class"=>"form-control", 'placeholder'=>'First Name'));
+                  echo form_input("firstname", $this->input->get("firstname"), array("class"=>"form-control", 'placeholder'=>'First Name'));
                   ?>
                </div> 
                <div class="form-group col-sm-3">
@@ -79,12 +78,12 @@
             <div class="row more_items" style="display:none">                  
                <div class="form-group col-sm-3">
                   <?php          
-                  echo form_input("agent_school", $this->input->get("agent_school"), array("class"=>"form-control", 'placeholder'=>'Agent/School Name'));
+                  echo form_input("institution", $this->input->get("institution"), array("class"=>"form-control", 'placeholder'=>'Agent/School Name'));
                   ?>
                </div> 
                <div class="form-group col-sm-3">
                   <?php               
-                  echo form_input("id", $this->input->get("id"), array("class"=>"form-control", 'placeholder'=>'ID'));
+                  echo form_input("plan_id", $this->input->get("plan_id"), array("class"=>"form-control", 'placeholder'=>'Student ID'));
                   ?>
                </div>
                <div class="form-group col-sm-3">
@@ -98,7 +97,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("application_from", $this->input->get("application_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Application Date From'));
+                     echo form_input("apply_date_from", $this->input->get("apply_date_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Application Date From'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -106,7 +105,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("arrival_from", $this->input->get("arrival_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date From'));
+                     echo form_input("arrival_date_from", $this->input->get("arrival_date_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date From'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -114,7 +113,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("effective_from", $this->input->get("effective_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Effective Date From'));
+                     echo form_input("effective_date_from", $this->input->get("effective_date_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Effective Date From'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -122,7 +121,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("expiry_from", $this->input->get("expiry_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Expiry Date From'));
+                     echo form_input("expiry_date_from", $this->input->get("expiry_date_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Expiry Date From'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -133,7 +132,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("application_to", $this->input->get("application_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Application Date To'));
+                     echo form_input("apply_date_to", $this->input->get("apply_date_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Application Date To'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -141,7 +140,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("arrival_to", $this->input->get("arrival_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date To'));
+                     echo form_input("arrival_date_to", $this->input->get("arrival_date_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date To'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -149,7 +148,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("effective_to", $this->input->get("effective_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Effective Date To'));
+                     echo form_input("effective_date_to", $this->input->get("effective_date_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Effective Date To'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -157,7 +156,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("expiry_to", $this->input->get("expiry_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Expiry Date To'));
+                     echo form_input("expiry_date_to", $this->input->get("expiry_date_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Expiry Date To'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -167,19 +166,17 @@
                <div class="form-group col-sm-3">
                   <?php                 
                      $policy = array(""=>'--Select Policy Status--');
-                     echo form_dropdown("policy", $policy, $this->input->get("policy"), array("class"=>'form-control'));
+                     echo $policy_status['dropdown'];
                   ?>
                </div>
                <div class="form-group col-sm-3">
                   <?php               
-                     $privince = array(""=>'--Select Province--');
-                     echo form_dropdown("privince", $privince, $this->input->get("privince"), array("class"=>'form-control'));
+                     echo $province;
                   ?>
                </div>
                <div class="form-group col-sm-3">
                   <?php             
-                     $country = array(""=>'--Select Country--');
-                     echo form_dropdown("country", $country, $this->input->get("country"), array("class"=>'form-control'));
+                     echo $country;
                   ?>
                </div>
             </div>
@@ -187,12 +184,15 @@
             <!-- search policy filter end -->
             <div class="clearfix"><br/></div>
 
+
+            <?php if($this->input->get("filter") == 'policy'): ?>
             <!-- search results start -->
             <div class="x_title">
                <h2>Search Result<small></small></h2>
                <div class="clearfix"></div>
             </div>
             <div class="x_content">
+               <?php if(!empty($policies)): ?>
                <div class="table-responsive">
                   <table class="table table-hover table-bordered">
                      <thead>
@@ -209,21 +209,27 @@
                         </tr>
                      </thead>
                      <tbody>
+                        <?php foreach ($policies as $key => $value): ?>
                         <tr>
-                           <td>JF00001</td>
-                           <td>1111</td>
-                           <td>Tony</td>
-                           <td>09/11/2005</td>
-                           <td>Paid</td>
-                           <td>09/11/2005</td>
-                           <td>Nick</td>
-                           <td>JF</td>
-                           <td>Open</td>
+                           <td><?php echo $value['policy']; ?></td>
+                           <td><?php echo $value['plan_id']; ?></td>
+                           <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
+                           <td><?php echo date("d/d/Y", strtotime($value['birthday'])); ?></td>
+                           <td><?php echo $policy_status['array'][$value['status_id']]; ?></td>
+                           <td><?php echo date("d/d/Y", strtotime($value['effective_date'])); ?></td>
+                           <td>Which data goes here</td>
+                           <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
+                           <td><a href="#">Open</a></td>
                         </tr>
+                        <?php endforeach; ?>
                      </tbody>
                   </table>
-               </div>
+               </div>               
+               <?php else:?>
+                  <center><?php echo heading("No record available", 4); ?></center>
+               <?php endif;?>
             </div>
+            <?php endif; ?>
             <!-- End Search List Section -->
          </div>
       </div>
@@ -356,6 +362,19 @@ $(document).ready(function() {
       window.location = "<?php echo base_url("emergency_assistance/edit_case/") ?>"+id;
    })
 })
+
+// to make to check hidden filters to show
+<?php
+$display = 0;
+if(!empty($params))
+   foreach ($params as $key => $value)
+      if($key <> 'product_short' && $key <> 'policy' && $key <> 'filter' && $key <> 'key')
+         if($value)
+            $display = 1;
+if($display):
+?>
+   $(".more_items").show();
+<?php endif; ?>
 $(document).on("click",".more_filters", function(){
    $(".more_items").toggle();
 })

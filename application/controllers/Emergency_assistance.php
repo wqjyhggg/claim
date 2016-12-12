@@ -67,10 +67,51 @@ class Emergency_assistance extends CI_Controller {
 				$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, case.insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
 				$this->data['cases'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
 			}
+			else if($this->input->get("filter") == 'policy')
+			{
+
+				// prepare post data array
+				$this->data['params'] = $this->input->get();
+				$this->data['params']['key'] = API_KEY;
+
+				// search policy code here
+				$url =  API_URL."search";
+				$curl = curl_init();
+
+				// Post Data 
+				curl_setopt($curl, CURLOPT_POST, 1);
+				curl_setopt($curl, CURLOPT_POSTFIELDS, $this->data['params']);
+
+				// Optional Authentication:
+				if(API_USER and API_PASSWORD)
+				{
+					curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+					curl_setopt($curl, CURLOPT_USERPWD, API_USER.":".API_PASSWORD);
+				}
+
+				curl_setopt($curl, CURLOPT_URL, $url);
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+				$result = curl_exec($curl);
+				$result = json_decode($result, TRUE);
+
+				// pass policies data to view
+				$this->data['policies']  = @$result['plan_list'];
+				$this->data['status']  = @$result['status_list'];
+
+				curl_close($curl);
+			}
 
 			// send case manager and eac managers list
 			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = $this->input->get($field_name), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Assign To--");
 			$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--");
+
+			// send countries and province list
+			$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->input->get($field_name), $key = "short_code", $value = "name");
+			$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->get($field_name), $key = "short_code", $value = "name");
+			$this->data['policy_status'] = $this->common_model->get_policy_status($field_name = "status_id", $selected = $this->input->get($field_name));
+			$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->get($field_name));
+				
 
 			// render view data
         	$this->template->write('title', SITE_TITLE.' - View Edit Emergency Assistance Case', TRUE);
@@ -98,9 +139,6 @@ class Emergency_assistance extends CI_Controller {
 
 			if ($this->form_validation->run() == true)
 			{
-				// echo "<pre>";
-				// print_r($_FILES);
-				// print_r($_POST); die;
 				// prepare post data array
 				$data = [];
 				$array = $this->input->post();
