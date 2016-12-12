@@ -111,4 +111,9 @@ else
 	defined('DB_NAME')      		OR define('DB_NAME', "jf_claim_management");
 }
 
+defined('API_URL')      			OR define('API_URL', "http://jfinsurance.auroraeducationonline.info/api/");
+defined('API_USER')     			OR define('API_USER', "test");
+defined('API_PASSWORD')				OR define('API_PASSWORD', "test1117");
+defined('API_KEY')					OR define('API_KEY', "bw3mLCG8N5PU3aGm");
+
 

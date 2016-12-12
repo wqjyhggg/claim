@@ -236,9 +236,9 @@ class Common_model extends CI_Model
      * @param       $field_name String
      * @param       $selected string
     */
-    public function getcountries($field_name, $selected)
+    public function getcountries($field_name, $selected, $key = "name", $value = "name")
     {
-        $record = $this->get_ref($table = "country", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Country--");
+        $record = $this->get_ref($table = "country", $key, $value, $dropdown=true, $empty = "--Select Country--");
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
     
@@ -248,9 +248,9 @@ class Common_model extends CI_Model
      * @param       $field_name String
      * @param       $selected string
     */
-    public function getprovinces($field_name, $selected)
+    public function getprovinces($field_name, $selected, $key= "name", $value = "name")
     {
-        $record = $this->get_ref($table = "province", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Province--");       
+        $record = $this->get_ref($table = "province", $key, $value, $dropdown=true, $empty = "--Select Province--");       
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
     
@@ -264,6 +264,72 @@ class Common_model extends CI_Model
     {
         $record = $this->get_ref($table = "reasons", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Reason--");       
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
+    }
+
+    /**
+     * Return a list of products
+     *
+     * @param       $field_name String
+     * @param       $selected string
+    */
+    public function get_products($field_name, $selected)
+    {
+        $products = array(
+            '' => '--Select Product--',
+            'JES'=>'JF Elite Plus International Student to Canada',
+            'JFC'=>'JF Care International Student to Canada',
+            'JFR'=>'JF Royal Visitor to Canada',
+            'JUS'=>'JF USA International Student to USA',
+            'NUS'=>'Nihao USA International Student to USA',
+            'OPL'=>'Optimum Plus Visitor to Canada'
+            );
+        return form_dropdown($field_name, $products, $selected, array("class"=>'form-control'));
+    }
+    
+    /**
+     * Return a list of policy status
+     *
+     * @param       $field_name String
+     * @param       $selected string
+    */
+    public function get_policy_status($field_name, $selected)
+    {
+
+        // prepare post data 
+        $post_data['key'] = API_KEY;
+        $post_data['policy'] = "0000";
+
+
+        // get list of policy status here
+        $url =  API_URL."search";
+        $curl = curl_init();
+
+        // Post Data 
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
+
+        // Optional Authentication:
+        if(API_USER and API_PASSWORD)
+        {
+            curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($curl, CURLOPT_USERPWD, API_USER.":".API_PASSWORD);
+        }
+
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($curl);
+
+        curl_close($curl);
+        $result = json_decode($result, TRUE);
+        $status = [''=>'--Select Policy Status--'];
+        if(!empty($result['status_list']))
+            foreach ($result['status_list'] as $key => $value) 
+                $status[$value['status_id']] = $value['name'];
+        return array(
+            'dropdown'=>form_dropdown($field_name, @$status, $selected, array("class"=>'form-control')),
+            'array'=>$status
+            );
     }
     
     /**
