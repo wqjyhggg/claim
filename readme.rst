@@ -7,14 +7,6 @@ Username: admin@admin.com
 Password: password
 
 #####################
-Dec, 12 2016 update:-
-#####################
-- API integration and configuration - done
-- Search policies from api  - done
---- Please see queries which is listed in doc ---
-
-
-#####################
 Dec, 09 2016 update:-
 #####################
 - Add inteke forms form edit case page - done
