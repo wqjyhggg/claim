@@ -253,13 +253,14 @@
                                 <div id="intake-files-1">
                                     <div class="form-group col-sm-12 files">
                                        <?php 
-                                          $files = explode(",", $value['docs']); 
+                                          $files = $value['docs'] ? explode(",", $value['docs']) : array(); 
                                           if(!empty($files)):
                                              foreach ($files as $file):
                                                 ?>
                                                  <div class="col-sm-9" style="">
-                                                     <span class="file-label"><?php echo $file; ?></span>
-                                                     <?php echo anchor("download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>'); ?>                                                     
+                                                     <span class="file-label"><?php echo anchor("file/".$file . '__' . $value['id'], $file, array('target'=>'_blank')); ?></span>
+                                                     <?php echo anchor("file/" . $file . '__' . $value['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
+                                                     <?php echo anchor("download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>                                                     
                                                  </div>
                                                  <?php
                                              endforeach;
@@ -366,6 +367,15 @@
 
    // once auto file clicked
    $(document).on("change","input[type=file]", function(){
+
+      // validate file extension
+      var ext = $(this).val().split('.').pop().toLowerCase();
+      if($.inArray(ext, ['pdf']) == -1) {
+          alert('invalid extension! Please attach only pdf file.');
+          $(this).val('');
+          return false;
+      }
+
       // display file name and delete button
       $(this).next("span.file-label").text($(this).val()).parent("div.col-sm-9").show();
    });
@@ -378,7 +388,7 @@
       var no_of_form = $(".intake-forms").length + 1;
 
       // add new file here
-      $(".modal-body .files").append('<div class="col-sm-9" style="display:none"><input style="display:none" type="file" name="files[]" id="file'+(count+1)+'" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
+      $(".modal-body .files").append('<div class="col-sm-9" style="display:none"><input style="display:none" type="file" name="files[]" id="file'+(count+1)+'" accept="pdf" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
 
       // place trigger clicked once file append in files class
       $('#file'+(count+1)).trigger("click");

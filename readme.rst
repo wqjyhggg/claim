@@ -7,6 +7,38 @@ Username: admin@admin.com
 Password: password
 
 #####################
+Dec, 13 2016 update:-
+#####################
+
+- A Database Error - solved, please import sql file -  DONE
+
+- at policy result , click a policy record ,system should enter policy details information page and at this page ,return the previous page. - DONE
+
+- at case result, click a case record , system should enter an "edit case " page rather than a "create case " page. - Already DONE
+
+- after create an intake form(also are called as "note"),  the "Emergency assistance" function page need to show the intake form's detailed information in this page, not only an attached file.  and attached file link should can be browsed its content. - DONE(you can able to browse file from browse button from edit/detail case page.)
+
+- the variable name will be: plan_id 
+if this variable (plan_id) is existing, other parameter will be ignored for the search result. - DONE
+ 
+- For birthday search the change as following:
+if  birthday2 is existed, the search query will search from birthday to birthday2 - DONE
+ 
+- For apply_date search the change as following:
+if  apply_date2 is existed, the search query will search from apply_date to apply_date2 - DONE
+ 
+- For arrival_date search the change as following:
+if  arrival_date2 is existed, the search query will search from arrival_date to arrival_date2 - DONE
+ 
+- For effective_date search the change as following:
+if  effective_date2 is existed, the search query will search from effective_date to effective_date2 - DONE
+ 
+- For expiry_date2 search the change as following:
+if  expiry_date2 is existed, the search query will search from expiry_date to expiry_date2 - DONE
+
+
+
+#####################
 Dec, 12 2016 update:-
 #####################
 - API integration and configuration - done
