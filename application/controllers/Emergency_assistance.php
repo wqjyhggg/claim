@@ -217,7 +217,7 @@ class Emergency_assistance extends CI_Controller {
 						$intake_form_id = $this->common_model->save("intake_form", $data_intake);
 
 						// create directory to identify intake files
-						mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+						@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
 
 						// move all files to that directory
 						if(!empty($file_names))
@@ -364,8 +364,30 @@ class Emergency_assistance extends CI_Controller {
 		}
 		else
 		{
-        	$this->template->write('title', SITE_TITLE.' - Create Case', TRUE);
+        	$this->template->write('title', SITE_TITLE.' - Create Policy', TRUE);
 	        $this->template->write_view('content', 'emergency_assistance/create_policy');
+	        $this->template->render();        
+		}
+	}
+
+	// redirect if needed, otherwise display the view policy page
+	public function view_policy()
+	{
+
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+			// get countries list
+			$this->data['countries'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->input->get("country2"), $key = "short_code", $value = "name");
+
+			// get province list
+			$this->data['provinces'] = $this->common_model->getprovinces($field_name = "province2", $selected = $this->input->get("province2"), $key = "short_code", $value = "name");
+        	$this->template->write('title', SITE_TITLE.' - View Policy', TRUE);
+	        $this->template->write_view('content', 'emergency_assistance/view_policy', $this->data);
 	        $this->template->render();        
 		}
 	}
@@ -564,7 +586,7 @@ class Emergency_assistance extends CI_Controller {
 				$intake_form_id = $this->common_model->save("intake_form", $data_intake);
 
 				// create directory to identify intake files
-				mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+				@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
 
 				// move all files to that directory
 				if(!empty($file_names))
@@ -595,6 +617,16 @@ class Emergency_assistance extends CI_Controller {
 		$this->load->helper("download");
 		force_download('./assets/uploads/intake_forms/' . $id . '/' . $file, NULL);
 	}
+
+	// browse intake form files
+	public function file($file, $id) {
+
+		// We'll be outputting a PDF
+		header('Content-type: application/pdf');
+
+		// The PDF source is in original.pdf
+		readfile('./assets/uploads/intake_forms/' . $id . '/' . $file);
+	}	
 
 	// delete intake form here for ajax request
 	public function deleteform($form_id) {

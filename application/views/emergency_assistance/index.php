@@ -83,7 +83,7 @@
                </div> 
                <div class="form-group col-sm-3">
                   <?php               
-                  echo form_input("plan_id", $this->input->get("plan_id"), array("class"=>"form-control", 'placeholder'=>'Student ID'));
+                  echo form_input("plan_id", $this->input->get("plan_id"), array("class"=>"form-control", 'placeholder'=>'ID'));
                   ?>
                </div>
                <div class="form-group col-sm-3">
@@ -97,7 +97,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("apply_date_from", $this->input->get("apply_date_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Application Date From'));
+                     echo form_input("apply_date", $this->input->get("apply_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Application Date From'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -105,7 +105,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("arrival_date_from", $this->input->get("arrival_date_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date From'));
+                     echo form_input("arrival_date", $this->input->get("arrival_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date From'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -113,7 +113,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("effective_date_from", $this->input->get("effective_date_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Effective Date From'));
+                     echo form_input("effective_date", $this->input->get("effective_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Effective Date From'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -121,7 +121,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("expiry_date_from", $this->input->get("expiry_date_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Expiry Date From'));
+                     echo form_input("expiry_date", $this->input->get("expiry_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Expiry Date From'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -132,7 +132,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("apply_date_to", $this->input->get("apply_date_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Application Date To'));
+                     echo form_input("apply_date2", $this->input->get("apply_date2"), array("class"=>"form-control datepicker", 'placeholder'=>'Application Date To'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -140,7 +140,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("arrival_date_to", $this->input->get("arrival_date_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date To'));
+                     echo form_input("arrival_date", $this->input->get("arrival_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date To'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -148,7 +148,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("effective_date_to", $this->input->get("effective_date_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Effective Date To'));
+                     echo form_input("effective_date2", $this->input->get("effective_date2"), array("class"=>"form-control datepicker", 'placeholder'=>'Effective Date To'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -156,7 +156,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("expiry_date_to", $this->input->get("expiry_date_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Expiry Date To'));
+                     echo form_input("expiry_date2", $this->input->get("expiry_date2"), array("class"=>"form-control datepicker", 'placeholder'=>'Expiry Date To'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -210,7 +210,7 @@
                      </thead>
                      <tbody>
                         <?php foreach ($policies as $key => $value): ?>
-                        <tr>
+                        <tr class="view-policy" data='<?php echo json_encode($value); ?>'>
                            <td><?php echo $value['policy']; ?></td>
                            <td><?php echo $value['plan_id']; ?></td>
                            <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
@@ -219,7 +219,7 @@
                            <td><?php echo date("d/d/Y", strtotime($value['effective_date'])); ?></td>
                            <td>Which data goes here</td>
                            <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
-                           <td><a href="#">Open</a></td>
+                           <td><?php echo anchor("emergency_assistance/view_policy", "Open"); ?></td>
                         </tr>
                         <?php endforeach; ?>
                      </tbody>
@@ -360,6 +360,15 @@ $(document).ready(function() {
    $(".row-link").click(function() {
       var id = $(this).attr("alt");
       window.location = "<?php echo base_url("emergency_assistance/edit_case/") ?>"+id;
+   })
+   $(".view-policy").click(function(){
+      var data = $(this).attr("data");
+
+      // insert data to dom element to save temporary
+      localStorage.setItem("policy_data", data);
+
+      // redirect it to view policy page
+      window.location = "<?php echo base_url("emergency_assistance/view_policy") ?>";
    })
 })
 
