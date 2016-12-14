@@ -197,9 +197,19 @@
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Insured Name:', 'insured_name', array("class"=>'col-sm-12'));  
-                     echo form_input("insured_name", $this->common_model->field_val("insured_name", $case_details), array("class"=>"form-control", 'placeholder'=>'Insured Name'));
-                     echo form_error("insured_name");
                      ?>
+                     <div class="form-group col-sm-6">
+                        <?php
+                        echo form_input("insured_firstname", $this->common_model->field_val("insured_firstname", $case_details), array("class"=>"form-control col-sm-6", 'placeholder'=>'Insured First Name'));
+                        echo form_error("insured_firstname");
+                        ?>
+                     </div>
+                     <div class="form-group col-sm-6">
+                        <?php 
+                        echo form_input("insured_lastname", $this->common_model->field_val("insured_lastname", $case_details), array("class"=>"form-control col-sm-6", 'placeholder'=>'Insured Last Name'));
+                        echo form_error("insured_lastname");
+                        ?>
+                     </div>
                   </div> 
                   <div class="form-group col-sm-4">
                      <?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>

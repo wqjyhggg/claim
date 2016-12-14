@@ -56,7 +56,7 @@ class Emergency_assistance extends CI_Controller {
 				if($this->input->get("policy_no")) 
 					$conditions['case.policy_no'] = $this->input->get("policy_no");
 				if($this->input->get("client_user_name")) 
-					$conditions['case.insured_name like'] = "%".$this->input->get("client_user_name")."%";
+					$conditions['concat_ws(" ", case.insured_firstname, case.insured_lastname) like'] = "%".$this->input->get("client_user_name")."%";
 				if($this->input->get("created")) 
 					$conditions['case.created like'] = "%".$this->input->get("created")."%";
 				if($this->input->get("assign_to")) 
@@ -64,7 +64,7 @@ class Emergency_assistance extends CI_Controller {
 				if($this->input->get("case_manager")) 
 					$conditions['case.case_manager'] = $this->input->get("case_manager");
 
-				$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, case.insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
+				$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
 				$this->data['cases'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
 			}
 			else if($this->input->get("filter") == 'policy')
@@ -352,6 +352,69 @@ class Emergency_assistance extends CI_Controller {
 	        }      
 		}
 	}
+
+	// redirect if needed, otherwise display the case management page
+	public function case_management()
+	{
+
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+			// initialize variables
+			$this->data['cases'] = []; 
+			$this->data['policies'] = [];
+
+			// ---search case filter---
+			// get all providers list
+			$order_by = array(
+				'field'=>'id',
+				'order'=>'desc'
+				);
+
+			$joins[] = array(
+				'table' => 'users u1',
+				'on' => 'u1.id = case.assign_to',
+				'type' => 'LEFT'
+				);
+			$joins[] = array(
+				'table' => 'users u2',
+				'on' => 'u2.id = case.case_manager',
+				'type' => 'LEFT'
+				);
+
+			// prepare conditions
+			$conditions = [];
+			if($this->input->get("case_no")) 
+				$conditions['case.case_no'] = $this->input->get("case_no");
+			if($this->input->get("policy_no")) 
+				$conditions['case.policy_no'] = $this->input->get("policy_no");
+			if($this->input->get("created_from")) 
+				$conditions['case.created >= '] = $this->input->get("created_from");
+			if($this->input->get("created_to")) 
+				$conditions['case.created <= '] = $this->input->get("created_to");
+			if($this->input->get("insured_firstname")) 
+				$conditions['case.insured_firstname like'] = "%".$this->input->get("insured_firstname")."%";
+			if($this->input->get("insured_lastname")) 
+				$conditions['case.insured_lastname like'] = "%".$this->input->get("insured_lastname")."%";
+			if($this->input->get("assign_to")) 
+				$conditions['case.assign_to'] = $this->input->get("assign_to");
+			if($this->input->get("priority")) 
+				$conditions['case.priority'] = $this->input->get("priority");
+
+			$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
+			$this->data['cases'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
+		
+			// render view data
+        	$this->template->write('title', SITE_TITLE.' - Case Management', TRUE);
+	        $this->template->write_view('content', 'emergency_assistance/case_management', $this->data);
+	        $this->template->render();        
+		}
+	}
+
 
 	// redirect if needed, otherwise display the create policy page
 	public function create_policy()

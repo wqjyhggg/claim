@@ -7,6 +7,14 @@ Username: admin@admin.com
 Password: password
 
 #####################
+Dec, 14 2016 update:-
+#####################
+- Case management page layout - done
+- Case management page, search case and list cases is  - done
+--- Other functionalities of case are in progress ---
+
+
+#####################
 Dec, 13 2016 update:-
 #####################
 

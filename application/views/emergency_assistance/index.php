@@ -326,7 +326,7 @@
                            <td><?php echo $value['created']; ?></td>
                            <td><?php echo $value['province']; ?></td>
                            <td><?php echo $value['reason']; ?></td>
-                           <td><?php echo $value['policy_no']; ?> accident</td>
+                           <td><?php echo $value['policy_no']; ?></td>
                            <td><?php echo $value['insured_name']; ?></td>
                            <td><?php echo $value['dob']; ?></td>
                            <td><?php echo $value['assign_to_name']; ?></td>
