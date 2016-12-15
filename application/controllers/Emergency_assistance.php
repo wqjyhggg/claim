@@ -707,4 +707,60 @@ class Emergency_assistance extends CI_Controller {
 		echo TRUE;
 
 	}
+
+	// redirect if needed, otherwise display the schedule page
+	public function schedule($year, $month)
+	{
+		// check date and time
+		if(!$year)
+		{
+			$year = date("Y"); 
+			$month = date('m');
+		}
+		// only accessible for case managers
+		if (!$this->ion_auth->is_casemamager())
+		{
+			// redirect them to the home page because they must be an case manager to view this
+			return show_error('You must be an authority to view this page.');
+		}
+		 else if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+
+			// load calendar library
+			$config = [];
+			$config['template'] = '
+				    {table_open}<table class="calendar">{/table_open}
+
+   					{heading_previous_cell}<th><a href="{previous_url}"><button type="button" class="btn"><i class="fa fa-chevron-left"></i> Prev</button></a></th>{/heading_previous_cell}
+				    {heading_title_cell}<th colspan="{colspan}"><center><h3>{heading}</h3></center></th>{/heading_title_cell}				    
+   					{heading_next_cell}<th><a href="{next_url}"><button type="button" class="btn pull-right"><i class="fa fa-chevron-right"></i> Prev</button></a></th>{/heading_next_cell}
+
+				    {week_day_cell}<th class="day_header"><h4>{week_day}</h4></th>{/week_day_cell}
+
+        			{cal_cell_start}<td data-toggle="modal" data-target="#model_window">{/cal_cell_start}
+				    {cal_cell_content}<span class="day_listing">{day}</span>&nbsp;&bull; {content}&nbsp;{/cal_cell_content}
+				    {cal_cell_content_today}<div class="today"><span class="day_listing">{day}</span>&bull; {content}</div>{/cal_cell_content_today}
+				    {cal_cell_no_content}<span class="day_listing" data-toggle="modal" data-target="#create_intake_form"  >{day}</span>&nbsp;{/cal_cell_no_content}
+				    {cal_cell_no_content_today}<div class="today"><span class="day_listing">{day}</span></div>{/cal_cell_no_content_today}
+				    {cal_cell_end}</td>{/cal_cell_end}
+
+				';
+			$config['show_next_prev'] = TRUE;
+			$config['day_type'] = 'long'; 
+			$this->load->library('calendar', $config);
+			$this->data['calendar'] = $this->calendar->generate($year, $month);
+
+			// get countries list
+			$this->data['countries'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->input->get("country2"), $key = "short_code", $value = "name");
+
+        	$this->template->write('title', SITE_TITLE.' - Employee Schedule', TRUE);
+	        $this->template->write_view('content', 'emergency_assistance/schedule', $this->data);
+	        $this->template->render();        
+		}
+	}
 }

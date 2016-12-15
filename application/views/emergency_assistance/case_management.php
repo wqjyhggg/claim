@@ -150,6 +150,5 @@ $(document).ready(function() {
 })
 $(document).on("click", ".row-link", function(){
    $(this).toggleClass("selected");
-
 })
 </script>

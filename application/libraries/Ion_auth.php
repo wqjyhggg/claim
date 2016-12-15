@@ -478,6 +478,22 @@ class Ion_auth
 		return $this->in_group($admin_group, $id);
 	}
 
+
+	/**
+	 * is_casemamager
+	 *
+	 * @return bool
+	 * @author Bhawani Shankar
+	 **/
+	public function is_casemamager($id=false)
+	{
+		$this->ion_auth_model->trigger_events(__FUNCTION__);
+
+		$group = str_replace("is_", "", __FUNCTION__);
+		
+		return $this->in_group($group, $id);
+	}
+
 	/**
 	 * in_group
 	 *

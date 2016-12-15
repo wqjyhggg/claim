@@ -232,6 +232,7 @@ class Auth extends CI_Controller {
                 'last_name'  => $this->input->post('last_name'),
                 'company'    => $this->input->post('company'),
                 'phone'      => $this->input->post('phone'),
+                'parent_id'      => $this->input->post('parent_id'),
             );
         }
         if ($this->form_validation->run() == true && $id = $this->ion_auth->register($identity, $password, $email, $additional_data))
@@ -315,6 +316,9 @@ class Auth extends CI_Controller {
                 'value' => $this->form_validation->set_value('password_confirm'),
             );
             $this->data['groups'] = $groups;
+
+            // select case manager
+            $this->data['casemamager'] = $this->common_model->getrusers($field_name = "parent_id", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--");
 
 			$this->template->write('title', SITE_TITLE.' - Create User', TRUE);
 	        $this->template->write_view('content', 'auth/create_user', $this->data);
@@ -472,6 +476,9 @@ class Auth extends CI_Controller {
             'class'=>'form-control',
 			'type' => 'password'
 		);
+
+	    // select case manager
+	    $this->data['casemamager'] = $this->common_model->getrusers($field_name = "parent_id", $this->form_validation->set_value('parent_id', $user->parent_id), $group = "casemamager", $empty = "--Select Case Manager--");
 
 		$this->template->write('title', SITE_TITLE.' - Edit User', TRUE);
         $this->template->write_view('content', 'auth/edit_user', $this->data);
