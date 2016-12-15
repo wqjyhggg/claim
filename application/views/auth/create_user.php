@@ -15,7 +15,7 @@
                <?php echo $message ?>
             </div>
             <div class="x_content">
-              <?php echo form_open("auth/create_user", array("class"=>'form-horizontal'));?>
+              <?php echo form_open("auth/create_user", array("class"=>'form-horizontal'));?>              
               <div class="row">
                 <div class="col-sm-6 form-group">
                   <?php echo form_label('First Name', 'first_name', array("class"=>'col-sm-12'));?>
@@ -99,6 +99,15 @@
                   <?php endforeach?>
                 </div>
 
+              </div>
+
+              <div class="row">              
+                <div class="col-sm-6 form-group manager_panel" style="display:none">
+                  <?php echo form_label('Case Manager', 'parent_id', array("class"=>'col-sm-12'));?>
+                  <div class="col-sm-12 input-group">
+                    <?php echo $casemamager;?>
+                  </div>
+                </div>
 
                 <div class="col-sm-12 form-group">
                   <?php echo form_submit('submit', "Submit", array("class"=>'btn btn-primary pull-right'));?>
@@ -112,3 +121,19 @@
       </div>
    </div>
 </duv>
+<script>
+  // show manager panel if user is emc
+  $(document).on("click", "input[type=checkbox]", function(){
+    if($(this).val() == 2 && $(this).is(":checked")) 
+    {
+      // show manager panel
+      $(".manager_panel").show();
+    }
+
+    if($(this).val() == 2 && !$(this).is(":checked")) 
+    {
+      // hide manager panel
+      $(".manager_panel").hide();
+    }
+  })
+</script>

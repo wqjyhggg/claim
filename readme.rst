@@ -7,6 +7,15 @@ Username: admin@admin.com
 Password: password
 
 #####################
+Dec, 15 2016 update:-
+#####################
+- Schedule page layout and design - done
+- Schedule page permissions - done
+- Model window design after clicking on date - done
+--- Other functionalities of schedule are in progress, assigning case functionality will be done once schedule process is complete ---
+
+
+#####################
 Dec, 14 2016 update:-
 #####################
 - Case management page layout - done
