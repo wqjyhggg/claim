@@ -600,15 +600,23 @@ class Auth extends CI_Controller {
 	}
 
 	// for autocomplete search
-	public function autocomplete($field)
+	public function autocomplete($field, $type = "")
 	{
 		$query = $this->input->get("query");
 
 		// get search query
 		$table = "users"; 
+		$group_by = array("users_groups.user_id");
 		$fields = "users.$field as `value`, users.id as `data`"; 
-		$conditions = "users.$field like '%$query%'";
-		$results = $this->common_model->select($record = "list", $typecast = "object", $table, $fields, $conditions);
+		$joins[] = array(
+			'table' => 'users_groups',
+			'on' => 'users_groups.user_id = users.id',
+			'type' => 'LEFT'
+			);
+		$conditions = "users.$field like '%$query%' ";
+		if($type)
+			$conditions .= " and users_groups.group_id = '$type' ";
+		$results = $this->common_model->select($record = "list", $typecast = "object", $table, $fields, $conditions, $joins, $order_by = array(), $group_by);
 
 		// return result in json format
 		$results = array('suggestions'=>$results);

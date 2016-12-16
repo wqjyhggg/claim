@@ -708,6 +708,134 @@ class Emergency_assistance extends CI_Controller {
 
 	}
 
+	// search users for ajax request
+	public function search_users($year, $month, $date, $type, $day) {
+
+		// prepare date
+		$date = $year."-".$month."-".$date;
+
+		// table settings goes here
+		$table = "users";
+		$fields = "users.first_name, users.last_name, users.email, users.active, users.id, (select schedule.schedule from schedule where schedule.employee_id = users.id and schedule.date = '$date') as schedule"; 
+		$group_by = array("users_groups.user_id");
+
+		// prepare conditions
+		$conditions = [];
+		$conditions[] = "users_groups.group_id = '2'";
+		if($this->input->post("last_name")) 
+			$conditions[] = "users.last_name like '%".$this->input->post("last_name")."%'";
+		if($this->input->post("first_name")) 
+			$conditions[] = "users.first_name like '%".$this->input->post("first_name")."%'";
+		if($this->input->post("email")) 
+			$conditions[] = "users.email like '%".$this->input->post("email")."%'";
+		$conditions = implode(" and ", $conditions);
+		$conditions .= " and IF(schedule.date = '$date',  schedule.date = '$date', users.id > '0')";
+		$group_by = array("users_groups.user_id");
+		$joins[] = array(
+				'table' => 'users_groups',
+				'on' => 'users_groups.user_id = users.id',
+				'type' => 'LEFT'
+				);
+		$joins[] = array(
+				'table' => 'schedule',
+				'on' => 'schedule.employee_id = users.id',
+				'type' => 'LEFT'
+				);
+		$order_by = array(
+			'field' => 'id',
+			'order' => 'desc'
+			);
+
+		// if sorting enabled
+		if($this->input->get("field")) 
+			$order_by = array(
+				'field' => $this->input->get("field"),
+				'order' => $this->input->get("order")
+				);
+
+		// get result
+		$this->data['users'] = $this->common_model->select($record = "list", $typecast = "array", $table, $fields, $conditions, $joins, $order_by, $group_by);
+		$this->data['date'] = $date;
+		$this->data['type'] = $type;
+
+		// render view file
+		$this->load->view("emergency_assistance/search_users", $this->data);
+	}
+	
+	// save schedule here from ajax request
+	public function save_schedule($year, $month, $date, $type, $day) {
+
+		// prepare date
+		$date = $year."-".$month."-".$date;
+
+		// select post  request
+		$employee_id  =$this->input->post("employee_id");
+		$schedule  =$this->input->post("schedule");
+
+		// check user select day(monday) or date(0000-00-00)
+		if($type == 'day')
+		{
+			// get all dates of month
+			$dates = $this->common_model->getAllDaysInAMonth($year, ucfirst($month), $day);
+
+			// used to add single quotes in save_schedule($year, $month, $date, $type, $day) function
+			function add_quotes($str) {
+			    return sprintf("'%s'", $str);
+			}
+
+			// delete schedule for this week		
+			$conditions = "schedule.date in(".implode(',', array_map('add_quotes', $dates)).") and employee_id = '$employee_id'";	
+			$this->common_model->delete('schedule', $conditions);
+
+			// add schedule for whole week 
+			foreach($dates as $date)
+			{
+				// insert values to database
+				$data = array(
+					'schedule'=>$schedule,
+					'employee_id'=>$employee_id,
+					'date'=>$date,
+					'created'=>date("Y-m-d H:i:s")
+					);
+				$this->common_model->save("schedule", $data);
+			}
+
+		}
+		else
+		{
+			// check employee schedule if exist
+			$conditions = array('schedule.employee_id'=>$employee_id, 'schedule.date'=>$date);
+			$schedule_details = $this->common_model->select($record = "first", $typecast = "array", $table = "schedule", $fields = "id", $conditions);
+
+			// insert schedule data
+			if(empty($schedule_details))
+			{
+				// insert values to database
+				$data = array(
+					'schedule'=>$schedule,
+					'employee_id'=>$employee_id,
+					'date'=>$date,
+					'created'=>date("Y-m-d H:i:s")
+					);
+				$this->common_model->save("schedule", $data);
+			}
+			else if(!$schedule)
+			{
+				// delete schedule request
+				$this->common_model->delete('schedule', $conditions);
+
+			} 
+			else 
+			{
+				// update schedule data
+				$this->common_model->update("schedule", array("schedule"=>$schedule), $conditions);
+
+			}
+		}
+		echo TRUE;
+
+	}
+
 	// redirect if needed, otherwise display the schedule page
 	public function schedule($year = "", $month = "")
 	{
@@ -730,7 +858,18 @@ class Emergency_assistance extends CI_Controller {
 		}
 		else
 		{
+			// get all schedules added by this manager
+			// $order_by = array(
+			// 	'field'=>'id',
+			// 	'order'=>'desc'
+			// 	);
 
+			// // prepare conditions
+			// $conditions = "DATE_FORMAT(schedule.date, '%m')";
+
+			// $fields = "DATE_FORMAT(schedule.date, '%m'), ";
+			// $this->data['schedules'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
+			
 			// load calendar library
 			$config = [];
 			$config['template'] = '
@@ -738,9 +877,9 @@ class Emergency_assistance extends CI_Controller {
 
    					{heading_previous_cell}<th><a href="{previous_url}"><button type="button" class="btn"><i class="fa fa-chevron-left"></i> Prev</button></a></th>{/heading_previous_cell}
 				    {heading_title_cell}<th colspan="{colspan}"><center><h3>{heading}</h3></center></th>{/heading_title_cell}				    
-   					{heading_next_cell}<th><a href="{next_url}"><button type="button" class="btn pull-right"><i class="fa fa-chevron-right"></i> Prev</button></a></th>{/heading_next_cell}
+   					{heading_next_cell}<th><a href="{next_url}"><button type="button" class="btn pull-right"><i class="fa fa-chevron-right"></i> Next</button></a></th>{/heading_next_cell}
 
-				    {week_day_cell}<th class="day_header"><h4>{week_day}</h4></th>{/week_day_cell}
+				    {week_day_cell}<th class="day_header" data-toggle="modal" data-target="#model_window"><h4>{week_day}</h4></th>{/week_day_cell}
 
         			{cal_cell_start}<td data-toggle="modal" data-target="#model_window">{/cal_cell_start}
 				    {cal_cell_content}<span class="day_listing">{day}</span>&nbsp;&bull; {content}&nbsp;{/cal_cell_content}
@@ -754,6 +893,10 @@ class Emergency_assistance extends CI_Controller {
 			$config['day_type'] = 'long'; 
 			$this->load->library('calendar', $config);
 			$this->data['calendar'] = $this->calendar->generate($year, $month);
+
+			// pass month and year to calender page
+			$this->data['year'] = $year;
+			$this->data['month'] = $month;
 
 			// get countries list
 			$this->data['countries'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->input->get("country2"), $key = "short_code", $value = "name");
