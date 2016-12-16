@@ -389,4 +389,44 @@ class Common_model extends CI_Model
     {
         return ($this->input->post($field_name)?$this->input->post($field_name):@$data[$field_name]);
     }
+
+    /**
+     * Get an array of \DateTime objects for each day (specified) in a year and month
+     *
+     * @param integer $year
+     * @param integer $month
+     * @param string $day
+     * @param integer $daysError    Number of days into month that requires inclusion of previous Monday
+     * @return array|\DateTime[]
+     * @throws Exception      If $year, $month and $day don't make a valid strtotime
+     */
+    function getAllDaysInAMonth($year, $month, $day = 'Monday', $daysError = 3) {
+        $dateString = 'first '.$day.' of '.$year.'-'.$month;
+
+        if (!strtotime($dateString)) {
+            throw new \Exception('"'.$dateString.'" is not a valid strtotime');
+        }
+
+        $startDay = new \DateTime($dateString);
+
+        if ($startDay->format('j') > $daysError) {
+            $startDay->modify('- 7 days');
+        }
+
+        $days_object = array();
+
+        while ($startDay->format('Y-m') <= $year.'-'.str_pad($month, 2, 0, STR_PAD_LEFT)) {
+            $days_object[] = clone($startDay);
+            $startDay->modify('+ 7 days');
+        }
+
+        // filter days
+        $days = [];
+        foreach ($days_object as $key => $value){
+            $value = (array) $value;
+            if(date('m', strtotime($value['date'])) == $month and strtotime($value['date']) >= time())
+                $days[] = date("Y-m-d", strtotime($value['date']));
+        }
+        return $days;
+    }
 }

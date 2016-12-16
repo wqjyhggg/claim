@@ -36,7 +36,8 @@
         <h4 class="modal-title">Create Schedule</h4>
       </div>
       <div class="modal-body">
-          <div class="row">             
+          <div class="row"> 
+            <?php echo form_open("emergency_assistance/search_users", array("class"=>'form-horizontal', 'id'=>'search_users'));?>                       
             <div class="form-group col-sm-3">
                <?php          
                echo form_input("last_name", $this->input->get("last_name"), array("class"=>"form-control autocomplete_field", 'placeholder'=>'Last Name'));
@@ -53,50 +54,18 @@
                ?>
             </div>
             <div class="col-sm-3">
-               <?php echo form_submit("Search", "Search", array("class"=>'btn btn-primary', "type"=>'submit')) ?>
-               <?php echo anchor("auth/users", "Reset", array('class'=>'btn btn-info')) ?>
+               <?php echo form_submit("Search", "Search", array("class"=>'btn btn-primary')) ?>
+               <?php echo form_reset("Reset", "Reset", array("class"=>'btn btn-info')) ?>
             </div>
+            <?php echo form_close(); ?>
          </div>
          <div class="x_panel">
             <div class="x_title">
-               <h2>Select User From List<small></small></h2>
+               <h2>Setup Employees Schedule<small></small></h2>
                <div class="clearfix"></div>
             </div>
-            <div class="x_content">
-               <div class="table-responsive">
-                  <table class="table table-hover table-bordered">
-                     <thead>
-                        <tr>
-                           <th><a href="http://192.168.1.253:81/jf_claim_management/auth/users?field=first_name&amp;order=asc" class="">First Name</a></th>
-                           <th><a href="http://192.168.1.253:81/jf_claim_management/auth/users?field=last_name&amp;order=asc" class="">Last Name</a></th>
-                           <th><a href="http://192.168.1.253:81/jf_claim_management/auth/users?field=email&amp;order=asc" class="">Email Address</a></th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <tr>
-                           <td>bhawani</td>
-                           <td>shankar</td>
-                           <td>g8bhawani@gmail.com</td>
-                        </tr>
-                     </tbody>
-                  </table>
-               </div>
-            </div>
-         </div>
-         <div class="row">             
-            <div class="form-group col-sm-6">
-               <?php 
-                 $status = array(
-                   ''=>'Select Shift',
-                   '1'=>'8am-2pm',
-                   '0'=>'2pm-8pm',
-                   '2'=>'8pm-8am',
-                 );
-                 echo form_dropdown("status", $status, $this->input->get("status"), array("class"=>'form-control'));
-               ?>
-            </div>
-            <div class="col-sm-3">
-               <?php echo form_submit("Add", "Add", array("class"=>'btn btn-primary', "type"=>'submit')) ?>
+            <div class="x_content search_users">
+               <center><?php echo heading("No record available", 4); ?></center>
             </div>
          </div>
       </div>
@@ -108,25 +77,87 @@
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
+   var date, type, day;
    $(document).ready(function() {
-      $(".datepicker").datepicker({
-           startDate: '-117y',
-           endDate: '+0y',
-       });
 
-      $("select[name=reason]").change(function(){
-         if($(this).val() == 'Outpatient')
-            $(".hospital_info").text("Doctor Info");
-         else if($(this).val() == 'Other')
-            $(".hospital_info").text("Doctor Info/Hospital Info");
-         else
-            $(".hospital_info").text("Hospital Info");
-      })
-
-      // to check model will not open in blank dates
+      // to check model should not open in blank dates
       $("td").click(function(){
+         type = "date";
          if(!$(this).children("span").hasClass("day_listing") && !$(this).children("div").children("span").hasClass("day_listing"))
             return false;
+         else
+         {
+            date = $(this).children("span.day_listing").html()?$(this).children("span.day_listing").html():$(this).children("div.today").children("span.day_listing").html();
+
+            search_users(type);
+         }
+      })
+   });
+   $(document).on("click", ".day_header", function(){
+      type = "day";
+      day = $(this).children("h4").text();
+      search_users(type);
+   })
+
+   // save schedule of employees
+   $(document).on("change", ".select_schedule", function() {
+      var schedule = $(this).val();
+      var employee_id = $(this).attr("alt");
+      var url = "<?php echo base_url("emergency_assistance/save_schedule/$year/$month"); ?>/" + date + '/' + type + '/' + day;
+      var data = {employee_id:employee_id, schedule: schedule};
+      $.ajax({
+         url:url,
+         method: "post",
+         data:data,
+         beforeSend: function(){
+
+            // show ajax loader here
+            $(".search_users").addClass("csspinner load1");
+         },
+         success: function(data){
+
+            // in succss place return responce to list
+            $(".search_users").removeClass("csspinner load1");
+         }
       })
    })
+
+  // fuzzy search
+  $(function() {
+    $(".autocomplete_field").click(function() {
+      var name = $(this).attr("name");
+      $(".autocomplete_field").autocomplete({
+        serviceUrl: "<?php echo base_url()."auth/autocomplete/"; ?>" + name+"/2",
+        minLength: 2,
+        dataType: "json",
+      });
+    });
+  });
+
+  // search users via ajax
+  $(document).on("submit", "#search_users", function(e){
+      e.preventDefault();
+      search_users(type);
+  })
+
+  function search_users(type){
+    var url = "<?php echo base_url("emergency_assistance/search_users/$year/$month"); ?>/" + date + '/' + type + '/' + day;
+      var data = $("#search_users").serialize();
+      $.ajax({
+         url:url,
+         method: "post",
+         data:data,
+         beforeSend: function(){
+
+            // show ajax loader here
+            $(".search_users").addClass("csspinner load1");
+         },
+         success: function(data){
+
+            // in succss place return responce to list
+            $(".search_users").html(data);
+            $(".search_users").removeClass("csspinner load1");
+         }
+      })
+  }
 </script>

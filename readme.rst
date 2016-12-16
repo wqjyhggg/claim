@@ -7,6 +7,17 @@ Username: admin@admin.com
 Password: password
 
 #####################
+Dec, 16 2016 update:-
+#####################
+- Search emc users via list name, firstname and email - done
+- List of emc employees on popup window - done
+- Add daily schedule once manager click on any future date - done
+- Add weekly schedule once user click on week header(like "Monday") for all monday's of month - done
+- Remove schedule - done
+--- Show all added schedules on calender dates is in progress---
+
+
+#####################
 Dec, 15 2016 update:-
 #####################
 - Schedule page layout and design - done
