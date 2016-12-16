@@ -709,7 +709,7 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// redirect if needed, otherwise display the schedule page
-	public function schedule($year, $month)
+	public function schedule($year = "", $month = "")
 	{
 		// check date and time
 		if(!$year)
