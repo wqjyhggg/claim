@@ -39,6 +39,11 @@
                       echo form_dropdown("status", $status, $user['schedule'], $attr);
                     ?>
                  </div>
+                <?php if(!@$attr['disabled']):?>
+                  <div class="form-group col-sm-2" <?php if(!$user['schedule']): ?>style="display:none"<?php endif; ?> >
+                    <i class="fa fa-trash row-link" style="margin-top:10px" title="Remove Schedule"></i>
+                  </div>
+                <?php endif; ?>
               </div>
            </td>
         </tr>

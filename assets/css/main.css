@@ -303,6 +303,18 @@ div.today {
     background: #E9EFF7;
     height: 100%;
 } 
+.calendar ul {
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+}
+.calendar li {
+    border: 1px solid #2c70d1;
+    margin: 2px;
+    padding: 1px 5px;
+    background-color: #99b8ea;
+    color: #000;
+}
 
 /*loader css */
 .csspinner { position: relative; }
@@ -328,4 +340,7 @@ div.today {
  -webkit-transform: rotate(360deg);
  transform: rotate(360deg);
 }
+}
+input[type=checkbox]{
+  cursor: pointer;
 }

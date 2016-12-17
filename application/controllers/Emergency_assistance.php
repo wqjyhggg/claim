@@ -7,6 +7,8 @@
  */
 class Emergency_assistance extends CI_Controller {
 
+	private $limit = 10;
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -362,6 +364,11 @@ class Emergency_assistance extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
+		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager())
+		{
+			// redirect them to the home page because they must be an case manager or admin to view this
+			return show_error('You must be an authority to view this page.');
+		}
 		else
 		{
 			// initialize variables
@@ -374,6 +381,8 @@ class Emergency_assistance extends CI_Controller {
 				'field'=>'id',
 				'order'=>'desc'
 				);
+			$limit = $this->limit; 
+			$offset = $this->uri->segment(3);
 
 			$joins[] = array(
 				'table' => 'users u1',
@@ -406,8 +415,27 @@ class Emergency_assistance extends CI_Controller {
 				$conditions['case.priority'] = $this->input->get("priority");
 
 			$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
-			$this->data['cases'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
-		
+			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array(), $having = "", $limit, $offset);
+			$this->data['cases'] = $results['records'];
+
+			// pagination start here
+			$config['base_url'] = site_url('emergency_assistance/case_management');
+			$config['per_page'] = $limit;
+			$config['first_url'] = $config['base_url'].'?'.http_build_query($this->input->get());
+			if (count($this->input->get()) > 0)
+				$config['suffix'] = '?' . http_build_query($this->input->get(), '', "&");
+			$config['total_rows'] = $results['rows'];
+			$this->pagination->initialize($config); // initiaze pagination config
+			$this->data['pagination'] = $this->pagination->create_links(); # create pagination links
+			// pagination end here
+
+			// get login user id
+			$case_manager = $this->ion_auth->user()->row()->id;
+
+            // select emc users
+			$additional_conditions = " and users.parent_id = '$case_manager' ";
+            $this->data['casemamager'] = $this->common_model->getrusers($field_name = "assign_to", $selected = $this->input->get($field_name), $group = "eacmanager", $empty = "--Select Case Manager--", $additional_conditions);
+			
 			// render view data
         	$this->template->write('title', SITE_TITLE.' - Case Management', TRUE);
 	        $this->template->write_view('content', 'emergency_assistance/case_management', $this->data);
@@ -719,8 +747,11 @@ class Emergency_assistance extends CI_Controller {
 		$fields = "users.first_name, users.last_name, users.email, users.active, users.id, (select schedule.schedule from schedule where schedule.employee_id = users.id and schedule.date = '$date') as schedule"; 
 		$group_by = array("users_groups.user_id");
 
+		// get login user id (case manager id)
+		$case_manager = $this->ion_auth->user()->row()->id;
+
 		// prepare conditions
-		$conditions = [];
+		$conditions[] = "users.parent_id = '$case_manager'";
 		$conditions[] = "users_groups.group_id = '2'";
 		if($this->input->post("last_name")) 
 			$conditions[] = "users.last_name like '%".$this->input->post("last_name")."%'";
@@ -788,13 +819,13 @@ class Emergency_assistance extends CI_Controller {
 			$this->common_model->delete('schedule', $conditions);
 
 			// add schedule for whole week 
-			foreach($dates as $date)
+			foreach($dates as $schedule_date)
 			{
 				// insert values to database
 				$data = array(
 					'schedule'=>$schedule,
 					'employee_id'=>$employee_id,
-					'date'=>$date,
+					'date'=>$schedule_date,
 					'created'=>date("Y-m-d H:i:s")
 					);
 				$this->common_model->save("schedule", $data);
@@ -858,41 +889,8 @@ class Emergency_assistance extends CI_Controller {
 		}
 		else
 		{
-			// get all schedules added by this manager
-			// $order_by = array(
-			// 	'field'=>'id',
-			// 	'order'=>'desc'
-			// 	);
-
-			// // prepare conditions
-			// $conditions = "DATE_FORMAT(schedule.date, '%m')";
-
-			// $fields = "DATE_FORMAT(schedule.date, '%m'), ";
-			// $this->data['schedules'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
-			
-			// load calendar library
-			$config = [];
-			$config['template'] = '
-				    {table_open}<table class="calendar">{/table_open}
-
-   					{heading_previous_cell}<th><a href="{previous_url}"><button type="button" class="btn"><i class="fa fa-chevron-left"></i> Prev</button></a></th>{/heading_previous_cell}
-				    {heading_title_cell}<th colspan="{colspan}"><center><h3>{heading}</h3></center></th>{/heading_title_cell}				    
-   					{heading_next_cell}<th><a href="{next_url}"><button type="button" class="btn pull-right"><i class="fa fa-chevron-right"></i> Next</button></a></th>{/heading_next_cell}
-
-				    {week_day_cell}<th class="day_header" data-toggle="modal" data-target="#model_window"><h4>{week_day}</h4></th>{/week_day_cell}
-
-        			{cal_cell_start}<td data-toggle="modal" data-target="#model_window">{/cal_cell_start}
-				    {cal_cell_content}<span class="day_listing">{day}</span>&nbsp;&bull; {content}&nbsp;{/cal_cell_content}
-				    {cal_cell_content_today}<div class="today"><span class="day_listing">{day}</span>&bull; {content}</div>{/cal_cell_content_today}
-				    {cal_cell_no_content}<span class="day_listing" data-toggle="modal" data-target="#create_intake_form"  >{day}</span>&nbsp;{/cal_cell_no_content}
-				    {cal_cell_no_content_today}<div class="today"><span class="day_listing">{day}</span></div>{/cal_cell_no_content_today}
-				    {cal_cell_end}</td>{/cal_cell_end}
-
-				';
-			$config['show_next_prev'] = TRUE;
-			$config['day_type'] = 'long'; 
-			$this->load->library('calendar', $config);
-			$this->data['calendar'] = $this->calendar->generate($year, $month);
+			//get schedule calendar
+			$this->data['calendar'] = $this->schedule_calendar($year, $month);
 
 			// pass month and year to calender page
 			$this->data['year'] = $year;
@@ -904,6 +902,91 @@ class Emergency_assistance extends CI_Controller {
         	$this->template->write('title', SITE_TITLE.' - Employee Schedule', TRUE);
 	        $this->template->write_view('content', 'emergency_assistance/schedule', $this->data);
 	        $this->template->render();        
+		}
+	}
+
+	
+    /**
+     * schedule calendar for ajax request and in schedule page
+     *
+     * @param       $year String
+     * @param       $month array
+     * @param       $type return - for return data/output - echo response for ajax complete
+    */
+	public function schedule_calendar($year = "", $month = "", $type = "return")
+	{
+		// check date and time
+		if(!$year)
+		{
+			$year = date("Y"); 
+			$month = date('m');
+		}
+		// only accessible for case managers
+		if (!$this->ion_auth->is_casemamager())
+		{
+			// redirect them to the home page because they must be an case manager to view this
+			return show_error('You must be an authority to view this page.');
+		}
+		else
+		{
+			// get login user id (case manager id)
+			$case_manager = $this->ion_auth->user()->row()->id;
+
+			// get all schedules added by this case manager and show all to calender
+			$order_by = array(
+				'field'=>'schedule.id',
+				'order'=>'desc'
+				);
+
+
+			$joins[] = array(
+				'table' => 'users u1',
+				'on' => 'u1.id = schedule.employee_id',
+				'type' => 'LEFT'
+				);
+			// prepare conditions
+			$conditions = "schedule.date like '%$year-$month%' and u1.parent_id = '$case_manager'";
+			$group_by = array("schedule.date");
+
+			$fields = "DATE_FORMAT(schedule.date, '%d') as date,  GROUP_CONCAT(concat_ws('-', concat_ws(' ', u1.first_name, u1.last_name), schedule.schedule) ORDER BY  schedule.id ASC SEPARATOR '|') as data";
+			$this->data['schedules'] = $this->common_model->select($record = "list", $typecast = "array", $table = "schedule", $fields, $conditions, $joins, $order_by, $group_by);
+
+			$content = [];
+			if(!empty($this->data['schedules']))
+				foreach ($this->data['schedules'] as $key => $value) 
+				{
+					$schedule_data = explode("|", $value['data']);
+					$prepare_list = "";
+					foreach ($schedule_data as $d) 
+						$prepare_list .= "<li>$d</li>";
+					$content[intval($value['date'])] = "<ul>$prepare_list</ul>";
+				}
+			$config = [];
+			$config['template'] = '
+				    {table_open}<table class="calendar">{/table_open}
+
+   					{heading_previous_cell}<th><a href="{previous_url}"><button type="button" class="btn"><i class="fa fa-chevron-left"></i> Prev</button></a></th>{/heading_previous_cell}
+				    {heading_title_cell}<th colspan="{colspan}"><center><h3>{heading}</h3></center></th>{/heading_title_cell}				    
+   					{heading_next_cell}<th><a href="{next_url}"><button type="button" class="btn pull-right"><i class="fa fa-chevron-right"></i> Next</button></a></th>{/heading_next_cell}
+
+				    {week_day_cell}<th class="day_header" data-toggle="modal" data-target="#model_window"><h4>{week_day}</h4></th>{/week_day_cell}
+
+        			{cal_cell_start}<td data-toggle="modal" data-target="#model_window">{/cal_cell_start}
+				    {cal_cell_content}<span class="day_listing">{day}</span>&nbsp; {content}&nbsp;{/cal_cell_content}
+				    {cal_cell_content_today}<div class="today"><span class="day_listing">{day}</span>{content}</div>{/cal_cell_content_today}
+				    {cal_cell_no_content}<span class="day_listing" data-toggle="modal" data-target="#create_intake_form"  >{day}</span>&nbsp;{/cal_cell_no_content}
+				    {cal_cell_no_content_today}<div class="today"><span class="day_listing">{day}</span></div>{/cal_cell_no_content_today}
+				    {cal_cell_end}</td>{/cal_cell_end}
+
+				';
+			$config['show_next_prev'] = TRUE;
+			$config['day_type'] = 'long'; 
+			$config['next_prev_url'] = base_url("emergency_assistance/schedule/"); 
+			$this->load->library('calendar', $config);
+			if($type == 'return')
+				return $this->calendar->generate($year, $month, $content);       
+			else
+				echo $this->calendar->generate($year, $month, $content); 
 		}
 	}
 }

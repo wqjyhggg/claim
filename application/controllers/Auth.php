@@ -232,7 +232,7 @@ class Auth extends CI_Controller {
                 'last_name'  => $this->input->post('last_name'),
                 'company'    => $this->input->post('company'),
                 'phone'      => $this->input->post('phone'),
-                'parent_id'      => $this->input->post('parent_id'),
+                'parent_id'  => $this->input->post('parent_id'),
             );
         }
         if ($this->form_validation->run() == true && $id = $this->ion_auth->register($identity, $password, $email, $additional_data))
@@ -367,6 +367,7 @@ class Auth extends CI_Controller {
 					'last_name'  => $this->input->post('last_name'),
 					'company'    => $this->input->post('company'),
 					'phone'      => $this->input->post('phone'),
+                	'parent_id'  => $this->input->post('parent_id'),
 				);
 
 				// update the password if it was posted

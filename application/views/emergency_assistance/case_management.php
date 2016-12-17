@@ -73,6 +73,7 @@
   
                <div class="col-sm-3">
                   <button class="btn btn-primary" name="filter" value="case">Search</button>
+                  <?php echo anchor("emergency_assistance/case_management", "Reset", array('class'=>'btn btn-info')); ?>
                </div>
             </div> 
             <?php echo form_close(); ?>
@@ -86,6 +87,7 @@
                   <table class="table table-hover table-bordered">
                      <thead>
                         <tr>
+                           <th><?php echo form_checkbox("selectall", 1); ?></th>
                            <th>Case number</th>
                            <th>Create Date</th>
                            <th>Place</th>
@@ -100,14 +102,15 @@
                      </thead>
                      <tbody>
                      <?php foreach ($cases as $key => $value): ?>
-                        <tr class="row-link" alt="<?php echo $value['id']; ?>" title="Click to View/Edit">
+                        <tr>
+                           <th><?php echo form_checkbox("case", $value['id']); ?></th>
                            <td><?php echo $value['case_no']; ?></td>
-                           <td><?php echo $value['created']; ?></td>
+                           <td><?php echo date('d/m/Y', strtotime($value['created'])); ?></td>
                            <td><?php echo $value['province']; ?></td>
                            <td><?php echo $value['reason']; ?></td>
                            <td><?php echo $value['policy_no']; ?></td>
                            <td><?php echo $value['insured_name']; ?></td>
-                           <td><?php echo $value['dob']; ?></td>
+                           <td><?php echo date('d/m/Y', strtotime($value['dob'])); ?></td>
                            <td><?php echo $value['assign_to_name']; ?></td>
                            <td><?php echo $value['case_manager_name']; ?></td>
                            <td><?php echo $value['priority']; ?></td>
@@ -118,20 +121,47 @@
                </div>
                </br>
                <div class="row form-group">
-                  <div class="col-sm-3">
-                     <button class="btn btn-primary">Auto Assign</button>
-                     <button class="btn btn-primary">Save Assign</button>
-                     <button class="btn btn-primary">Assign To</button>
-                     <button class="btn btn-primary">Follow Up</button>     
-                     <button class="btn btn-primary">View/Edit Case</button>      
-                     <button class="btn btn-primary">Set Inactive</button>      
-                     <button class="btn btn-primary">Email/Print</button>   
-                  </div>               
+                  <div class="col-sm-12">
+                     <div class="col-sm-2">
+                        <button class="btn btn-primary show_button" disabled>Auto Assign</button>
+                     </div>
+                     <div class="col-sm-2">
+                        <div class="col-sm-12">
+                           <button class="btn btn-primary show_button" disabled>Assign To <i class="fa fa-angle-double-right"></i> </button>
+                        </div>
+                        <div class="col-sm-12">
+                           <button class="btn btn-primary show_button" disabled>Follow Up <i class="fa fa-angle-double-right"></i></button>  
+                        </div>   
+                     </div>
+                     <div class="col-sm-6">
+                        <?php echo $casemamager; ?>
+                     </div>  
+                  </div>
+
+                  <div class="clearfix"><br/></div>
+                  
+                  <div class="col-sm-12 form-group">
+                     <div class="col-sm-2">
+                        <button class="btn btn-primary show_button" disabled>View/Edit Case</button>  
+                     </div>
+
+                     <div class="col-sm-2">    
+                         <div class="col-sm-12">
+                           <button class="btn btn-primary show_button" disabled>Set Inactive</button>
+                        </div>  
+                     </div>
+
+                     <div class="col-sm-2">    
+                        <button class="btn btn-primary show_button" disabled>Email/Print</button> 
+                     </div> 
+                  </div>            
                </div>
 
                <?php else:?>
                   <center><?php echo heading("No record available", 4); ?></center>
-               <?php endif;?>
+               <?php endif;
+               echo $pagination;
+               ?>
             </div>
             <!-- End Search List Section -->
          </div>
@@ -151,4 +181,28 @@ $(document).ready(function() {
 $(document).on("click", ".row-link", function(){
    $(this).toggleClass("selected");
 })
+
+// select all checkboxes script
+$(document).on("click", "input[name=selectall]",  function(){
+
+   // check user click check or uncheck tickbox
+   if($(this).is(":checked"))
+      $("input[name=case]").prop("checked", true);
+   else
+      $("input[name=case]").prop("checked", false);
+})
+
+// enable disable buttons
+$(document).on("click", "input[name=case]",  function(){
+   var length = $("input[name=case]:checked").length;
+   if(length)
+   {
+      $(".show_button").removeAttr("disabled");
+   }
+   else
+   {
+      $(".show_button").attr("disabled", "disabled");
+   }
+})
+
 </script>

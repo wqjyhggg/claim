@@ -338,8 +338,9 @@ class Common_model extends CI_Model
      * @param       $field_name String
      * @param       $selected string
      * @param       $group group name. string/array ex- 'admin' and array("'admin'", "'manager'")
+     * @param       $additional_conditions string, it should start from " and YOUR CONDITIONS" or " OR YOUR CONDITIONS"
     */
-    public function getrusers($field_name, $selected, $group = "eacmanager", $empty = "--Assign To--")
+    public function getrusers($field_name, $selected, $group = "eacmanager", $empty = "--Assign To--", $additional_conditions = "")
     {
         // place join to users group table to check user group
         $join[] = array(
@@ -361,8 +362,13 @@ class Common_model extends CI_Model
         else
             $conditions = "groups.name='$group'";
         
+        // if additional conditions exists
+        if($additional_conditions)
+        {
+            $conditions .= $additional_conditions;
+        }
 
-        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=true, $empty, $conditions, $join, $group_by = array("users.id"));       
+        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=true, $empty, $conditions, $join, $group_by = array("users.id"));
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
 

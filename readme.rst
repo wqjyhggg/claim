@@ -7,6 +7,16 @@ Username: admin@admin.com
 Password: password
 
 #####################
+Dec, 17 2016 update:-
+#####################
+- Add Schedule calender - done
+- Show schedule on calender dates cell - done
+- Calender design - done
+- Case management page some jquery validations, checkbox selections, emc users list - done
+--- other functionalies on case management page is in progress---
+
+
+#####################
 Dec, 16 2016 update:-
 #####################
 - Search emc users via list name, firstname and email - done
