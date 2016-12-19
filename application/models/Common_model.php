@@ -194,7 +194,7 @@ class Common_model extends CI_Model
      * @param       $joins array
      * @param       $group_by array
     */
-    public function get_ref($table,$key,$value,$dropdown=false, $empty = "Please Select", $conditions = "", $joins = array(), $group_by = array())
+    public function get_ref($table, $key, $value, $dropdown=false, $empty = "Please Select", $conditions = "", $joins = array(), $group_by = array())
     {
         $this->db->select("$table.$key, $table.$value");
         $this->db->from($table);
@@ -333,7 +333,7 @@ class Common_model extends CI_Model
     }
     
     /**
-     * Return a list of provinces
+     * Return a list of users
      *
      * @param       $field_name String
      * @param       $selected string
@@ -362,6 +362,59 @@ class Common_model extends CI_Model
         else
             $conditions = "groups.name='$group'";
         
+        // if additional conditions exists
+        if($additional_conditions)
+        {
+            $conditions .= $additional_conditions;
+        }
+
+        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=true, $empty, $conditions, $join, $group_by = array("users.id"));
+        return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
+    }
+
+
+    
+    /**
+     * Return a list of users based on schedule
+     *
+     * @param       $field_name String
+     * @param       $selected string
+     * @param       $group group name. string/array ex- 'admin' and array("'admin'", "'manager'")
+     * @param       $additional_conditions string, it should start from " and YOUR CONDITIONS" or " OR YOUR CONDITIONS"
+    */
+    public function shift_users($field_name, $selected, $group = "eacmanager", $empty = "--Assign To--", $additional_conditions = "")
+    {
+        
+        // place join to users table to get user name
+        $join[] = array(
+            'table'=>'schedule',
+            'on'=>'users.id = schedule.employee_id',
+            'type'=>'INNER'
+            );
+
+        // place join to users group table to check user group
+        $join[] = array(
+            'table'=>'users_groups',
+            'on'=>'users_groups.user_id = users.id',
+            'type'=>'INNER'
+            );
+
+        // join groups table to get group name
+        $join[] = array(
+            'table'=>'groups',
+            'on'=>'groups.id = users_groups.group_id',
+            'type'=>'INNER'
+            );
+
+        // to check user type
+        if(is_array($group)) // for multiple groups
+            $conditions = "groups.name in(".implode(',' , $group).")";
+        else
+            $conditions = "groups.name='$group'";
+        
+        // for today schedule only
+        $conditions = "schedule.date='".date('Y-m-d')."'";
+
         // if additional conditions exists
         if($additional_conditions)
         {

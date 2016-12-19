@@ -27,13 +27,19 @@
                       $status = array(
                         ''=>'Select Shift',
                         '8am-2pm'=>'8am-2pm',
-                        '2pm-8p'=>'2pm-8pm',
+                        '2pm-8pm'=>'2pm-8pm',
                         '8pm-8am'=>'8pm-8am',
                       );
                       $attr = array(
                         "class"=>'form-control select_schedule',
                          'alt'=>$user['id']
                          );
+
+                      // to set default blank once case manager clicked on day header
+                      if($type == 'day')
+                        $user['schedule'] = "";
+
+                      // in case of past date
                       if($disabled)
                         $attr['disabled'] = TRUE;
                       echo form_dropdown("status", $status, $user['schedule'], $attr);

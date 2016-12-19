@@ -102,7 +102,7 @@
                      </thead>
                      <tbody>
                      <?php foreach ($cases as $key => $value): ?>
-                        <tr>
+                        <tr class="row-link" alt="<?php echo $value['id']; ?>">
                            <th><?php echo form_checkbox("case", $value['id']); ?></th>
                            <td><?php echo $value['case_no']; ?></td>
                            <td><?php echo date('d/m/Y', strtotime($value['created'])); ?></td>
@@ -123,31 +123,45 @@
                <div class="row form-group">
                   <div class="col-sm-12">
                      <div class="col-sm-2">
-                        <button class="btn btn-primary show_button" disabled>Auto Assign</button>
+                        <button class="btn btn-primary show_button auto_assign" disabled>Auto Assign</button>
                      </div>
                      <div class="col-sm-2">
                         <div class="col-sm-12">
-                           <button class="btn btn-primary show_button" disabled>Assign To <i class="fa fa-angle-double-right"></i> </button>
+                           <button class="btn btn-primary show_button assign_to" disabled>Assign To <i class="fa fa-angle-double-right"></i> </button>
                         </div>
                         <div class="col-sm-12">
-                           <button class="btn btn-primary show_button" disabled>Follow Up <i class="fa fa-angle-double-right"></i></button>  
+                           <button class="btn btn-primary show_button follow_up" disabled>Follow Up <i class="fa fa-angle-double-right"></i></button>  
                         </div>   
                      </div>
-                     <div class="col-sm-6">
-                        <?php echo $casemamager; ?>
+                     <div class="col-sm-8 employees-section" style="display:none">
+                        <?php foreach ($employee_shift as $key => $value): ?>
+                        <div class="col-sm-4">
+                           <fieldset>
+                              <legend><?php echo $value; ?></legend>
+                              <?php
+                                 $list = "employees_".$key; 
+                                 echo $$list;
+                               ?>
+                           </fieldset>
+                           <div class="clearfix"><br/></div>
+                        </div>
+                        <?php endforeach; ?>
+
+                        <div class="col-sm-12">
+                           <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save Assign</button> 
+                           <button class="btn btn-primary pull-right save" style="display:none" ><i class="fa fa-check-circle-o"></i> Save</button>  
+                        </div>   
                      </div>  
                   </div>
-
-                  <div class="clearfix"><br/></div>
-                  
+                 
                   <div class="col-sm-12 form-group">
                      <div class="col-sm-2">
-                        <button class="btn btn-primary show_button" disabled>View/Edit Case</button>  
+                        <button class="btn btn-primary show_button view_edit" disabled>View/Edit Case</button>  
                      </div>
 
                      <div class="col-sm-2">    
                          <div class="col-sm-12">
-                           <button class="btn btn-primary show_button" disabled>Set Inactive</button>
+                           <button class="btn btn-primary show_button mark_inactive" disabled>Set Inactive</button>
                         </div>  
                      </div>
 
@@ -172,37 +186,159 @@
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
+var employee_id;
 $(document).ready(function() {
    $(".datepicker").datepicker({
         startDate: '-5y',
         endDate: '+2y',
     });
-})
-$(document).on("click", ".row-link", function(){
-   $(this).toggleClass("selected");
-})
+}).on("click", ".row-link", function(){                                                // open edit case page to enter reserver amount
 
-// select all checkboxes script
-$(document).on("click", "input[name=selectall]",  function(){
+   var id = $(this).attr("alt");
+   window.location = "<?php echo base_url("emergency_assistance/edit_case") ?>/"+id+"?ref=manage";
+}).on("click", "input[name=selectall]",  function(){                                   // select all checkboxes script
 
-   // check user click check or uncheck tickbox
-   if($(this).is(":checked"))
+   if($(this).is(":checked"))                                                          // check user click check or uncheck tickbox
       $("input[name=case]").prop("checked", true);
    else
       $("input[name=case]").prop("checked", false);
-})
+}).on("click", "input[name=case], input[name=selectall]",  function(e){                // enable disable buttons
 
-// enable disable buttons
-$(document).on("click", "input[name=case]",  function(){
+   e.stopPropagation();
    var length = $("input[name=case]:checked").length;
    if(length)
    {
       $(".show_button").removeAttr("disabled");
+      if(length > 1)
+          $(".view_edit").attr("disabled", "disabled");
    }
    else
    {
       $(".show_button").attr("disabled", "disabled");
+      $(".employees-section").hide();
    }
-})
+}).on("click", ".assign_to", function(){                                               // on clicked assign to button
+
+   $(".employees-section, .save_assign").show();
+   $(".save").hide();
+}).on("click", ".follow_up", function(){                                               // clicking on follow_up button
+
+   $(".employees-section, .save").show();
+   $(".save_assign").hide();
+}).on("click", ".view_edit", function(){                                               // once manager click on "View/Edit"case button
+
+   var id = $("input[name=case]:checked").val();
+   window.location = "<?php echo base_url("emergency_assistance/edit_case") ?>/"+id+"?ref=manage";
+}).on("change", "select", function(){                                                  // set validation on emc select list
+
+   var val = $(this).val();
+   $("select").val("");
+   $(this).val(val);
+   employee_id = val;                                                                  // set selected employee
+}).on("click", ".save_assign", function(){                                             // clicking on save assign button
+   
+   // check if employee selected or not
+   if(!employee_id)
+   {
+      alert("Please select emc user first.");
+      return false;
+   }
+
+   // assign emc user to selected cases 
+   var cases = [];
+   $("input[name=case]:checked").each(function(){
+      cases.push($(this).val());
+   })
+   var cases = cases.join(",");
+
+   // assign cases to emc manager here
+   $.ajax({
+      url: "<?php echo base_url("emergency_assistance/assign_cases/manually") ?>",
+      method: "post",
+      data:{cases:cases, employee_id: employee_id},
+      beforeSend: function(){
+         $(".right_col").addClass("csspinner load1");
+      },
+      success: function() {
+         window.location.reload();
+      }
+   })
+}).on("click", ".save", function(){                                                    // clicking on follow button
+   
+   // check if employee selected or not
+   if(!employee_id)
+   {
+      alert("Please select emc user first.");
+      return false;
+   }
+
+   // assign emc user to selected cases 
+   var cases = [];
+   $("input[name=case]:checked").each(function(){
+      cases.push($(this).val());
+   })
+   var cases = cases.join(",");
+
+   // assign cases to emc manager here
+   $.ajax({
+      url: "<?php echo base_url("emergency_assistance/follow_up_cases") ?>",
+      method: "post",
+      data:{cases:cases, employee_id: employee_id},
+      beforeSend: function(){
+         $(".right_col").addClass("csspinner load1");
+      },
+      success: function() {
+         window.location.reload();
+      }
+   })
+}).on("click", ".mark_inactive", function(){                                           // clicking on save assign button
+   
+   // selected cases 
+   var cases = [];
+   $("input[name=case]:checked").each(function(){
+      cases.push($(this).val());
+   })
+   var cases = cases.join(",");
+
+   // assign cases to emc manager here
+   $.ajax({
+      url: "<?php echo base_url("emergency_assistance/mark_inactive") ?>",
+      method: "post",
+      data:{cases:cases, employee_id: employee_id},
+      beforeSend: function(){
+         $(".right_col").addClass("csspinner load1");
+      },
+      success: function() {
+         window.location.reload();
+      }
+   })
+}).on("click", ".auto_assign", function(){                                             // clicking on save assign button
+   
+   // assign emc user to selected cases 
+   var cases = [];
+   $("input[name=case]:checked").each(function(){
+      cases.push($(this).val());
+   })
+   var cases = cases.join(",");
+
+   // return confirm yes/no before go further
+   if(confirm("Are you sure you want to assign case automatically?"))
+   {
+      // assign cases to emc manager here
+      $.ajax({
+         url: "<?php echo base_url("emergency_assistance/assign_cases/automatic") ?>",
+         method: "post",
+         data:{cases:cases, employee_id: employee_id},
+         beforeSend: function(){
+            $(".right_col").addClass("csspinner load1");
+         },
+         success: function() {
+            window.location.reload();
+         }
+      })
+   } 
+   else
+      return false;
+});
 
 </script>

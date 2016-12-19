@@ -7,6 +7,20 @@ Username: admin@admin.com
 Password: password
 
 #####################
+Dec, 19 2016 update:-
+#####################
+----- Case Management Page----- 
+- Auto Assign to emc - done
+- Assign emc manually - done
+- Categorize emc list based on currenttime and shift - done
+- Follow on case management page - done
+- Set inactive function - done
+- View/Edit button action - done
+--- other functionalies on case management page email/print, reserve amount are in progress---
+-Note:- please import database files to avoid errors
+
+
+#####################
 Dec, 17 2016 update:-
 #####################
 - Add Schedule calender - done

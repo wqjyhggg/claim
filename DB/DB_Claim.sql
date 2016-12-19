@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS `case` (
   `country` varchar(40) DEFAULT NULL,
   `country2` varchar(40) DEFAULT NULL,
   `post_code` varchar(10) DEFAULT NULL,
-  `assign_to` int(11) NOT NULL,
+  `assign_to` int(11) NOT NULL DEFAULT '0',
+  `follow_up_to` int(11) NOT NULL DEFAULT '0',
   `reason` varchar(30) NOT NULL,
   `first_name` varchar(20) NOT NULL,
   `last_name` varchar(20) DEFAULT NULL,
@@ -34,23 +35,24 @@ CREATE TABLE IF NOT EXISTS `case` (
   `dob` date DEFAULT NULL,
   `case_manager` int(10) NOT NULL,
   `priority` varchar(10) NOT NULL,
+  `status` enum('0','1') NOT NULL DEFAULT '1' COMMENT '0-deactive, 1-active, stand for case status active/inactive',
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `case_no` (`case_no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8;
 
 /*!40000 ALTER TABLE `case` DISABLE KEYS */;
-INSERT INTO `case` (`id`, `case_no`, `created_by`, `street_no`, `street_name`, `city`, `province`, `country`, `country2`, `post_code`, `assign_to`, `reason`, `first_name`, `last_name`, `phone_number`, `email`, `relations`, `diagnosis`, `treatment`, `third_party_recovery`, `policy_no`, `insured_firstname`, `insured_lastname`, `dob`, `case_manager`, `priority`, `created`) VALUES
-	(5, '0000005', 1, '123143', 'sodala1', 'jaipur', 'British Columbia', 'United States', 'Canada', '302015', 1, 'AD&D', 'bhawani', 'shankar', '424242424', 'developer@brsoftech.com', 'Father', 'test', 'sodala', 'Y', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '2016-12-06 11:28:53'),
-	(7, '0000007', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 2, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '2016-12-08 06:47:47'),
-	(8, '0000008', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 1, 'AD&D', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '2016-12-08 06:56:05'),
-	(9, '0000009', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 2, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'HIGH', '2016-12-08 06:57:12'),
-	(78, '0000078', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'Canada', '302014', 2, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '2016-12-09 06:11:42'),
-	(79, '0000079', 1, '1231', 'sodala', 'us', 'British Columbia', 'United States', 'United States', '21313', 5, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'HIGH', '2016-12-09 06:12:49'),
-	(80, '0000080', 1, '1231', 'sodala', 'us', 'British Columbia', 'United States', 'United States', '21313', 5, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'HIGH', '2016-12-09 06:14:12'),
-	(81, '0000081', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 2, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '2016-12-09 06:19:41'),
-	(87, '0000087', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 1, 'AD&D', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '2016-12-13 07:48:23'),
-	(88, '0000088', 1, 'sdfdsfdsf', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 2, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'Y', '99098908', '21231', '56465', '2000-05-30', 2, 'HIGH', '2016-12-14 09:38:54');
+INSERT INTO `case` (`id`, `case_no`, `created_by`, `street_no`, `street_name`, `city`, `province`, `country`, `country2`, `post_code`, `assign_to`, `follow_up_to`, `reason`, `first_name`, `last_name`, `phone_number`, `email`, `relations`, `diagnosis`, `treatment`, `third_party_recovery`, `policy_no`, `insured_firstname`, `insured_lastname`, `dob`, `case_manager`, `priority`, `status`, `created`) VALUES
+	(5, '0000005', 1, '123143', 'sodala1', 'jaipur', 'British Columbia', 'United States', 'Canada', '302015', 2, 0, 'AD&D', 'bhawani', 'shankar', '424242424', 'developer@brsoftech.com', 'Father', 'test', 'sodala', 'Y', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '0', '2016-12-06 11:28:53'),
+	(7, '0000007', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 5, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '1', '2016-12-08 06:47:47'),
+	(8, '0000008', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 6, 0, 'AD&D', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '1', '2016-12-08 06:56:05'),
+	(9, '0000009', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 2, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'HIGH', '1', '2016-12-08 06:57:12'),
+	(78, '0000078', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'Canada', '302014', 5, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '1', '2016-12-09 06:11:42'),
+	(79, '0000079', 1, '1231', 'sodala', 'us', 'British Columbia', 'United States', 'United States', '21313', 5, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'HIGH', '1', '2016-12-09 06:12:49'),
+	(80, '0000080', 1, '1231', 'sodala', 'us', 'British Columbia', 'United States', 'United States', '21313', 6, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'HIGH', '1', '2016-12-09 06:14:12'),
+	(81, '0000081', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 6, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '1', '2016-12-09 06:19:41'),
+	(87, '0000087', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 0, 0, 'AD&D', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '2000-05-30', 2, 'Normal', '1', '2016-12-13 07:48:23'),
+	(88, '0000088', 1, 'sdfdsfdsf', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 0, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'Y', '99098908', '21231', '56465', '2000-05-30', 2, 'HIGH', '1', '2016-12-14 09:38:54');
 /*!40000 ALTER TABLE `case` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `country` (
@@ -217,8 +219,9 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `date` date NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `employee_id` (`employee_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
+  KEY `employee_id` (`employee_id`),
+  CONSTRAINT `schedule_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=latin1;
 
 /*!40000 ALTER TABLE `schedule` DISABLE KEYS */;
 INSERT INTO `schedule` (`id`, `employee_id`, `schedule`, `date`, `created`) VALUES
@@ -227,33 +230,60 @@ INSERT INTO `schedule` (`id`, `employee_id`, `schedule`, `date`, `created`) VALU
 	(8, 5, '8pm-8am', '2017-01-15', '2016-12-17 08:14:29'),
 	(9, 5, '8pm-8am', '2017-01-22', '2016-12-17 08:14:29'),
 	(10, 5, '8pm-8am', '2017-01-29', '2016-12-17 08:14:29'),
-	(11, 2, '2pm-8p', '2017-01-01', '2016-12-17 08:14:32'),
-	(12, 2, '2pm-8p', '2017-01-08', '2016-12-17 08:14:32'),
-	(13, 2, '2pm-8p', '2017-01-15', '2016-12-17 08:14:32'),
-	(14, 2, '2pm-8p', '2017-01-22', '2016-12-17 08:14:32'),
-	(15, 2, '2pm-8p', '2017-01-29', '2016-12-17 08:14:32'),
+	(11, 2, '2pm-8pm', '2017-01-01', '2016-12-17 08:14:32'),
+	(12, 2, '2pm-8pm', '2017-01-08', '2016-12-17 08:14:32'),
+	(13, 2, '2pm-8pm', '2017-01-15', '2016-12-17 08:14:32'),
+	(14, 2, '2pm-8pm', '2017-01-22', '2016-12-17 08:14:32'),
+	(15, 2, '2pm-8pm', '2017-01-29', '2016-12-17 08:14:32'),
 	(16, 6, '8am-2pm', '2017-01-01', '2016-12-17 08:14:34'),
 	(17, 6, '8am-2pm', '2017-01-08', '2016-12-17 08:14:35'),
 	(18, 6, '8am-2pm', '2017-01-15', '2016-12-17 08:14:35'),
 	(19, 6, '8am-2pm', '2017-01-22', '2016-12-17 08:14:35'),
 	(20, 6, '8am-2pm', '2017-01-29', '2016-12-17 08:14:35'),
 	(21, 6, '8am-2pm', '2016-12-22', '2016-12-17 08:14:55'),
-	(22, 2, '2pm-8p', '2016-12-22', '2016-12-17 08:14:57'),
+	(22, 2, '2pm-8pm', '2016-12-22', '2016-12-17 08:14:57'),
 	(23, 6, '8am-2pm', '2016-12-18', '2016-12-17 08:15:18'),
 	(24, 5, '8pm-8am', '2016-12-18', '2016-12-17 08:15:20'),
-	(25, 2, '2pm-8p', '2016-12-18', '2016-12-17 08:15:23'),
-	(26, 6, '2pm-8p', '2016-12-28', '2016-12-17 08:25:12'),
-	(30, 6, '2pm-8p', '2017-01-03', '2016-12-17 09:08:34'),
-	(32, 6, '2pm-8p', '2017-01-10', '2016-12-17 09:19:02'),
+	(25, 2, '2pm-8pm', '2016-12-18', '2016-12-17 08:15:23'),
+	(26, 6, '2pm-8pm', '2016-12-28', '2016-12-17 08:25:12'),
+	(30, 6, '2pm-8pm', '2017-01-03', '2016-12-17 09:08:34'),
+	(32, 6, '2pm-8pm', '2017-01-10', '2016-12-17 09:19:02'),
 	(38, 5, '8am-2pm', '2017-01-03', '2016-12-17 09:19:20'),
 	(39, 5, '8am-2pm', '2017-01-10', '2016-12-17 09:19:20'),
 	(40, 5, '8am-2pm', '2017-01-17', '2016-12-17 09:19:20'),
 	(41, 5, '8am-2pm', '2017-01-24', '2016-12-17 09:19:20'),
 	(42, 5, '8am-2pm', '2017-01-31', '2016-12-17 09:19:20'),
-	(43, 6, '', '2016-12-06', '2016-12-17 10:19:54'),
-	(44, 5, '', '2016-12-06', '2016-12-17 10:19:57'),
-	(47, 5, '2pm-8p', '2016-12-20', '2016-12-17 10:29:22');
+	(47, 5, '2pm-8pm', '2016-12-20', '2016-12-17 10:29:22'),
+	(63, 5, '2pm-8pm', '2017-01-11', '2016-12-19 06:33:54'),
+	(64, 6, '2pm-8pm', '2017-01-11', '2016-12-19 06:34:02'),
+	(71, 6, '2pm-8pm', '2017-01-05', '2016-12-19 06:41:05'),
+	(72, 6, '2pm-8pm', '2017-01-12', '2016-12-19 06:41:05'),
+	(73, 6, '2pm-8pm', '2017-01-19', '2016-12-19 06:41:05'),
+	(74, 6, '2pm-8pm', '2017-01-26', '2016-12-19 06:41:05'),
+	(75, 5, '2pm-8pm', '2017-01-12', '2016-12-19 06:47:55'),
+	(76, 6, '8am-2pm', '2016-12-19', '2016-12-19 07:25:01'),
+	(77, 5, '2pm-8pm', '2016-12-19', '2016-12-19 07:25:04'),
+	(78, 2, '8pm-8am', '2016-12-19', '2016-12-19 07:25:07'),
+	(79, 6, '8pm-8am', '2016-12-26', '2016-12-19 07:26:39'),
+	(80, 5, '8am-2pm', '2016-12-26', '2016-12-19 07:26:41'),
+	(81, 2, '2pm-8pm', '2016-12-26', '2016-12-19 07:26:47');
 /*!40000 ALTER TABLE `schedule` ENABLE KEYS */;
+
+CREATE TABLE IF NOT EXISTS `template` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) DEFAULT NULL,
+  `type` enum('claim','case','emc') DEFAULT NULL COMMENT '''claim-claim manager'',''case-case manager'',''emc-emc user''',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+
+/*!40000 ALTER TABLE `template` DISABLE KEYS */;
+INSERT INTO `template` (`id`, `name`, `type`) VALUES
+	(1, 'Additional Information Requisition.docx', 'case'),
+	(2, 'Continuing Care Notice.docx', 'case'),
+	(3, 'Policy Cancelation Notice.docx', 'case'),
+	(4, 'Release of Medical Records Notice (Medical provider).docx', 'case'),
+	(5, 'Repatriation Notice.docx', 'case');
+/*!40000 ALTER TABLE `template` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -279,10 +309,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `parent_id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`) VALUES
-	(1, 0, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1481952161, 1, 'Admin', 'istrator', NULL, '2132132132'),
+	(1, 0, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1482150562, 1, 'Admin', 'istrator', NULL, '2132132132'),
 	(2, 1, '192.168.1.29', 'a@xx.com', '$2y$08$gnsbXPmHtU7SBQko94uf9.VVVzzFhd12fYK3n1FMx4lL8yDPzMvvm', NULL, 'a@xx.com', NULL, NULL, NULL, NULL, 1479881420, 1480055689, 0, 'nn123a', 'bb123', NULL, '123131'),
 	(5, 1, '192.168.1.29', 'paytm123e@gmail.com', '$2y$08$p84W1BzwM7WslS9PgioW5elSODLU0E0N/p8Q2uyNzOFeHxD48AW3q', NULL, 'paytm123e@gmail.com', NULL, NULL, NULL, NULL, 1479977418, NULL, 1, 'bhawani', 'bb', NULL, '231321322'),
-	(6, 1, '192.168.1.29', 'g8bhawani@gmail.com', '$2y$08$Bm7PbyWf99OzJpfeICUmU.9/8/OU68KK/uvBtblO4hkAGfz799nUG', NULL, 'g8bhawani@gmail.com', NULL, NULL, NULL, NULL, 1481794884, NULL, 1, 'bhawani', 'istrator', NULL, '231564645');
+	(6, 1, '192.168.1.29', 'g8bhawani@gmail.com', '$2y$08$Bm7PbyWf99OzJpfeICUmU.9/8/OU68KK/uvBtblO4hkAGfz799nUG', NULL, 'g8bhawani@gmail.com', NULL, NULL, NULL, NULL, 1481794884, NULL, 1, 'istra', 'istrator', NULL, '231564645');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `users_groups` (

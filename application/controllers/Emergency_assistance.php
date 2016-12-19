@@ -33,7 +33,8 @@ class Emergency_assistance extends CI_Controller {
 			$this->data['policies'] = [];
 
 			// search case filter
-			if($this->input->get("filter") == 'case') {
+			if($this->input->get("filter") == 'case') 
+			{
 				// get all providers list
 				$order_by = array(
 					'field'=>'id',
@@ -432,9 +433,33 @@ class Emergency_assistance extends CI_Controller {
 			// get login user id
 			$case_manager = $this->ion_auth->user()->row()->id;
 
+			// timing shifts array
+			$shifts = array(
+				'8am-2pm'=>array(strtotime("8am"), strtotime("2pm")),
+				'2pm-8pm'=>array(strtotime("2pm"), strtotime("8pm")),
+				'8pm-8am'=>array(strtotime("8pm"), strtotime("8am"))
+				); 
+
+			// rearrange shifts accriding to current time 
+			if(time() >= $shifts['8am-2pm'][0] && time() < $shifts['8am-2pm'][1])
+			{
+				$this->data['employee_shift'] = ['8am-2pm', '2pm-8pm', '8pm-8am'];
+			}
+			if(time() >= $shifts['2pm-8pm'][0] && time() < $shifts['2pm-8pm'][1])
+			{
+				$this->data['employee_shift'] = ['2pm-8pm', '8pm-8am', '8am-2pm'];
+			}
+			if(time() >= $shifts['8pm-8am'][0] && time() < $shifts['8pm-8am'][1])
+			{
+				$this->data['employee_shift'] = ['8pm-8am', '8am-2pm', '2pm-8pm'];
+			}
+
             // select emc users
-			$additional_conditions = " and users.parent_id = '$case_manager' ";
-            $this->data['casemamager'] = $this->common_model->getrusers($field_name = "assign_to", $selected = $this->input->get($field_name), $group = "eacmanager", $empty = "--Select Case Manager--", $additional_conditions);
+			foreach ($this->data['employee_shift'] as $key => $value) 
+			{
+				$additional_conditions = " and users.parent_id = '$case_manager' and  schedule.schedule = '$value'";
+            	$this->data['employees_'.$key] = $this->common_model->shift_users($field_name = "assign_to", $selected = $this->input->get($field_name), $group = "eacmanager", $empty = "--Select Employee--", $additional_conditions);
+			}
 			
 			// render view data
         	$this->template->write('title', SITE_TITLE.' - Case Management', TRUE);
@@ -704,13 +729,15 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// download intake form files
-	public function download($file, $id) {
+	public function download($file, $id) 
+	{
 		$this->load->helper("download");
 		force_download('./assets/uploads/intake_forms/' . $id . '/' . $file, NULL);
 	}
 
 	// browse intake form files
-	public function file($file, $id) {
+	public function file($file, $id) 
+	{
 
 		// We'll be outputting a PDF
 		header('Content-type: application/pdf');
@@ -720,7 +747,8 @@ class Emergency_assistance extends CI_Controller {
 	}	
 
 	// delete intake form here for ajax request
-	public function deleteform($form_id) {
+	public function deleteform($form_id) 
+	{
 
 		// load files library to delete file
 		$this->load->helper('file');
@@ -737,7 +765,8 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// search users for ajax request
-	public function search_users($year, $month, $date, $type, $day) {
+	public function search_users($year, $month, $date, $type, $day) 
+	{
 
 		// prepare date
 		$date = $year."-".$month."-".$date;
@@ -794,7 +823,8 @@ class Emergency_assistance extends CI_Controller {
 	}
 	
 	// save schedule here from ajax request
-	public function save_schedule($year, $month, $date, $type, $day) {
+	public function save_schedule($year, $month, $date, $type, $day) 
+	{
 
 		// prepare date
 		$date = $year."-".$month."-".$date;
@@ -810,7 +840,8 @@ class Emergency_assistance extends CI_Controller {
 			$dates = $this->common_model->getAllDaysInAMonth($year, ucfirst($month), $day);
 
 			// used to add single quotes in save_schedule($year, $month, $date, $type, $day) function
-			function add_quotes($str) {
+			function add_quotes($str) 
+			{
 			    return sprintf("'%s'", $str);
 			}
 
@@ -988,5 +1019,87 @@ class Emergency_assistance extends CI_Controller {
 			else
 				echo $this->calendar->generate($year, $month, $content); 
 		}
+	}
+
+	// assign case manager manually or automatically for ajax request
+	public function assign_cases($type = "automatic") 
+	{
+		$cases = $this->input->post("cases");
+		$cases = $this->input->post("cases");	
+		$cases = explode(",", $cases);		
+		if($type == "manually")
+		{
+			$employee_id = $this->input->post("employee_id");
+
+			// asigning process
+			foreach ($cases as $key => $value) 
+			{
+				$this->common_model->update("case", array("assign_to"=>$employee_id), array("id"=>$value));
+			}
+		}
+
+		// assign cases with emc which have minimum cases one by one ascending order
+		else if($type == 'automatic')
+		{
+			$fields = "count(case.id) as counter, users.id";
+			$conditions = "users.parent_id = '".$this->ion_auth->user()->row()->id."'";
+			$joins[] = array(
+				'table' => 'case',
+				'on' => 'users.id = case.assign_to',
+				'type' => 'LEFT'
+				);
+			$order_by = array(
+					'field'=>'counter',
+					'order'=>'asc'
+				);
+			$group_by = array(
+				'users.id'
+				);
+			$users= $this->common_model->select($record = "first", $typecast = "array", $table = "users", $fields, $conditions, $joins, $order_by, $group_by, $having = "" );
+			if(!empty($users))
+				foreach ($cases as $key => $value) 
+				{
+					$this->common_model->update("case", array("assign_to"=>$users['id']), array("id"=>$value));
+				}
+			
+		}
+
+		echo TRUE;
+
+	}
+
+	//follow up cases only for ajax request
+	public function follow_up_cases() 
+	{
+		$cases = $this->input->post("cases");
+		$cases = $this->input->post("cases");	
+		$cases = explode(",", $cases);
+		$employee_id = $this->input->post("employee_id");
+
+		// follow up process
+		foreach ($cases as $key => $value) 
+		{
+			$this->common_model->update("case", array("follow_up_to"=>$employee_id), array("id"=>$value));
+		}
+
+		echo TRUE;
+
+	}
+
+	//mark inactive cases for ajax request
+	public function mark_inactive() 
+	{
+		$cases = $this->input->post("cases");
+		$cases = $this->input->post("cases");	
+		$cases = explode(",", $cases);
+
+		// mark deactivate process
+		foreach ($cases as $key => $value) 
+		{
+			$this->common_model->update("case", array("status"=>'0'), array("id"=>$value));
+		}
+
+		echo TRUE;
+
 	}
 }

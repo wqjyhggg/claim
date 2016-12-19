@@ -80,14 +80,13 @@
    var date, type, day;
 
    // to check model should not open in blank dates
-    $(document).on("click", "td", function(){
+    $(document).on("click", ".calendar td", function(){
        type = "date";
        if(!$(this).children("span").hasClass("day_listing") && !$(this).children("div").children("span").hasClass("day_listing"))
           return false;
        else
        {
           date = $(this).children("span.day_listing").html()?$(this).children("span.day_listing").html():$(this).children("div.today").children("span.day_listing").html();
-
           search_users(type);
        }
     })
