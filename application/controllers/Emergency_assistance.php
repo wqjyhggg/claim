@@ -437,7 +437,7 @@ class Emergency_assistance extends CI_Controller {
 			$shifts = array(
 				'8am-2pm'=>array(strtotime("8am"), strtotime("2pm")),
 				'2pm-8pm'=>array(strtotime("2pm"), strtotime("8pm")),
-				'8pm-8am'=>array(strtotime("8pm"), strtotime("8am"))
+				'8pm-8am'=>array(strtotime("8pm"), strtotime("11:59pm"), strtotime("8am"))
 				); 
 
 			// rearrange shifts accriding to current time 
@@ -449,7 +449,7 @@ class Emergency_assistance extends CI_Controller {
 			{
 				$this->data['employee_shift'] = ['2pm-8pm', '8pm-8am', '8am-2pm'];
 			}
-			if(time() >= $shifts['8pm-8am'][0] && time() < $shifts['8pm-8am'][1])
+			if((time() >= $shifts['8pm-8am'][0] and time() <= $shifts['8pm-8am'][1]) OR (time() < $shifts['8pm-8am'][2]))
 			{
 				$this->data['employee_shift'] = ['8pm-8am', '8am-2pm', '2pm-8pm'];
 			}
