@@ -210,6 +210,16 @@
                         ?>
                      </div>
                   </div> 
+
+                  <div class="form-group col-sm-4">
+                     <?php echo form_label('Insured Address:', 'insured_address', array("class"=>'col-sm-12'));   ?>
+                     <div class="form-group col-sm-12">
+                        <?php                
+                        echo form_textarea("insured_address", $this->common_model->field_val("insured_address", $case_details), array("class"=>"form-control", 'placeholder'=>'Insured Address', 'style'=>"height:90px"));
+                        echo form_error("insured_address");
+                        ?>
+                     </div>
+                  </div>   
                   <div class="form-group col-sm-4">
                      <?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">

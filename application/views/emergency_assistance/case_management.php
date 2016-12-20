@@ -1,4 +1,9 @@
-<duv >
+<style>
+.modal-lg {
+    width: 95%;
+}
+</style>
+<duv>
    <div class="page-title">
       <div class="title_left">
          <h3>Case Management</h3>         
@@ -102,7 +107,15 @@
                      </thead>
                      <tbody>
                      <?php foreach ($cases as $key => $value): ?>
-                        <tr class="row-link" alt="<?php echo $value['id']; ?>">
+                        <!-- placing all attributes in table row to replace feature in doc via js -->
+                        <tr class="row-link" alt="<?php echo $value['id']; ?>"
+                           insured_address="<?php echo nl2br($value['insured_address']) ?>"
+                           insured_lastname="<?php echo $value['insured_lastname'] ?>"
+                           insured_name="<?php echo $value['insured_name'] ?>"
+                           policy_no="<?php echo $value['policy_no'] ?>"
+                           case_no="<?php echo $value['case_no'] ?>"
+                           casemanager_name="<?php echo $value['case_manager_name'] ?>"
+                           >
                            <th><?php echo form_checkbox("case", $value['id']); ?></th>
                            <td><?php echo $value['case_no']; ?></td>
                            <td><?php echo date('d/m/Y', strtotime($value['created'])); ?></td>
@@ -166,7 +179,7 @@
                      </div>
 
                      <div class="col-sm-2">    
-                        <button class="btn btn-primary show_button" disabled>Email/Print</button> 
+                        <button class="btn btn-primary show_button email_print"  data-toggle="modal" data-target="#print_template" disabled>Email/Print</button> 
                      </div> 
                   </div>            
                </div>
@@ -182,6 +195,83 @@
       </div>
    </div>
 </duv>
+
+<!-- Email print doc content here -->
+<div id="print_template" class="modal fade" role="dialog">
+  <div class="modal-dialog  modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Print/email Template Letter</h4>
+      </div>
+      <?php 
+         //echo form_open_multipart("emergency_assistance/send_email", array("id"=>'send_email'));
+       ?>
+      <div class="modal-body">
+          <div class="row">
+               <div class="form-group col-sm-3">
+                  <?php
+                  echo form_label('To:', 'email', array("class"=>'col-sm-12'));
+                  ?>
+                  <div class="form-group col-sm-12">
+                     <?php  
+                     echo form_input("email", "", array("class"=>"form-control col-sm-6 form-group", 'placeholder'=>'Email Address'));
+                     ?>
+                  </div>
+               </div>
+               <div class="form-group col-sm-12">
+               <?php 
+                  echo form_label('Select Template:', 'select_template', array("class"=>'col-sm-12'));
+               ?>
+               <div class="form-group col-sm-12">
+                  <?php foreach($docs as $doc): ?>
+                     <div class="select-doc col-sm-2" doc="<?php echo $doc['id'] ?>">
+                        <i class="fa fa-file-word-o large"></i>
+                        <?php echo $doc['name'] ?> 
+                     </div>
+                  <?php endforeach; ?>
+               </div>
+            </div>  
+            <div class="form-group col-sm-12 docfiles">
+               <?php foreach($docs as $doc): ?>
+                  <div class="col-sm-6 doc-description doc-<?php echo $doc['id'] ?>" style="display:none">
+                     <div class="col-sm-12 doc_title">
+                        <?php echo heading($doc['name'].' <i class="fa fa-print large pull-right" title="Print file"></i>', 4); ?> 
+                     </div>
+                     <div class="col-sm-12 doc-desc">
+                        <?php
+                           // find and replace text
+                           $find = array(
+                              '{otc_logo}',
+                              '{current_date}'
+                              );
+                           $replace = array(
+                              img(array('src'=>'otc.jpg','width'=>'90', 'height'=>'50')),
+                              date("F d, Y")
+                              );
+                         echo str_replace($find, $replace, $doc['description']);
+                        ?>
+                     </div>                     
+                  </div>
+               <?php endforeach; ?>
+            </div>
+         </div>
+      </div>
+      <div class="modal-footer">
+         <label class="col-sm-12">&nbsp;</label>
+         <button class="btn btn-primary save-intakeform" type="submit">Send</button>
+         <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+      </div>
+      <?php //echo form_close(); ?>
+    </div>
+
+  </div>
+</div>
+<!-- end here -->
+
+
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
@@ -210,7 +300,7 @@ $(document).ready(function() {
    {
       $(".show_button").removeAttr("disabled");
       if(length > 1)
-          $(".view_edit").attr("disabled", "disabled");
+          $(".view_edit, .email_print").attr("disabled", "disabled");
    }
    else
    {
@@ -339,6 +429,49 @@ $(document).ready(function() {
    } 
    else
       return false;
+}).on("click", ".select-doc", function(){                                              // show email/print function
+   $(this).toggleClass("active");
+
+   // get doc if
+   var id = $(this).attr("doc");
+
+   // open doc related to file selection
+   if($(this).hasClass("active"))
+   {
+      $(".doc-"+id).show();
+   } 
+   else
+   {
+      $(".doc-"+id).hide();
+   }
+
+   // get selected case details object
+   var obj = $("input[name=case]:checked").parent("th").parent("tr.row-link");
+
+   // replace string from casemanager name etc
+   var str = $(".doc-"+id+"  .doc-desc").html();
+   str = str.replace(/{insured_name}/gi, obj.attr("insured_name"))
+   .replace("{insured_address}", obj.attr("insured_address"))
+   .replace("{insured_lastname}", obj.attr("insured_lastname"))
+   .replace("{policy_no}", obj.attr("policy_no"))
+   .replace("{case_no}", obj.attr("case_no"))
+   .replace("{policy_coverage_info}", "{policy_coverage_info}")
+   .replace("{casemanager_name}", obj.attr("casemanager_name"));
+
+   $(".doc-"+id+" .doc-desc").html(str);
+
+});
+
+// create input boxes where requirement need
+var $outer = $(".outer-text");
+$outer.each(function(){
+   var text = $.trim($(this).text());
+
+   $(this).empty();
+   if(!$(this).hasClass("area"))
+      $(this).append("<input class='outer-text' value='" + text + "'></input>");
+   else        
+      $(this).append("<textarea  style='width:100%' rows='6' value=''>"+ text +"</textarea>");
 });
 
 </script>

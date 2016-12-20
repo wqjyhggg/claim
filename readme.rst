@@ -7,6 +7,16 @@ Username: admin@admin.com
 Password: password
 
 #####################
+Dec, 20 2016 update:-
+#####################
+- Case Management Page----- ------
+- Print/Email templates integration - done (sending is remaining)
+- Popup layout and settings is - done
+--- email/print in progress---
+-Note:- please import database files to avoid errors
+
+
+#####################
 Dec, 19 2016 update:-
 #####################
 - Case Management Page----- ------

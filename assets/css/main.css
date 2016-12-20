@@ -344,3 +344,27 @@ div.today {
 input[type=checkbox]{
   cursor: pointer;
 }
+.select-doc.col-sm-2 {
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-weight: bold;
+    min-height: 51px;
+    margin: 7px;
+    padding: 6px;
+    color: #3d96da;
+}
+
+.select-doc.col-sm-2.active, .select-doc.col-sm-2:hover {
+    background: #8dbbea;
+    color: #fff;
+    border: #3d96da 1px solid;
+}
+.doc-description {
+    border: 1px solid #3d96da;
+    margin-bottom: 9px;
+}
+.doc_title {
+    border-bottom: 1px solid #3d96da;
+    color: #3d96da;
+    text-align: center;
+}

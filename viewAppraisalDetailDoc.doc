@@ -1,0 +1,33 @@
+
+
+<html>
+   <style>body, p{ font-family: Calibri; font-size:11pt !important}</style>
+   <body>
+		<img src="otc.jpg"   width="90" height="50"/>
+		<p>{current_date}</p>
+		<p>{insured_name}</p>
+		<p>{insured_address}</p>
+
+		<p align="center">Letter of Repatriation Notice </p>
+		<p>Dear Mr./Ms. {insured_lastname},</p>
+		<p>Re: Policy Number: {policy_no}, Case Number: {case_no} <br/> Coverage Period: {policy_coverage_info}</p>
+
+		<p>This letter is to inform you that we have come to a decision based on the medical notes submitted to offer you a one-way economy flight ticket to your home country. Your policy will terminate five days from the day you were informed if you do not accept the offer.</p>
+
+		<p>Please find the following provisions in the policy wording:</p>
+
+		<p>"If you choose to decline the transfer or return when declared medically stable by the Assistance Company, the Insurer will be released from any liability for expenses incurred for such sickness or injury after the proposed date of transfer or return. The Assistance Company will make every provision for your medical condition when choosing and arranging the mode of your transfer or return" </p>
+
+		<p>Limitation of Benefits</p>
+
+		<p>Once you are deemed medically stable to return to your country of origin (with or without a medical escort) in the opinion of the Assistance Company or, your emergency is considered to have ended, whereupon any further consultation, treatment, recurrence or complication related to the emergency will no longer be eligible for coverage under this policy</p>
+
+		<p>Your prompt attention is appreciated to ensure the processing of your case. Should you have any questions, please do not hesitate to contact us at 905-707-9555 or toll free at 1-888-988-3268.</p>
+		
+		<p>For and on behalf of<br/>Ontime Care Worldwide</p>
+		<p>{casemanager_name}<br/>Case Manager</p>
+   </body>
+
+</html>
+
+    

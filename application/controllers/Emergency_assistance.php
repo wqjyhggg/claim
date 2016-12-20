@@ -134,7 +134,7 @@ class Emergency_assistance extends CI_Controller {
 		else
 		{
 			//validate form input
-			$this->form_validation->set_rules('assign_to', 'Assign To', 'required');
+			$this->form_validation->set_rules('assign_to', 'Assign To', '');
 			$this->form_validation->set_rules('reason', 'Reason', 'required');
 			$this->form_validation->set_rules('first_name', 'First Name', 'required');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
@@ -278,7 +278,7 @@ class Emergency_assistance extends CI_Controller {
 		else
 		{
 			//validate form input
-			$this->form_validation->set_rules('assign_to', 'Assign To', 'required');
+			$this->form_validation->set_rules('assign_to', 'Assign To', '');
 			$this->form_validation->set_rules('reason', 'Reason', 'required');
 			$this->form_validation->set_rules('first_name', 'First Name', 'required');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
@@ -347,6 +347,7 @@ class Emergency_assistance extends CI_Controller {
 
 				// pass case id to server
 				$this->data['case_id'] = $id;
+				$this->data['ref'] = $this->input->get("ref");
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Edit Case', TRUE);
@@ -415,7 +416,7 @@ class Emergency_assistance extends CI_Controller {
 			if($this->input->get("priority")) 
 				$conditions['case.priority'] = $this->input->get("priority");
 
-			$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
+			$fields = "case.insured_address, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, case.insured_lastname, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
 			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array(), $having = "", $limit, $offset);
 			$this->data['cases'] = $results['records'];
 
@@ -440,7 +441,7 @@ class Emergency_assistance extends CI_Controller {
 				'8pm-8am'=>array(strtotime("8pm"), strtotime("11:59pm"), strtotime("8am"))
 				); 
 
-			// rearrange shifts accriding to current time 
+			// rearrange shifts according to system current time 
 			if(time() >= $shifts['8am-2pm'][0] && time() < $shifts['8am-2pm'][1])
 			{
 				$this->data['employee_shift'] = ['8am-2pm', '2pm-8pm', '8pm-8am'];
@@ -460,6 +461,11 @@ class Emergency_assistance extends CI_Controller {
 				$additional_conditions = " and users.parent_id = '$case_manager' and  schedule.schedule = '$value'";
             	$this->data['employees_'.$key] = $this->common_model->shift_users($field_name = "assign_to", $selected = $this->input->get($field_name), $group = "eacmanager", $empty = "--Select Employee--", $additional_conditions);
 			}
+
+			// get all documents for sending email/print.
+			$fields = "id, name, description";
+			$conditions = "type = 'case'";
+			$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
 			
 			// render view data
         	$this->template->write('title', SITE_TITLE.' - Case Management', TRUE);
