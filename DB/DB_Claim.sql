@@ -147,14 +147,17 @@ CREATE TABLE IF NOT EXISTS `provider` (
   `services` varchar(200) DEFAULT NULL,
   `lat` varchar(20) DEFAULT NULL,
   `lng` varchar(20) DEFAULT NULL,
+  `priority` tinyint(1) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 /*!40000 ALTER TABLE `provider` DISABLE KEYS */;
-INSERT INTO `provider` (`id`, `name`, `address`, `postcode`, `discount`, `contact_person`, `phone_no`, `email`, `ppo_codes`, `services`, `lat`, `lng`, `created`) VALUES
-	(7, 'bhawan', 'gangotri garden, jaipur', 302015, 10, '21321', '32132', 'g8bhawani@gmail.com', '1', '321', '26.8726731', '75.7788451', NULL),
-	(8, 'bhawan', 'sodala, jaipur', 302011, 10, '21321', '32132', 'g8bhawani@gmail.com', '1', '321', '26.9064744', '75.7728014', NULL);
+INSERT INTO `provider` (`id`, `name`, `address`, `postcode`, `discount`, `contact_person`, `phone_no`, `email`, `ppo_codes`, `services`, `lat`, `lng`, `priority`, `created`) VALUES
+	(7, 'bhawan', 'gangotri garden, jaipur', 302015, 2, '21321', '32132', 'g8bhawani@gmail.com', '1', '321', '26.8726731', '75.7788451', 1, NULL),
+	(8, 'bhawan', 'sodala, jaipur', 302011, 3, '21321', '32132', 'g8bhawani@gmail.com', '1', '321', '26.9064744', '75.7728014', 2, NULL),
+	(9, 'Apolo hospital', 'sodala', 302015, 20, '1231231321', '32156421456', 'gf@bf.com', '2313', 'all', '26.9064744', '75.7728014', 3, NULL),
+	(10, 'Apolo hospital', 'sodala', 302015, 10, '1231231321', '32156421456', 'gf@bf.com', '2313', 'all', '26.9064744', '75.7728014', 5, NULL);
 /*!40000 ALTER TABLE `provider` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `province` (
@@ -222,15 +225,10 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   PRIMARY KEY (`id`),
   KEY `employee_id` (`employee_id`),
   CONSTRAINT `schedule_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=206 DEFAULT CHARSET=latin1;
 
 /*!40000 ALTER TABLE `schedule` DISABLE KEYS */;
 INSERT INTO `schedule` (`id`, `employee_id`, `schedule`, `date`, `created`) VALUES
-	(6, 5, '8pm-8am', '2017-01-01', '2016-12-17 08:14:29'),
-	(7, 5, '8pm-8am', '2017-01-08', '2016-12-17 08:14:29'),
-	(8, 5, '8pm-8am', '2017-01-15', '2016-12-17 08:14:29'),
-	(9, 5, '8pm-8am', '2017-01-22', '2016-12-17 08:14:29'),
-	(10, 5, '8pm-8am', '2017-01-29', '2016-12-17 08:14:29'),
 	(11, 2, '2pm-8pm', '2017-01-01', '2016-12-17 08:14:32'),
 	(12, 2, '2pm-8pm', '2017-01-08', '2016-12-17 08:14:32'),
 	(13, 2, '2pm-8pm', '2017-01-15', '2016-12-17 08:14:32'),
@@ -249,25 +247,91 @@ INSERT INTO `schedule` (`id`, `employee_id`, `schedule`, `date`, `created`) VALU
 	(26, 6, '2pm-8pm', '2016-12-28', '2016-12-17 08:25:12'),
 	(30, 6, '2pm-8pm', '2017-01-03', '2016-12-17 09:08:34'),
 	(32, 6, '2pm-8pm', '2017-01-10', '2016-12-17 09:19:02'),
-	(38, 5, '8am-2pm', '2017-01-03', '2016-12-17 09:19:20'),
-	(39, 5, '8am-2pm', '2017-01-10', '2016-12-17 09:19:20'),
-	(40, 5, '8am-2pm', '2017-01-17', '2016-12-17 09:19:20'),
-	(41, 5, '8am-2pm', '2017-01-24', '2016-12-17 09:19:20'),
-	(42, 5, '8am-2pm', '2017-01-31', '2016-12-17 09:19:20'),
 	(47, 5, '2pm-8pm', '2016-12-20', '2016-12-17 10:29:22'),
-	(63, 5, '2pm-8pm', '2017-01-11', '2016-12-19 06:33:54'),
 	(64, 6, '2pm-8pm', '2017-01-11', '2016-12-19 06:34:02'),
 	(71, 6, '2pm-8pm', '2017-01-05', '2016-12-19 06:41:05'),
 	(72, 6, '2pm-8pm', '2017-01-12', '2016-12-19 06:41:05'),
 	(73, 6, '2pm-8pm', '2017-01-19', '2016-12-19 06:41:05'),
 	(74, 6, '2pm-8pm', '2017-01-26', '2016-12-19 06:41:05'),
-	(75, 5, '2pm-8pm', '2017-01-12', '2016-12-19 06:47:55'),
 	(76, 6, '8am-2pm', '2016-12-19', '2016-12-19 07:25:01'),
 	(77, 5, '2pm-8pm', '2016-12-19', '2016-12-19 07:25:04'),
 	(78, 2, '8pm-8am', '2016-12-19', '2016-12-19 07:25:07'),
 	(79, 6, '8pm-8am', '2016-12-26', '2016-12-19 07:26:39'),
-	(80, 5, '8am-2pm', '2016-12-26', '2016-12-19 07:26:41'),
-	(81, 2, '2pm-8pm', '2016-12-26', '2016-12-19 07:26:47');
+	(81, 2, '2pm-8pm', '2016-12-26', '2016-12-19 07:26:47'),
+	(88, 7, '8am-2pm', '2016-12-23', '2016-12-21 09:48:09'),
+	(89, 7, '8am-2pm', '2016-12-30', '2016-12-21 09:48:09'),
+	(90, 6, '2pm-8pm', '2016-12-23', '2016-12-21 09:48:12'),
+	(91, 6, '2pm-8pm', '2016-12-30', '2016-12-21 09:48:12'),
+	(94, 2, '8pm-8am', '2016-12-23', '2016-12-21 09:48:18'),
+	(95, 2, '8pm-8am', '2016-12-30', '2016-12-21 09:48:18'),
+	(106, 5, '8pm-8am', '2016-12-22', '2016-12-21 10:23:00'),
+	(107, 5, '8pm-8am', '2016-12-23', '2016-12-21 10:23:00'),
+	(108, 5, '8pm-8am', '2016-12-24', '2016-12-21 10:23:00'),
+	(109, 5, '8pm-8am', '2016-12-25', '2016-12-21 10:23:00'),
+	(110, 5, '8pm-8am', '2016-12-26', '2016-12-21 10:23:00'),
+	(111, 5, '8pm-8am', '2016-12-27', '2016-12-21 10:23:00'),
+	(112, 5, '8pm-8am', '2016-12-28', '2016-12-21 10:23:00'),
+	(113, 5, '8pm-8am', '2016-12-29', '2016-12-21 10:23:00'),
+	(114, 5, '8pm-8am', '2016-12-30', '2016-12-21 10:23:01'),
+	(115, 5, '8pm-8am', '2016-12-31', '2016-12-21 10:23:01'),
+	(148, 5, '8am-2pm', '2017-01-02', '2016-12-21 10:24:01'),
+	(149, 5, '8am-2pm', '2017-01-03', '2016-12-21 10:24:03'),
+	(150, 5, '8am-2pm', '2017-01-04', '2016-12-21 10:24:04'),
+	(151, 5, '8am-2pm', '2017-01-05', '2016-12-21 10:24:05'),
+	(152, 5, '8am-2pm', '2017-01-06', '2016-12-21 10:24:05'),
+	(153, 5, '8am-2pm', '2017-01-07', '2016-12-21 10:24:06'),
+	(154, 5, '8am-2pm', '2017-01-08', '2016-12-21 10:24:06'),
+	(155, 5, '8am-2pm', '2017-01-09', '2016-12-21 10:24:07'),
+	(156, 5, '8am-2pm', '2017-01-10', '2016-12-21 10:24:07'),
+	(157, 5, '8am-2pm', '2017-01-11', '2016-12-21 10:24:07'),
+	(158, 5, '8am-2pm', '2017-01-12', '2016-12-21 10:24:07'),
+	(159, 5, '8am-2pm', '2017-01-13', '2016-12-21 10:24:07'),
+	(160, 5, '8am-2pm', '2017-01-14', '2016-12-21 10:24:07'),
+	(161, 5, '8am-2pm', '2017-01-15', '2016-12-21 10:24:07'),
+	(162, 5, '8am-2pm', '2017-01-16', '2016-12-21 10:24:07'),
+	(163, 5, '8am-2pm', '2017-01-17', '2016-12-21 10:24:08'),
+	(164, 5, '8am-2pm', '2017-01-18', '2016-12-21 10:24:08'),
+	(165, 5, '8am-2pm', '2017-01-19', '2016-12-21 10:24:09'),
+	(166, 5, '8am-2pm', '2017-01-20', '2016-12-21 10:24:09'),
+	(167, 5, '8am-2pm', '2017-01-21', '2016-12-21 10:24:09'),
+	(168, 5, '8am-2pm', '2017-01-22', '2016-12-21 10:24:09'),
+	(169, 5, '8am-2pm', '2017-01-23', '2016-12-21 10:24:09'),
+	(170, 5, '8am-2pm', '2017-01-24', '2016-12-21 10:24:09'),
+	(171, 5, '8am-2pm', '2017-01-25', '2016-12-21 10:24:10'),
+	(172, 5, '8am-2pm', '2017-01-26', '2016-12-21 10:24:10'),
+	(173, 5, '8am-2pm', '2017-01-27', '2016-12-21 10:24:10'),
+	(174, 5, '8am-2pm', '2017-01-28', '2016-12-21 10:24:10'),
+	(175, 5, '8am-2pm', '2017-01-29', '2016-12-21 10:24:10'),
+	(176, 5, '8am-2pm', '2017-01-30', '2016-12-21 10:24:10'),
+	(177, 5, '8am-2pm', '2017-01-31', '2016-12-21 10:24:10'),
+	(178, 5, '2pm-8pm', '2017-02-01', '2016-12-21 10:26:21'),
+	(179, 5, '2pm-8pm', '2017-02-02', '2016-12-21 10:26:21'),
+	(180, 5, '2pm-8pm', '2017-02-03', '2016-12-21 10:26:21'),
+	(181, 5, '2pm-8pm', '2017-02-04', '2016-12-21 10:26:21'),
+	(182, 5, '2pm-8pm', '2017-02-05', '2016-12-21 10:26:21'),
+	(183, 5, '2pm-8pm', '2017-02-06', '2016-12-21 10:26:21'),
+	(184, 5, '2pm-8pm', '2017-02-07', '2016-12-21 10:26:22'),
+	(185, 5, '2pm-8pm', '2017-02-08', '2016-12-21 10:26:22'),
+	(186, 5, '2pm-8pm', '2017-02-09', '2016-12-21 10:26:22'),
+	(187, 5, '2pm-8pm', '2017-02-10', '2016-12-21 10:26:22'),
+	(188, 5, '2pm-8pm', '2017-02-11', '2016-12-21 10:26:22'),
+	(189, 5, '2pm-8pm', '2017-02-12', '2016-12-21 10:26:22'),
+	(190, 5, '2pm-8pm', '2017-02-13', '2016-12-21 10:26:22'),
+	(191, 5, '2pm-8pm', '2017-02-14', '2016-12-21 10:26:22'),
+	(192, 5, '2pm-8pm', '2017-02-15', '2016-12-21 10:26:22'),
+	(193, 5, '2pm-8pm', '2017-02-16', '2016-12-21 10:26:22'),
+	(194, 5, '2pm-8pm', '2017-02-17', '2016-12-21 10:26:22'),
+	(195, 5, '2pm-8pm', '2017-02-18', '2016-12-21 10:26:22'),
+	(196, 5, '2pm-8pm', '2017-02-19', '2016-12-21 10:26:22'),
+	(197, 5, '2pm-8pm', '2017-02-20', '2016-12-21 10:26:22'),
+	(198, 5, '2pm-8pm', '2017-02-21', '2016-12-21 10:26:22'),
+	(199, 5, '2pm-8pm', '2017-02-22', '2016-12-21 10:26:22'),
+	(200, 5, '2pm-8pm', '2017-02-23', '2016-12-21 10:26:22'),
+	(201, 5, '2pm-8pm', '2017-02-24', '2016-12-21 10:26:22'),
+	(202, 5, '2pm-8pm', '2017-02-25', '2016-12-21 10:26:22'),
+	(203, 5, '2pm-8pm', '2017-02-26', '2016-12-21 10:26:22'),
+	(204, 5, '2pm-8pm', '2017-02-27', '2016-12-21 10:26:22'),
+	(205, 5, '2pm-8pm', '2017-02-28', '2016-12-21 10:26:22');
 /*!40000 ALTER TABLE `schedule` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `template` (
@@ -306,15 +370,17 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_name` varchar(50) DEFAULT NULL,
   `company` varchar(100) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
+  `shift` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`id`, `parent_id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`) VALUES
-	(1, 0, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1482227130, 1, 'Admin', 'istrator', NULL, '2132132132'),
-	(2, 1, '192.168.1.29', 'a@xx.com', '$2y$08$gnsbXPmHtU7SBQko94uf9.VVVzzFhd12fYK3n1FMx4lL8yDPzMvvm', NULL, 'a@xx.com', NULL, NULL, NULL, NULL, 1479881420, 1480055689, 0, 'nn123a', 'bb123', NULL, '123131'),
-	(5, 1, '192.168.1.29', 'paytm123e@gmail.com', '$2y$08$p84W1BzwM7WslS9PgioW5elSODLU0E0N/p8Q2uyNzOFeHxD48AW3q', NULL, 'paytm123e@gmail.com', NULL, NULL, NULL, NULL, 1479977418, NULL, 1, 'bhawani', 'bb', NULL, '231321322'),
-	(6, 1, '192.168.1.29', 'g8bhawani@gmail.com', '$2y$08$Bm7PbyWf99OzJpfeICUmU.9/8/OU68KK/uvBtblO4hkAGfz799nUG', NULL, 'g8bhawani@gmail.com', NULL, NULL, NULL, NULL, 1481794884, NULL, 1, 'istra', 'istrator', NULL, '231564645');
+INSERT INTO `users` (`id`, `parent_id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`, `shift`) VALUES
+	(1, 0, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1482295178, 1, 'Admin', 'istrator', NULL, '2132132132', ''),
+	(2, 1, '192.168.1.29', 'a@xx.com', '$2y$08$gnsbXPmHtU7SBQko94uf9.VVVzzFhd12fYK3n1FMx4lL8yDPzMvvm', NULL, 'a@xx.com', NULL, NULL, NULL, NULL, 1479881420, 1480055689, 1, 'nn123a', 'bb123', NULL, '123131', '2pm-8pm'),
+	(5, 1, '192.168.1.29', 'paytm123e@gmail.com', '$2y$08$p84W1BzwM7WslS9PgioW5elSODLU0E0N/p8Q2uyNzOFeHxD48AW3q', NULL, 'paytm123e@gmail.com', NULL, NULL, NULL, NULL, 1479977418, NULL, 1, 'bhawani', 'bb', NULL, '231321322', '2pm-8pm'),
+	(6, 1, '192.168.1.29', 'g8bhawani@gmail.com', '$2y$08$Bm7PbyWf99OzJpfeICUmU.9/8/OU68KK/uvBtblO4hkAGfz799nUG', NULL, 'g8bhawani@gmail.com', NULL, NULL, NULL, NULL, 1481794884, NULL, 1, 'istra', 'istrator', NULL, '231564645', '8pm-8am'),
+	(7, 1, '192.168.1.29', 'jack.salli@gmail.com', '$2y$08$a9mqZV7Yz/NsUNYtL2HmF.pwR0DmCeuzJ1s41AbYlCMCb/KmveH4S', NULL, 'jack.salli@gmail.com', NULL, NULL, NULL, NULL, 1482300501, NULL, 1, 'jack', 'sali', NULL, '12345678', '8am-2pm');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `users_groups` (
@@ -327,22 +393,23 @@ CREATE TABLE IF NOT EXISTS `users_groups` (
   KEY `fk_users_groups_groups1_idx` (`group_id`),
   CONSTRAINT `fk_users_groups_groups1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `fk_users_groups_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
 
 /*!40000 ALTER TABLE `users_groups` DISABLE KEYS */;
 INSERT INTO `users_groups` (`id`, `user_id`, `group_id`) VALUES
-	(80, 1, 1),
-	(81, 1, 2),
-	(82, 1, 3),
-	(83, 1, 4),
-	(84, 1, 5),
-	(85, 1, 6),
-	(86, 1, 7),
-	(90, 2, 2),
-	(91, 2, 4),
-	(92, 2, 7),
-	(89, 5, 2),
-	(88, 6, 2);
+	(99, 1, 1),
+	(100, 1, 2),
+	(101, 1, 3),
+	(102, 1, 4),
+	(103, 1, 5),
+	(104, 1, 6),
+	(105, 1, 7),
+	(96, 2, 2),
+	(97, 2, 4),
+	(98, 2, 7),
+	(108, 5, 2),
+	(94, 6, 2),
+	(93, 7, 2);
 /*!40000 ALTER TABLE `users_groups` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

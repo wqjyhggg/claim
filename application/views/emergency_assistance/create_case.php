@@ -94,7 +94,7 @@
                   </div>       
                   <div class="col-sm-2">
                      <label class="col-sm-12">&nbsp;</label>
-                     <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary')) ?>
+                     <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary', 'target'=>'_blank')) ?>
                   </div>
                   <div class="form-group col-sm-4">
                      <?php 

@@ -7,6 +7,15 @@ Username: admin@admin.com
 Password: password
 
 #####################
+Dec, 21 2016 update:-
+#####################
+- automatically schedule: at user management page, every EMC user account has a work shift field . When case manager click Auto Schedule, system automatically all the EMCs' schedule according to the default work shift in the user management in this month.  After Auto Schedule, case manager can user above manual schedule function to adjust some EMCs' work shift. - DONE
+- Print/Email:- Edit template, preview function, print function done on case management page.
+- Create a provider: Add a field priority, (values range :1,2,3,4,5). - DONE
+
+***Please import database to avoid db errors**
+
+#####################
 Dec, 20 2016 update:-
 #####################
 - Case Management Page----- ------

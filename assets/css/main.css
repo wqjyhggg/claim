@@ -314,6 +314,7 @@ div.today {
     padding: 1px 5px;
     background-color: #99b8ea;
     color: #000;
+    text-align: center;
 }
 
 /*loader css */

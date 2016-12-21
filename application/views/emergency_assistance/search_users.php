@@ -3,6 +3,7 @@
   <table class="table table-hover table-bordered">
      <thead>
         <tr>
+           <th>ID</th>
            <th>First Name</th>
            <th>Last Name</th>
            <th>Email Address</th>
@@ -12,6 +13,7 @@
      <tbody>
         <?php foreach ($users as $user):?>
         <tr>
+           <td><?php echo "EMC".str_pad($user['id'], 4, 0, STR_PAD_LEFT);?></td>
            <td><?php echo htmlspecialchars($user['first_name'],ENT_QUOTES,'UTF-8');?></td>
            <td><?php echo htmlspecialchars($user['last_name'],ENT_QUOTES,'UTF-8');?></td>
            <td><?php echo htmlspecialchars($user['email'],ENT_QUOTES,'UTF-8');?></td>

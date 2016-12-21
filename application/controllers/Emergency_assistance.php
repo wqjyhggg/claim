@@ -467,6 +467,9 @@ class Emergency_assistance extends CI_Controller {
 			$conditions = "type = 'case'";
 			$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
 			
+			// get province list
+			$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->get("province"));
+
 			// render view data
         	$this->template->write('title', SITE_TITLE.' - Case Management', TRUE);
 	        $this->template->write_view('content', 'emergency_assistance/case_management', $this->data);
@@ -536,6 +539,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('ppo_codes', 'PPO Codes', 'required');
 			$this->form_validation->set_rules('services', 'Services', 'required');
+			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
 			if ($this->form_validation->run() == true)
 			{
@@ -553,6 +557,7 @@ class Emergency_assistance extends CI_Controller {
 					'email' => $this->input->post("email"),
 					'ppo_codes' => $this->input->post("ppo_codes"),
 					'services' => $this->input->post("services"),
+					'priority' => $this->input->post("priority"),
 					'lat'=>$cordinates['lat'],
 					'lng'=>$cordinates['lng'],
 					);
@@ -610,9 +615,12 @@ class Emergency_assistance extends CI_Controller {
 					  ) AS distance";
 			  	$having = "distance < " . NEAREST_PROVIDERS_RANGE;
 		  	}
-
+			$order_by = array(
+				'field' => 'discount',
+				'order' => 'desc'
+				);
 			// get all providers list
-			$records = $this->common_model->select($record = "list", $typecast = "array", $table = "provider", $fields, $conditions = "", $joins = array(), $order_by = array(), $group_by = array(), $having);
+			$records = $this->common_model->select($record = "list", $typecast = "array", $table = "provider", $fields, $conditions = "", $joins = array(), $order_by, $group_by = array(), $having);
 			$this->data['records'] = $records;
 
 			// get countries list
@@ -770,8 +778,49 @@ class Emergency_assistance extends CI_Controller {
 
 	}
 
+
+	// Auto schedule process here for ajax request
+	public function auto_schedule($emc, $year, $month) 
+	{
+
+		// get employee details
+		$conditions = array('users.id'=>$emc);
+		$schedule_details = $this->common_model->select($record = "first", $typecast = "array", $table = "users", $fields = "shift", $conditions);
+
+		if($schedule_details['shift'])
+		{
+			// auto schedule to this employee for this month
+			for($i = 1; $i <= date('t', strtotime($year."-".$month)); $i++)
+			{
+				$data = array(
+					'schedule'=>$schedule_details['shift'],
+					'employee_id'=>$emc,
+					'date'=>$year."-".$month."-".$i,
+					'created'=>date("Y-m-d H:i:s")
+					);
+				if(time() < strtotime($year."-".$month."-".$i))
+				{
+					// delete schedule if already exists
+					$this->common_model->delete('schedule', array('employee_id'=>$emc, 'date'=>$year."-".$month."-".$i));
+
+					// insert schedule data
+					$this->common_model->save("schedule", $data);
+				}
+			}
+
+
+			echo TRUE;
+		}
+		else
+		{
+			echo FALSE;
+		}
+
+
+	}
+
 	// search users for ajax request
-	public function search_users($year, $month, $date, $type, $day) 
+	public function search_users($year, $month, $emc, $date, $type, $day) 
 	{
 
 		// prepare date
@@ -796,6 +845,10 @@ class Emergency_assistance extends CI_Controller {
 			$conditions[] = "users.email like '%".$this->input->post("email")."%'";
 		$conditions = implode(" and ", $conditions);
 		$conditions .= " and IF(schedule.date = '$date',  schedule.date = '$date', users.id > '0')";
+
+		// check records if related to specific emc
+		if($emc)
+			$conditions .= " and users.id = '$emc'";
 		$group_by = array("users_groups.user_id");
 		$joins[] = array(
 				'table' => 'users_groups',
@@ -823,6 +876,7 @@ class Emergency_assistance extends CI_Controller {
 		$this->data['users'] = $this->common_model->select($record = "list", $typecast = "array", $table, $fields, $conditions, $joins, $order_by, $group_by);
 		$this->data['date'] = $date;
 		$this->data['type'] = $type;
+		$this->data['emc'] = $emc;
 
 		// render view file
 		$this->load->view("emergency_assistance/search_users", $this->data);
@@ -905,7 +959,7 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// redirect if needed, otherwise display the schedule page
-	public function schedule($year = "", $month = "")
+	public function schedule($emc = 0, $year = "", $month = "")
 	{
 		// check date and time
 		if(!$year)
@@ -926,8 +980,11 @@ class Emergency_assistance extends CI_Controller {
 		}
 		else
 		{
+			// get user type if exists
+			$this->data['emc'] = $this->input->get('emc')?$this->input->get('emc'):$emc;
+
 			//get schedule calendar
-			$this->data['calendar'] = $this->schedule_calendar($year, $month);
+			$this->data['calendar'] = $this->schedule_calendar($this->data['emc'], $year, $month, "return");
 
 			// pass month and year to calender page
 			$this->data['year'] = $year;
@@ -935,7 +992,8 @@ class Emergency_assistance extends CI_Controller {
 
 			// get countries list
 			$this->data['countries'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->input->get("country2"), $key = "short_code", $value = "name");
-
+			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "emc", $this->data['emc'], $group = array("'eacmanager'"), $empty = "--Select Employee--", $additional_conditions = " and users.parent_id='".$this->ion_auth->user()->row()->id."'", $user_code = "EMC");
+			
         	$this->template->write('title', SITE_TITLE.' - Employee Schedule', TRUE);
 	        $this->template->write_view('content', 'emergency_assistance/schedule', $this->data);
 	        $this->template->render();        
@@ -949,8 +1007,9 @@ class Emergency_assistance extends CI_Controller {
      * @param       $year String
      * @param       $month array
      * @param       $type return - for return data/output - echo response for ajax complete
+     * @param       $emc int - show events and calender for specific emc user
     */
-	public function schedule_calendar($year = "", $month = "", $type = "return")
+	public function schedule_calendar($emc = 0, $year = "", $month = "", $type = "return")
 	{
 		// check date and time
 		if(!$year)
@@ -983,9 +1042,20 @@ class Emergency_assistance extends CI_Controller {
 				);
 			// prepare conditions
 			$conditions = "schedule.date like '%$year-$month%' and u1.parent_id = '$case_manager'";
+
+			// if calender for specific employee
+			if($emc)
+				$conditions .= " and u1.id = '$emc'";
 			$group_by = array("schedule.date");
 
-			$fields = "DATE_FORMAT(schedule.date, '%d') as date,  GROUP_CONCAT(concat_ws('-', concat_ws(' ', u1.first_name, u1.last_name), schedule.schedule) ORDER BY  schedule.id ASC SEPARATOR '|') as data";
+			$fields = "DATE_FORMAT(schedule.date, '%d') as date,  ";
+
+			// check calendar for on or all emc users
+			if($emc)
+				$fields .= "GROUP_CONCAT(schedule.schedule ORDER BY  schedule.id ASC SEPARATOR '|') as data";
+			else
+				$fields .= "GROUP_CONCAT(concat_ws('-', concat_ws(' ', u1.first_name, u1.last_name), schedule.schedule) ORDER BY  schedule.id ASC SEPARATOR '|') as data";
+
 			$this->data['schedules'] = $this->common_model->select($record = "list", $typecast = "array", $table = "schedule", $fields, $conditions, $joins, $order_by, $group_by);
 
 			$content = [];
@@ -1018,7 +1088,7 @@ class Emergency_assistance extends CI_Controller {
 				';
 			$config['show_next_prev'] = TRUE;
 			$config['day_type'] = 'long'; 
-			$config['next_prev_url'] = base_url("emergency_assistance/schedule/"); 
+			$config['next_prev_url'] = base_url("emergency_assistance/schedule/$emc/"); 
 			$this->load->library('calendar', $config);
 			if($type == 'return')
 				return $this->calendar->generate($year, $month, $content);       

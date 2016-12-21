@@ -152,10 +152,10 @@ class Common_model extends CI_Model
 
         if($result->num_rows() > 0) 
         {
-            return true;
+            return TRUE;
         }
         else {
-            return false;
+            return FALSE;
         }
     }
 
@@ -175,10 +175,10 @@ class Common_model extends CI_Model
 
         if($result->num_rows() > 0) 
         {
-            return true;
+            return TRUE;
         }
         else {
-            return false;
+            return FALSE;
         }
     }
 
@@ -193,10 +193,15 @@ class Common_model extends CI_Model
      * @param       $conditions array/string
      * @param       $joins array
      * @param       $group_by array
+     * @param       $group_by array
+     * @param       $user_code string - emc/cm etc - to show user code intead of name
     */
-    public function get_ref($table, $key, $value, $dropdown=false, $empty = "Please Select", $conditions = "", $joins = array(), $group_by = array())
+    public function get_ref($table, $key, $value, $dropdown=FALSE, $empty = "Please Select", $conditions = "", $joins = array(), $group_by = array(), $user_code = FALSE)
     {
-        $this->db->select("$table.$key, $table.$value");
+        if($user_code)
+            $this->db->select("$table.$key, $table.$value, $table.id");
+        else            
+            $this->db->select("$table.$key, $table.$value");
         $this->db->from($table);
         // $this->db->order_by($value);
 
@@ -225,6 +230,9 @@ class Common_model extends CI_Model
             foreach($result->result_array() as $row) 
             {
                 $array[$row[$key]] = $row[$value];
+
+                if($user_code)
+                    $array[$row[$key]] = $user_code.str_pad($row['id'], 4, 0, STR_PAD_LEFT);
             }
         }
         return $array;
@@ -238,7 +246,7 @@ class Common_model extends CI_Model
     */
     public function getcountries($field_name, $selected, $key = "name", $value = "name")
     {
-        $record = $this->get_ref($table = "country", $key, $value, $dropdown=true, $empty = "--Select Country--");
+        $record = $this->get_ref($table = "country", $key, $value, $dropdown=TRUE, $empty = "--Select Country--");
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
     
@@ -250,7 +258,7 @@ class Common_model extends CI_Model
     */
     public function getprovinces($field_name, $selected, $key= "name", $value = "name")
     {
-        $record = $this->get_ref($table = "province", $key, $value, $dropdown=true, $empty = "--Select Province--");       
+        $record = $this->get_ref($table = "province", $key, $value, $dropdown=TRUE, $empty = "--Select Province--");       
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
     
@@ -262,7 +270,7 @@ class Common_model extends CI_Model
     */
     public function getreasons($field_name, $selected)
     {
-        $record = $this->get_ref($table = "reasons", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Reason--");       
+        $record = $this->get_ref($table = "reasons", $key= "name", $value = "name", $dropdown=TRUE, $empty = "--Select Reason--");       
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
 
@@ -340,7 +348,7 @@ class Common_model extends CI_Model
      * @param       $group group name. string/array ex- 'admin' and array("'admin'", "'manager'")
      * @param       $additional_conditions string, it should start from " and YOUR CONDITIONS" or " OR YOUR CONDITIONS"
     */
-    public function getrusers($field_name, $selected, $group = "eacmanager", $empty = "--Assign To--", $additional_conditions = "")
+    public function getrusers($field_name, $selected, $group = "eacmanager", $empty = "--Assign To--", $additional_conditions = "", $user_code = FALSE)
     {
         // place join to users group table to check user group
         $join[] = array(
@@ -368,7 +376,7 @@ class Common_model extends CI_Model
             $conditions .= $additional_conditions;
         }
 
-        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=true, $empty, $conditions, $join, $group_by = array("users.id"));
+        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=TRUE, $empty, $conditions, $join, $group_by = array("users.id"), $user_code);
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
 
@@ -421,7 +429,7 @@ class Common_model extends CI_Model
             $conditions .= $additional_conditions;
         }
 
-        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=true, $empty, $conditions, $join, $group_by = array("users.id"));
+        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=TRUE, $empty, $conditions, $join, $group_by = array("users.id"));
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
 
@@ -434,7 +442,7 @@ class Common_model extends CI_Model
     */
     public function getrelations($field_name, $selected)
     {
-        $record = $this->get_ref($table = "relations", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Relationship--");      
+        $record = $this->get_ref($table = "relations", $key= "name", $value = "name", $dropdown=TRUE, $empty = "--Select Relationship--");      
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
 

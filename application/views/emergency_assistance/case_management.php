@@ -1,6 +1,6 @@
 <style>
 .modal-lg {
-    width: 95%;
+    width: 75%;
 }
 </style>
 <duv>
@@ -211,7 +211,15 @@
        ?>
       <div class="modal-body">
           <div class="row">
-               <div class="form-group col-sm-3">
+            <div class="col-sm-6">
+               <div>
+                  <label for="mail_label" class="col-sm-2">Mail Addres:</label>    
+                  <div class="form-group col-sm-6">
+                     <input name="priority" value="HIGH" id="mail_address" class="col-sm-1" type="checkbox">
+                     <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address</label>
+                  </div>
+               </div>
+               <div>
                   <?php
                   echo form_label('To:', 'email', array("class"=>'col-sm-12'));
                   ?>
@@ -221,7 +229,39 @@
                      ?>
                   </div>
                </div>
-               <div class="form-group col-sm-12">
+            </div>
+            <div class="form-group col-sm-12">
+
+               <div class="form-group col-sm-3">
+                  <?php               
+                  echo form_label('Street No.:', 'street_no', array("class"=>'col-sm-12'));  
+                  echo form_input("street_no", "", array("class"=>"form-control", 'placeholder'=>'Street No.'));
+                  echo form_error("street_no");
+                  ?>
+               </div> 
+               <div class="form-group col-sm-3">
+                  <?php               
+                  echo form_label('Street Name.:', 'street_name', array("class"=>'col-sm-12'));  
+                  echo form_input("street_name", "", array("class"=>"form-control", 'placeholder'=>'Street Name.'));
+                  echo form_error("street_name");
+                  ?>
+               </div> 
+               <div class="form-group col-sm-3">
+                  <?php               
+                  echo form_label('City:', 'city', array("class"=>'col-sm-12'));  
+                  echo form_input("city", "", array("class"=>"form-control", 'placeholder'=>'City'));
+                  echo form_error("city");
+                  ?>
+               </div> 
+
+               <div class="form-group col-sm-3">
+                  <?php 
+                     echo form_label('Province:', 'province', array("class"=>'col-sm-12'));
+                     echo $province;
+                     echo form_error("province"); 
+                  ?>
+               </div>
+
                <?php 
                   echo form_label('Select Template:', 'select_template', array("class"=>'col-sm-12'));
                ?>
@@ -236,9 +276,9 @@
             </div>  
             <div class="form-group col-sm-12 docfiles">
                <?php foreach($docs as $doc): ?>
-                  <div class="col-sm-6 doc-description doc-<?php echo $doc['id'] ?>" style="display:none">
+                  <div class="col-sm-12 doc-description doc-<?php echo $doc['id'] ?>" style="display:none">
                      <div class="col-sm-12 doc_title">
-                        <?php echo heading($doc['name'].' <i class="fa fa-print large pull-right" title="Print file"></i>', 4); ?> 
+                        <?php echo heading($doc['name']); ?> 
                      </div>
                      <div class="col-sm-12 doc-desc">
                         <?php
@@ -261,8 +301,10 @@
       </div>
       <div class="modal-footer">
          <label class="col-sm-12">&nbsp;</label>
-         <button class="btn btn-primary save-intakeform" type="submit">Send</button>
-         <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+         <button type="button" class="btn btn-info preview-template" disabled>Preview</button>
+         <button class="btn btn-primary email-intakeform" disabled >Email</button>
+         <button type="button" class="btn btn-info print" disabled>Print</button>
+         <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
       </div>
       <?php //echo form_close(); ?>
     </div>
@@ -275,6 +317,7 @@
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
+<script src="<?php echo base_url() ?>/assets/js/jQuery.print.js"></script>
 <script>
 var employee_id;
 $(document).ready(function() {
@@ -430,20 +473,17 @@ $(document).ready(function() {
    else
       return false;
 }).on("click", ".select-doc", function(){                                              // show email/print function
-   $(this).toggleClass("active");
+   
+   // hide all doc files here
+   $(".doc-description").hide(); 
+   $(".select-doc").removeClass("active");
 
    // get doc if
    var id = $(this).attr("doc");
+   $(this).addClass("active");
 
-   // open doc related to file selection
-   if($(this).hasClass("active"))
-   {
-      $(".doc-"+id).show();
-   } 
-   else
-   {
-      $(".doc-"+id).hide();
-   }
+   // show related doc file
+   $(".doc-"+id).show();
 
    // get selected case details object
    var obj = $("input[name=case]:checked").parent("th").parent("tr.row-link");
@@ -460,7 +500,64 @@ $(document).ready(function() {
 
    $(".doc-"+id+" .doc-desc").html(str);
 
-});
+   // reset all edit//preview section
+   $(".preview-template").text("Preview").removeClass("active-preview");
+
+   // enable disable buttons
+   $(".print").attr("disabled", "disabled");
+   $(".preview-template, .email-intakeform").removeAttr("disabled");
+
+})
+
+// preview template script 
+.on("click", ".preview-template", function(){
+   // get selected doc
+   $(this).toggleClass("active-preview");
+   var doc_id = $(".select-doc.active").attr("doc");
+   if($(this).hasClass("active-preview"))
+   {
+      $(this).text("Edit Template");
+      var $outer = $(".doc-"+doc_id+" .outer-text input, .doc-"+doc_id+" .outer-text textarea");
+      $outer.each(function(){
+         var text = $.trim($(this).val());
+
+         $(this).parent("p,span").html(text.replace(/\n/g, "<br>"));
+         $(this).remove();
+      });
+
+      // enable print button
+      $(".print").removeAttr("disabled");
+   }
+   else
+   {
+      $(this).text("Preview");
+      var $outer = $(".outer-text");
+      $outer.each(function(){
+         var text = $.trim($(this).html()).replace(/<br>/g, "\n");
+
+         $(this).empty();
+         if(!$(this).hasClass("area"))
+            $(this).append("<input class='outer-text' value='" + text + "'></input>");
+         else        
+            $(this).append("<textarea  style='width:100%' rows='6'>"+ text +"</textarea>");
+      });
+
+      // disable print button
+      $(".print").attr("disabled", "disabled");
+   }
+   
+})
+
+// print button script here
+.on("click", ".print", function(){
+   var doc_id = $(".select-doc.active").attr("doc");
+   $(".doc-"+doc_id).print({
+        globalStyles: false,
+        mediaPrint: true,
+        iframe: true,
+        noPrintSelector: ".avoid-this",
+    });
+})
 
 // create input boxes where requirement need
 var $outer = $(".outer-text");
@@ -473,5 +570,7 @@ $outer.each(function(){
    else        
       $(this).append("<textarea  style='width:100%' rows='6' value=''>"+ text +"</textarea>");
 });
+
+
 
 </script>

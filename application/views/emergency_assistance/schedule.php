@@ -1,7 +1,7 @@
 <duv>
    <div class="page-title">
       <div class="title_left">
-         <h3>Employee Schedule</h3>         
+         <h3>Work Schedule</h3>         
       </div>
    </div>
    <div class="clearfix"></div>
@@ -11,8 +11,27 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
          <div class="x_panel">
             <div class="x_title">
-               <h2>Schedule Calendar<small></small></h2>
-               <div class="clearfix"></div>
+              <h2>Schedule Calendar<small></small></h2>
+
+              <div class="form-group col-sm-4 pull-right">
+                <div class="form-group col-sm-3">
+                 <?php 
+                  echo form_label('Employee:', 'emc', array("class"=>'col-sm-12'));                  
+                  $priority = array(
+                     ""=>'--Select Priority--',
+                     "HIGH"=>'High',
+                     "Normal"=>'Normal',
+                     );
+                     ?>
+                 </div>
+                 <div class="form-group col-sm-9">
+                     <?php echo $eacmanagers;?>
+                </div>
+              </div>
+
+              <a href="javascript:void(0)" class="btn btn-primary pull-right auto-schedule"><i class="fa fa-clock-o"></i> Auto Schedule Whole EMCs</a>
+
+              <div class="clearfix"></div>
             </div>
             <div class="x_content"> 
                <div class="col-sm-12 calendar-data">           
@@ -36,6 +55,7 @@
         <h4 class="modal-title">Create Schedule</h4>
       </div>
       <div class="modal-body">
+          <?php if(!$emc): ?>
           <div class="row"> 
             <?php echo form_open("emergency_assistance/search_users", array("class"=>'form-horizontal', 'id'=>'search_users'));?>                       
             <div class="form-group col-sm-3">
@@ -59,9 +79,10 @@
             </div>
             <?php echo form_close(); ?>
          </div>
+        <?php endif; ?>
          <div class="x_panel">
             <div class="x_title">
-               <h2>Setup Employees Schedule<small></small></h2>
+               <h2>Employee(s) Work Schedule<small></small></h2>
                <div class="clearfix"></div>
             </div>
             <div class="x_content search_users">
@@ -151,7 +172,7 @@
 
   // search users request
   function search_users(type){
-    var url = "<?php echo base_url("emergency_assistance/search_users/$year/$month"); ?>/" + date + '/' + type + '/' + day;
+    var url = "<?php echo base_url("emergency_assistance/search_users/$year/$month/$emc"); ?>/" + date + '/' + type + '/' + day;
       var data = $("#search_users").serialize();
       $.ajax({
          url:url,
@@ -173,26 +194,65 @@
 
   // reload calendar request
   function reload_calendar(){
-    var url = "<?php echo base_url("emergency_assistance/schedule_calendar/$year/$month/output"); ?>";
-      $.ajax({
-         url:url,
-         beforeSend: function(){
+    var url = "<?php echo base_url("emergency_assistance/schedule_calendar/$emc/$year/$month/output"); ?>";
+    $.ajax({
+       url:url,
+       beforeSend: function(){
 
-            // show ajax loader here
-            $(".calendar-data").addClass("csspinner load1");
-         },
-         success: function(data){
+          // show ajax loader here
+          $(".calendar-data").addClass("csspinner load1");
+       },
+       success: function(data){
 
-            // in succss place return responce to list
-            $(".calendar-data").html(data);
-            $(".calendar-data").removeClass("csspinner load1");
-         }
-      })
+          // in succss place return responce to list
+          $(".calendar-data").html(data);
+          $(".calendar-data").removeClass("csspinner load1");
+       }
+    })
   }
 
   // remove schedule event
   $(document).on("click", ".fa.fa-trash.row-link", function(){
     $(this).parent("div").parent("div").children(".col-sm-9").children("select.select_schedule").val("").trigger("change");
     $(this).parent("div").hide();
+  })
+
+  // once user change employee dropdown
+  .on("change", "select[name=emc]", function(){
+    window.location = "<?php echo base_url("emergency_assistance/schedule") ?>?emc="+$(this).val();
+  })
+
+  // once user click on auto-schedule button
+  .on("click", ".auto-schedule", function(){
+    if(confirm("Are you sure, you want to auto schedule whole emc? Schedule will be auto generated for all future dates for this month."))
+    {
+      var url = "<?php echo base_url("emergency_assistance/auto_schedule/$emc/$year/$month"); ?>";
+      $.ajax({
+         url:url,
+         beforeSend: function(){
+
+            // show ajax loader here
+            $(".right_col").addClass("csspinner load1");
+         },
+         success: function(data){
+
+          $(".right_col").removeClass("csspinner load1");
+          if(data)
+          {
+            // in succss place return responce to list
+            reload_calendar();
+          }
+          else
+          {  
+            alert("Sorry, no auto schedule specified for this emc user. ");           
+            return false;
+          }
+         }
+      })
+    } 
+    else
+    {
+      return false;
+    }
   })
 </script>

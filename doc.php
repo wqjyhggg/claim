@@ -178,7 +178,6 @@
 	var $outer = $(".outer-text input, .outer-text textarea");
 	$outer.each(function(){
 		var text = $.trim($(this).val());
-
 		$(this).parent("p,span").html(text.replace(/\n/g, "<br />"));
 		$(this).remove();
 	});
