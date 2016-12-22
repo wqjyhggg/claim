@@ -6,6 +6,19 @@ Username: admin@admin.com
 
 Password: password
 
+
+
+#####################
+Dec, 22 2016 update:-
+#####################
+- Case Management Page----- ------
+- Print/Email templates complete functionality - done
+- Print/Email templates and inactive function in edit case page - done
+- Add insured amount in case - done
+- Products api integtation - done
+-Note:- please import database files to avoid errors
+
+
 #####################
 Dec, 21 2016 update:-
 #####################

@@ -207,7 +207,7 @@
         <h4 class="modal-title">Print/email Template Letter</h4>
       </div>
       <?php 
-         //echo form_open_multipart("emergency_assistance/send_email", array("id"=>'send_email'));
+         echo form_open_multipart("emergency_assistance/send_print_email", array("id"=>'send_print_email'));
        ?>
       <div class="modal-body">
           <div class="row">
@@ -225,7 +225,7 @@
                   ?>
                   <div class="form-group col-sm-12">
                      <?php  
-                     echo form_input("email", "", array("class"=>"form-control col-sm-6 form-group", 'placeholder'=>'Email Address'));
+                     echo form_input("email", "", array("class"=>"form-control col-sm-6 form-group email required", 'placeholder'=>'Email Address'));
                      ?>
                   </div>
                </div>
@@ -235,21 +235,21 @@
                <div class="form-group col-sm-3">
                   <?php               
                   echo form_label('Street No.:', 'street_no', array("class"=>'col-sm-12'));  
-                  echo form_input("street_no", "", array("class"=>"form-control", 'placeholder'=>'Street No.'));
+                  echo form_input("street_no", "", array("class"=>"form-control required", 'placeholder'=>'Street No.'));
                   echo form_error("street_no");
                   ?>
                </div> 
                <div class="form-group col-sm-3">
                   <?php               
                   echo form_label('Street Name.:', 'street_name', array("class"=>'col-sm-12'));  
-                  echo form_input("street_name", "", array("class"=>"form-control", 'placeholder'=>'Street Name.'));
+                  echo form_input("street_name", "", array("class"=>"form-control required", 'placeholder'=>'Street Name.'));
                   echo form_error("street_name");
                   ?>
                </div> 
                <div class="form-group col-sm-3">
                   <?php               
                   echo form_label('City:', 'city', array("class"=>'col-sm-12'));  
-                  echo form_input("city", "", array("class"=>"form-control", 'placeholder'=>'City'));
+                  echo form_input("city", "", array("class"=>"form-control required", 'placeholder'=>'City'));
                   echo form_error("city");
                   ?>
                </div> 
@@ -306,18 +306,19 @@
          <button type="button" class="btn btn-info print" disabled>Print</button>
          <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
       </div>
-      <?php //echo form_close(); ?>
+      <?php echo form_close(); ?>
     </div>
 
   </div>
 </div>
 <!-- end here -->
-
+<div style="display:none" id="products"><?php echo $products; ?></div>
 
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script src="<?php echo base_url() ?>/assets/js/jQuery.print.js"></script>
+<script src="<?php echo base_url() ?>/assets/js/jquery.validate.min.js"></script>
 <script>
 var employee_id;
 $(document).ready(function() {
@@ -517,7 +518,7 @@ $(document).ready(function() {
    if($(this).hasClass("active-preview"))
    {
       $(this).text("Edit Template");
-      var $outer = $(".doc-"+doc_id+" .outer-text input, .doc-"+doc_id+" .outer-text textarea");
+      var $outer = $(".doc-"+doc_id+" .outer-text input, .doc-"+doc_id+" .outer-text textarea, .doc-"+doc_id+" .select-product select");
       $outer.each(function(){
          var text = $.trim($(this).val());
 
@@ -542,6 +543,15 @@ $(document).ready(function() {
             $(this).append("<textarea  style='width:100%' rows='6'>"+ text +"</textarea>");
       });
 
+      // for the products list
+      var $outer_select = $(".select-product");
+      $outer_select.each(function(){
+         var text = $.trim($(this).text());
+
+         $(this).empty();
+         $(this).append($("#products").html()).children("select").val(text);
+      });
+
       // disable print button
       $(".print").attr("disabled", "disabled");
    }
@@ -559,6 +569,36 @@ $(document).ready(function() {
     });
 })
 
+// send email print to recepient email:-
+.on("submit", "#send_print_email", function(e){
+   e.preventDefault();
+   var doc_id = $(".select-doc.active").attr("doc");
+   var template = $(".doc-"+doc_id).children("div.doc-desc").html();
+   if($(this).valid()) 
+   {
+      $.ajax({
+            url: "<?php echo base_url("emergency_assistance/send_print_email") ?>",
+            method: "post",
+            data:{
+               email:$("input[name=email]").val(), 
+               street_no:$("input[name=street_no]").val(), 
+               street_name:$("input[name=street_name]").val(), 
+               city:$("input[name=city]").val(), 
+               province:$("select[name=province]").val(), 
+               template:template,
+               case_id: $("input[name=case]:checked").val(),
+               doc: $(".select-doc.active").text()
+            },
+            beforeSend: function(){
+               $(".modal-content").addClass("csspinner load1");
+            },
+            success: function() {
+               window.location.reload();
+            }
+         })
+   }
+})
+
 // create input boxes where requirement need
 var $outer = $(".outer-text");
 $outer.each(function(){
@@ -569,6 +609,14 @@ $outer.each(function(){
       $(this).append("<input class='outer-text' value='" + text + "'></input>");
    else        
       $(this).append("<textarea  style='width:100%' rows='6' value=''>"+ text +"</textarea>");
+});
+
+var $outer_select = $(".select-product");
+$outer_select.each(function(){
+   var text = $.trim($(this).text());
+
+   $(this).empty();
+   $(this).append($("#products").html());
 });
 
 

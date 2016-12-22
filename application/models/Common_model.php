@@ -279,19 +279,51 @@ class Common_model extends CI_Model
      *
      * @param       $field_name String
      * @param       $selected string
+     * @param       $classes boolean TRUE/FALSE to show classes - Purpose to remove classes in edit doc file 
+     * @param       $short boolean TRUE/FALSE to show full value or short value of array key 
     */
-    public function get_products($field_name, $selected)
+    public function get_products($field_name, $selected, $classes = TRUE, $short = TRUE)
     {
-        $products = array(
-            '' => '--Select Product--',
-            'JES'=>'JF Elite Plus International Student to Canada',
-            'JFC'=>'JF Care International Student to Canada',
-            'JFR'=>'JF Royal Visitor to Canada',
-            'JUS'=>'JF USA International Student to USA',
-            'NUS'=>'Nihao USA International Student to USA',
-            'OPL'=>'Optimum Plus Visitor to Canada'
-            );
-        return form_dropdown($field_name, $products, $selected, array("class"=>'form-control'));
+
+        // get products from jf api
+        $url =  API_URL."products";
+        $curl = curl_init();
+
+        // Post TYPE REQUEST 
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, array('key'=>API_KEY));
+
+        // Optional Authentication:
+        if(API_USER and API_PASSWORD)
+        {
+            curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($curl, CURLOPT_USERPWD, API_USER.":".API_PASSWORD);
+        }
+
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($curl);
+        $result = json_decode($result, TRUE);
+
+        // get all data here
+        $products  = [''=>'--Select Product--'];
+        // echo curl_error($curl);
+
+        curl_close($curl);
+        // print_r($result); die;
+
+        if(!empty(@$result['plan']))
+        {   
+            foreach ($result['plan'] as $key => $value) 
+            {
+                if($short)
+                    $products[$value['product_short']] = $value['up_insuer'];
+                else                    
+                    $products[$value['up_insuer']] = $value['up_insuer'];
+            }
+        }
+        return form_dropdown($field_name, $products, $selected, array("class"=>$classes?'form-control':""));
     }
     
     /**

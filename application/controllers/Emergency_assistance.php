@@ -283,6 +283,8 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('first_name', 'First Name', 'required');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
+			if($this->input->get("ref") == 'manage')
+				$this->form_validation->set_rules('reserve_amount', 'Create Reservers', 'number');
 
 			if ($this->form_validation->run() == true)
 			{
@@ -316,7 +318,12 @@ class Emergency_assistance extends CI_Controller {
 					'on' => 'u1.id = case.created_by',
 					'type' => 'LEFT'
 					);
-				$case_details = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('case.id'=>$id), $joins);
+				$joins[] = array(
+					'table' => 'users u2',
+					'on' => 'u2.id = case.case_manager',
+					'type' => 'LEFT'
+					);
+				$case_details = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name", $conditions = array('case.id'=>$id), $joins);
 				$this->data['case_details'] = $case_details;
 				if(empty($case_details))
 				{
@@ -331,6 +338,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name, $case_details));
+				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "");
 				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Assign To--");
 				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--");
 				$this->data['reasons'] = $this->common_model->getreasons($field_name = "reason", $selected = $this->common_model->field_val($field_name, $case_details));
@@ -348,6 +356,15 @@ class Emergency_assistance extends CI_Controller {
 				// pass case id to server
 				$this->data['case_id'] = $id;
 				$this->data['ref'] = $this->input->get("ref");
+
+				// pass template data if page referred from case management page
+				if($this->data['ref'] <> 'manage')
+				{
+					// get all documents for sending email/print.
+					$fields = "id, name, description";
+					$conditions = "type = 'case'";
+					$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
+				}
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Edit Case', TRUE);
@@ -469,6 +486,9 @@ class Emergency_assistance extends CI_Controller {
 			
 			// get province list
 			$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->get("province"));
+
+			// get products list
+			$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->get($field_name), FALSE, FALSE);
 
 			// render view data
         	$this->template->write('title', SITE_TITLE.' - Case Management', TRUE);
@@ -746,7 +766,7 @@ class Emergency_assistance extends CI_Controller {
 	public function download($file, $id) 
 	{
 		$this->load->helper("download");
-		force_download('./assets/uploads/intake_forms/' . $id . '/' . $file, NULL);
+		force_download('./assets/uploads/intake_forms/' . $id . '/' . urldecode($file), NULL);
 	}
 
 	// browse intake form files
@@ -757,7 +777,7 @@ class Emergency_assistance extends CI_Controller {
 		header('Content-type: application/pdf');
 
 		// The PDF source is in original.pdf
-		readfile('./assets/uploads/intake_forms/' . $id . '/' . $file);
+		readfile('./assets/uploads/intake_forms/' . $id . '/' . urldecode($file));
 	}	
 
 	// delete intake form here for ajax request
@@ -1165,7 +1185,6 @@ class Emergency_assistance extends CI_Controller {
 	//mark inactive cases for ajax request
 	public function mark_inactive() 
 	{
-		$cases = $this->input->post("cases");
 		$cases = $this->input->post("cases");	
 		$cases = explode(",", $cases);
 
@@ -1174,8 +1193,78 @@ class Emergency_assistance extends CI_Controller {
 		{
 			$this->common_model->update("case", array("status"=>'0'), array("id"=>$value));
 		}
+		$this->session->set_flashdata('success', "Case successfully deactivated.");
 
 		echo TRUE;
 
 	}
+
+	//send email template for ajax request
+	public function send_print_email() 
+	{
+		// get all requested params
+		$email = $this->input->post("email");
+		$street_no = $this->input->post("street_no");
+		$street_name = $this->input->post("street_name");
+		$city = $this->input->post("city");
+		$province = $this->input->post("province");
+		$template = $this->input->post("template");
+		$doc = $this->input->post("doc");
+		$case_id = $this->input->post("case_id");
+
+		// create pdf from template	 using DOM PDF	
+		require_once './assets/dompdf/dompdf_config.inc.php';		
+	    $dompdf = new DOMPDF();
+	    $dompdf->load_html($template);
+	    $dompdf->render();
+	    $output = $dompdf->output();
+	    $filename = trim($doc).rand(999,999999).'.pdf';
+	    $filepath =  "./assets/temp/".$filename;
+	    file_put_contents($filepath, $output);
+
+		// generate data array
+		$intake_notes = array(
+			"Email: ".$email,
+			"Street No: ".$street_no,
+			"Street No: ".$street_name,
+			"City: ".$city,
+			"Province: ".$province,
+			);
+		$data_intake = array(
+			'case_id' => $case_id,
+			'created_by' => $this->ion_auth->user()->row()->id,
+			'notes' => implode(", ", $intake_notes),
+			'created' => date("Y-m-d H:i:s"),
+			'docs' => $filename
+			);
+
+		// save values to database
+		$intake_form_id = $this->common_model->save("intake_form", $data_intake);
+
+		// create directory to identify intake files
+		@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+
+		// move all files to that directory
+		copy("./assets/temp/$filename", "./assets/uploads/intake_forms/$intake_form_id/$filename");
+		unlink("./assets/temp/$filename");
+
+		// send success message
+		$this->session->set_flashdata('success', "Email successfully sent.");
+
+		// send email notification to provider email address
+		$this->load->library('email');
+		$config['mailtype'] = 'html';
+		$this->email->initialize($config);
+		$this->email->from(FROM_EMAIL, SITE_TITLE);
+		$this->email->to($email);
+
+		$this->email->subject("Received $doc");
+		$this->email->message($data_intake['notes']);
+		$this->email->attach("assets/uploads/intake_forms/$intake_form_id/$filename");
+		$this->email->send();
+		echo TRUE;
+
+	}
+
+
 }
