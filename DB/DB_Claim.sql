@@ -19,7 +19,6 @@ CREATE TABLE IF NOT EXISTS `case` (
   `country2` varchar(40) DEFAULT NULL,
   `post_code` varchar(10) DEFAULT NULL,
   `assign_to` int(11) NOT NULL DEFAULT '0',
-  `follow_up_to` int(11) NOT NULL DEFAULT '0',
   `reason` varchar(30) NOT NULL,
   `first_name` varchar(20) NOT NULL,
   `last_name` varchar(20) DEFAULT NULL,
@@ -37,24 +36,24 @@ CREATE TABLE IF NOT EXISTS `case` (
   `case_manager` int(10) NOT NULL,
   `reserve_amount` float DEFAULT NULL,
   `priority` varchar(10) NOT NULL,
-  `status` enum('0','1') NOT NULL DEFAULT '1' COMMENT '0-deactive, 1-active, stand for case status active/inactive',
+  `status` enum('A','D') NOT NULL DEFAULT 'A' COMMENT 'D-deactive, A-active, stand for case status active/inactive',
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `case_no` (`case_no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8;
 
 /*!40000 ALTER TABLE `case` DISABLE KEYS */;
-INSERT INTO `case` (`id`, `case_no`, `created_by`, `street_no`, `street_name`, `city`, `province`, `country`, `country2`, `post_code`, `assign_to`, `follow_up_to`, `reason`, `first_name`, `last_name`, `phone_number`, `email`, `relations`, `diagnosis`, `treatment`, `third_party_recovery`, `policy_no`, `insured_firstname`, `insured_lastname`, `insured_address`, `dob`, `case_manager`, `reserve_amount`, `priority`, `status`, `created`) VALUES
-	(5, '0000005', 1, '123143', 'sodala1', 'jaipur', 'British Columbia', 'United States', 'Canada', '302015', 2, 0, 'AD&D', 'bhawani', 'shankar', '424242424', 'developer@brsoftech.com', 'Father', 'test', 'sodala', 'Y', '99098908', 'bhawani', '', '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 10, 'Normal', '0', '2016-12-06 11:28:53'),
-	(7, '0000007', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 5, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', '1', '2016-12-08 06:47:47'),
-	(8, '0000008', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 6, 0, 'AD&D', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', '1', '2016-12-08 06:56:05'),
-	(9, '0000009', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 2, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', '1', '2016-12-08 06:57:12'),
-	(78, '0000078', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'Canada', '302014', 5, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', '1', '2016-12-09 06:11:42'),
-	(79, '0000079', 1, '1231', 'sodala', 'us', 'British Columbia', 'United States', 'United States', '21313', 5, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', '1', '2016-12-09 06:12:49'),
-	(80, '0000080', 1, '1231', 'sodala', 'us', 'British Columbia', 'United States', 'United States', '21313', 6, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', '1', '2016-12-09 06:14:12'),
-	(81, '0000081', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 6, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', '1', '2016-12-09 06:19:41'),
-	(87, '0000087', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 0, 0, 'AD&D', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', '1', '2016-12-13 07:48:23'),
-	(88, '0000088', 1, '', '', '', 'British Columbia', 'United States', 'United States', '21313', 0, 0, 'Assistance Only', 'bhawani', 'bb', '424242424', '', 'Sister', 'test', 'sodala', 'Y', '99098908', '21231', '56465', '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', '0', '2016-12-14 09:38:54');
+INSERT INTO `case` (`id`, `case_no`, `created_by`, `street_no`, `street_name`, `city`, `province`, `country`, `country2`, `post_code`, `assign_to`, `reason`, `first_name`, `last_name`, `phone_number`, `email`, `relations`, `diagnosis`, `treatment`, `third_party_recovery`, `policy_no`, `insured_firstname`, `insured_lastname`, `insured_address`, `dob`, `case_manager`, `reserve_amount`, `priority`, `status`, `created`) VALUES
+	(5, '0000005', 1, '123143', 'sodala1', 'jaipur', 'British Columbia', 'United States', 'Canada', '302015', 7, 'AD&D', 'bhawani', 'shankar', '424242424', 'developer@brsoftech.com', 'Father', 'test', 'sodala', 'Y', '99098908', 'bhawani', '', '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 10, 'Normal', 'D', '2016-12-06 11:28:53'),
+	(7, '0000007', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 5, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', 'A', '2016-12-08 06:47:47'),
+	(8, '0000008', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 6, 'AD&D', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', 'A', '2016-12-08 06:56:05'),
+	(9, '0000009', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 2, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', 'A', '2016-12-08 06:57:12'),
+	(78, '0000078', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'Canada', '302014', 5, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', 'A', '2016-12-09 06:11:42'),
+	(79, '0000079', 1, '1231', 'sodala', 'us', 'British Columbia', 'United States', 'United States', '21313', 5, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', 'A', '2016-12-09 06:12:49'),
+	(80, '0000080', 1, '1231', 'sodala', 'us', 'British Columbia', 'United States', 'United States', '21313', 6, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', 'A', '2016-12-09 06:14:12'),
+	(81, '0000081', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 6, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', 'A', '2016-12-09 06:19:41'),
+	(87, '0000087', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 0, 'AD&D', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', 'A', '2016-12-13 07:48:23'),
+	(88, '0000088', 1, '', '', '', 'British Columbia', 'United States', 'United States', '21313', 0, 'Assistance Only', 'bhawani', 'bb', '424242424', '', 'Sister', 'test', 'sodala', 'Y', '99098908', '21231', '56465', '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', 'A', '2016-12-14 09:38:54');
 /*!40000 ALTER TABLE `case` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `country` (
@@ -96,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `intake_form` (
   `docs` text,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 /*!40000 ALTER TABLE `intake_form` DISABLE KEYS */;
 INSERT INTO `intake_form` (`id`, `case_id`, `created_by`, `notes`, `docs`, `created`) VALUES
@@ -133,7 +132,20 @@ INSERT INTO `intake_form` (`id`, `case_id`, `created_by`, `notes`, `docs`, `crea
 	(35, 5, 1, 'Email: developer@brsoftech.com, Street No: 1231, Street No: sodala, City: jaipur, Province: Alberta', 'Continuing Care Notice434799.pdf', '2016-12-22 10:14:35'),
 	(36, 5, 1, 'Email: developer@brsoftech.com, Street No: 1231, Street No: sodala, City: jaipur, Province: Alberta', 'Policy Cancelation Notice505682.pdf', '2016-12-22 10:15:21'),
 	(37, 5, 1, 'Email: developer@brsoftech.com, Street No: 1231, Street No: sodala, City: jaipur, Province: Alberta', 'Continuing Care Notice36943.pdf', '2016-12-22 10:19:07'),
-	(38, 88, 1, 'Email: , Street No: 132123, Street No: 121231, City: 124564, Province: British Columbia', 'Policy Cancelation Notice231908.pdf', '2016-12-22 13:55:03');
+	(38, 88, 1, 'Email: , Street No: 132123, Street No: 121231, City: 124564, Province: British Columbia', 'Policy Cancelation Notice231908.pdf', '2016-12-22 13:55:03'),
+	(39, 0, 1, '', NULL, '2016-12-23 07:23:42'),
+	(40, 5, 1, 'need to follow by bhawani shankar', NULL, '2016-12-23 07:26:51'),
+	(41, 5, 1, 'yahoio', NULL, '2016-12-23 07:54:47'),
+	(42, 5, 1, 'go og ogo', NULL, '2016-12-23 07:55:15'),
+	(43, 5, 1, 'asdsad', NULL, '2016-12-23 07:59:56'),
+	(44, 5, 1, 'dsfdsf', NULL, '2016-12-23 08:00:13'),
+	(45, 5, 1, 'dsfdsf', NULL, '2016-12-23 08:00:35'),
+	(46, 5, 1, '231321321', NULL, '2016-12-23 08:01:02'),
+	(47, 5, 1, ' sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g sad as dsa dsa d f df gdf g fg df g', '', '2016-12-23 12:22:26'),
+	(48, 5, 1, 'sadsdsadsad', '', '2016-12-23 12:49:57'),
+	(49, 5, 1, 'sadsdsadsad', '', '2016-12-23 12:50:01'),
+	(50, 5, 1, 'sad sad sad sad sa dfgdf gdf gdfgdf gdf gdf gdfg dfgdfgdfgdfgdfgdfgdf gdf gdf gdf gdfg ', '', '2016-12-23 12:50:15'),
+	(51, 5, 1, 'sad sad sad sad sa dfgdf gdf gdfgdf gdf gdf gdfg dfgdfgdfgdfgdfgdfgdf gdf gdf gdf gdfg ', '', '2016-12-23 12:50:44');
 /*!40000 ALTER TABLE `intake_form` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `login_attempts` (
@@ -146,6 +158,57 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 
 /*!40000 ALTER TABLE `login_attempts` DISABLE KEYS */;
 /*!40000 ALTER TABLE `login_attempts` ENABLE KEYS */;
+
+CREATE TABLE IF NOT EXISTS `policies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `policy_no` varchar(50) DEFAULT '0',
+  `created_by` int(11) DEFAULT NULL,
+  `product_short` varchar(5) DEFAULT '0',
+  `agent` varchar(50) DEFAULT '0',
+  `apply_date` date DEFAULT NULL,
+  `arrival_date` date DEFAULT NULL,
+  `effective_date` date DEFAULT NULL,
+  `expiry_date` date DEFAULT NULL,
+  `totaldays` int(11) DEFAULT '0',
+  `checkboxdays` char(3) DEFAULT '0',
+  `dailyrate` varchar(50) DEFAULT '0',
+  `totalyears` int(3) DEFAULT '0',
+  `premium` float DEFAULT '0',
+  `beneficiary` varchar(50) DEFAULT '0',
+  `isfamilyplan` char(1) DEFAULT '0',
+  `holiday_rate` char(1) DEFAULT '0',
+  `sum_insured` float DEFAULT '0',
+  `student_id` varchar(50) DEFAULT '0',
+  `institution` varchar(50) DEFAULT '0',
+  `institution_addr` varchar(50) DEFAULT '0',
+  `institution_phone` varchar(20) DEFAULT '0',
+  `customer_id` int(11) DEFAULT '0',
+  `firstname` varchar(50) DEFAULT '0',
+  `lastname` varchar(50) DEFAULT '0',
+  `birthday` date DEFAULT NULL,
+  `gender` char(1) DEFAULT '0',
+  `street_number` varchar(50) DEFAULT '0',
+  `street_name` varchar(50) DEFAULT '0',
+  `suite_number` varchar(50) DEFAULT '0',
+  `city` varchar(50) DEFAULT '0',
+  `province` varchar(50) DEFAULT '0',
+  `country` varchar(50) DEFAULT '0',
+  `postcode` varchar(20) DEFAULT '0',
+  `phone1` varchar(20) DEFAULT '0',
+  `phone2` varchar(20) DEFAULT '0',
+  `contact_email` varchar(50) DEFAULT '0',
+  `contact_phone` varchar(20) DEFAULT '0',
+  `residence` varchar(50) DEFAULT '0',
+  `note` text,
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+/*!40000 ALTER TABLE `policies` DISABLE KEYS */;
+INSERT INTO `policies` (`id`, `policy_no`, `created_by`, `product_short`, `agent`, `apply_date`, `arrival_date`, `effective_date`, `expiry_date`, `totaldays`, `checkboxdays`, `dailyrate`, `totalyears`, `premium`, `beneficiary`, `isfamilyplan`, `holiday_rate`, `sum_insured`, `student_id`, `institution`, `institution_addr`, `institution_phone`, `customer_id`, `firstname`, `lastname`, `birthday`, `gender`, `street_number`, `street_name`, `suite_number`, `city`, `province`, `country`, `postcode`, `phone1`, `phone2`, `contact_email`, `contact_phone`, `residence`, `note`, `created`) VALUES
+	(89, '99098908', 1, 'JFC', '2231564', '0000-00-00', '0000-00-00', '0000-00-00', '0000-00-00', 32456, '0', '56456456', 54, 546, '56', 'Y', 'Y', 65465, '545', '54546', '1424', '1321', 0, 'Elias', 'a', '0000-00-00', '', '31321321', 'sodala', '321321', 'jaipur', 'British Columbia', 'United States', '302015', '123456', '321564', '23141234@3215456321.564564', '3214564321', '54641', '21321321', '2016-12-23 11:25:47'),
+	(90, '99098908', 1, 'JFC', '34564654', '2016-12-21', '2016-12-22', '2016-12-29', '2016-12-13', 12, 'Y', '212', 12, 12124, '2154', 'Y', 'Y', 23143500, '14564', '4564564', '5646543215', '43', 0, 'iOS', '321564', '2016-12-22', 'F', '54964', 'sodala1', '234587', '321', 'British Columbia', 'United States', '13213213', '5646421564', '3215642164', '321@45564.256', '14564231564', '5464564', '23134251452456145614 32456 32 456 432 456456 45 112 451 434 56', '2016-12-23 11:30:55');
+/*!40000 ALTER TABLE `policies` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `provider` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -389,7 +452,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `parent_id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`, `shift`) VALUES
-	(1, 0, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1482383295, 1, 'Admin', 'istrator', NULL, '2132132132', ''),
+	(1, 0, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1482486561, 1, 'Admin', 'istrator', NULL, '2132132132', ''),
 	(2, 1, '192.168.1.29', 'a@xx.com', '$2y$08$gnsbXPmHtU7SBQko94uf9.VVVzzFhd12fYK3n1FMx4lL8yDPzMvvm', NULL, 'a@xx.com', NULL, NULL, NULL, NULL, 1479881420, 1480055689, 1, 'nn123a', 'bb123', NULL, '123131', '2pm-8pm'),
 	(5, 1, '192.168.1.29', 'paytm123e@gmail.com', '$2y$08$p84W1BzwM7WslS9PgioW5elSODLU0E0N/p8Q2uyNzOFeHxD48AW3q', NULL, 'paytm123e@gmail.com', NULL, NULL, NULL, NULL, 1479977418, NULL, 1, 'bhawani', 'bb', NULL, '231321322', '2pm-8pm'),
 	(6, 1, '192.168.1.29', 'g8bhawani@gmail.com', '$2y$08$Bm7PbyWf99OzJpfeICUmU.9/8/OU68KK/uvBtblO4hkAGfz799nUG', NULL, 'g8bhawani@gmail.com', NULL, NULL, NULL, NULL, 1481794884, NULL, 1, 'istra', 'istrator', NULL, '231564645', '8pm-8am'),

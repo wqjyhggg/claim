@@ -64,6 +64,18 @@
                   ?>
                </div>
 
+
+               <div class="form-group col-sm-3">
+                  <?php 
+                  $options = array(
+                     ''=>'--Case Status--',
+                     'A'=>'Active',
+                     'D'=>'Inactive'
+                     );
+                  echo form_dropdown("status", $options, $this->input->get("status"), array("class"=>"form-control"));
+                  ?>
+               </div>
+
                <div class="form-group col-sm-3">
                   <?php 
                   echo form_label('Priority:', 'priority_label', array("class"=>'col-sm-4')); 
@@ -143,7 +155,7 @@
                            <button class="btn btn-primary show_button assign_to" disabled>Assign To <i class="fa fa-angle-double-right"></i> </button>
                         </div>
                         <div class="col-sm-12">
-                           <button class="btn btn-primary show_button follow_up" disabled>Follow Up <i class="fa fa-angle-double-right"></i></button>  
+                           <button class="btn btn-primary show_button follow_up"  data-toggle="modal" data-target="#follow_reason" disabled>Follow Up <i class="fa fa-angle-double-right"></i></button>  
                         </div>   
                      </div>
                      <div class="col-sm-8 employees-section" style="display:none">
@@ -162,7 +174,6 @@
 
                         <div class="col-sm-12">
                            <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save Assign</button> 
-                           <button class="btn btn-primary pull-right save" style="display:none" ><i class="fa fa-check-circle-o"></i> Save</button>  
                         </div>   
                      </div>  
                   </div>
@@ -195,6 +206,49 @@
       </div>
    </div>
 </duv>
+
+<!-- follow up model window here -->
+<div id="follow_reason" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Follow up case</h4>
+      </div>
+      <?php 
+         echo form_open_multipart("emergency_assistance/follow_up_cases", array("id"=>'follow_up_cases'));
+       ?>
+      <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+               <div>
+                  <?php
+                  echo form_label('Please Enter The Reason:', 'notes', array("class"=>'col-sm-12'));
+                  ?>
+                  <div class="col-sm-12">
+                     <?php  
+                     echo form_textarea("notes", "", array("class"=>"form-control col-sm-6 form-group required", 'placeholder'=>'Please Enter The Reason'));
+                     ?>
+                  </div>
+                  <div class="col-sm-12 follow-section">
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="modal-footer">
+         <label class="col-sm-12">&nbsp;</label>
+         <button class="btn btn-info complete-follow">Follow Up</button>
+         <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+      </div>
+      <?php echo form_close(); ?>
+    </div>
+
+  </div>
+</div>
+<!-- follow up model end here -->
 
 <!-- Email print doc content here -->
 <div id="print_template" class="modal fade" role="dialog">
@@ -353,11 +407,18 @@ $(document).ready(function() {
    }
 }).on("click", ".assign_to", function(){                                               // on clicked assign to button
 
+   if($(".follow-section").children("div").hasClass('col-sm-4'))
+      $(".employees-section").html($(".follow-section").html());
+   $(".follow-section").html("");
+
    $(".employees-section, .save_assign").show();
-   $(".save").hide();
 }).on("click", ".follow_up", function(){                                               // clicking on follow_up button
 
-   $(".employees-section, .save").show();
+   // open popup screen why need to follow up this case and assign to emc user
+   $(".follow-section").html($(".employees-section").html());
+   $(".employees-section").html("");
+
+   $(".employees-section").show();
    $(".save_assign").hide();
 }).on("click", ".view_edit", function(){                                               // once manager click on "View/Edit"case button
 
@@ -397,35 +458,49 @@ $(document).ready(function() {
          window.location.reload();
       }
    })
-}).on("click", ".save", function(){                                                    // clicking on follow button
+})
+
+// clicking on follow button
+.on("submit", "#follow_up_cases", function(e){                                            
    
-   // check if employee selected or not
-   if(!employee_id)
+   // prevent form to submit
+   e.preventDefault();
+
+
+   if($(this).valid())
    {
-      alert("Please select emc user first.");
-      return false;
-   }
 
-   // assign emc user to selected cases 
-   var cases = [];
-   $("input[name=case]:checked").each(function(){
-      cases.push($(this).val());
-   })
-   var cases = cases.join(",");
-
-   // assign cases to emc manager here
-   $.ajax({
-      url: "<?php echo base_url("emergency_assistance/follow_up_cases") ?>",
-      method: "post",
-      data:{cases:cases, employee_id: employee_id},
-      beforeSend: function(){
-         $(".right_col").addClass("csspinner load1");
-      },
-      success: function() {
-         window.location.reload();
+      // check if employee selected or not
+      if(!employee_id)
+      {
+         alert("Please select emc user first.");
+         return false;
       }
-   })
-}).on("click", ".mark_inactive", function(){                                           // clicking on save assign button
+
+      // assign emc user to selected cases 
+      var cases = [];
+      $("input[name=case]:checked").each(function(){
+         cases.push($(this).val());
+      })
+      var cases = cases.join(",");
+
+      // assign cases to emc manager here
+      $.ajax({
+         url: "<?php echo base_url("emergency_assistance/follow_up_cases") ?>",
+         method: "post",
+         data:{cases:cases, employee_id: employee_id, notes: $("textarea[name=notes]").val() },
+         beforeSend: function(){
+            $(".right_col").addClass("csspinner load1");
+         },
+         success: function() {
+            window.location.reload();
+         }
+      })
+   }
+})
+
+// clicking on save assign button
+.on("click", ".mark_inactive", function(){                                           
    
    // selected cases 
    var cases = [];

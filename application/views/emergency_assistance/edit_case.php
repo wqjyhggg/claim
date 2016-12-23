@@ -284,7 +284,7 @@
                         echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info'));
                      if($ref == 'manage'):
                       ?>
-                        <button type="button" class="btn btn-primary follow_up">Follow Up <i class="fa fa-angle-double-right"></i></button>
+                        <button type="button" class="btn btn-primary follow_up"  data-toggle="modal" data-target="#follow_reason">Follow Up <i class="fa fa-angle-double-right"></i></button>
                         <button type="button" class="btn btn-primary mark_inactive">Inactive</button>
                      <?php else:?>
                         <!-- put here email button -->
@@ -461,6 +461,61 @@
 <!-- end here --> 
 <?php endif;?>   
 
+<!-- follow up model window here -->
+<div id="follow_reason" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Follow up case</h4>
+      </div>
+      <?php 
+         echo form_open_multipart("emergency_assistance/follow_up_cases", array("id"=>'follow_up_cases'));
+       ?>
+      <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+               <div>
+                  <?php
+                  echo form_label('Please Enter The Reason:', 'notes', array("class"=>'col-sm-12'));
+                  ?>
+                  <div class="col-sm-12">
+                     <?php  
+                     echo form_textarea("notes", "", array("class"=>"form-control col-sm-6 form-group required", 'placeholder'=>'Please Enter The Reason'));
+                     ?>
+                  </div>
+                  <div class="col-sm-12 follow-section">
+                     <?php foreach ($employee_shift as $key => $value): ?>
+                        <div class="col-sm-4">
+                           <fieldset>
+                              <legend><?php echo $value; ?></legend>
+                              <?php
+                                 $list = "employees_".$key; 
+                                 echo $$list;
+                               ?>
+                           </fieldset>
+                           <div class="clearfix"><br/></div>
+                        </div>
+                     <?php endforeach; ?>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="modal-footer">
+         <label class="col-sm-12">&nbsp;</label>
+         <button class="btn btn-info complete-follow">Follow Up</button>
+         <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+      </div>
+      <?php echo form_close(); ?>
+    </div>
+
+  </div>
+</div>
+<!-- follow up model end here -->
+
 <!-- Create Intake Form Modal -->
 <div id="create_intake_form" class="modal fade" role="dialog">
   <div class="modal-dialog  modal-lg">
@@ -525,6 +580,7 @@
 <script src="<?php echo base_url() ?>/assets/js/jQuery.print.js"></script>
 <script src="<?php echo base_url() ?>/assets/js/jquery.validate.min.js"></script>
 <script>
+   var employee_id;
    $(document).ready(function() {
       $("#create_intakeform").validate();
       $(".datepicker").datepicker({
@@ -611,7 +667,7 @@
             $(".right_col").addClass("csspinner load1");
          },
          success: function() {
-            window.location.reload();
+            window.location = "<?php echo base_url("emergency_assistance/case_management") ?>";
          }
       })
    })
@@ -741,6 +797,57 @@
          })
       }
    })
+
+   // set validation on emc select list
+   .on("change", "select[name=assign_to_follow]", function(){
+
+      var val = $(this).val();
+      $("select").val("");
+      $(this).val(val);
+
+      // set selected employee
+      employee_id = val;
+   })
+
+
+// clicking on follow button
+.on("submit", "#follow_up_cases", function(e){                                            
+   
+   // prevent form to submit
+   e.preventDefault();
+
+
+   if($(this).valid())
+   {
+
+      // check if employee selected or not
+      if(!employee_id)
+      {
+         alert("Please select emc user first.");
+         return false;
+      }
+
+      // assign emc user to selected cases 
+      var cases = [];
+      $("input[name=case]:checked").each(function(){
+         cases.push($(this).val());
+      })
+      var cases = cases.join(",");
+
+      // assign cases to emc manager here
+      $.ajax({
+         url: "<?php echo base_url("emergency_assistance/follow_up_cases") ?>",
+         method: "post",
+         data:{cases:"<?php echo $case_id; ?>", employee_id: employee_id, notes: $("textarea[name=notes]").val() },
+         beforeSend: function(){
+            $(".modal-dialog").addClass("csspinner load1");
+         },
+         success: function() {
+            window.location.reload();
+         }
+      })
+   }
+})
 
 // create input boxes where requirement need
 var $outer = $(".outer-text");

@@ -10,7 +10,7 @@
 	<li>  <?php echo anchor("emergency_assistance/case_management", '<i class="fa fa-list-ul"></i>Case management</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
 
-	<li> <a href="#" class="leftmeun"><i class="fa fa-files-o"></i>Claim</a> </li>
+	<li> <?php echo anchor("emergency_assistance/claim", '<i class="fa fa-files-o"></i>Claim</a>', array("class"=>'leftmeun')) ?> </li>
 
 	<li> <a href="#" class="leftmeun"><i class="fa fa-upload"></i>Upload claim</a> </li>
 

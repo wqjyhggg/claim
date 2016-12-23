@@ -140,7 +140,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
-			if ($this->form_validation->run() == true)
+			if ($this->form_validation->run() == TRUE)
 			{
 				// prepare post data array
 				$data = [];
@@ -286,7 +286,7 @@ class Emergency_assistance extends CI_Controller {
 			if($this->input->get("ref") == 'manage')
 				$this->form_validation->set_rules('reserve_amount', 'Create Reservers', 'number');
 
-			if ($this->form_validation->run() == true)
+			if ($this->form_validation->run() == TRUE)
 			{
 				// prepare post data array
 				$data = [];
@@ -365,6 +365,40 @@ class Emergency_assistance extends CI_Controller {
 					$conditions = "type = 'case'";
 					$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
 				}
+				else
+				{
+
+					// get login user id
+					$case_manager = $this->ion_auth->user()->row()->id;
+
+					// timing shifts array
+					$shifts = array(
+						'8am-2pm'=>array(strtotime("8am"), strtotime("2pm")),
+						'2pm-8pm'=>array(strtotime("2pm"), strtotime("8pm")),
+						'8pm-8am'=>array(strtotime("8pm"), strtotime("11:59pm"), strtotime("8am"))
+						); 
+
+					// rearrange shifts according to system current time 
+					if(time() >= $shifts['8am-2pm'][0] && time() < $shifts['8am-2pm'][1])
+					{
+						$this->data['employee_shift'] = ['8am-2pm', '2pm-8pm', '8pm-8am'];
+					}
+					if(time() >= $shifts['2pm-8pm'][0] && time() < $shifts['2pm-8pm'][1])
+					{
+						$this->data['employee_shift'] = ['2pm-8pm', '8pm-8am', '8am-2pm'];
+					}
+					if((time() >= $shifts['8pm-8am'][0] and time() <= $shifts['8pm-8am'][1]) OR (time() < $shifts['8pm-8am'][2]))
+					{
+						$this->data['employee_shift'] = ['8pm-8am', '8am-2pm', '2pm-8pm'];
+					}
+
+			        // select emc users
+					foreach ($this->data['employee_shift'] as $key => $value) 
+					{
+						$additional_conditions = " and users.parent_id = '$case_manager' and  schedule.schedule = '$value'";
+			        	$this->data['employees_'.$key] = $this->common_model->shift_users($field_name = "assign_to_follow", $selected = $this->input->get($field_name), $group = "eacmanager", $empty = "--Select Employee--", $additional_conditions);
+					}
+				}
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Edit Case', TRUE);
@@ -432,6 +466,8 @@ class Emergency_assistance extends CI_Controller {
 				$conditions['case.assign_to'] = $this->input->get("assign_to");
 			if($this->input->get("priority")) 
 				$conditions['case.priority'] = $this->input->get("priority");
+			if($this->input->get("status")) 
+				$conditions['case.status'] = $this->input->get("status");
 
 			$fields = "case.insured_address, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, case.insured_lastname, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
 			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array(), $having = "", $limit, $offset);
@@ -499,9 +535,8 @@ class Emergency_assistance extends CI_Controller {
 
 
 	// redirect if needed, otherwise display the create policy page
-	public function create_policy()
+	public function create_policy($id = 0)
 	{
-
 		if (!$this->ion_auth->logged_in())
 		{
 			// redirect them to the login page
@@ -509,9 +544,46 @@ class Emergency_assistance extends CI_Controller {
 		}
 		else
 		{
-        	$this->template->write('title', SITE_TITLE.' - Create Policy', TRUE);
-	        $this->template->write_view('content', 'emergency_assistance/create_policy');
-	        $this->template->render();        
+			//validate form input
+			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
+
+			if ($this->form_validation->run() == TRUE)
+			{
+				// prepare post data array
+				$data = [];
+				$array = $this->input->post();
+				// print_r($array); die;
+				foreach ($array as $key => $value) 
+				{
+					# code...
+					if($key <> "submit")
+						$data[$key] = $value;
+				}
+				$data['created'] = date('Y-m-d H:i:s');
+				$data['created_by'] = $this->ion_auth->user()->row()->id;
+
+				// insert values to database
+				$record_id = $this->common_model->save("policies", $data);
+
+				// send success message
+				$this->session->set_flashdata('success', "Policy successfully created");
+
+				// redirect them to the login page
+				redirect('emergency_assistance', 'refresh');
+			}
+			else
+			{	
+				
+				// load dropdowns- countries, province, products data
+				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
+				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));				
+				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
+
+				// load view data
+	        	$this->template->write('title', SITE_TITLE.' - Create Policy', TRUE);
+		        $this->template->write_view('content', 'emergency_assistance/create_policy', $this->data);
+		        $this->template->render();  
+	        }      
 		}
 	}
 
@@ -561,7 +633,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('services', 'Services', 'required');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
-			if ($this->form_validation->run() == true)
+			if ($this->form_validation->run() == TRUE)
 			{
 				// get lat lng from address
 				$cordinates = $this->lat_lng_finder($this->input->post("address").", ".$this->input->post("postcode"));
@@ -682,7 +754,7 @@ class Emergency_assistance extends CI_Controller {
 		{
 			$this->form_validation->set_rules('intake_notes', 'Intake Notes', 'required');
 
-			if ($this->form_validation->run() == true)
+			if ($this->form_validation->run() == TRUE)
 			{
 				// get app post params
 				$array = $this->input->post();
@@ -700,7 +772,7 @@ class Emergency_assistance extends CI_Controller {
 				$file_names = [];
 
 				// upload files to server
-				$files = $_FILES['files'];
+				$files = @$_FILES['files'];
 				if(!empty($files))
 				{	foreach ($files['name'] as $key => $value) 
 					{	
@@ -1168,15 +1240,29 @@ class Emergency_assistance extends CI_Controller {
 	public function follow_up_cases() 
 	{
 		$cases = $this->input->post("cases");
-		$cases = $this->input->post("cases");	
+		$notes = $this->input->post("notes");	
 		$cases = explode(",", $cases);
 		$employee_id = $this->input->post("employee_id");
 
 		// follow up process
 		foreach ($cases as $key => $value) 
 		{
-			$this->common_model->update("case", array("follow_up_to"=>$employee_id), array("id"=>$value));
+
+			$data_intake = array(
+				'case_id' => $value,
+				'created_by' => $this->ion_auth->user()->row()->id,
+				'notes' => $notes,
+				'created' => date("Y-m-d H:i:s")
+				);
+
+			// save values to intake database
+			$this->common_model->save("intake_form", $data_intake);
+
+			// save record in intake form as notes
+			$this->common_model->update("case", array("assign_to"=>$employee_id), array("id"=>$value));
 		}
+
+		$this->session->set_flashdata('success', "Follow up case successfully.");
 
 		echo TRUE;
 
@@ -1191,7 +1277,7 @@ class Emergency_assistance extends CI_Controller {
 		// mark deactivate process
 		foreach ($cases as $key => $value) 
 		{
-			$this->common_model->update("case", array("status"=>'0'), array("id"=>$value));
+			$this->common_model->update("case", array("status"=>'D'), array("id"=>$value));
 		}
 		$this->session->set_flashdata('success', "Case successfully deactivated.");
 
@@ -1264,6 +1350,114 @@ class Emergency_assistance extends CI_Controller {
 		$this->email->send();
 		echo TRUE;
 
+	}
+
+
+
+	// redirect if needed, otherwise display the claim page
+	public function claim()
+	{
+
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+			// initialize variables
+			$this->data['cases'] = []; 
+			$this->data['policies'] = [];
+
+			// search case filter
+			if($this->input->get("filter") == 'case') 
+			{
+				// get all providers list
+				$order_by = array(
+					'field'=>'id',
+					'order'=>'desc'
+					);
+
+				$joins[] = array(
+					'table' => 'users u1',
+					'on' => 'u1.id = case.assign_to',
+					'type' => 'LEFT'
+					);
+				$joins[] = array(
+					'table' => 'users u2',
+					'on' => 'u2.id = case.case_manager',
+					'type' => 'LEFT'
+					);
+
+				// prepare conditions
+				$conditions = [];
+				if($this->input->get("case_no")) 
+					$conditions['case.case_no'] = $this->input->get("case_no");
+				if($this->input->get("policy_no")) 
+					$conditions['case.policy_no'] = $this->input->get("policy_no");
+				if($this->input->get("client_user_name")) 
+					$conditions['concat_ws(" ", case.insured_firstname, case.insured_lastname) like'] = "%".$this->input->get("client_user_name")."%";
+				if($this->input->get("created")) 
+					$conditions['case.created like'] = "%".$this->input->get("created")."%";
+				if($this->input->get("assign_to")) 
+					$conditions['case.assign_to'] = $this->input->get("assign_to");
+				if($this->input->get("case_manager")) 
+					$conditions['case.case_manager'] = $this->input->get("case_manager");
+
+				$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
+				$this->data['cases'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
+			}
+			else if($this->input->get("filter") == 'policy')
+			{
+
+				// prepare post data array
+				$this->data['params'] = $this->input->get();
+				$this->data['params']['key'] = API_KEY;
+
+				// search policy code here
+				$url =  API_URL."search";
+				$curl = curl_init();
+
+				// Post Data 
+				curl_setopt($curl, CURLOPT_POST, 1);
+				curl_setopt($curl, CURLOPT_POSTFIELDS, $this->data['params']);
+
+				// Optional Authentication:
+				if(API_USER and API_PASSWORD)
+				{
+					curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+					curl_setopt($curl, CURLOPT_USERPWD, API_USER.":".API_PASSWORD);
+				}
+
+				curl_setopt($curl, CURLOPT_URL, $url);
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+				$result = curl_exec($curl);
+				$result = json_decode($result, TRUE);
+
+				// pass policies data to view
+				$this->data['policies']  = @$result['plan_list'];
+				$this->data['status']  = @$result['status_list'];
+
+				curl_close($curl);
+			}
+
+			// send case manager and eac managers list
+			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = $this->input->get($field_name), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Assign To--");
+			$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--");
+
+			// send countries and province list
+			$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->input->get($field_name), $key = "short_code", $value = "name");
+			$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->get($field_name), $key = "short_code", $value = "name");
+			$this->data['policy_status'] = $this->common_model->get_policy_status($field_name = "status_id", $selected = $this->input->get($field_name));
+			$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->get($field_name));
+				
+
+			// render view data
+        	$this->template->write('title', SITE_TITLE.' - Claim', TRUE);
+	        $this->template->write_view('content', 'emergency_assistance/claim', $this->data);
+	        $this->template->render();        
+		}
 	}
 
 

@@ -9,6 +9,16 @@ Password: password
 
 
 #####################
+Dec, 23 2016 update:-
+#####################
+- Case Management: follow and inactivate from listing and edit screen is - done
+- Create policy - done
+- Claim page layout - done
+-Note:- please import database files to avoid errors
+
+
+
+#####################
 Dec, 22 2016 update:-
 #####################
 - Case Management Page----- ------
