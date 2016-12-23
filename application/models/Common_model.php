@@ -152,10 +152,10 @@ class Common_model extends CI_Model
 
         if($result->num_rows() > 0) 
         {
-            return true;
+            return TRUE;
         }
         else {
-            return false;
+            return FALSE;
         }
     }
 
@@ -175,10 +175,10 @@ class Common_model extends CI_Model
 
         if($result->num_rows() > 0) 
         {
-            return true;
+            return TRUE;
         }
         else {
-            return false;
+            return FALSE;
         }
     }
 
@@ -193,10 +193,15 @@ class Common_model extends CI_Model
      * @param       $conditions array/string
      * @param       $joins array
      * @param       $group_by array
+     * @param       $group_by array
+     * @param       $user_code string - emc/cm etc - to show user code intead of name
     */
-    public function get_ref($table,$key,$value,$dropdown=false, $empty = "Please Select", $conditions = "", $joins = array(), $group_by = array())
+    public function get_ref($table, $key, $value, $dropdown=FALSE, $empty = "Please Select", $conditions = "", $joins = array(), $group_by = array(), $user_code = FALSE)
     {
-        $this->db->select("$table.$key, $table.$value");
+        if($user_code)
+            $this->db->select("$table.$key, $table.$value, $table.id");
+        else            
+            $this->db->select("$table.$key, $table.$value");
         $this->db->from($table);
         // $this->db->order_by($value);
 
@@ -225,6 +230,9 @@ class Common_model extends CI_Model
             foreach($result->result_array() as $row) 
             {
                 $array[$row[$key]] = $row[$value];
+
+                if($user_code)
+                    $array[$row[$key]] = $user_code.str_pad($row['id'], 4, 0, STR_PAD_LEFT);
             }
         }
         return $array;
@@ -238,7 +246,7 @@ class Common_model extends CI_Model
     */
     public function getcountries($field_name, $selected, $key = "name", $value = "name")
     {
-        $record = $this->get_ref($table = "country", $key, $value, $dropdown=true, $empty = "--Select Country--");
+        $record = $this->get_ref($table = "country", $key, $value, $dropdown=TRUE, $empty = "--Select Country--");
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
     
@@ -250,7 +258,7 @@ class Common_model extends CI_Model
     */
     public function getprovinces($field_name, $selected, $key= "name", $value = "name")
     {
-        $record = $this->get_ref($table = "province", $key, $value, $dropdown=true, $empty = "--Select Province--");       
+        $record = $this->get_ref($table = "province", $key, $value, $dropdown=TRUE, $empty = "--Select Province--");       
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
     
@@ -262,7 +270,7 @@ class Common_model extends CI_Model
     */
     public function getreasons($field_name, $selected)
     {
-        $record = $this->get_ref($table = "reasons", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Reason--");       
+        $record = $this->get_ref($table = "reasons", $key= "name", $value = "name", $dropdown=TRUE, $empty = "--Select Reason--");       
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
 
@@ -271,19 +279,51 @@ class Common_model extends CI_Model
      *
      * @param       $field_name String
      * @param       $selected string
+     * @param       $classes boolean TRUE/FALSE to show classes - Purpose to remove classes in edit doc file 
+     * @param       $short boolean TRUE/FALSE to show full value or short value of array key 
     */
-    public function get_products($field_name, $selected)
+    public function get_products($field_name, $selected, $classes = TRUE, $short = TRUE)
     {
-        $products = array(
-            '' => '--Select Product--',
-            'JES'=>'JF Elite Plus International Student to Canada',
-            'JFC'=>'JF Care International Student to Canada',
-            'JFR'=>'JF Royal Visitor to Canada',
-            'JUS'=>'JF USA International Student to USA',
-            'NUS'=>'Nihao USA International Student to USA',
-            'OPL'=>'Optimum Plus Visitor to Canada'
-            );
-        return form_dropdown($field_name, $products, $selected, array("class"=>'form-control'));
+
+        // get products from jf api
+        $url =  API_URL."products";
+        $curl = curl_init();
+
+        // Post TYPE REQUEST 
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, array('key'=>API_KEY));
+
+        // Optional Authentication:
+        if(API_USER and API_PASSWORD)
+        {
+            curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($curl, CURLOPT_USERPWD, API_USER.":".API_PASSWORD);
+        }
+
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($curl);
+        $result = json_decode($result, TRUE);
+
+        // get all data here
+        $products  = [''=>'--Select Product--'];
+        // echo curl_error($curl);
+
+        curl_close($curl);
+        // print_r($result); die;
+
+        if(!empty(@$result['plan']))
+        {   
+            foreach ($result['plan'] as $key => $value) 
+            {
+                if($short)
+                    $products[$value['product_short']] = $value['up_insuer'];
+                else                    
+                    $products[$value['up_insuer']] = $value['up_insuer'];
+            }
+        }
+        return form_dropdown($field_name, $products, $selected, array("class"=>$classes?'form-control':""));
     }
     
     /**
@@ -333,13 +373,14 @@ class Common_model extends CI_Model
     }
     
     /**
-     * Return a list of provinces
+     * Return a list of users
      *
      * @param       $field_name String
      * @param       $selected string
      * @param       $group group name. string/array ex- 'admin' and array("'admin'", "'manager'")
+     * @param       $additional_conditions string, it should start from " and YOUR CONDITIONS" or " OR YOUR CONDITIONS"
     */
-    public function getrusers($field_name, $selected, $group = "eacmanager", $empty = "--Assign To--")
+    public function getrusers($field_name, $selected, $group = "eacmanager", $empty = "--Assign To--", $additional_conditions = "", $user_code = FALSE)
     {
         // place join to users group table to check user group
         $join[] = array(
@@ -361,8 +402,66 @@ class Common_model extends CI_Model
         else
             $conditions = "groups.name='$group'";
         
+        // if additional conditions exists
+        if($additional_conditions)
+        {
+            $conditions .= $additional_conditions;
+        }
 
-        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=true, $empty, $conditions, $join, $group_by = array("users.id"));       
+        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=TRUE, $empty, $conditions, $join, $group_by = array("users.id"), $user_code);
+        return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
+    }
+
+
+    
+    /**
+     * Return a list of users based on schedule
+     *
+     * @param       $field_name String
+     * @param       $selected string
+     * @param       $group group name. string/array ex- 'admin' and array("'admin'", "'manager'")
+     * @param       $additional_conditions string, it should start from " and YOUR CONDITIONS" or " OR YOUR CONDITIONS"
+    */
+    public function shift_users($field_name, $selected, $group = "eacmanager", $empty = "--Assign To--", $additional_conditions = "")
+    {
+        
+        // place join to users table to get user name
+        $join[] = array(
+            'table'=>'schedule',
+            'on'=>'users.id = schedule.employee_id',
+            'type'=>'INNER'
+            );
+
+        // place join to users group table to check user group
+        $join[] = array(
+            'table'=>'users_groups',
+            'on'=>'users_groups.user_id = users.id',
+            'type'=>'INNER'
+            );
+
+        // join groups table to get group name
+        $join[] = array(
+            'table'=>'groups',
+            'on'=>'groups.id = users_groups.group_id',
+            'type'=>'INNER'
+            );
+
+        // to check user type
+        if(is_array($group)) // for multiple groups
+            $conditions = "groups.name in(".implode(',' , $group).")";
+        else
+            $conditions = "groups.name='$group'";
+        
+        // for today schedule only
+        $conditions = "schedule.date='".date('Y-m-d')."'";
+
+        // if additional conditions exists
+        if($additional_conditions)
+        {
+            $conditions .= $additional_conditions;
+        }
+
+        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=TRUE, $empty, $conditions, $join, $group_by = array("users.id"));
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
 
@@ -375,7 +474,7 @@ class Common_model extends CI_Model
     */
     public function getrelations($field_name, $selected)
     {
-        $record = $this->get_ref($table = "relations", $key= "name", $value = "name", $dropdown=true, $empty = "--Select Relationship--");      
+        $record = $this->get_ref($table = "relations", $key= "name", $value = "name", $dropdown=TRUE, $empty = "--Select Relationship--");      
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
 

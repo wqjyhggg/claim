@@ -6,6 +6,72 @@ Username: admin@admin.com
 
 Password: password
 
+
+
+#####################
+Dec, 23 2016 update:-
+#####################
+- Case Management: follow and inactivate from listing and edit screen is - done
+- Create policy - done
+- Claim page layout - done
+-Note:- please import database files to avoid errors
+
+
+
+#####################
+Dec, 22 2016 update:-
+#####################
+- Case Management Page----- ------
+- Print/Email templates complete functionality - done
+- Print/Email templates and inactive function in edit case page - done
+- Add insured amount in case - done
+- Products api integtation - done
+-Note:- please import database files to avoid errors
+
+
+#####################
+Dec, 21 2016 update:-
+#####################
+- automatically schedule: at user management page, every EMC user account has a work shift field . When case manager click Auto Schedule, system automatically all the EMCs' schedule according to the default work shift in the user management in this month.  After Auto Schedule, case manager can user above manual schedule function to adjust some EMCs' work shift. - DONE
+- Print/Email:- Edit template, preview function, print function done on case management page.
+- Create a provider: Add a field priority, (values range :1,2,3,4,5). - DONE
+
+***Please import database to avoid db errors**
+
+#####################
+Dec, 20 2016 update:-
+#####################
+- Case Management Page----- ------
+- Print/Email templates integration - done (sending is remaining)
+- Popup layout and settings is - done
+--- email/print in progress---
+-Note:- please import database files to avoid errors
+
+
+#####################
+Dec, 19 2016 update:-
+#####################
+- Case Management Page----- ------
+- Auto Assign to emc - done
+- Assign emc manually - done
+- Categorize emc list based on currenttime and shift - done
+- Follow on case management page - done
+- Set inactive function - done
+- View/Edit button action - done
+--- other functionalies on case management page email/print, reserve amount are in progress---
+-Note:- please import database files to avoid errors
+
+
+#####################
+Dec, 17 2016 update:-
+#####################
+- Add Schedule calender - done
+- Show schedule on calender dates cell - done
+- Calender design - done
+- Case management page some jquery validations, checkbox selections, emc users list - done
+--- other functionalies on case management page is in progress---
+
+
 #####################
 Dec, 16 2016 update:-
 #####################

@@ -232,7 +232,8 @@ class Auth extends CI_Controller {
                 'last_name'  => $this->input->post('last_name'),
                 'company'    => $this->input->post('company'),
                 'phone'      => $this->input->post('phone'),
-                'parent_id'      => $this->input->post('parent_id'),
+                'parent_id'  => $this->input->post('parent_id'),
+                'shift'  => $this->input->post('shift'),
             );
         }
         if ($this->form_validation->run() == true && $id = $this->ion_auth->register($identity, $password, $email, $additional_data))
@@ -315,6 +316,12 @@ class Auth extends CI_Controller {
                 'type'  => 'password',
                 'value' => $this->form_validation->set_value('password_confirm'),
             );
+            $this->data['shift_options'] = array(                
+                ''=>'Select Shift',
+                '8am-2pm'=>'8am-2pm',
+                '2pm-8pm'=>'2pm-8pm',
+                '8pm-8am'=>'8pm-8am',
+            );
             $this->data['groups'] = $groups;
 
             // select case manager
@@ -367,6 +374,8 @@ class Auth extends CI_Controller {
 					'last_name'  => $this->input->post('last_name'),
 					'company'    => $this->input->post('company'),
 					'phone'      => $this->input->post('phone'),
+                	'parent_id'  => $this->input->post('parent_id'),
+                	'shift'  => $this->input->post('shift'),
 				);
 
 				// update the password if it was posted
@@ -476,6 +485,12 @@ class Auth extends CI_Controller {
             'class'=>'form-control',
 			'type' => 'password'
 		);
+        $this->data['shift_options'] = array(                
+            ''=>'Select Shift',
+            '8am-2pm'=>'8am-2pm',
+            '2pm-8pm'=>'2pm-8pm',
+            '8pm-8am'=>'8pm-8am',
+        );
 
 	    // select case manager
 	    $this->data['casemamager'] = $this->common_model->getrusers($field_name = "parent_id", $this->form_validation->set_value('parent_id', $user->parent_id), $group = "casemamager", $empty = "--Select Case Manager--");

@@ -94,7 +94,7 @@
                   </div>       
                   <div class="col-sm-2">
                      <label class="col-sm-12">&nbsp;</label>
-                     <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary')) ?>
+                     <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary', 'target'=>'_blank')) ?>
                   </div>
                   <div class="form-group col-sm-4">
                      <?php 
@@ -211,6 +211,15 @@
                         ?>
                      </div>
                   </div> 
+                  <div class="form-group col-sm-4">
+                     <?php echo form_label('Insured Address:', 'insured_address', array("class"=>'col-sm-12'));   ?>
+                     <div class="form-group col-sm-12">
+                        <?php                
+                        echo form_textarea("insured_address", $this->common_model->field_val("insured_address", $case_details), array("class"=>"form-control", 'placeholder'=>'Insured Address', 'style'=>"height:90px"));
+                        echo form_error("insured_address");
+                        ?>
+                     </div>
+                  </div>  
                   <div class="form-group col-sm-4">
                      <?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">

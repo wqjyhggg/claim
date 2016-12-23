@@ -121,6 +121,10 @@
                      </tbody>
                   </table>
                <!-- End Search List Section -->
+
+                  <div class="col-sm-12" style="text-align:center">
+                     <button class="btn btn-primary return_back">Return</button>  
+                  </div>
                </div>
             <?php else: ?>
                <center><?php echo heading("No record available", 4); ?></center>
@@ -139,6 +143,9 @@ $(document).ready(function() {
         startDate: '-5y',
         endDate: '+2y',
     });
+   $(".return_back").click(function(){
+      window.close(); // or self.close();
+   })
 })
 $(document).on("click",".more_filters", function(){
    $(".more_items").toggle();

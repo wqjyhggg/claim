@@ -303,6 +303,19 @@ div.today {
     background: #E9EFF7;
     height: 100%;
 } 
+.calendar ul {
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+}
+.calendar li {
+    border: 1px solid #2c70d1;
+    margin: 2px;
+    padding: 1px 5px;
+    background-color: #99b8ea;
+    color: #000;
+    text-align: center;
+}
 
 /*loader css */
 .csspinner { position: relative; }
@@ -328,4 +341,31 @@ div.today {
  -webkit-transform: rotate(360deg);
  transform: rotate(360deg);
 }
+}
+input[type=checkbox]{
+  cursor: pointer;
+}
+.select-doc.col-sm-2 {
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-weight: bold;
+    min-height: 51px;
+    margin: 7px;
+    padding: 6px;
+    color: #3d96da;
+}
+
+.select-doc.col-sm-2.active, .select-doc.col-sm-2:hover {
+    background: #8dbbea;
+    color: #fff;
+    border: #3d96da 1px solid;
+}
+.doc-description {
+    border: 1px solid #3d96da;
+    margin-bottom: 9px;
+}
+.doc_title {
+    border-bottom: 1px solid #3d96da;
+    color: #3d96da;
+    text-align: center;
 }

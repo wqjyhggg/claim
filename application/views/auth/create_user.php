@@ -108,6 +108,14 @@
                     <?php echo $casemamager;?>
                   </div>
                 </div>
+                <div class="col-sm-6 form-group manager_panel" style="display:none">
+                  <?php echo form_label('Select Shift', 'shift', array("class"=>'col-sm-12'));?>
+                  <div class="col-sm-12 input-group">
+                    <?php
+                      echo form_dropdown("shift", $shift_options, $this->form_validation->set_value('shift'), array('class'=>'form-control'));
+                    ?>
+                  </div>
+                </div>
 
                 <div class="col-sm-12 form-group">
                   <?php echo form_submit('submit', "Submit", array("class"=>'btn btn-primary pull-right'));?>

@@ -76,6 +76,21 @@
                         echo form_input("services", $this->input->post("services"), array("class"=>"form-control", 'placeholder'=>'Services'));
                         echo form_error("services");
                      ?>
+                  </div> 
+                  <div class="form-group col-sm-6">
+                     <?php 
+                        echo form_label('Priority:', 'priority', array("class"=>'col-sm-12'));  
+                        $options = array(
+                           ''=>'Select Priority',
+                           '1'=>'1-Star',
+                           '2'=>'2-Star',
+                           '3'=>'3-Star',
+                           '4'=>'4-Star',
+                           '5'=>'5-Star',
+                           );                             
+                        echo form_dropdown("priority", $options,  $this->input->post("priority"), array("class"=>"form-control", 'placeholder'=>'Priority'));
+                        echo form_error("priority");
+                     ?>
                   </div>        
                   <div class="col-sm-6">
                      <label class="col-sm-12">&nbsp;</label>

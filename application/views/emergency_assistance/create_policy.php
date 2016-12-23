@@ -18,11 +18,30 @@
             <div class="x_content">
                <?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'post')); ?>
                <div class="row" style="margin-bottom:15px;">
-                  <div class="form-group col-sm-3">
-                     <label><span>JF Elite Plus International Student to Canada</span></label>
+
+                  <div class="col-sm-3">
+                     <div class="form-group col-sm-12">
+                        <?php 
+                           echo form_label('Policy No:', 'policy_no', array("class"=>'col-sm-12'));                            
+                           echo form_input("policy_no", $this->input->post("policy_no"), array("class"=>"form-control", 'placeholder'=>'Policy No'));
+                        ?>
+                     </div>
                   </div>
                   <div class="form-group col-sm-3">
-                     <label style="text-transform: capitalize;">By Agent[ AgentID:1 ] : AdminF AdminL</label>
+                     <div class="form-group col-sm-12">
+                        <?php 
+                           echo form_label('Select Product:', 'product', array("class"=>'col-sm-12'));       
+                           echo $products;
+                        ?>
+                     </div>
+                  </div>
+                  <div class="form-group col-sm-3">
+                     <div class="col-sm-12">
+                        <?php 
+                           echo form_label('Agent Name:', 'agent', array("class"=>'col-sm-12'));                            
+                           echo form_input("agent", $this->input->post("agent"), array("class"=>"form-control", 'placeholder'=>'Agent Name'));
+                        ?>
+                     </div>
                   </div>
                </div>
                <div class="row">
@@ -34,7 +53,7 @@
                               <?php echo form_label('Apply Date:', 'apply_date', array("class"=>'col-sm-12'));   ?>
                               <div class="input-group date">
                                  <?php                
-                                 echo form_input("apply_date", $this->input->post("apply_date"), array("class"=>"form-control", 'placeholder'=>'Apply Date'));
+                                 echo form_input("apply_date", $this->input->post("apply_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Apply Date'));
                                  ?>
                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                               </div>
@@ -43,7 +62,7 @@
                               <?php echo form_label('Arrival Date:', 'arrival_date', array("class"=>'col-sm-12'));   ?>
                               <div class="input-group date">
                                  <?php                
-                                 echo form_input("arrival_date", $this->input->post("arrival_date"), array("class"=>"form-control", 'placeholder'=>'Arrival Date'));
+                                 echo form_input("arrival_date", $this->input->post("arrival_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date'));
                                  ?>
                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                               </div>
@@ -52,7 +71,7 @@
                               <?php echo form_label('Effective Date:', 'effective_date', array("class"=>'col-sm-12'));   ?>
                               <div class="input-group date">
                                  <?php                
-                                 echo form_input("effective_date", $this->input->post("effective_date"), array("class"=>"form-control", 'placeholder'=>'Effective Date'));
+                                 echo form_input("effective_date", $this->input->post("effective_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Effective Date'));
                                  ?>
                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                               </div>
@@ -61,7 +80,7 @@
                               <?php echo form_label('Expiry Date:', 'expiry_date', array("class"=>'col-sm-12'));   ?>
                               <div class="input-group date">
                                  <?php                
-                                 echo form_input("expiry_date", $this->input->post("expiry_date"), array("class"=>"form-control", 'placeholder'=>'Expiry Date'));
+                                 echo form_input("expiry_date", $this->input->post("expiry_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Expiry Date'));
                                  ?>
                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                               </div>
@@ -82,13 +101,13 @@
                            <div class="col-sm-3">
                               <?php 
                                  echo form_label('Daily Rate:', 'dailyrate', array("class"=>'col-sm-12'));                     
-                                 echo form_input("dailyrate", $this->input->post("dailyrate"), array("class"=>"form-control", 'placeholder'=>'Daily Rate', 'readonly'=>'readonly'));
+                                 echo form_input("dailyrate", $this->input->post("dailyrate"), array("class"=>"form-control", 'placeholder'=>'Daily Rate'));
                               ?>
                            </div>
                            <div class="col-sm-3">
                               <?php 
                                  echo form_label('Age:', 'totalyears', array("class"=>'col-sm-12'));                            
-                                 echo form_input("totalyears", $this->input->post("totalyears"), array("class"=>"form-control", 'placeholder'=>'Age', 'readonly'=>'readonly'));
+                                 echo form_input("totalyears", $this->input->post("totalyears"), array("class"=>"form-control", 'placeholder'=>'Age'));
                               ?>
                            </div>
                            <div class="col-sm-3">
@@ -126,8 +145,10 @@
                               ?>
                            </div>
                            <div class="form-group col-sm-3">
-                              <label class="col-sm-12">Sum Insured (CAD) : $5,000,000</label>
-                              <input name="sum_insured" value="5000000" type="hidden">
+                              <?php 
+                                 echo form_label('Sum Insured:', 'sum_insured', array("class"=>'col-sm-12'));                           
+                                 echo form_input("sum_insured", $this->input->post("sum_insured"), array("class"=>"form-control", 'placeholder'=>'Sum Insured'));
+                              ?>
                            </div>
                         </div>
                         <div class="row">
@@ -183,7 +204,7 @@
                               <?php echo form_label('Birth Date:', 'birthday', array("class"=>'col-sm-12'));   ?>
                               <div class="input-group date">
                                  <?php                
-                                 echo form_input("birthday", $this->input->post("birthday"), array("class"=>"form-control", 'placeholder'=>'Birth Date'));
+                                 echo form_input("birthday", $this->input->post("birthday"), array("class"=>"form-control datepicker", 'placeholder'=>'Birth Date'));
                                  ?>
                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                               </div>
@@ -237,16 +258,14 @@
                         <div class="row">
                            <div class="form-group col-sm-3">
                               <?php 
-                                 echo form_label('Province:', 'province2', array("class"=>'col-sm-12'));                  
-                                 $province2 = array(""=>'--Select Province--');
-                                 echo form_dropdown("province2", $province2, $this->input->get("province2"), array("class"=>'form-control'));
+                                 echo form_label('Province:', 'province2', array("class"=>'col-sm-12'));
+                                 echo $province;
                               ?>
                            </div>
                            <div class="form-group col-sm-3">
                               <?php 
-                                 echo form_label('Country:', 'country2', array("class"=>'col-sm-12'));                  
-                                 $country2 = array(""=>'--Select Country--');
-                                 echo form_dropdown("country2", $country2, $this->input->get("country2"), array("class"=>'form-control'));
+                                 echo form_label('Country:', 'country2', array("class"=>'col-sm-12'));       
+                                 echo $country;
                               ?>
                            </div>
                            <div class="form-group col-sm-3">
