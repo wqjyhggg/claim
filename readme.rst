@@ -9,6 +9,12 @@ Password: password
 
 
 #####################
+Jan, 07 2016 update:-
+#####################
+- Create Claim page layout - done
+
+
+#####################
 Dec, 23 2016 update:-
 #####################
 - Case Management: follow and inactivate from listing and edit screen is - done
