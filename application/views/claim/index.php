@@ -414,13 +414,14 @@
                <!-- search policy filter end -->
                <div class="clearfix"><br/></div>
 
-               <?php //if($this->input->get("filter") == 'claim'): ?>
+               <?php if($this->input->get("filter") == 'claim'): ?>
                <!-- search results start -->
                <div class="x_title">
                   <h2>Search Result<small></small></h2>
                   <div class="clearfix"></div>
                </div>
                <div class="x_content">
+                  <?php if(!empty($claims)): ?>
                   <div class="table-responsive">
                      <table class="table table-hover table-bordered">
                         <thead>
@@ -440,26 +441,31 @@
                            </tr>
                         </thead>
                         <tbody>
-                           <tr class="row-link" title="Click to View/Edit">
-                              <th><?php echo form_checkbox("case", 1); ?></th>
-                              <td>57</td>
-                              <td>12345612456</td>
-                              <td>216346</td>
-                              <td>Neifang</td>
-                              <td>zang</td>
-                              <td>M</td>
-                              <td>1990-01-20</td>
-                              <td>2016-12-13</td>
-                              <td></td>
-                              <td></td>                              
-                              <td>Finished</td>
+                           <?php foreach ($claims as $key => $value): ?>
+                           <tr>
+                              <td><?php echo form_checkbox("selectall", $value['id']); ?></td>
+                              <td><?php echo $value['id']; ?></td>
+                              <td><?php echo $value['policy_no']; ?></td>
+                              <td><?php echo $value['claim_no']; ?></td>
+                              <td><?php echo $value['insured_first_name']; ?></td>
+                              <td><?php echo $value['insured_last_name']; ?></td>
+                              <td><?php echo $value['gender']; ?></td>
+                              <td><?php echo $value['dob']; ?></td>
+                              <td><?php echo $value['claim_date']; ?></td>
+                              <td>0</td>
+                              <td>0</td>
+                              <td><?php echo anchor("case/detail/".$value['id'], "Detail"); ?></td>
                            </tr>
+                        <?php endforeach; ?>
                         </tbody>
                      </table>
                   </div>
+                  <?php else:?>
+                     <center><?php echo heading("No record available", 4); ?></center>
+                  <?php endif;?>
                </div>
                <!-- End Search List Section -->
-               <?php //endif;?>
+               <?php endif;?>
             </div>
          </div>
       </div>

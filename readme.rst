@@ -9,6 +9,13 @@ Password: password
 
 
 #####################
+Jan, 10 2016 update:-
+#####################
+- Create Claim page basic info - done
+- Search claim page - done
+
+
+#####################
 Jan, 07 2016 update:-
 #####################
 - Create Claim page layout - done

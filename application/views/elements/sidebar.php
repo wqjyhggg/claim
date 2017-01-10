@@ -22,7 +22,5 @@
 
 	<li> <a href="#" class="leftmeun"><i class="fa fa-money"></i>Payments</a> </li>
 
-	<li> <a href="#" class="leftmeun"><i class="fa fa-user"></i>HR management</a> </li>
-
 	<li> <?php echo anchor("auth/logout", '<i class="fa fa-power-off"></i>Logout</a>', array("class"=>'leftmeun')) ?> </li>
 </ul>
