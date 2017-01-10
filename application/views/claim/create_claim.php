@@ -16,7 +16,7 @@
                <div class="clearfix"></div>
             </div>
             <div class="x_content">
-               <?php //echo form_open("", array('class'=>'form-horizontal', 'method'=>'post')); ?>
+               <?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'post')); ?>
                <div class="row" style="margin-bottom:15px;">
                   <div class="form-group col-sm-3">
                      <?php 
@@ -36,7 +36,7 @@
                         echo form_label('&nbsp;', 'gender', array("class"=>'col-sm-12'));
                         echo form_checkbox("gender", "Y", $this->input->post("gender"), array('class'=>'setpremium')); ?>  Male
                      </div>
-                     <div class="col-sm-4">
+                     <div class="col-sm-5">
                         <?php 
                         echo form_label('&nbsp;', 'gender', array("class"=>'col-sm-12'));
                         echo form_checkbox("gender", "Y", $this->input->post("gender"), array('class'=>'setpremium')); ?>  Female
@@ -45,17 +45,17 @@
                   <div class="col-sm-3">
                      <?php 
                         echo form_label('ID', 'id', array("class"=>'col-sm-12'));
+                        echo form_input("personal_id", $this->input->post("personal_id"), array("class"=>"form-control", 'placeholder'=>'ID'));
                      ?>
-                     #######
                   </div>
                </div>
 
                <div class="row">
                   <div class="form-group col-sm-3">
-                     <?php echo form_label('Date of Birth:', 'apply_date', array("class"=>'col-sm-12'));   ?>
+                     <?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">
                         <?php                
-                        echo form_input("apply_date", $this->input->post("apply_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Date of Birth'));
+                        echo form_input("dob", $this->input->post("dob"), array("class"=>"form-control datepicker", 'placeholder'=>'Date of Birth'));
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                      </div>
@@ -111,7 +111,6 @@
                         ?>
                   </div>
                </div>
-
 
                <h4>Address in Canada</h4>
                <div class="row">
@@ -333,7 +332,7 @@
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Country:', 'country2', array("class"=>'col-sm-12'));       
-                              echo $country;
+                              echo $country2;
                            ?>
                         </div>
                         <div class="col-sm-3">
@@ -447,7 +446,7 @@
                   </div>
                </div>
 
-               <h2>EXPENSES CLAIMED<small></small></h2>
+               <!-- <h2>EXPENSES CLAIMED<small></small></h2>
                <div class="row">
                   <div class="col-sm-12">
                      <div class="table-responsive">
@@ -490,15 +489,15 @@
                         </table>
                      </div>
                   </div>
-               </div>
+               </div> -->
 
-               <h2>Intake Form List<small></small></h2>
+               <!-- <h2>Intake Form List<small></small></h2>
                <div class="row">
                   <div class="col-sm-12">
-                     ----------------------------------------------------------------------------------------------------------------------
-                  </div>
-               </div>
 
+                  </div>
+               </div> -->
+               <!-- 
                <h2>PAYEE INFORMATION<small></small></h2>
                <div class="row">
                   <div class="col-sm-12">
@@ -555,10 +554,11 @@
                         ?>
                      </div>
                   </div>
-               </div>
+               </div> 
+               -->
 
                <br/>
-               <h2>ATTACHED LIST<small></small></h2>
+               <!-- <h2>ATTACHED LIST<small></small></h2>
                <div class="row">
                   <div class="col-sm-12">
                      <div class="col-sm-3">
@@ -570,7 +570,7 @@
                         <button class="btn btn-primary">Upload Attached</button>
                      </div>
                   </div>
-               </div>
+               </div> -->
                <div class="row">
                   <div class="col-sm-3">
                      <?php 
@@ -591,13 +591,15 @@
                   <div class="col-sm-2">
                      <input class="btn btn-primary" name="Cancel" value="Cancel" type="submit">  
                   </div>
-                  <div class="col-sm-2"> 
+                  <!-- <div class="col-sm-2"> 
                      <input class="btn btn-primary" name="Examine" value="Examine" type="submit">  
                   </div>
                   <div class="col-sm-2"> 
                      <input class="btn btn-primary" name="Email" value="Email/Print" type="submit">      
-                  </div>
+                  </div> -->
                </div>
+
+               <?php echo form_close(); ?>
 
             </div>
          </div>
@@ -617,4 +619,3 @@
       $(".more_items").toggle();
    })
 </script>
-

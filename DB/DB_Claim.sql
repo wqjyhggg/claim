@@ -40,21 +40,78 @@ CREATE TABLE IF NOT EXISTS `case` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `case_no` (`case_no`)
-) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 /*!40000 ALTER TABLE `case` DISABLE KEYS */;
-INSERT INTO `case` (`id`, `case_no`, `created_by`, `street_no`, `street_name`, `city`, `province`, `country`, `country2`, `post_code`, `assign_to`, `reason`, `first_name`, `last_name`, `phone_number`, `email`, `relations`, `diagnosis`, `treatment`, `third_party_recovery`, `policy_no`, `insured_firstname`, `insured_lastname`, `insured_address`, `dob`, `case_manager`, `reserve_amount`, `priority`, `status`, `created`) VALUES
-	(5, '0000005', 1, '123143', 'sodala1', 'jaipur', 'British Columbia', 'United States', 'Canada', '302015', 7, 'AD&D', 'bhawani', 'shankar', '424242424', 'developer@brsoftech.com', 'Father', 'test', 'sodala', 'Y', '99098908', 'bhawani', '', '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 10, 'Normal', 'D', '2016-12-06 11:28:53'),
-	(7, '0000007', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 5, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', 'A', '2016-12-08 06:47:47'),
-	(8, '0000008', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 6, 'AD&D', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', 'A', '2016-12-08 06:56:05'),
-	(9, '0000009', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 2, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', 'A', '2016-12-08 06:57:12'),
-	(78, '0000078', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'Canada', '302014', 5, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', 'A', '2016-12-09 06:11:42'),
-	(79, '0000079', 1, '1231', 'sodala', 'us', 'British Columbia', 'United States', 'United States', '21313', 5, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', 'A', '2016-12-09 06:12:49'),
-	(80, '0000080', 1, '1231', 'sodala', 'us', 'British Columbia', 'United States', 'United States', '21313', 6, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', 'A', '2016-12-09 06:14:12'),
-	(81, '0000081', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 6, 'Assistance Only', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', 'A', '2016-12-09 06:19:41'),
-	(87, '0000087', 1, '1231', 'sodala', 'jaipur', 'British Columbia', 'United States', 'United States', '21313', 0, 'AD&D', 'bhawani', 'bb', '424242424', 'developer@brsoftech.com', 'Sister', 'test', 'sodala', 'N', '99098908', 'bhawani', NULL, '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'Normal', 'A', '2016-12-13 07:48:23'),
-	(88, '0000088', 1, '', '', '', 'British Columbia', 'United States', 'United States', '21313', 0, 'Assistance Only', 'bhawani', 'bb', '424242424', '', 'Sister', 'test', 'sodala', 'Y', '99098908', '21231', '56465', '1341 Goldhawk Trail\r\nOakville, ON\r\nL6M 3Y5', '2000-05-30', 2, 0, 'HIGH', 'A', '2016-12-14 09:38:54');
 /*!40000 ALTER TABLE `case` ENABLE KEYS */;
+
+CREATE TABLE IF NOT EXISTS `claim` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `claim_no` varchar(64) NOT NULL,
+  `claim_date` date DEFAULT NULL,
+  `created_by` int(11) NOT NULL,
+  `insured_first_name` varchar(45) DEFAULT NULL,
+  `insured_last_name` varchar(30) DEFAULT NULL,
+  `gender` char(1) DEFAULT NULL,
+  `personal_id` varchar(40) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `policy_no` varchar(40) DEFAULT NULL,
+  `school_name` varchar(100) DEFAULT NULL,
+  `group_id` varchar(50) DEFAULT '0',
+  `arrival_date` date DEFAULT NULL,
+  `guardian_name` varchar(50) DEFAULT NULL,
+  `guardian_phone` varchar(50) DEFAULT NULL,
+  `street_address` text,
+  `city` varchar(50) DEFAULT NULL,
+  `province` varchar(50) DEFAULT NULL,
+  `telephone` varchar(30) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `post_code` varchar(15) NOT NULL DEFAULT 'N',
+  `arrival_date_canada` date DEFAULT NULL,
+  `cellular` varchar(20) DEFAULT NULL,
+  `physician_name` varchar(100) DEFAULT NULL,
+  `clinic_name` varchar(100) DEFAULT NULL,
+  `physician_street_address` text NOT NULL,
+  `physician_city` varchar(50) DEFAULT NULL,
+  `country` varchar(30) DEFAULT NULL,
+  `physician_post_code` varchar(20) DEFAULT NULL,
+  `physician_telephone` varchar(20) DEFAULT NULL,
+  `physician_alt_telephone` varchar(20) DEFAULT NULL,
+  `physician_name_canada` varchar(30) DEFAULT NULL,
+  `clinic_name_canada` varchar(100) DEFAULT NULL,
+  `physician_street_address_canada` text,
+  `physician_city_canada` varchar(50) DEFAULT NULL,
+  `physician_post_code_canada` varchar(20) DEFAULT NULL,
+  `physician_telephone_canada` varchar(20) DEFAULT NULL,
+  `physician_alt_telephone_canada` varchar(20) DEFAULT NULL,
+  `travel_insurance_coverage` varchar(5) DEFAULT NULL,
+  `full_name` varchar(100) DEFAULT NULL,
+  `employee_name` varchar(100) DEFAULT NULL,
+  `employee_street_address` text,
+  `city_town` varchar(50) DEFAULT NULL,
+  `country2` varchar(50) DEFAULT NULL,
+  `employee_telephone` varchar(20) DEFAULT NULL,
+  `medical_description` text,
+  `date_symptoms` date DEFAULT NULL,
+  `date_first_physician` date DEFAULT NULL,
+  `medication_date_1` date DEFAULT NULL,
+  `medication_1` varchar(50) DEFAULT NULL,
+  `medication_date_2` date DEFAULT NULL,
+  `medication_2` varchar(50) DEFAULT NULL,
+  `medication_date_3` date DEFAULT NULL,
+  `medication_3` varchar(50) DEFAULT NULL,
+  `status` enum('A','D') NOT NULL DEFAULT 'A' COMMENT 'D-deactive, A-active, stand for case status active/inactive',
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `claim_no` (`claim_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+/*!40000 ALTER TABLE `claim` DISABLE KEYS */;
+INSERT INTO `claim` (`id`, `claim_no`, `claim_date`, `created_by`, `insured_first_name`, `insured_last_name`, `gender`, `personal_id`, `dob`, `policy_no`, `school_name`, `group_id`, `arrival_date`, `guardian_name`, `guardian_phone`, `street_address`, `city`, `province`, `telephone`, `email`, `post_code`, `arrival_date_canada`, `cellular`, `physician_name`, `clinic_name`, `physician_street_address`, `physician_city`, `country`, `physician_post_code`, `physician_telephone`, `physician_alt_telephone`, `physician_name_canada`, `clinic_name_canada`, `physician_street_address_canada`, `physician_city_canada`, `physician_post_code_canada`, `physician_telephone_canada`, `physician_alt_telephone_canada`, `travel_insurance_coverage`, `full_name`, `employee_name`, `employee_street_address`, `city_town`, `country2`, `employee_telephone`, `medical_description`, `date_symptoms`, `date_first_physician`, `medication_date_1`, `medication_1`, `medication_date_2`, `medication_2`, `medication_date_3`, `medication_3`, `status`, `created`) VALUES
+	(89, 'asdsad', NULL, 1, 'bhawani', 'shankar', 'Y', '1541564', '0000-00-00', '99098908', '3256535', '+626+5', '0000-00-00', '5413254', '1221321', '65789456', '321', '7897494596', '7897456456798', 'g8bhawani@gmail.com', '302015', '0000-00-00', '3', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0000-00-00', '0000-00-00', '0000-00-00', '', '0000-00-00', '', '0000-00-00', '', '', '2017-01-10 10:44:30'),
+	(92, '112200111', NULL, 1, 'bhawani', 'shankar', 'Y', '1541564', '0000-00-00', '99098908', '3256535', '+626+5', '0000-00-00', '5413254', '1221321', '65789456', '321', '7897494596', '7897456456798', 'g8bhawani@gmail.com', '302015', '0000-00-00', '32', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0000-00-00', '0000-00-00', '0000-00-00', '', '0000-00-00', '', '0000-00-00', '', '', '2017-01-10 10:46:04'),
+	(94, '0000094', NULL, 1, 'bhawani', 'shankar', 'Y', '1541564', '0000-00-00', '99098908', '3256535', '+626+5', '0000-00-00', '5413254', '1221321', '65789456', '321', '7897494596', '7897456456798', 'g8bhawani@gmail.com', '302015', '0000-00-00', '32', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0000-00-00', '0000-00-00', '0000-00-00', '', '0000-00-00', '', '0000-00-00', '', '', '2017-01-10 10:55:25');
+/*!40000 ALTER TABLE `claim` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `country` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -416,7 +473,7 @@ CREATE TABLE IF NOT EXISTS `template` (
   `description` longtext NOT NULL,
   `type` enum('claim','case','emc') DEFAULT NULL COMMENT '''claim-claim manager'',''case-case manager'',''emc-emc user''',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 /*!40000 ALTER TABLE `template` DISABLE KEYS */;
 INSERT INTO `template` (`id`, `name`, `description`, `type`) VALUES
@@ -452,7 +509,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `parent_id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`, `shift`) VALUES
-	(1, 0, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1482486561, 1, 'Admin', 'istrator', NULL, '2132132132', ''),
+	(1, 0, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', NULL, NULL, NULL, NULL, 1268889823, 1484044068, 1, 'Admin', 'istrator', NULL, '2132132132', ''),
 	(2, 1, '192.168.1.29', 'a@xx.com', '$2y$08$gnsbXPmHtU7SBQko94uf9.VVVzzFhd12fYK3n1FMx4lL8yDPzMvvm', NULL, 'a@xx.com', NULL, NULL, NULL, NULL, 1479881420, 1480055689, 1, 'nn123a', 'bb123', NULL, '123131', '2pm-8pm'),
 	(5, 1, '192.168.1.29', 'paytm123e@gmail.com', '$2y$08$p84W1BzwM7WslS9PgioW5elSODLU0E0N/p8Q2uyNzOFeHxD48AW3q', NULL, 'paytm123e@gmail.com', NULL, NULL, NULL, NULL, 1479977418, NULL, 1, 'bhawani', 'bb', NULL, '231321322', '2pm-8pm'),
 	(6, 1, '192.168.1.29', 'g8bhawani@gmail.com', '$2y$08$Bm7PbyWf99OzJpfeICUmU.9/8/OU68KK/uvBtblO4hkAGfz799nUG', NULL, 'g8bhawani@gmail.com', NULL, NULL, NULL, NULL, 1481794884, NULL, 1, 'istra', 'istrator', NULL, '231564645', '8pm-8am'),
