@@ -195,34 +195,57 @@
                <?php if(!empty($policies)): ?>
                <div class="table-responsive">
                   <table class="table table-hover table-bordered">
-                     <thead>
-                        <tr>
-                           <th>Policy No</th>
-                           <th>ID</th>
-                           <th>Name</th>
-                           <th>Date of Birth</th>
-                           <th>Status</th>
-                           <th>Effect Date</th>
-                           <th>User</th>
-                           <th>Agent</th>
-                           <th>Action</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <?php foreach ($policies as $key => $value): ?>
-                        <tr class="view-policy" data='<?php echo json_encode($value); ?>'>
-                           <td><?php echo $value['policy']; ?></td>
-                           <td><?php echo $value['plan_id']; ?></td>
-                           <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
-                           <td><?php echo date("d/d/Y", strtotime($value['birthday'])); ?></td>
-                           <td><?php echo $policy_status['array'][$value['status_id']]; ?></td>
-                           <td><?php echo date("d/d/Y", strtotime($value['effective_date'])); ?></td>
-                           <td>Which data goes here</td>
-                           <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
-                           <td><?php echo anchor("emergency_assistance/view_policy", "Open"); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                     </tbody>
+                     <?php if(($this->input->get("lastname") or $this->input->get("firstname")) and !$this->input->get("result")): ?>
+                        <thead>
+                           <tr>
+                              <th>First Name</th>
+                              <th>Last Name</th>
+                              <th>Date of Birth</th>
+                              <th>Gender</th>
+                              <th>Action</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <?php foreach ($policies as $key => $value): ?>
+                              <tr class="view-policies" data='<?php echo json_encode($value); ?>'>
+                                 <td><?php echo $value['firstname']; ?></td>
+                                 <td><?php echo $value['lastname']; ?></td>
+                                 <td><?php echo date("d/d/Y", strtotime($value['birthday'])); ?></td>
+                                 <td><?php echo $value['gender']; ?></td>
+                                 <td class="policies"><?php echo anchor("emergency_assistance/?result=policy&filter=policy&lastname=".$value['lastname']."&firstname=".$value['firstname'], "View Policies"); ?></td>
+                              </tr>
+                           <?php endforeach; ?>
+                        </tbody>
+                     <?php else:?>
+                        <thead>
+                           <tr>
+                              <th>Policy No</th>
+                              <th>ID</th>
+                              <th>Name</th>
+                              <th>Date of Birth</th>
+                              <th>Status</th>
+                              <th>Effect Date</th>
+                              <th>User</th>
+                              <th>Agent</th>
+                              <th>Action</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <?php foreach ($policies as $key => $value): ?>
+                           <tr class="view-policy" data='<?php echo json_encode($value); ?>'>
+                              <td><?php echo $value['policy']; ?></td>
+                              <td><?php echo $value['plan_id']; ?></td>
+                              <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
+                              <td><?php echo date("d/d/Y", strtotime($value['birthday'])); ?></td>
+                              <td><?php echo $policy_status['array'][$value['status_id']]; ?></td>
+                              <td><?php echo date("d/d/Y", strtotime($value['effective_date'])); ?></td>
+                              <td>Which data goes here</td>
+                              <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
+                              <td><?php echo anchor("emergency_assistance/view_policy", "Open"); ?></td>
+                           </tr>
+                           <?php endforeach; ?>
+                        </tbody>
+                     <?php endif; ?>
                   </table>
                </div>               
                <?php else:?>
@@ -370,6 +393,13 @@ $(document).ready(function() {
       // redirect it to view policy page
       window.location = "<?php echo base_url("emergency_assistance/view_policy") ?>";
    })
+   $(".view-policies").click(function(){
+      var data = $(this).attr("data");
+
+      // redirect it to view policy page
+      window.location = $(this).children("td.policies").children("a").attr("href");
+   })
+
 })
 
 // to make to check hidden filters to show
