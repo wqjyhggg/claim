@@ -200,8 +200,14 @@ class Claim extends CI_Controller {
 				// load dropdowns- countries, province, products data
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
-				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));				
+				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
+				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "");
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
+
+				// get all documents for sending email/print.
+				$fields = "id, name, description";
+				$conditions = "type = 'claim'";
+				$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Create Claim', TRUE);
@@ -353,6 +359,39 @@ class Claim extends CI_Controller {
 		        $this->template->render();  
 	        }      
 		}
+	}
+
+
+	function import_files(){
+		set_time_limit(0);
+		ini_set('max_execution_time', -1);
+		$txt_file    = file_get_contents('icd10cm_codes_2017 (3).txt');
+		$rows        = explode("\n", $txt_file);
+		foreach($rows as $row => $data)
+		{
+		    //get row data
+			$info = [];
+		    $info['code']         = substr($data, 0,8);
+		    $info['description']  = substr($data, 8,strlen($data));
+		    $this->common_model->save("diagnosis", $info);
+		}
+	}
+
+	// for autocomplete search
+	public function search_diagnosis($field)
+	{
+		$query = $this->input->get("query");
+
+		// get search query
+		$table = "diagnosis"; 
+		$group_by = array("users_groups.user_id");
+		$fields = "diagnosis.$field as `value`, diagnosis.id as `data`"; 
+		$conditions = "diagnosis.$field like '%$query%' ";
+		$results = $this->common_model->select($record = "list", $typecast = "object", $table, $fields, $conditions);
+
+		// return result in json format
+		$results = array('suggestions'=>$results);
+		echo json_encode($results);
 	}
 
 

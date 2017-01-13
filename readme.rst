@@ -9,6 +9,17 @@ Password: password
 
 
 #####################
+Jan, 13 2016 update:-
+#####################
+*******************
+Claim page update
+*******************
+- import database of icd10cm codes
+- jquery functions:- multiple expenses / multiple payee, multiple file upload, email print(one doc), intake form(add and delete)
+
+
+
+#####################
 Jan, 11 2016 update:-
 #####################
 - Search policy function : If users search by client's name, system can list all the clients whose name is same one, then users can choose a client to display his/her all policies.If users search by a policy number，system will display the policy's clients (holder, insured), then list his/her all policies. - done
