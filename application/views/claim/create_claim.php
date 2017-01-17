@@ -14,7 +14,7 @@
                <div class="clearfix"></div>
             </div>
             <div class="x_content">
-               <?php //echo form_open("", array('class'=>'form-horizontal', 'method'=>'post')); ?>
+               <?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post')); ?>
                <div class="row" style="margin-bottom:15px;">
                   <div class="form-group col-sm-3">
                      <?php 
@@ -62,6 +62,7 @@
                      <?php 
                         echo form_label('Policy#:', 'policy_no', array("class"=>'col-sm-12'));                            
                         echo form_input("policy_no", $this->input->post("policy_no"), array("class"=>"form-control", 'placeholder'=>'Policy#'));
+                        echo form_error("policy_no");
                      ?>
                   </div>
                   <div class="col-sm-3">
@@ -571,7 +572,7 @@
                   </div>
                </div>
 
-               <?php //echo form_close(); ?>
+               <?php echo form_close(); ?>
 
             </div>
          </div>
@@ -760,17 +761,17 @@
       <tr>
          <td>
             <?php 
-               echo form_input("invoice", $this->input->post("invoice"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control"));
             ?>
          </td>  
          <td>
             <?php 
-               echo form_input("provider_name", $this->input->post("provider_name"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control"));
             ?>
          </td>  
          <td>
             <?php 
-               echo form_input("referencing_physician", $this->input->post("referencing_physician"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control"));
             ?>
          </td>  
          <td>
@@ -809,32 +810,32 @@
                      'V08B - Cremation/Burial'=>'Cremation/Burial',
                      'V12 - Air Flight Accident'=>'Air Flight Accident'
                   );
-               echo form_dropdown("coverage_code", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control'));
+               echo form_dropdown("expenses_climed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control'));
             ?>
          </td>  
          <td>
             <?php 
-               echo form_input("diagnosis", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field"));
+               echo form_input("expenses_climed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field"));
             ?>
          </td>  
          <td>
             <?php 
-               echo form_input("service_description", $this->input->post("service_description"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[service_description][]", $this->input->post("service_description"), array("class"=>"form-control"));
             ?>
          </td>  
          <td>
             <?php 
-               echo form_input("date_of_service", $this->input->post("date_of_service"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
             <?php 
-               echo form_input("amount_billed", $this->input->post("amount_billed"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
             <?php 
-               echo form_input("amount_client_paid", $this->input->post("amount_client_paid"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
@@ -844,22 +845,22 @@
                      "CAD"=>'CAD',
                      "CNY"=>'CNY',
                   );
-               echo form_dropdown("currency", $currency, $this->input->get("currency"), array("class"=>'form-control'));
+               echo form_dropdown("expenses_climed[currency][]", $currency, $this->input->get("currency"), array("class"=>'form-control'));
             ?>
          </td> 
          <td>
             <?php 
-               echo form_input("currency_rate", $this->input->post("currency_rate"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[currency_rate][]", $this->input->post("currency_rate"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
             <?php 
-               echo form_input("payee", $this->input->post("payee"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[payee][]", $this->input->post("payee"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
             <?php 
-               echo form_input("comment", $this->input->post("comment"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[comment][]", $this->input->post("comment"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
@@ -874,22 +875,22 @@
       <tr>
          <td>
             <?php 
-               echo form_input("bank", $this->input->post("bank"), array("class"=>"form-control", 'placeholder'=>'Bank Name'));
+               echo form_input("payees[bank][]", $this->input->post("bank"), array("class"=>"form-control", 'placeholder'=>'Bank Name'));
             ?>
          </td>
          <td>
             <?php 
-               echo form_input("payee_name", $this->input->post("payee_name"), array("class"=>"form-control", 'placeholder'=>'Payee Name'));
+               echo form_input("payees[payee_name][]", $this->input->post("payee_name"), array("class"=>"form-control", 'placeholder'=>'Payee Name'));
             ?>
          </td>
          <td>
             <?php 
-               echo form_input("account_cheque", $this->input->post("account_cheque"), array("class"=>"form-control", 'placeholder'=>'Account/Cheque#'));
+               echo form_input("payees[account_cheque][]", $this->input->post("account_cheque"), array("class"=>"form-control", 'placeholder'=>'Account/Cheque#'));
             ?>
          </td>
          <td>
             <?php 
-               echo form_input("payment", $this->input->post("payment"), array("class"=>"form-control", 'placeholder'=>'Payment'));
+               echo form_input("payees[payment][]", $this->input->post("payment"), array("class"=>"form-control", 'placeholder'=>'Payment'));
             ?>
          </td>
          <td>
@@ -899,12 +900,12 @@
                      "CAD"=>'CAD',
                      "CNY"=>'CNY',
                   );
-               echo form_dropdown("payee_currency", $payee_currency, $this->input->get("payee_currency"), array("class"=>'form-control'));
+               echo form_dropdown("payees[payee_currency][]", $payee_currency, $this->input->get("payee_currency"), array("class"=>'form-control'));
             ?>
          </td>
          <td>
             <?php 
-               echo form_input("payee_currency_rate", $this->input->post("payee_currency_rate"), array("class"=>"form-control", 'placeholder'=>'Currency Rate'));
+               echo form_input("payees[payee_currency_rate][]", $this->input->post("payee_currency_rate"), array("class"=>"form-control", 'placeholder'=>'Currency Rate'));
             ?>
          </td>
          <td>
@@ -1103,7 +1104,7 @@
       var no_of_form = $(".intake-forms").length + 1;
 
       // add new file here
-      $(".modal-body .files").append('<div class="col-sm-9" style="display:none"><input style="display:none" type="file" name="files[]" id="file'+(count+1)+'" accept="pdf" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
+      $(".modal-body .files").append('<div class="col-sm-9" style="display:none"><input style="display:none" type="file" name="files_'+no_of_form+'[]" id="file'+(count+1)+'" accept="pdf" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
 
       // place trigger clicked once file append in files class
       $('#file'+(count+1)).trigger("click");
@@ -1117,7 +1118,7 @@
       var no_of_form = $(".intake-forms").length + 1;
 
       // add new file here
-      $(".uploaded_files").append('<div class="col-sm-9" style="display:none"><input style="display:none" type="file" name="files_multi[]" id="file'+(count+1)+'" accept="pdf" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
+      $(".uploaded_files").append('<div class="col-sm-9" ><input style="display:none" type="file" name="files_multi[]" id="file'+(count+1)+'" accept="pdf" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
 
       // place trigger clicked once file append in files class
       $('#file'+(count+1)).trigger("click");
