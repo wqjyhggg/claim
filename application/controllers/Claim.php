@@ -173,10 +173,12 @@ class Claim extends CI_Controller {
 				// prepare post data array
 				$data = [];
 				$array = $this->input->post();
+				// echo "<pre>";
+				// print_r($array);
 				foreach ($array as $key => $value) 
 				{
 					# code...
-					if($key <> "filter" && $key <> "same_policy")
+					if($key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form")
 						$data[$key] = $value;
 				}
 				$data['created'] = date('Y-m-d H:i:s');
@@ -184,6 +186,120 @@ class Claim extends CI_Controller {
 
 				// insert values to database
 				$record_id = $this->common_model->save("claim", $data);
+
+				// insert payee information
+				if(!empty($array['payees']))
+				{
+					foreach($array['payees']['bank'] as $key => $val)	
+					{
+						$payee_data = array(
+							'claim_id'=>$record_id,
+							'bank'=>$val,
+							'payee_name'=>$array['payees']['payee_name'][$key],
+							'account_cheque'=>$array['payees']['account_cheque'][$key],
+							'payment'=>$array['payees']['payment'][$key],
+							'payee_currency'=>$array['payees']['payee_currency'][$key],
+							'payee_currency_rate'=>$array['payees']['payee_currency_rate'][$key],
+							'created'=>date('Y-m-d H:i:s')
+							);
+						$this->common_model->save("payees", $payee_data);
+					}
+				}
+
+				// insert expenses_climed data
+				if(!empty($array['expenses_climed']))
+				{
+					foreach($array['expenses_climed']['invoice'] as $key => $val)	
+					{
+						$payee_data = array(
+							'claim_id'=>$record_id,
+							'invoice'=>$val,
+							'provider_name'=>$array['expenses_climed']['provider_name'][$key],
+							'referencing_physician'=>$array['expenses_climed']['referencing_physician'][$key],
+							'coverage_code'=>$array['expenses_climed']['coverage_code'][$key],
+							'diagnosis'=>$array['expenses_climed']['diagnosis'][$key],
+							'service_description'=>$array['expenses_climed']['service_description'][$key],
+							'date_of_service'=>$array['expenses_climed']['date_of_service'][$key],
+							'amount_billed'=>$array['expenses_climed']['amount_billed'][$key],
+							'amount_client_paid'=>$array['expenses_climed']['amount_client_paid'][$key],
+							'currency'=>$array['expenses_climed']['currency'][$key],
+							'currency_rate'=>$array['expenses_climed']['currency_rate'][$key],
+							'payee'=>$array['expenses_climed']['payee'][$key],
+							'comment'=>$array['expenses_climed']['comment'][$key],
+							'created'=>date('Y-m-d H:i:s')
+							);
+						$this->common_model->save("expenses_climed", $payee_data);
+					}
+				}
+
+				// insert intake notes
+				// insert intake forms if exists
+				$no_of_form = $array['no_of_form'];
+
+				// load upload class
+				$config['upload_path'] = './assets/uploads/intake_forms/';
+				$config['allowed_types'] = '*';
+				$config['overwrite'] = FALSE;
+				$this->load->library('upload', $config);
+
+				// initialize upload config
+				$this->upload->initialize($config);
+				if($no_of_form)
+				{
+					// add intake form batch
+					for($i = 1; $i <= $no_of_form; $i++)
+					{
+						// initialize file names array
+						$file_names = [];
+
+						// upload files to server
+						$files = $_FILES['files_'.$i];
+						if(!empty($files))
+						{	foreach ($files['name'] as $key => $value) 
+							{	
+								if($files['name'][$key])
+								{
+									$_FILES['userfile']['name'] = $files['name'][$key];
+					                $_FILES['userfile']['type'] = $files['type'][$key];
+					                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+					                $_FILES['userfile']['error'] = $files['error'][$key];
+					                $_FILES['userfile']['size'] = $files['size'][$key];
+									
+									$field_name = 'userfile';
+
+									// upload file to server
+									$this->upload->do_upload();
+									$file_data = $this->upload->data();
+									$file_names[] = $file_data['file_name'];
+								}
+							}
+						}
+
+						// generate data array
+						$data_intake = array(
+							'case_id' => $record_id,
+							'created_by' => $this->ion_auth->user()->row()->id,
+							'notes' => $array['notes_'.$i],
+							'created' => date("Y-m-d H:i:s"),
+							'docs' => implode(",", $file_names),
+							'type'=>'CLAIM'
+							);
+
+						// save values to database
+						$intake_form_id = $this->common_model->save("intake_form", $data_intake);
+
+						// create directory to identify intake files
+						@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+
+						// move all files to that directory
+						if(!empty($file_names))
+							foreach ($file_names as $fname)
+							{
+								copy("./assets/uploads/intake_forms/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
+								unlink("./assets/uploads/intake_forms/$fname");
+							}
+					}
+				}
 
 				// update case no(7 length) to table
 				$this->common_model->update("claim", array("claim_no"=>str_pad($record_id, 7, 0, STR_PAD_LEFT)), array("id"=>$record_id));
@@ -387,7 +503,7 @@ class Claim extends CI_Controller {
 		$group_by = array("users_groups.user_id");
 		$fields = "diagnosis.$field as `value`, diagnosis.id as `data`"; 
 		$conditions = "diagnosis.$field like '%$query%' ";
-		$results = $this->common_model->select($record = "list", $typecast = "object", $table, $fields, $conditions);
+		$results = $this->common_model->select($record = "list", $typecast = "object", $table, $fields, $conditions, $joins = array(), $order_by = array(), $group_by = array(), $having = "" , $limit = 8);
 
 		// return result in json format
 		$results = array('suggestions'=>$results);

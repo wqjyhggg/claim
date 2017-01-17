@@ -9,6 +9,19 @@ Password: password
 
 
 #####################
+Jan, 17 2016 update:-
+#####################
+*******************
+Claim page update
+*******************
+- Intake form submission
+- Multiple expenses submission
+- Multiple payees submission
+- Setup fuzzy search on Diagnosis
+
+
+
+#####################
 Jan, 13 2016 update:-
 #####################
 *******************
