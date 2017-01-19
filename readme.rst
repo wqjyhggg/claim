@@ -7,6 +7,18 @@ Username: admin@admin.com
 Password: password
 
 
+#####################
+Jan, 19 2016 update:-
+#####################
+*******************
+Claim page update
+*******************
+- Add all OTC templates for email print
+- Work on Claim Examine page
+- Claim examin page design done
+* other modules are in progress....
+
+
 
 #####################
 Jan, 17 2016 update:-

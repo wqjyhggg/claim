@@ -173,8 +173,7 @@ class Claim extends CI_Controller {
 				// prepare post data array
 				$data = [];
 				$array = $this->input->post();
-				// echo "<pre>";
-				// print_r($array);
+
 				foreach ($array as $key => $value) 
 				{
 					# code...
@@ -184,8 +183,50 @@ class Claim extends CI_Controller {
 				$data['created'] = date('Y-m-d H:i:s');
 				$data['created_by'] = $this->ion_auth->user()->row()->id;
 
+				// upload claim pdf files to server
+				$files = $_FILES['files_multi'];
+				$file_names = [];
+
+				// load upload class
+				$config['upload_path'] = './assets/uploads/claim_files/';
+				$config['allowed_types'] = '*';
+				$config['overwrite'] = FALSE;
+				$this->load->library('upload', $config);
+
+				// initialize upload config
+				$this->upload->initialize($config);
+				if(!empty($files))
+				{	foreach ($files['name'] as $key => $value) 
+					{	
+						if($files['name'][$key])
+						{
+							$_FILES['userfile']['name'] = $files['name'][$key];
+			                $_FILES['userfile']['type'] = $files['type'][$key];
+			                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+			                $_FILES['userfile']['error'] = $files['error'][$key];
+			                $_FILES['userfile']['size'] = $files['size'][$key];
+							
+							// upload file to server
+							$this->upload->do_upload();
+							$file_data = $this->upload->data();
+							$file_names[] = $file_data['file_name'];
+						}
+					}
+				}
+
 				// insert values to database
 				$record_id = $this->common_model->save("claim", $data);
+
+				// create directory to copy/shift files
+				@mkdir('./assets/uploads/claim_files/'.$record_id, 0777);
+
+				// move all files to that directory
+				if(!empty($file_names))
+					foreach ($file_names as $fname)
+					{
+						copy("./assets/uploads/claim_files/$fname", "./assets/uploads/claim_files/$record_id/$fname");
+						unlink("./assets/uploads/claim_files/$fname");
+					}
 
 				// insert payee information
 				if(!empty($array['payees']))
@@ -336,9 +377,8 @@ class Claim extends CI_Controller {
 
 
 	// redirect if needed, otherwise display the edit case page
-	public function detail_claim($id = 0)
+	public function examine_claim($id)
 	{
-
 		if (!$this->ion_auth->logged_in())
 		{
 			// redirect them to the login page
@@ -347,131 +387,220 @@ class Claim extends CI_Controller {
 		else
 		{
 			//validate form input
-			$this->form_validation->set_rules('assign_to', 'Assign To', '');
-			$this->form_validation->set_rules('reason', 'Reason', 'required');
-			$this->form_validation->set_rules('first_name', 'First Name', 'required');
-			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
-			$this->form_validation->set_rules('priority', 'Priority', 'required');
-			if($this->input->get("ref") == 'manage')
-				$this->form_validation->set_rules('reserve_amount', 'Create Reservers', 'number');
+			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 
 			if ($this->form_validation->run() == TRUE)
 			{
 				// prepare post data array
 				$data = [];
 				$array = $this->input->post();
+
 				foreach ($array as $key => $value) 
 				{
 					# code...
-					$data[$key] = $value;
+					if($key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form")
+						$data[$key] = $value;
+				}
+				$data['created'] = date('Y-m-d H:i:s');
+				$data['created_by'] = $this->ion_auth->user()->row()->id;
 
-					// for check third party recovery
-					if($key == 'third_party_recovery')
-						$data[$key] = $value ? $value : "N";
+				// upload claim pdf files to server
+				$files = $_FILES['files_multi'];
+				$file_names = [];
+
+				// load upload class
+				$config['upload_path'] = './assets/uploads/claim_files/';
+				$config['allowed_types'] = '*';
+				$config['overwrite'] = FALSE;
+				$this->load->library('upload', $config);
+
+				// initialize upload config
+				$this->upload->initialize($config);
+				if(!empty($files))
+				{	foreach ($files['name'] as $key => $value) 
+					{	
+						if($files['name'][$key])
+						{
+							$_FILES['userfile']['name'] = $files['name'][$key];
+			                $_FILES['userfile']['type'] = $files['type'][$key];
+			                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+			                $_FILES['userfile']['error'] = $files['error'][$key];
+			                $_FILES['userfile']['size'] = $files['size'][$key];
+							
+							// upload file to server
+							$this->upload->do_upload();
+							$file_data = $this->upload->data();
+							$file_names[] = $file_data['file_name'];
+						}
+					}
 				}
 
 				// insert values to database
-				$this->common_model->update("case", $data, array('id'=>$id));
+				$record_id = $this->common_model->save("claim", $data);
+
+				// create directory to copy/shift files
+				@mkdir('./assets/uploads/claim_files/'.$record_id, 0777);
+
+				// move all files to that directory
+				if(!empty($file_names))
+					foreach ($file_names as $fname)
+					{
+						copy("./assets/uploads/claim_files/$fname", "./assets/uploads/claim_files/$record_id/$fname");
+						unlink("./assets/uploads/claim_files/$fname");
+					}
+
+				// insert payee information
+				if(!empty($array['payees']))
+				{
+					foreach($array['payees']['bank'] as $key => $val)	
+					{
+						$payee_data = array(
+							'claim_id'=>$record_id,
+							'bank'=>$val,
+							'payee_name'=>$array['payees']['payee_name'][$key],
+							'account_cheque'=>$array['payees']['account_cheque'][$key],
+							'payment'=>$array['payees']['payment'][$key],
+							'payee_currency'=>$array['payees']['payee_currency'][$key],
+							'payee_currency_rate'=>$array['payees']['payee_currency_rate'][$key],
+							'created'=>date('Y-m-d H:i:s')
+							);
+						$this->common_model->save("payees", $payee_data);
+					}
+				}
+
+				// insert expenses_climed data
+				if(!empty($array['expenses_climed']))
+				{
+					foreach($array['expenses_climed']['invoice'] as $key => $val)	
+					{
+						$payee_data = array(
+							'claim_id'=>$record_id,
+							'invoice'=>$val,
+							'provider_name'=>$array['expenses_climed']['provider_name'][$key],
+							'referencing_physician'=>$array['expenses_climed']['referencing_physician'][$key],
+							'coverage_code'=>$array['expenses_climed']['coverage_code'][$key],
+							'diagnosis'=>$array['expenses_climed']['diagnosis'][$key],
+							'service_description'=>$array['expenses_climed']['service_description'][$key],
+							'date_of_service'=>$array['expenses_climed']['date_of_service'][$key],
+							'amount_billed'=>$array['expenses_climed']['amount_billed'][$key],
+							'amount_client_paid'=>$array['expenses_climed']['amount_client_paid'][$key],
+							'currency'=>$array['expenses_climed']['currency'][$key],
+							'currency_rate'=>$array['expenses_climed']['currency_rate'][$key],
+							'payee'=>$array['expenses_climed']['payee'][$key],
+							'comment'=>$array['expenses_climed']['comment'][$key],
+							'created'=>date('Y-m-d H:i:s')
+							);
+						$this->common_model->save("expenses_climed", $payee_data);
+					}
+				}
+
+				// insert intake notes
+				// insert intake forms if exists
+				$no_of_form = $array['no_of_form'];
+
+				// load upload class
+				$config['upload_path'] = './assets/uploads/intake_forms/';
+				$config['allowed_types'] = '*';
+				$config['overwrite'] = FALSE;
+				$this->load->library('upload', $config);
+
+				// initialize upload config
+				$this->upload->initialize($config);
+				if($no_of_form)
+				{
+					// add intake form batch
+					for($i = 1; $i <= $no_of_form; $i++)
+					{
+						// initialize file names array
+						$file_names = [];
+
+						// upload files to server
+						$files = $_FILES['files_'.$i];
+						if(!empty($files))
+						{	foreach ($files['name'] as $key => $value) 
+							{	
+								if($files['name'][$key])
+								{
+									$_FILES['userfile']['name'] = $files['name'][$key];
+					                $_FILES['userfile']['type'] = $files['type'][$key];
+					                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+					                $_FILES['userfile']['error'] = $files['error'][$key];
+					                $_FILES['userfile']['size'] = $files['size'][$key];
+									
+									$field_name = 'userfile';
+
+									// upload file to server
+									$this->upload->do_upload();
+									$file_data = $this->upload->data();
+									$file_names[] = $file_data['file_name'];
+								}
+							}
+						}
+
+						// generate data array
+						$data_intake = array(
+							'case_id' => $record_id,
+							'created_by' => $this->ion_auth->user()->row()->id,
+							'notes' => $array['notes_'.$i],
+							'created' => date("Y-m-d H:i:s"),
+							'docs' => implode(",", $file_names),
+							'type'=>'CLAIM'
+							);
+
+						// save values to database
+						$intake_form_id = $this->common_model->save("intake_form", $data_intake);
+
+						// create directory to identify intake files
+						@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+
+						// move all files to that directory
+						if(!empty($file_names))
+							foreach ($file_names as $fname)
+							{
+								copy("./assets/uploads/intake_forms/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
+								unlink("./assets/uploads/intake_forms/$fname");
+							}
+					}
+				}
+
+				// update case no(7 length) to table
+				$this->common_model->update("claim", array("claim_no"=>str_pad($record_id, 7, 0, STR_PAD_LEFT)), array("id"=>$record_id));
 
 				// send success message
-				$this->session->set_flashdata('success', "Case successfully updated");
+				$this->session->set_flashdata('success', "Claim successfully created");
 
 				// redirect them to the login page
-				redirect('emergency_assistance', 'refresh');
+				redirect('claim', 'refresh');
 			}
 			else
 			{	
-				// verify case details
+
+				// get claim details
 				$joins[] = array(
 					'table' => 'users u1',
-					'on' => 'u1.id = case.created_by',
+					'on' => 'u1.id = claim.created_by',
 					'type' => 'LEFT'
 					);
-				$joins[] = array(
-					'table' => 'users u2',
-					'on' => 'u2.id = case.case_manager',
-					'type' => 'LEFT'
-					);
-				$case_details = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name", $conditions = array('case.id'=>$id), $joins);
-				$this->data['case_details'] = $case_details;
-				if(empty($case_details))
-				{
-					// send error message
-					$this->session->set_flashdata('error', "Something went wrong, please try after some time.");
+				$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('claim.id'=>$id), $joins);
 
-					// redirect them to the list page
-					redirect('emergency_assistance', 'refresh');
-				}
-
-				// load dropdowns data
-				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name, $case_details));
-				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name, $case_details));
-				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name, $case_details));
+				// get expenses_climed list
+				$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields = "`expenses_climed`.*", $conditions = array('expenses_climed.claim_id'=>$id));
+				
+				// load dropdowns- countries, province, products data
+				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
+				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
+				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "");
-				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Assign To--");
-				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--");
-				$this->data['reasons'] = $this->common_model->getreasons($field_name = "reason", $selected = $this->common_model->field_val($field_name, $case_details));
-				$this->data['relations'] = $this->common_model->getrelations($field_name = "relations", $selected = $this->common_model->field_val($field_name, $case_details));
+				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
 
-				// get intake forms
-				$joins = [];
-				$joins[] = array(
-					'table' => 'users u1',
-					'on' => 'u1.id = intake_form.created_by',
-					'type' => 'LEFT'
-					);
-				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('intake_form.case_id'=>$id), $joins);
-
-				// pass case id to server
-				$this->data['case_id'] = $id;
-				$this->data['ref'] = $this->input->get("ref");
-
-				// pass template data if page referred from case management page
-				if($this->data['ref'] <> 'manage')
-				{
-					// get all documents for sending email/print.
-					$fields = "id, name, description";
-					$conditions = "type = 'case'";
-					$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
-				}
-				else
-				{
-
-					// get login user id
-					$case_manager = $this->ion_auth->user()->row()->id;
-
-					// timing shifts array
-					$shifts = array(
-						'8am-2pm'=>array(strtotime("8am"), strtotime("2pm")),
-						'2pm-8pm'=>array(strtotime("2pm"), strtotime("8pm")),
-						'8pm-8am'=>array(strtotime("8pm"), strtotime("11:59pm"), strtotime("8am"))
-						); 
-
-					// rearrange shifts according to system current time 
-					if(time() >= $shifts['8am-2pm'][0] && time() < $shifts['8am-2pm'][1])
-					{
-						$this->data['employee_shift'] = ['8am-2pm', '2pm-8pm', '8pm-8am'];
-					}
-					if(time() >= $shifts['2pm-8pm'][0] && time() < $shifts['2pm-8pm'][1])
-					{
-						$this->data['employee_shift'] = ['2pm-8pm', '8pm-8am', '8am-2pm'];
-					}
-					if((time() >= $shifts['8pm-8am'][0] and time() <= $shifts['8pm-8am'][1]) OR (time() < $shifts['8pm-8am'][2]))
-					{
-						$this->data['employee_shift'] = ['8pm-8am', '8am-2pm', '2pm-8pm'];
-					}
-
-			        // select emc users
-					foreach ($this->data['employee_shift'] as $key => $value) 
-					{
-						$additional_conditions = " and users.parent_id = '$case_manager' and  schedule.schedule = '$value'";
-			        	$this->data['employees_'.$key] = $this->common_model->shift_users($field_name = "assign_to_follow", $selected = $this->input->get($field_name), $group = "eacmanager", $empty = "--Select Employee--", $additional_conditions);
-					}
-				}
+				// get all documents for sending email/print.
+				$fields = "id, name, description";
+				$conditions = "type = 'claim'";
+				$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
 
 				// load view data
-	        	$this->template->write('title', SITE_TITLE.' - Edit Case', TRUE);
-		        $this->template->write_view('content', 'emergency_assistance/edit_case', $this->data);
+	        	$this->template->write('title', SITE_TITLE.' - Examine Claim', TRUE);
+		        $this->template->write_view('content', 'claim/examine_claim', $this->data);
 		        $this->template->render();  
 	        }      
 		}
