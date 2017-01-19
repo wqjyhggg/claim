@@ -564,12 +564,12 @@
                   <div class="col-sm-2">
                      <?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
                   </div>
-                  <div class="col-sm-2"> 
+                  <!-- <div class="col-sm-2"> 
                      <input class="btn btn-primary" name="Examine" value="Examine" type="button">  
                   </div>
                   <div class="col-sm-2"> 
                      <input class="btn btn-primary email_print" data-toggle="modal"  name="Email" value="Email/Print" type="button" data-target="#print_template">      
-                  </div>
+                  </div> -->
                </div>
 
                <?php echo form_close(); ?>
@@ -1118,7 +1118,7 @@
       var no_of_form = $(".intake-forms").length + 1;
 
       // add new file here
-      $(".uploaded_files").append('<div class="col-sm-9" ><input style="display:none" type="file" name="files_multi[]" id="file'+(count+1)+'" accept="pdf" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
+      $(".uploaded_files").append('<div class="col-sm-9"  style="display:none" ><input style="display:none" type="file" name="files_multi[]" id="file'+(count+1)+'" accept="pdf" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
 
       // place trigger clicked once file append in files class
       $('#file'+(count+1)).trigger("click");
