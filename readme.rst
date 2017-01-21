@@ -8,6 +8,15 @@ Password: password
 
 
 #####################
+Jan, 21 2016 update:-
+#####################
+*******************
+Claim page update
+*******************
+- working on claim and examine claim page
+
+
+#####################
 Jan, 19 2016 update:-
 #####################
 *******************

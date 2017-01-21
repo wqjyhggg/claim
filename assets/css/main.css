@@ -369,3 +369,8 @@ input[type=checkbox]{
     color: #3d96da;
     text-align: center;
 }
+.move_down {
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    padding-bottom: 7px;
+}

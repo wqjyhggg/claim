@@ -177,7 +177,7 @@ class Claim extends CI_Controller {
 				foreach ($array as $key => $value) 
 				{
 					# code...
-					if($key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form")
+					if($key <> "Examine" && $key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form")
 						$data[$key] = $value;
 				}
 				$data['created'] = date('Y-m-d H:i:s');
@@ -213,6 +213,7 @@ class Claim extends CI_Controller {
 						}
 					}
 				}
+				$data['files'] = implode(",", $file_names);
 
 				// insert values to database
 				$record_id = $this->common_model->save("claim", $data);
@@ -348,8 +349,13 @@ class Claim extends CI_Controller {
 				// send success message
 				$this->session->set_flashdata('success', "Claim successfully created");
 
-				// redirect them to the login page
-				redirect('claim', 'refresh');
+				if($this->input->post('Examine') == 'Examine')
+					// redirect them to the examine claim page
+					redirect("claim/examine_claim/$record_id", 'refresh');
+				else
+					// redirect them to the claim page
+					redirect('claim', 'refresh');
+
 			}
 			else
 			{	
@@ -360,6 +366,7 @@ class Claim extends CI_Controller {
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "");
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
+				$this->data['payees'] = $this->common_model->get_payees($field_name = "expenses_climed[payee][]", $selected = $this->input->post($field_name));
 
 				// get all documents for sending email/print.
 				$fields = "id, name, description";
@@ -592,6 +599,7 @@ class Claim extends CI_Controller {
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "");
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
+				$this->data['payees'] = $this->common_model->get_payees($field_name = "expenses_climed[payee][]", $selected = $this->input->post($field_name));
 
 				// get all documents for sending email/print.
 				$fields = "id, name, description";
@@ -639,5 +647,17 @@ class Claim extends CI_Controller {
 		echo json_encode($results);
 	}
 
+	// for ajax request
+	public function save_item(){
+
+		// generate data array
+		$data = $this->input->post();
+		unset($data['id']);
+		unset($data['Save']);
+
+		// update values to database
+		$this->common_model->update("expenses_climed", $data, array('id'=>$this->input->post('id')));
+		echo TRUE;
+	}
 
 }

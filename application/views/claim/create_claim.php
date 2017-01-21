@@ -450,30 +450,8 @@
                </h2>
                <div class="row">
                   <div class="col-sm-12">
-                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
-                           <thead>
-                              <tr>
-                                 <th>Invoice#</th>
-                                 <th>Name of Provider</th>
-                                 <th>Name of Referring Physician</th>
-                                 <th>Coverage Code</th>
-                                 <th>Diagnosis</th>
-                                 <th>Description of Services</th>
-                                 <th>Date of Service</th>
-                                 <th>Amount Billed</th>
-                                 <th>Amount Client Paid</th>
-                                 <th>Currency</th>
-                                 <th>Currency Rate</th>   
-                                 <th>Payee</th>
-                                 <th>Comment</th>    
-                                 <th>&nbsp;</th>                        
-                              </tr>
-                           </thead>
-                           <tbody class="expenses-list">
-                                                                                     
-                           </tbody>
-                        </table>
+                     <div class="expenses-list">
+                                                                               
                      </div>
                   </div>
                </div>
@@ -564,10 +542,10 @@
                   <div class="col-sm-2">
                      <?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
                   </div>
-                  <!-- <div class="col-sm-2"> 
-                     <input class="btn btn-primary" name="Examine" value="Examine" type="button">  
-                  </div>
                   <div class="col-sm-2"> 
+                     <input class="btn btn-primary" name="Examine" value="Examine" type="submit">  
+                  </div>
+                  <!-- <div class="col-sm-2"> 
                      <input class="btn btn-primary email_print" data-toggle="modal"  name="Email" value="Email/Print" type="button" data-target="#print_template">      
                   </div> -->
                </div>
@@ -756,26 +734,30 @@
 </div>
 <!-- end intake form model here -->
 
-<table style="display:none">
-   <tbody class="base-row">
-      <tr>
-         <td>
-            <?php 
+<div style="display:none">
+   <div class="base-row">
+      <div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
+         <div class="col-sm-3">
+            <?php  
+               echo form_label('Invoice#:', 'invoice', array("class"=>'col-sm-12'));
                echo form_input("expenses_climed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control"));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
+               echo form_label('Name of Provider:', 'provider_name', array("class"=>'col-sm-12'));
                echo form_input("expenses_climed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control"));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
+               echo form_label('Name of Referring Physician:', 'referencing_physician', array("class"=>'col-sm-12'));
                echo form_input("expenses_climed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control"));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
+               echo form_label('Coverage Code:', 'coverage_code', array("class"=>'col-sm-12'));
                   $coverage_code = array(
                      ""=>'Coverage code',
                      'V01 - Hospitalization'=>'Hospitalization',
@@ -812,34 +794,40 @@
                   );
                echo form_dropdown("expenses_climed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control'));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
+               echo form_label('Diagnosis:', 'diagnosis', array("class"=>'col-sm-12'));
                echo form_input("expenses_climed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field"));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
+               echo form_label('Description of Services:', 'service_description', array("class"=>'col-sm-12'));
                echo form_input("expenses_climed[service_description][]", $this->input->post("service_description"), array("class"=>"form-control"));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
-               echo form_input("expenses_climed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control"));
+               echo form_label('Date of Service:', 'date_of_service', array("class"=>'col-sm-12'));
+               echo form_input("expenses_climed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control  datepicker"));
             ?>
-         </td> 
-         <td>
+         </div> 
+         <div class="col-sm-3">
             <?php 
+               echo form_label('Amount Billed:', 'amount_billed', array("class"=>'col-sm-12'));
                echo form_input("expenses_climed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control"));
             ?>
-         </td> 
-         <td>
+         </div> 
+         <div class="col-sm-3">
             <?php 
+               echo form_label('Amount Client Paid:', 'amount_client_paid', array("class"=>'col-sm-12'));
                echo form_input("expenses_climed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control"));
             ?>
-         </td> 
-         <td>
+         </div> 
+         <div class="col-sm-3">
             <?php 
+               echo form_label('Currency:', 'currency', array("class"=>'col-sm-12'));
             $currency = array(
                      "USD"=>'USD',
                      "CAD"=>'CAD',
@@ -847,28 +835,31 @@
                   );
                echo form_dropdown("expenses_climed[currency][]", $currency, $this->input->get("currency"), array("class"=>'form-control'));
             ?>
-         </td> 
-         <td>
+         </div> 
+         <div class="col-sm-3">
             <?php 
+               echo form_label('Currency Rate:', 'currency_rate', array("class"=>'col-sm-12'));
                echo form_input("expenses_climed[currency_rate][]", $this->input->post("currency_rate"), array("class"=>"form-control"));
             ?>
-         </td> 
-         <td>
+         </div> 
+         <div class="col-sm-3">
             <?php 
-               echo form_input("expenses_climed[payee][]", $this->input->post("payee"), array("class"=>"form-control"));
+               echo form_label('Payee:', 'payee', array("class"=>'col-sm-12'));
+               echo $payees;
             ?>
-         </td> 
-         <td>
+         </div> 
+         <div class="col-sm-3">
             <?php 
+               echo form_label('Comment:', 'comment', array("class"=>'col-sm-12'));
                echo form_input("expenses_climed[comment][]", $this->input->post("comment"), array("class"=>"form-control"));
             ?>
-         </td> 
-         <td>
-            <i class="fa fa-trash row-link remove_claim"></i>
-         </td>
-      </tr>
-   </tbody>
-</table>
+         </div> 
+         <div class="col-sm-3">
+            <i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i>
+         </div>
+      </div>
+   </div>
+</div>
 
 <table style="display:none">
    <tbody class="payee-buffer">
@@ -926,6 +917,7 @@
            endDate: '+2y',
        });
    })
+   
    .on("click",".more_filters", function(){
       $(".more_items").toggle();
    })
@@ -938,12 +930,22 @@
         dataType: "json",
       });
     }) 
+   
    .on("click", ".add_new_expenses", function(){
       var html = $(".base-row").html();
       $(".expenses-list").append(html);
+      $(".autocomplete_field").autocomplete({
+        serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
+        minLength: 2,
+        dataType: "json",
+      });
+      $(".datepicker").datepicker({
+           startDate: '-5y',
+           endDate: '+2y',
+       });
    })
    .on("click", ".remove_claim", function(){
-      $(this).parent("td").parent("tr").remove();
+      $(this).parent("div").parent("div").remove();
    })
    
    .on("click", ".add_payee", function(){
