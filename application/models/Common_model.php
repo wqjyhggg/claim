@@ -239,10 +239,27 @@ class Common_model extends CI_Model
     }
 
     /**
+     * Return a list of payees
+     *
+     * @param       $field_name String
+     * @param       $selected string
+     * @param       $key string - option value
+     * @param       $key string - option label
+    */
+    public function get_payees($field_name, $selected, $key = "name", $value = "name")
+    {
+        $record = $this->get_ref($table = "provider", $key, $value, $dropdown=TRUE, $empty = "--Select Payee--");
+        return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
+    }
+       
+
+    /**
      * Return a list of countries
      *
      * @param       $field_name String
      * @param       $selected string
+     * @param       $key string - option value
+     * @param       $key string - option label
     */
     public function getcountries($field_name, $selected, $key = "name", $value = "name")
     {
@@ -255,6 +272,8 @@ class Common_model extends CI_Model
      *
      * @param       $field_name String
      * @param       $selected string
+     * @param       $key string - option value
+     * @param       $key string - option label
     */
     public function getprovinces($field_name, $selected, $key= "name", $value = "name")
     {
