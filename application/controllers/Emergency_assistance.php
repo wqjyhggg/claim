@@ -1460,5 +1460,40 @@ class Emergency_assistance extends CI_Controller {
 		}
 	}
 
+	function get_policy_info()
+	{
+
+		// prepare post data array
+		$this->data['params'] = $this->input->get();
+		$this->data['params']['key'] = API_KEY;
+
+		// search policy code here
+		$url =  API_URL."search";
+		$curl = curl_init();
+
+		// Post Data 
+		curl_setopt($curl, CURLOPT_POST, 1);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $this->data['params']);
+
+		// Optional Authentication:
+		if(API_USER and API_PASSWORD)
+		{
+			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($curl, CURLOPT_USERPWD, API_USER.":".API_PASSWORD);
+		}
+
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+		$result = curl_exec($curl);
+
+		curl_close($curl);
+
+		// pass policies data to view
+		echo $result;
+		die;
+
+	}
+
 
 }

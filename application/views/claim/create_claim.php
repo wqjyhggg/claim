@@ -20,6 +20,7 @@
                      <?php 
                         echo form_label('Insured First Name:', 'insured_first_name', array("class"=>'col-sm-12'));                            
                         echo form_input("insured_first_name", $this->input->post("insured_first_name"), array("class"=>"form-control", 'placeholder'=>'Insured First Name'));
+                        echo form_error("insured_first_name");
                      ?>
                   </div>
                   <div class="col-sm-3">
@@ -44,6 +45,7 @@
                      <?php 
                         echo form_label('ID', 'id', array("class"=>'col-sm-12'));
                         echo form_input("personal_id", $this->input->post("personal_id"), array("class"=>"form-control", 'placeholder'=>'ID'));
+                        echo form_error("personal_id");
                      ?>
                   </div>
                </div>
@@ -57,24 +59,28 @@
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                      </div>
+                     <?php echo form_error("dob"); ?>
                   </div>
                   <div class="col-sm-3">
                      <?php 
                         echo form_label('Policy#:', 'policy_no', array("class"=>'col-sm-12'));                            
                         echo form_input("policy_no", $this->input->post("policy_no"), array("class"=>"form-control", 'placeholder'=>'Policy#'));
                         echo form_error("policy_no");
+                        echo form_hidden("policy_info");
                      ?>
                   </div>
                   <div class="col-sm-3">
                      <?php 
                         echo form_label('School Name:', 'school_name', array("class"=>'col-sm-12'));                            
                         echo form_input("school_name", $this->input->post("school_name"), array("class"=>"form-control", 'placeholder'=>'School Name'));
+                        echo form_error("school_name");
                      ?>
                   </div>
                   <div class="col-sm-3">
                      <?php 
                         echo form_label('Group ID:', 'group_id', array("class"=>'col-sm-12'));                            
                         echo form_input("group_id", $this->input->post("group_id"), array("class"=>"form-control", 'placeholder'=>'Group ID'));
+                        echo form_error("group_id");
                      ?>
                   </div>
                </div>
@@ -507,7 +513,6 @@
                <div class="row">
                   <div class="col-sm-12">
                      <div class="col-sm-3 uploaded_files">
-                        no files attached
                      </div>
 
                      <div class="col-sm-3">
@@ -545,9 +550,9 @@
                   <div class="col-sm-2"> 
                      <input class="btn btn-primary" name="Examine" value="Examine" type="submit">  
                   </div>
-                  <!-- <div class="col-sm-2"> 
+                  <div class="col-sm-2"> 
                      <input class="btn btn-primary email_print" data-toggle="modal"  name="Email" value="Email/Print" type="button" data-target="#print_template">      
-                  </div> -->
+                  </div>
                </div>
 
                <?php echo form_close(); ?>
@@ -574,15 +579,15 @@
         <h4 class="modal-title">Print/email Template Letter</h4>
       </div>
       <?php 
-         //echo form_open_multipart("emergency_assistance/send_print_email", array("id"=>'send_print_email'));
+         echo form_open_multipart("case/send_print_email", array("id"=>'send_print_email'));
        ?>
       <div class="modal-body">
           <div class="row">
             <div class="col-sm-6">
                <div>
-                  <label for="mail_label" class="col-sm-2">Mail Addres:</label>    
+                  <label for="mail_label" class="col-sm-2">Mail Address:</label>    
                   <div class="form-group col-sm-6">
-                     <input name="priority" value="HIGH" id="mail_address" class="col-sm-1" type="checkbox">
+                     <input name="same_address" value="1" id="mail_address" class="col-sm-1" type="checkbox">
                      <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address</label>
                   </div>
                </div>
@@ -673,7 +678,7 @@
          <button type="button" class="btn btn-info print" disabled>Print</button>
          <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
       </div>
-      <?php //echo form_close(); ?>
+      <?php echo form_close(); ?>
     </div>
 
   </div>
@@ -973,13 +978,16 @@
       // get selected case details object
       var obj = $(".email_print");
 
+      // get policy info      
+      var data = $.parseJSON(localStorage.getItem("policy_data"));
+
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
       str = str.replace(/{insured_name}/gi, obj.attr("insured_name"))
       .replace("{insured_address}", obj.attr("insured_address"))
       .replace("{insured_lastname}", obj.attr("insured_lastname"))
       .replace("{policy_no}", obj.attr("policy_no"))
-      .replace("{case_no}", obj.attr("case_no"))
+      .replace("{case_no}", $('input[name=policy_no]').val())
       .replace("{policy_coverage_info}", "{policy_coverage_info}")
       .replace("{casemanager_name}", obj.attr("casemanager_name"));
 
@@ -1055,32 +1063,51 @@
    // send email print to recepient email:-
    .on("submit", "#send_print_email", function(e){
       e.preventDefault();
-      return false
-      // var doc_id = $(".select-doc.active").attr("doc");
-      // var template = $(".doc-"+doc_id).children("div.doc-desc").html();
-      // if($(this).valid()) 
-      // {
-      //    $.ajax({
-      //       url: "<?php echo base_url("emergency_assistance/send_print_email") ?>",
-      //       method: "post",
-      //       data:{
-      //          email:$("input[name=email]").val(), 
-      //          street_no:$("input[name=street_no_email]").val(), 
-      //          street_name:$("input[name=street_name_email]").val(), 
-      //          city:$("input[name=city_email]").val(), 
-      //          province:$("select[name=province_email]").val(), 
-      //          template:template,
-      //          case_id: "<?php //echo $case_id; ?>",
-      //          doc: $(".select-doc.active").text()
-      //       },
-      //       beforeSend: function(){
-      //          $(".modal-content").addClass("csspinner load1");
-      //       },
-      //       success: function() {
-      //          window.location.reload();
-      //       }
-      //    })
-      // }
+      var doc_id = $(".select-doc.active").attr("doc");
+      var template = $(".doc-"+doc_id).children("div.doc-desc").html();
+      if($(this).valid()) 
+      {
+         $.ajax({
+            url: "<?php echo base_url("claim/send_print_email") ?>",
+            method: "post",
+            dataType:"json",
+            data:{
+               email:$("#send_print_email input[name=email]").val(), 
+               street_no:$("#send_print_email input[name=street_no_email]").val(), 
+               street_name:$("#send_print_email input[name=street_name_email]").val(), 
+               city:$("#send_print_email input[name=city_email]").val(), 
+               province:$("#send_print_email select[name=province_email]").val(), 
+               template:template,
+               doc: $("#send_print_email .select-doc.active").text()
+            },
+            beforeSend: function(){
+               $(".modal-content").addClass("csspinner load1");
+            },
+            success: function(data) {
+               // create new intake form - - count no of intake forms
+               var count = $(".intake-forms").length + 1;
+
+               // place no of form in hidden field 
+               $("input[name=no_of_form]").val(count);
+
+               // get notes and files
+               var notes = data.data_intake;
+               var files = '<div class="col-sm-9" style=""><input type="hidden" name="file_pdf_'+count+'" value="'+data.file_name+'" /><span class="file-label">'+data.file_name+'</span> <i class="fa fa-trash row-link" id="'+count+'"></i></div>';
+
+               // generate html data
+               var html = '<div class="col-sm-12 intake-forms"><div class=col-sm-12"><input type="hidden" name="notes_'+count+'" value="'+notes+'" />' + notes + '</div><div id="intake-files-'+count+'">'+files+'</div> <div class=col-sm-3"><i class="fa fa-remove row-link remove-form pull-right"></i></div> <div class="col-sm-12">By: <?php echo $this->ion_auth->user()->row()->first_name; ?> on <i><?php echo date("Y-m-d"); ?></i></div></div>';
+
+               // place every value to intake display area
+               $(".intake-forms-list").append(html);
+
+               // close model popup
+               $('#print_template').modal('hide');
+
+               $(".modal-content").removeClass("csspinner load1");
+
+            }
+         })
+      }
    })
 
    // once auto file clicked
@@ -1117,13 +1144,19 @@
       var count = $("input[type=file]").length;
 
       // count no of intake forms
-      var no_of_form = $(".intake-forms").length + 1;
+      var no_of_form = $(".uploaded_files .col-sm-9").length + 1;
 
       // add new file here
       $(".uploaded_files").append('<div class="col-sm-9"  style="display:none" ><input style="display:none" type="file" name="files_multi[]" id="file'+(count+1)+'" accept="pdf" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
 
       // place trigger clicked once file append in files class
       $('#file'+(count+1)).trigger("click");
+   })
+
+   // delete files
+   .on("click",".fa-trash", function(){
+      $(this).parent("div").remove();
+      $("#file"+$(this).attr("id")).remove();
    })
 
    // delete intake form
@@ -1180,6 +1213,53 @@
       $(".intake-heading").show()
    })
 
+   // get  policy information here
+   .on("change", "input[name=policy_no]", function(){
+      $.ajax({
+         url: "<?php echo base_url("emergency_assistance/get_policy_info"); ?>",
+         method:"get",
+         data:{policy:$(this).val()},
+         dataType: "json",
+         beforeSend: function(){
+            $(".nav-m22d").addClass("csspinner load1");
+         },
+         success: function(data){
+            if(typeof data.plan_list != "undefined" && data.plan_list.length)
+            {
+               localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
+               $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+            }
+            else{
+               alert("Sorry, policy information dows not exists, please check policy no and try again");
+               $(this).val("");
+            }
+            $(".nav-m22d").removeClass("csspinner load1");
+         }
+      })
+   })
+
+   // once user clicked on same with policy button
+   .on("click", "input[name=same_policy]", function(){
+
+      // get local data
+      var data = $.parseJSON(localStorage.getItem("policy_data"));
+      if($(this).is(":checked"))
+      {
+         // fill all json values to address fields
+         $("input[name=street_address]").val(data[0].street_number+" "+data[0].street_name);
+         $("input[name=city]").val(data[0].city);
+         $("input[name=province]").val(data[0].province2);
+         $("input[name=telephone]").val(data[0].phone1);
+         $("input[name=email]").val(data[0].contact_email);
+         $("input[name=post_code]").val(data[0].postcode);
+         $("input[name=arrival_date_canada]").val(data[0].arrival_date);
+         // $("input[name=cellular]").val(data.plan_list.street_number);
+      }
+      else
+      {
+         $("input[name=street_address],input[name=city],input[name=province],input[name=telephone],input[name=email],input[name=post_code],input[name=arrival_date_canada],input[name=cellular]").val("");
+      }
+   })
 
 // create input boxes where requirement need
 var $outer = $(".outer-text");
