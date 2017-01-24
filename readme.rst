@@ -8,6 +8,22 @@ Password: password
 
 
 #####################
+Jan, 24 2016 update:-
+#####################
+*******************
+Claim and examine page update
+*******************
+- Send email/print function with intake form in 'create claim' page is done (some pre-fill values in certain places of docs is remaining)
+- Edit claim item from claim examine page is done
+- Examine page: policy info is done 
+- examine claim: Payee information and intake forms list si done 
+
+
+- QUERY:- Where to get "Policy Premium" and "Policy Pre-existion condition coverage", we have not find these info from "http://jfinsurance.auroraeducationonline.info/api/search" api. Please explain
+
+
+
+#####################
 Jan, 21 2016 update:-
 #####################
 *******************

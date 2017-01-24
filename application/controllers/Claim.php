@@ -166,7 +166,12 @@ class Claim extends CI_Controller {
 		else
 		{
 			//validate form input
+			$this->form_validation->set_rules('insured_first_name', 'Insured First Name', 'required');
+			$this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
+			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
+			$this->form_validation->set_rules('school_name', 'School Name', 'required');
+			$this->form_validation->set_rules('group_id', 'Group ID', 'required');
 
 			if ($this->form_validation->run() == TRUE)
 			{
@@ -177,14 +182,14 @@ class Claim extends CI_Controller {
 				foreach ($array as $key => $value) 
 				{
 					# code...
-					if($key <> "Examine" && $key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form")
+					if($key <> "Examine" && $key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form" && !strpos($key, "ile_pdf"))
 						$data[$key] = $value;
 				}
 				$data['created'] = date('Y-m-d H:i:s');
 				$data['created_by'] = $this->ion_auth->user()->row()->id;
 
 				// upload claim pdf files to server
-				$files = $_FILES['files_multi'];
+				$files = @$_FILES['files_multi'];
 				$file_names = [];
 
 				// load upload class
@@ -295,7 +300,7 @@ class Claim extends CI_Controller {
 						$file_names = [];
 
 						// upload files to server
-						$files = $_FILES['files_'.$i];
+						$files = @$_FILES['files_'.$i];
 						if(!empty($files))
 						{	foreach ($files['name'] as $key => $value) 
 							{	
@@ -327,12 +332,25 @@ class Claim extends CI_Controller {
 							'type'=>'CLAIM'
 							);
 
+						// if file is getting from email/print function
+						if(@$array['file_pdf_'.$i])
+						{
+							$data_intake['docs'] = $array['file_pdf_'.$i];
+						}
+
 						// save values to database
 						$intake_form_id = $this->common_model->save("intake_form", $data_intake);
 
 						// create directory to identify intake files
 						@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
 
+						// if file is getting from email/print function
+						if(@$array['file_pdf_'.$i])
+						{
+							$fname = $array['file_pdf_'.$i];
+							copy("./assets/temp/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
+							unlink("./assets/temp/$fname");
+						}
 						// move all files to that directory
 						if(!empty($file_names))
 							foreach ($file_names as $fname)
@@ -345,6 +363,7 @@ class Claim extends CI_Controller {
 
 				// update case no(7 length) to table
 				$this->common_model->update("claim", array("claim_no"=>str_pad($record_id, 7, 0, STR_PAD_LEFT)), array("id"=>$record_id));
+
 
 				// send success message
 				$this->session->set_flashdata('success', "Claim successfully created");
@@ -606,6 +625,20 @@ class Claim extends CI_Controller {
 				$conditions = "type = 'claim'";
 				$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
 
+				// get all payees infomation
+				$fields = "*";
+				$conditions = "claim_id = '$id'";
+				$this->data['payees'] = $this->common_model->select($record = "list", $typecast = "array", $table = "payees", $fields, $conditions);
+
+				// get intake forms
+				$joins = [];
+				$joins[] = array(
+					'table' => 'users u1',
+					'on' => 'u1.id = intake_form.created_by',
+					'type' => 'LEFT'
+					);
+				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('intake_form.case_id'=>$id, 'type'=>'CLAIM'), $joins);
+
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Examine Claim', TRUE);
 		        $this->template->write_view('content', 'claim/examine_claim', $this->data);
@@ -658,6 +691,57 @@ class Claim extends CI_Controller {
 		// update values to database
 		$this->common_model->update("expenses_climed", $data, array('id'=>$this->input->post('id')));
 		echo TRUE;
+	}
+
+	//send email template for ajax request
+	public function send_print_email() 
+	{
+		// get all requested params
+		$email = $this->input->post("email");
+		$street_no = $this->input->post("street_no");
+		$street_name = $this->input->post("street_name");
+		$city = $this->input->post("city");
+		$province = $this->input->post("province");
+		$template = $this->input->post("template");
+		$doc = $this->input->post("doc");
+
+		// create pdf from template	 using DOM PDF	
+		require_once './assets/dompdf/dompdf_config.inc.php';		
+	    $dompdf = new DOMPDF();
+	    $dompdf->load_html($template);
+	    $dompdf->render();
+	    $output = $dompdf->output();
+	    $filename = trim($doc).rand(999,999999).'.pdf';
+	    $filepath =  "./assets/temp/".$filename;
+	    file_put_contents($filepath, $output);
+
+		// generate data array
+		$intake_notes = array(
+			"Email: ".$email,
+			"Street No: ".$street_no,
+			"Street No: ".$street_name,
+			"City: ".$city,
+			"Province: ".$province,
+			);
+		$data_intake = array(
+			'created_by' => $this->ion_auth->user()->row()->id,
+			'notes' => implode(", ", $intake_notes),
+			'created' => date("Y-m-d H:i:s"),
+			'docs' => $filename
+			);
+
+		// send email notification to provider email address
+		$this->load->library('email');
+		$config['mailtype'] = 'html';
+		$this->email->initialize($config);
+		$this->email->from(FROM_EMAIL, SITE_TITLE);
+		$this->email->to($email);
+
+		$this->email->subject("Received $doc");
+		$this->email->message($data_intake['notes']);
+		$this->email->attach("./assets/temp/$filename");
+		$this->email->send();
+		echo json_encode(array("data_intake"=>implode(", ", $intake_notes), 'file'=>"./assets/temp/$filename", 'file_name'=>$filename));
 	}
 
 }

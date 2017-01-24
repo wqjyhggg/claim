@@ -303,34 +303,34 @@
                <h4 class="modal-title intake-heading" <?php if(!empty($intake_forms)): ?> style="display:none"<?php endif; ?>>Intake Froms</h4>
                <div class="row intake-forms-list col-sm-12">
                   <?php 
-                        foreach ($intake_forms as $key => $value):
-                           ?>
-                            <div class="col-sm-12 intake-forms">
-                                <div class="col-sm-12&quot;"><?php echo $value['notes'] ?></div>
-                                <div id="intake-files-1">
-                                    <div class="form-group col-sm-12 files">
-                                       <?php 
-                                          $files = $value['docs'] ? explode(",", $value['docs']) : array(); 
-                                          if(!empty($files)):
-                                             foreach ($files as $file):
-                                                ?>
-                                                 <div class="col-sm-9" style="">
-                                                     <span class="file-label"><?php echo anchor("file/".$file . '__' . $value['id'], $file, array('target'=>'_blank')); ?></span>
-                                                     <?php echo anchor("file/" . $file . '__' . $value['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
-                                                     <?php echo anchor("download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>                                                     
-                                                 </div>
-                                                 <?php
-                                             endforeach;
-                                          endif;
-                                       ?>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3&quot;"><i class="fa fa-remove row-link remove-form pull-right" alt="<?php echo $value['id']; ?>"></i></div>
-                                <div class="col-sm-12">By: <?php echo $value['created_by'] ?> on <i><?php echo date("Y-m-d", strtotime($value['created'])) ?></i></div>
-                            </div>  
-                           <?php
-                           endforeach;
-                     ?>
+                     foreach ($intake_forms as $key => $value):
+                        ?>
+                         <div class="col-sm-12 intake-forms">
+                             <div class="col-sm-12&quot;"><?php echo $value['notes'] ?></div>
+                             <div id="intake-files-1">
+                                 <div class="form-group col-sm-12 files">
+                                    <?php 
+                                       $files = $value['docs'] ? explode(",", $value['docs']) : array(); 
+                                       if(!empty($files)):
+                                          foreach ($files as $file):
+                                             ?>
+                                              <div class="col-sm-9" style="">
+                                                  <span class="file-label"><?php echo anchor("file/".$file . '__' . $value['id'], $file, array('target'=>'_blank')); ?></span>
+                                                  <?php echo anchor("file/" . $file . '__' . $value['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
+                                                  <?php echo anchor("download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>                                                     
+                                              </div>
+                                              <?php
+                                          endforeach;
+                                       endif;
+                                    ?>
+                                 </div>
+                             </div>
+                             <div class="col-sm-3&quot;"><i class="fa fa-remove row-link remove-form pull-right" alt="<?php echo $value['id']; ?>"></i></div>
+                             <div class="col-sm-12">By: <?php echo $value['created_by'] ?> on <i><?php echo date("Y-m-d", strtotime($value['created'])) ?></i></div>
+                         </div>  
+                        <?php
+                        endforeach;
+                  ?>
                </div>
                <?php endif; ?>
                <?php echo form_close(); ?>

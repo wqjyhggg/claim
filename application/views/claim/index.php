@@ -427,7 +427,7 @@
                         <thead>
                            <tr>
                               <th><?php echo form_checkbox("selectall", 1); ?></th>
-                              <th>Detail</th>
+                              <th>ID</th>
                               <th>Policy Number</th>
                               <th>Claim Number</th>
                               <th>First Name</th>
@@ -454,7 +454,7 @@
                               <td><?php echo $value['claim_date']; ?></td>
                               <td>0</td>
                               <td>0</td>
-                              <td><?php echo anchor("case/detail/".$value['id'], "Detail"); ?></td>
+                              <td><?php echo anchor("claim/examine_claim/".$value['id'], "Detail"); ?></td>
                            </tr>
                         <?php endforeach; ?>
                         </tbody>
