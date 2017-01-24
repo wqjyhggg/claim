@@ -19,7 +19,7 @@ Claim and examine page update
 - examine claim: Payee information and intake forms list si done 
 
 
-- QUERY:- Where to get "Policy Premium" and "Policy Pre-existion condition coverage". Please explain
+- QUERY:- Where to get "Policy Premium" and "Policy Pre-existion condition coverage", we have not find these info from "http://jfinsurance.auroraeducationonline.info/api/search" api. Please explain
 
 
 
