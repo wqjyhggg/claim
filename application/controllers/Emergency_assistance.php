@@ -1192,7 +1192,6 @@ class Emergency_assistance extends CI_Controller {
 	// assign case manager manually or automatically for ajax request
 	public function assign_cases($type = "automatic") 
 	{
-		$cases = $this->input->post("cases");
 		$cases = $this->input->post("cases");	
 		$cases = explode(",", $cases);		
 		if($type == "manually")

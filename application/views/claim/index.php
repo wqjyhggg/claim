@@ -205,7 +205,7 @@
                      </thead>
                      <tbody>
                         <?php foreach ($policies as $key => $value): ?>
-                        <tr class="view-policy" data='<?php echo json_encode($value); ?>'>
+                        <tr class="view-policy" data='<?php echo $value['policy']; ?>'>
                            <td><?php echo $value['policy']; ?></td>
                            <td><?php echo $value['plan_id']; ?></td>
                            <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
@@ -214,7 +214,7 @@
                            <td><?php echo date("d/d/Y", strtotime($value['effective_date'])); ?></td>
                            <td>Which data goes here</td>
                            <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
-                           <td><?php echo anchor("emergency_assistance/view_policy", "Open"); ?></td>
+                           <td><?php echo anchor("claim/create_claim?policy_no=".$value['policy'], "Open"); ?></td>
                         </tr>
                         <?php endforeach; ?>
                      </tbody>
@@ -316,7 +316,7 @@
                         </thead>
                         <tbody>
                         <?php foreach ($cases as $key => $value): ?>
-                           <tr class="row-link" alt="<?php echo $value['id']; ?>" title="Click to View/Edit">
+                           <tr class='row-link' alt='<?php echo $value['id']; ?>' policy='<?php echo $value['policy_no'] ?>' title='Click to add claim' case_no='<?php echo $value['case_no']; ?>'>
                               <td><?php echo $value['case_no']; ?></td>
                               <td><?php echo $value['created']; ?></td>
                               <td><?php echo $value['province']; ?></td>
@@ -327,14 +327,14 @@
                               <td><?php echo $value['assign_to_name']; ?></td>
                               <td><?php echo $value['case_manager_name']; ?></td>
                               <td><?php echo $value['priority']; ?></td>
-                              <td><?php echo anchor("emergency_assistance/create_case/".$value['id'], "Clone"); ?></td>
+                              <td><?php echo anchor('emergency_assistance/create_claim?policy='.$value['policy_no'].'&case_no='.$value['policy'], 'Detail'); ?></td>
                            </tr>
                         <?php endforeach; ?>
                         </tbody>
                      </table>
                   </div>
                   <?php else:?>
-                     <center><?php echo heading("No record available", 4); ?></center>
+                     <center><?php echo heading('No record available', 4); ?></center>
                   <?php endif;?>
                </div>
                <!-- End Search List Section -->
@@ -480,18 +480,21 @@ $(document).ready(function() {
         startDate: '-5y',
         endDate: '+2y',
     });
+
+   // create claim once user clicked on case
    $(".row-link").click(function() {
       var id = $(this).attr("alt");
-      window.location = "<?php echo base_url("emergency_assistance/edit_case/") ?>"+id;
+      var case_no = $(this).attr("case_no");
+      var policy_no = $(this).attr("policy_no");
+      window.location = "<?php echo base_url("claim/create_claim/") ?>?policy="+policy_no+'&case_no='+case_no;
    })
+
+   // create claim once user clicked on policy
    $(".view-policy").click(function(){
       var data = $(this).attr("data");
 
-      // insert data to dom element to save temporary
-      localStorage.setItem("policy_data", data);
-
       // redirect it to view policy page
-      window.location = "<?php echo base_url("emergency_assistance/view_policy") ?>";
+      window.location = "<?php echo base_url("claim/create_claim") ?>?policy="+data;
    })
 })
 
