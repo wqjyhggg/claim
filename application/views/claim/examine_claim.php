@@ -12,6 +12,7 @@
             <div class="x_title">
                <h2>CLAIM HISTORY<small></small></h2>
                <div class="clearfix"></div>
+               <?php echo $message; ?>
             </div>
             <div class="x_content">
                <?php if(!empty($expenses)): ?>
@@ -213,12 +214,6 @@
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
-                              echo form_label('Amt Deductable:', 'amt_exempt', array("class"=>'col-sm-12'));
-                              echo form_input("amt_exempt", $this->input->post("amt_exempt"), array("class"=>"form-control", 'placeholder'=>'Amt Deductable'));
-                           ?>
-                        </div>
-                        <div class="form-group col-sm-3">
-                           <?php 
                               echo form_label('Comment:', 'comment', array("class"=>'col-sm-12'));
                               echo form_input("comment", $this->input->post("comment"), array("class"=>"form-control", 'placeholder'=>'Comment'));
                            ?>
@@ -314,12 +309,12 @@
                         <div class="col-sm-4">
                            <?php 
                            echo form_label('&nbsp;', 'gender', array("class"=>'col-sm-12'));
-                           echo form_radio("gender", "Y", $this->common_model->field_val("gender", $claim_details), array('class'=>'setpremium')); ?>  Male
+                           echo form_radio("gender", "male", ($this->common_model->field_val("gender", $claim_details)=='male'?TRUE:FALSE), array('class'=>'setpremium')); ?>  Male
                         </div>
                         <div class="col-sm-5">
                            <?php 
                            echo form_label('&nbsp;', 'gender', array("class"=>'col-sm-12'));
-                           echo form_radio("gender", "Y", $this->common_model->field_val("gender", $claim_details), array('class'=>'setpremium')); ?>  Female
+                           echo form_radio("gender", "female", ($this->common_model->field_val("gender", $claim_details)=='female'?TRUE:FALSE), array('class'=>'setpremium')); ?>  Female
                         </div>
                      </div>
                      <div class="col-sm-3">
@@ -569,11 +564,11 @@
                               </div>
                               <div class="col-sm-1">
                                  <?php 
-                                 echo form_radio("travel_insurance_coverage", "Y", $this->common_model->field_val("travel_insurance_coverage", $claim_details), array('class'=>'setpremium')); ?>  Yes
+                                 echo form_radio("travel_insurance_coverage", "Y", ($this->common_model->field_val("travel_insurance_coverage", $claim_details) == 'Y'?TRUE:FALSE), array('class'=>'setpremium')); ?>  Yes
                               </div>
                               <div class="col-sm-1">
                                  <?php 
-                                 echo form_radio("travel_insurance_coverage", "N", $this->common_model->field_val("travel_insurance_coverage", $claim_details), array('class'=>'setpremium')); ?>  No
+                                 echo form_radio("travel_insurance_coverage", "N", $this->common_model->field_val("travel_insurance_coverage", $claim_details) == 'N'?TRUE:FALSE, array('class'=>'setpremium')); ?>  No
                               </div>
 
                               <div class="col-sm-12">
@@ -656,11 +651,11 @@
                               </div>
                               <div class="col-sm-1">
                                  <?php 
-                                 echo form_radio("travel_insurance_coverage", "Y", $this->common_model->field_val("travel_insurance_coverage", $claim_details), array('class'=>'setpremium')); ?>  Yes
+                                 echo form_radio("travel_insurance_coverage_guardians", "Y", $this->common_model->field_val("travel_insurance_coverage_guardians", $claim_details), array('class'=>'setpremium')); ?>  Yes
                               </div>
                               <div class="col-sm-1">
                                  <?php 
-                                 echo form_radio("travel_insurance_coverage", "N", $this->common_model->field_val("travel_insurance_coverage", $claim_details), array('class'=>'setpremium')); ?>  No
+                                 echo form_radio("travel_insurance_coverage_guardians", "N", $this->common_model->field_val("travel_insurance_coverage_guardians", $claim_details), array('class'=>'setpremium')); ?>  No
                               </div>
 
                               <div class="col-sm-12" style="margin-bottom:10px">
@@ -861,9 +856,9 @@
                                  foreach ($files as $file):
                                     ?>
                                      <div class="col-sm-9" style="">
-                                         <span class="file-label"><?php echo anchor("file/".$file . '__' . $claim_details['id'], $file, array('target'=>'_blank')); ?></span>
-                                         <?php echo anchor("file/" . $file . '__' . $claim_details['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
-                                         <?php echo anchor("download/" . $file . '__' . $claim_details['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>                                                    
+                                         <span class="file-label"><?php echo anchor("file_claim/".$file . '__' . $claim_details['id'], $file, array('target'=>'_blank')); ?></span>
+                                         <?php echo anchor("file_claim/" . $file . '__' . $claim_details['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
+                                         <?php echo anchor("claim_doc_download/" . $file . '__' . $claim_details['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>                                                    
                                      </div>
                                      <?php
                                  endforeach;
@@ -963,7 +958,7 @@
         <h4 class="modal-title">Print/email Template Letter</h4>
       </div>
       <?php 
-         //echo form_open_multipart("emergency_assistance/send_print_email", array("id"=>'send_print_email'));
+         echo form_open_multipart("claim/send_print_email_claim", array("id"=>'send_print_email'));
        ?>
       <div class="modal-body">
           <div class="row">
@@ -1062,7 +1057,7 @@
          <button type="button" class="btn btn-info print" disabled>Print</button>
          <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
       </div>
-      <?php //echo form_close(); ?>
+      <?php echo form_close(); ?>
     </div>
 
   </div>
@@ -1417,37 +1412,6 @@
        });
    })
 
-   // send email print to recepient email:-
-   .on("submit", "#send_print_email", function(e){
-      e.preventDefault();
-      return false
-      // var doc_id = $(".select-doc.active").attr("doc");
-      // var template = $(".doc-"+doc_id).children("div.doc-desc").html();
-      // if($(this).valid()) 
-      // {
-      //    $.ajax({
-      //       url: "<?php echo base_url("emergency_assistance/send_print_email") ?>",
-      //       method: "post",
-      //       data:{
-      //          email:$("input[name=email]").val(), 
-      //          street_no:$("input[name=street_no_email]").val(), 
-      //          street_name:$("input[name=street_name_email]").val(), 
-      //          city:$("input[name=city_email]").val(), 
-      //          province:$("select[name=province_email]").val(), 
-      //          template:template,
-      //          case_id: "<?php //echo $case_id; ?>",
-      //          doc: $(".select-doc.active").text()
-      //       },
-      //       beforeSend: function(){
-      //          $(".modal-content").addClass("csspinner load1");
-      //       },
-      //       success: function() {
-      //          window.location.reload();
-      //       }
-      //    })
-      // }
-   })
-
    // once auto file clicked
    .on("change","input[type=file]", function(){
 
@@ -1580,6 +1544,36 @@
                window.location.reload();
             }
          })
+   })
+
+   // send email print to recepient email:-
+   .on("submit", "#send_print_email", function(e){
+      e.preventDefault();
+      var doc_id = $(".select-doc.active").attr("doc");
+      var template = $(".doc-"+doc_id).children("div.doc-desc").html();
+      if($(this).valid()) 
+      {
+         $.ajax({
+            url: "<?php echo base_url("claim/send_print_email_claim") ?>",
+            method: "post",
+            data:{
+               email:$("#send_print_email input[name=email]").val(), 
+               street_no:$("#send_print_email  input[name=street_no_email]").val(), 
+               street_name:$("#send_print_email  input[name=street_name_email]").val(), 
+               city:$("#send_print_email  input[name=city_email]").val(), 
+               province:$("#send_print_email  select[name=province_email]").val(), 
+               template:template,
+               case_id: "<?php echo $claim_details['id']; ?>",
+               doc: $("#send_print_email .select-doc.active").text()
+            },
+            beforeSend: function(){
+               $(".modal-content").addClass("csspinner load1");
+            },
+            success: function() {
+               window.location.reload();
+            }
+         })
+      }
    })
 
 // create input boxes where the requirement need

@@ -6,7 +6,7 @@
 <duv >
    <div class="page-title">
       <div class="title_left">
-         <h3>Create Case</h3>         
+         <h3>Edit Case</h3>         
       </div>
    </div>
    <div class="clearfix"></div>

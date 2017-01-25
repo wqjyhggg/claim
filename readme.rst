@@ -8,15 +8,33 @@ Password: password
 
 
 #####################
+Jan, 25 2016 update:-
+#####################
+*****************************
+Claim and examine page update
+*****************************
+- Edit claim function is done.
+- Send email/template from examine claim page is done
+
+- Some other updates:- 
+- Title should not be "View Edit Emergency Assistance Case"  , This is "Claim" page. - done
+- In Case Result section, system should provide a "select" function to examiners can select a case record and then create new claim related this case and policy. - done
+- Case Result table, Column "Action" should not be "Clone", examiner cannot create a case. it should be "detail"
+- Claim Result section, when clicking selection or other filed, system links to incorrect page --case management page  ,not "claim detail" page  - done
+- when clicking Create New Claim, system cannot find the correct page, shows as follows, please check it: - done
+
+
+
+#####################
 Jan, 24 2016 update:-
 #####################
-*******************
+*****************************
 Claim and examine page update
-*******************
+*****************************
 - Send email/print function with intake form in 'create claim' page is done (some pre-fill values in certain places of docs is remaining)
 - Edit claim item from claim examine page is done
 - Examine page: policy info is done 
-- examine claim: Payee information and intake forms list si done 
+- examine claim: Payee information and intake forms list is done 
 
 
 - QUERY:- Where to get "Policy Premium" and "Policy Pre-existion condition coverage", we have not find these info from "http://jfinsurance.auroraeducationonline.info/api/search" api. Please explain

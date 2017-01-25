@@ -424,14 +424,14 @@ class Claim extends CI_Controller {
 				foreach ($array as $key => $value) 
 				{
 					# code...
-					if($key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form")
+					if($key <> "Examine" && $key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form" && !strpos($key, "ile_pdf"))
 						$data[$key] = $value;
 				}
 				$data['created'] = date('Y-m-d H:i:s');
 				$data['created_by'] = $this->ion_auth->user()->row()->id;
 
 				// upload claim pdf files to server
-				$files = $_FILES['files_multi'];
+				$files = @$_FILES['files_multi'];
 				$file_names = [];
 
 				// load upload class
@@ -462,10 +462,8 @@ class Claim extends CI_Controller {
 				}
 
 				// insert values to database
-				$record_id = $this->common_model->save("claim", $data);
-
-				// create directory to copy/shift files
-				@mkdir('./assets/uploads/claim_files/'.$record_id, 0777);
+				$this->common_model->update("claim", $data, array('id'=>$id));
+				$record_id = $id;
 
 				// move all files to that directory
 				if(!empty($file_names))
@@ -477,7 +475,10 @@ class Claim extends CI_Controller {
 
 				// insert payee information
 				if(!empty($array['payees']))
-				{
+				{	
+					// remove old payees
+					$this->common_model->delete('payees', array('claim_id' => $record_id));
+
 					foreach($array['payees']['bank'] as $key => $val)	
 					{
 						$payee_data = array(
@@ -495,30 +496,30 @@ class Claim extends CI_Controller {
 				}
 
 				// insert expenses_climed data
-				if(!empty($array['expenses_climed']))
-				{
-					foreach($array['expenses_climed']['invoice'] as $key => $val)	
-					{
-						$payee_data = array(
-							'claim_id'=>$record_id,
-							'invoice'=>$val,
-							'provider_name'=>$array['expenses_climed']['provider_name'][$key],
-							'referencing_physician'=>$array['expenses_climed']['referencing_physician'][$key],
-							'coverage_code'=>$array['expenses_climed']['coverage_code'][$key],
-							'diagnosis'=>$array['expenses_climed']['diagnosis'][$key],
-							'service_description'=>$array['expenses_climed']['service_description'][$key],
-							'date_of_service'=>$array['expenses_climed']['date_of_service'][$key],
-							'amount_billed'=>$array['expenses_climed']['amount_billed'][$key],
-							'amount_client_paid'=>$array['expenses_climed']['amount_client_paid'][$key],
-							'currency'=>$array['expenses_climed']['currency'][$key],
-							'currency_rate'=>$array['expenses_climed']['currency_rate'][$key],
-							'payee'=>$array['expenses_climed']['payee'][$key],
-							'comment'=>$array['expenses_climed']['comment'][$key],
-							'created'=>date('Y-m-d H:i:s')
-							);
-						$this->common_model->save("expenses_climed", $payee_data);
-					}
-				}
+				// if(!empty($array['expenses_climed']))
+				// {
+				// 	foreach($array['expenses_climed']['invoice'] as $key => $val)	
+				// 	{
+				// 		$payee_data = array(
+				// 			'claim_id'=>$record_id,
+				// 			'invoice'=>$val,
+				// 			'provider_name'=>$array['expenses_climed']['provider_name'][$key],
+				// 			'referencing_physician'=>$array['expenses_climed']['referencing_physician'][$key],
+				// 			'coverage_code'=>$array['expenses_climed']['coverage_code'][$key],
+				// 			'diagnosis'=>$array['expenses_climed']['diagnosis'][$key],
+				// 			'service_description'=>$array['expenses_climed']['service_description'][$key],
+				// 			'date_of_service'=>$array['expenses_climed']['date_of_service'][$key],
+				// 			'amount_billed'=>$array['expenses_climed']['amount_billed'][$key],
+				// 			'amount_client_paid'=>$array['expenses_climed']['amount_client_paid'][$key],
+				// 			'currency'=>$array['expenses_climed']['currency'][$key],
+				// 			'currency_rate'=>$array['expenses_climed']['currency_rate'][$key],
+				// 			'payee'=>$array['expenses_climed']['payee'][$key],
+				// 			'comment'=>$array['expenses_climed']['comment'][$key],
+				// 			'created'=>date('Y-m-d H:i:s')
+				// 			);
+				// 		$this->common_model->save("expenses_climed", $payee_data);
+				// 	}
+				// }
 
 				// insert intake notes
 				// insert intake forms if exists
@@ -593,7 +594,7 @@ class Claim extends CI_Controller {
 				$this->common_model->update("claim", array("claim_no"=>str_pad($record_id, 7, 0, STR_PAD_LEFT)), array("id"=>$record_id));
 
 				// send success message
-				$this->session->set_flashdata('success', "Claim successfully created");
+				$this->session->set_flashdata('success', "Claim successfully updated");
 
 				// redirect them to the login page
 				redirect('claim', 'refresh');
@@ -661,7 +662,25 @@ class Claim extends CI_Controller {
 		    $info['description']  = substr($data, 8,strlen($data));
 		    $this->common_model->save("diagnosis", $info);
 		}
+	}	
+
+	// download claim files
+	public function download($file, $id) 
+	{
+		$this->load->helper("download");
+		force_download('./assets/uploads/claim_files/' . $id . '/' . urldecode($file), NULL);
 	}
+
+	// browse claim files
+	public function file($file, $id) 
+	{
+
+		// We'll be outputting a PDF
+		header('Content-type: application/pdf');
+
+		// The PDF source is in original.pdf
+		readfile('./assets/uploads/claim_files/' . $id . '/' . urldecode($file));
+	}	
 
 	// for autocomplete search
 	public function search_diagnosis($field)
@@ -743,5 +762,74 @@ class Claim extends CI_Controller {
 		$this->email->send();
 		echo json_encode(array("data_intake"=>implode(", ", $intake_notes), 'file'=>"./assets/temp/$filename", 'file_name'=>$filename));
 	}
+
+	//send email template from examine claim page
+	public function send_print_email_claim() 
+	{
+		// get all requested params
+		$email = $this->input->post("email");
+		$street_no = $this->input->post("street_no");
+		$street_name = $this->input->post("street_name");
+		$city = $this->input->post("city");
+		$province = $this->input->post("province");
+		$template = $this->input->post("template");
+		$doc = $this->input->post("doc");
+		$case_id = $this->input->post("case_id");
+
+		// create pdf from template	 using DOM PDF	
+		require_once './assets/dompdf/dompdf_config.inc.php';		
+	    $dompdf = new DOMPDF();
+	    $dompdf->load_html($template);
+	    $dompdf->render();
+	    $output = $dompdf->output();
+	    $filename = trim($doc).rand(999,999999).'.pdf';
+	    $filepath =  "./assets/temp/".$filename;
+	    file_put_contents($filepath, $output);
+
+		// generate data array
+		$intake_notes = array(
+			"Email: ".$email,
+			"Street No: ".$street_no,
+			"Street No: ".$street_name,
+			"City: ".$city,
+			"Province: ".$province,
+			);
+		$data_intake = array(
+			'case_id' => $case_id,
+			'created_by' => $this->ion_auth->user()->row()->id,
+			'notes' => implode(", ", $intake_notes),
+			'created' => date("Y-m-d H:i:s"),
+			'docs' => $filename,
+			'type'=>'CLAIM'
+			);
+
+		// save values to database
+		$intake_form_id = $this->common_model->save("intake_form", $data_intake);
+
+		// create directory to identify intake files
+		@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+
+		// move all files to that directory
+		copy("./assets/temp/$filename", "./assets/uploads/intake_forms/$intake_form_id/$filename");
+		unlink("./assets/temp/$filename");
+
+		// send success message
+		$this->session->set_flashdata('success', "Email successfully sent.");
+
+		// send email notification to provider email address
+		$this->load->library('email');
+		$config['mailtype'] = 'html';
+		$this->email->initialize($config);
+		$this->email->from(FROM_EMAIL, SITE_TITLE);
+		$this->email->to($email);
+
+		$this->email->subject("Received $doc");
+		$this->email->message($data_intake['notes']);
+		$this->email->attach("assets/uploads/intake_forms/$intake_form_id/$filename");
+		$this->email->send();
+		echo TRUE;
+
+	}
+
 
 }

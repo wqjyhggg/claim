@@ -33,12 +33,12 @@
                      <div class="col-sm-4">
                         <?php 
                         echo form_label('&nbsp;', 'gender', array("class"=>'col-sm-12'));
-                        echo form_radio("gender", "Y", $this->input->post("gender"), array('class'=>'setpremium')); ?>  Male
+                        echo form_radio("gender", "male", $this->input->post("gender"), array('class'=>'setpremium')); ?>  Male
                      </div>
                      <div class="col-sm-5">
                         <?php 
                         echo form_label('&nbsp;', 'gender', array("class"=>'col-sm-12'));
-                        echo form_radio("gender", "Y", $this->input->post("gender"), array('class'=>'setpremium')); ?>  Female
+                        echo form_radio("gender", "female", $this->input->post("gender"), array('class'=>'setpremium')); ?>  Female
                      </div>
                   </div>
                   <div class="col-sm-3">
@@ -64,7 +64,7 @@
                   <div class="col-sm-3">
                      <?php 
                         echo form_label('Policy#:', 'policy_no', array("class"=>'col-sm-12'));                            
-                        echo form_input("policy_no", $this->input->post("policy_no"), array("class"=>"form-control", 'placeholder'=>'Policy#'));
+                        echo form_input("policy_no", ($this->input->post("policy_no")?$this->input->post("policy_no"):$this->input->get("policy")), array("class"=>"form-control", 'placeholder'=>'Policy#'));
                         echo form_error("policy_no");
                         echo form_hidden("policy_info");
                      ?>
@@ -293,11 +293,11 @@
                            </div>
                            <div class="col-sm-1">
                               <?php 
-                              echo form_radio("travel_insurance_coverage", "Y", $this->input->post("travel_insurance_coverage"), array('class'=>'setpremium')); ?>  Yes
+                              echo form_radio("travel_insurance_coverage_guardians", "Y", $this->input->post("travel_insurance_coverage_guardians"), array('class'=>'setpremium')); ?>  Yes
                            </div>
                            <div class="col-sm-1">
                               <?php 
-                              echo form_radio("travel_insurance_coverage", "N", $this->input->post("travel_insurance_coverage"), array('class'=>'setpremium')); ?>  No
+                              echo form_radio("travel_insurance_coverage_guardians", "N", $this->input->post("travel_insurance_coverage_guardians"), array('class'=>'setpremium')); ?>  No
                            </div>
 
                            <div class="col-sm-12">
@@ -983,17 +983,25 @@
 
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
-      str = str.replace(/{insured_name}/gi, obj.attr("insured_name"))
-      .replace("{insured_address}", obj.attr("insured_address"))
-      .replace("{insured_lastname}", obj.attr("insured_lastname"))
-      .replace("{policy_no}", obj.attr("policy_no"))
-      .replace("{case_no}", $('input[name=policy_no]').val())
+      str = str.replace(/{insured_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
+      .replace("{insured_address}", $("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val())
+      .replace("{insured_lastname}", $("input[name=insured_last_name]").val())
+      .replace("{policy_no}", $("input[name=policy_no]").val())
+      .replace("{case_no}", $("input[name=case_no]").val())
       .replace("{policy_coverage_info}", "{policy_coverage_info}")
-      .replace("{casemanager_name}", obj.attr("casemanager_name"));
+      .replace("{casemanager_name}", '<?php echo $this->ion_auth->user()->row()->first_name ?>')
+      .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')
+
+      .replace("{clinic_name}", $("input[name=clinic_name]").val())
+      .replace("{insured_dob}", $("input[name=dob]").val())
+      .replace("{policy_no}", $("input[name=policy_no]").val())
+      .replace("{policy_no}", $("input[name=policy_no]").val())
+      .replace("{policy_no}", $("input[name=policy_no]").val())
+      .replace("{policy_no}", $("input[name=policy_no]").val()); 
 
       $(".doc-"+id+" .doc-desc").html(str);
 
-      // reset all edit//preview section
+      // reset all edit/preview section
       $(".preview-template").text("Preview").removeClass("active-preview");
 
       // enable disable buttons
@@ -1230,7 +1238,7 @@
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
             }
             else{
-               alert("Sorry, policy information dows not exists, please check policy no and try again");
+               alert("Sorry, policy information does not exists, please check policy no and try again");
                $(this).val("");
             }
             $(".nav-m22d").removeClass("csspinner load1");
@@ -1259,7 +1267,36 @@
       {
          $("input[name=street_address],input[name=city],input[name=province],input[name=telephone],input[name=email],input[name=post_code],input[name=arrival_date_canada],input[name=cellular]").val("");
       }
-   })
+   });
+
+   <?php
+   if($this->input->get('policy'))
+   {
+      ?>
+      $.ajax({
+         url: "<?php echo base_url("emergency_assistance/get_policy_info"); ?>",
+         method:"get",
+         data:{policy:"<?php echo $this->input->get('policy'); ?>"},
+         dataType: "json",
+         beforeSend: function(){
+            $(".nav-m22d").addClass("csspinner load1");
+         },
+         success: function(data){
+            if(typeof data.plan_list != "undefined" && data.plan_list.length)
+            {
+               localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
+               $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+            }
+            else{
+               alert("Sorry, policy information does not exists, please check policy no and try again");
+               $(this).val("");
+            }
+            $(".nav-m22d").removeClass("csspinner load1");
+         }
+      })
+      <?php
+   }
+   ?>
 
 // create input boxes where requirement need
 var $outer = $(".outer-text");
