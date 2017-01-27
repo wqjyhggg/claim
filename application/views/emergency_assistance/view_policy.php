@@ -2,6 +2,11 @@
 
 <duv >
    <div class="page-title">
+      <?php
+      if($this->input->get('type') == 'add_claim')
+         echo anchor("claim/create_claim?policy=", '<i class="fa fa-plus-circle"></i> New Claim', array("class"=>'btn btn-primary new_claim')) 
+      ?>
+
       <?php echo anchor("emergency_assistance/create_case", '<i class="fa fa-plus-circle"></i> New Case', array("class"=>'btn btn-primary')) ?>
 
       <?php echo anchor("emergency_assistance/create_policy", '<i class="fa fa-plus-circle"></i> New Policy', array("class"=>'btn btn-primary')) ?>
@@ -360,6 +365,9 @@
                $("input[name="+index+"]").prop("checked", true);
             }
          }
+
+         if(index == 'policy')
+            $('.new_claim').attr('href', '<?php echo base_url("claim/create_claim?policy=") ?>'+value);
 
          // check for label
          if(index == 'sum_insured') 

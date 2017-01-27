@@ -43,6 +43,11 @@ class Claim extends CI_Controller {
 					);
 
 				$joins = [];
+				$joins[] = array(
+					'table' => 'users u1',
+					'on' => 'u1.id = claim.assign_to',
+					'type' => 'LEFT'
+					);
 
 				// prepare conditions
 				$conditions = [];
@@ -62,7 +67,7 @@ class Claim extends CI_Controller {
 				if($this->input->get("claim_date_to")) 
 					$conditions['claim.claim_date <= '] = $this->input->get("claim_date_to");
 
-				$fields = "claim.id, claim.policy_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.claim_date, claim.status";
+				$fields = "concat_ws(' ', u1.first_name, u1.last_name) as claim_examiner, claim.id, claim.policy_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.claim_date, claim.status";
 				$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "claim", $fields, $conditions, $joins, $order_by, $group_by = array());
 			}
 			else if($this->input->get("filter") == 'case') 
@@ -146,6 +151,9 @@ class Claim extends CI_Controller {
 			$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->get($field_name), $key = "short_code", $value = "name");
 			$this->data['policy_status'] = $this->common_model->get_policy_status($field_name = "status_id", $selected = $this->input->get($field_name));
 			$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->get($field_name));
+
+			// get claim examiners
+			$this->data['claim_examiner'] = $this->common_model->getrusers($field_name = "assign_user", "", $group = array("'claimexaminer'"), $empty = "--Select Claim Examiner--", $additional_conditions = "");
 
 			// render view data
         	$this->template->write('title', SITE_TITLE.' - Claim', TRUE);
@@ -610,8 +618,12 @@ class Claim extends CI_Controller {
 					);
 				$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('claim.id'=>$id), $joins);
 
-				// get expenses_climed list
+				// get expenses climed items list
 				$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields = "`expenses_climed`.*", $conditions = array('expenses_climed.claim_id'=>$id));
+
+				// get claim history
+				$fields = "expenses_climed.claim_no, expenses_climed.case_no,expenses_climed.claim_date,sum(expenses_climed.amount_claimed) as amount_claimed,sum(expenses_climed.amount_client_paid) as amount_client_paid,expenses_climed.currency,expenses_climed.pay_to";
+				$this->data['claim_history'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields, $conditions = array('expenses_climed.claim_id'=>$id), $joins = array(), $order_by = array(), $group_by = array('expenses_climed.id'));
 				
 				// load dropdowns- countries, province, products data
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
@@ -827,6 +839,26 @@ class Claim extends CI_Controller {
 		$this->email->message($data_intake['notes']);
 		$this->email->attach("assets/uploads/intake_forms/$intake_form_id/$filename");
 		$this->email->send();
+		echo TRUE;
+
+	}
+
+	// assign claim examinner manually for ajax request
+	public function assign_claim($type = "automatic") 
+	{
+		$claim = $this->input->post("claim");	
+		$claim = explode(",", $claim);		
+		$employee_id = $this->input->post("employee_id");
+
+		// asigning process
+		foreach ($claim as $key => $value) 
+		{
+			$this->common_model->update("claim", array("assign_to"=>$employee_id), array("id"=>$value));
+		}
+
+		// send success message
+		$this->session->set_flashdata('success', "Claim asssigned successfully");
+
 		echo TRUE;
 
 	}

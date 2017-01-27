@@ -18,35 +18,40 @@
                <?php if(!empty($expenses)): ?>
                   <div class="row">
                      <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
-                           <thead>
-                              <tr>
-                                 <th>Claim No</th>
-                                 <th>Case No</th>
-                                 <th>Claim Date</th>
-                                 <th>Total Claimed</th>
-                                 <th>Total Paid</th>
-                                 <th>Currency</th>
-                                 <th>Pay To</th>
-                                 <th>Cheque No</th>
-                                 <th>Total Received</th>                       
-                              </tr>
-                           </thead>
-                           <tbody>
-                              <?php //foreach ($claims as $key => $value): ?>
-                              <tr>
-                                 <td>1</td>
-                                 <td>0</td>
-                                 <td>0</td>
-                                 <td>0</td>
-                                 <td>0</td>
-                                 <td>0</td>
-                                 <td>0</td>
-                                 <td>0</td>
-                              </tr>
-                           <?php //endforeach; ?>
-                           </tbody>
-                        </table>
+                        <?php if(!empty($claim_history)): ?>
+                           <table class="table table-hover table-bordered">
+                              <thead>
+                                 <tr>
+                                    <th>Claim No</th>
+                                    <th>Case No</th>
+                                    <th>Claim Date</th>
+                                    <th>Total Claimed</th>
+                                    <th>Total Paid</th>
+                                    <th>Currency</th>
+                                    <th>Pay To</th>
+                                    <th>Cheque No</th>
+                                    <th>Total Received</th>                       
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <?php foreach ($claim_history as $key => $value): ?>
+                                 <tr>
+                                    <td><?php echo $value['claim_no']; ?></td>
+                                    <td><?php echo $value['case_no']; ?></td>
+                                    <td><?php echo $value['claim_date']; ?></td>
+                                    <td><?php echo $value['amount_claimed']; ?></td>
+                                    <td><?php echo $value['amount_client_paid']; ?></td>
+                                    <td><?php echo $value['currency']; ?></td>
+                                    <td><?php echo $value['pay_to']; ?></td>
+                                    <td><?php //echo $value['claim_no']; ?></td>
+                                    <td><?php //echo $value['claim_no']; ?></td>
+                                 </tr>
+                              <?php endforeach; ?>
+                              </tbody>
+                           </table>
+                        <?php else: ?>
+                           <center><?php echo heading('No record available', 4); ?></center>
+                        <?php endif;?>
                      </div>
                   </div>
 
@@ -1573,6 +1578,26 @@
                window.location.reload();
             }
          })
+      }
+   })
+
+   // once user clicked on accept button 
+   .on("click", "input[name=Accept]", function(){
+      if(confirm('Are you sure you want to accept claim')){
+         // redirect to payment page
+         window.location = "<?php echo base_url("claim/payment?claim=".$claim_details['id']); ?>";
+      } else {
+         return false;
+      }
+   })
+
+   // once user clicked on accept button 
+   .on("click", "input[name=Deny]", function(){
+      if(confirm('Are you sure you want to deny claim')){
+         // deny claim and close its details 
+
+      } else {
+         return false;
       }
    })
 

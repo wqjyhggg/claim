@@ -7,6 +7,19 @@ Username: admin@admin.com
 Password: password
 
 
+
+#####################
+Jan, 27 2016 update:-
+#####################
+*****************************
+Claim and examine page update
+*****************************
+- Assign claim to claim examiners is done
+- Worked on examin claim page in claim history section.
+- I think that  it is better if we provide a checkbox in case result table as claims result . it is similar in policy result.   When examiner selects a policy or case and then click "Create new claim" button, system will create a new claim related to the selected policy/case. NOTE:  CAN ONLY SELECT ONE POLICY/CASE. - DONE
+
+
+
 #####################
 Jan, 25 2016 update:-
 #####################

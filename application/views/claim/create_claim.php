@@ -128,7 +128,7 @@
                   
                   <div class="form-group col-sm-3">
                      <?php 
-                        echo form_label('Street Address:', 'street_address', array("class"=>'col-sm-12'));                           
+                        echo form_label('Street Address:', 'street_address', array("class"=>'col-sm-12'));
                         echo form_input("street_address", $this->input->post("street_address"), array("class"=>"form-control", 'placeholder'=>'Street Address'));
                      ?>
                   </div>

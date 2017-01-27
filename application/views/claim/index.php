@@ -192,6 +192,7 @@
                   <table class="table table-hover table-bordered">
                      <thead>
                         <tr>
+                           <td></td>
                            <th>Policy No</th>
                            <th>ID</th>
                            <th>Name</th>
@@ -205,7 +206,8 @@
                      </thead>
                      <tbody>
                         <?php foreach ($policies as $key => $value): ?>
-                        <tr class="view-policy" data='<?php echo $value['policy']; ?>'>
+                        <tr class="view-policy" data='<?php echo json_encode($value); ?>'>
+                           <td><?php echo form_checkbox('select_claim'); ?></td>
                            <td><?php echo $value['policy']; ?></td>
                            <td><?php echo $value['plan_id']; ?></td>
                            <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
@@ -214,7 +216,8 @@
                            <td><?php echo date("d/d/Y", strtotime($value['effective_date'])); ?></td>
                            <td>Which data goes here</td>
                            <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
-                           <td><?php echo anchor("claim/create_claim?policy_no=".$value['policy'], "Open"); ?></td>
+                           <!-- <td><?php echo anchor("claim/create_claim?policy_no=".$value['policy'], "Open"); ?></td> -->
+                           <td><?php echo anchor("emergency_assistance/view_policy?type=add_claim", "Open"); ?></td>
                         </tr>
                         <?php endforeach; ?>
                      </tbody>
@@ -301,6 +304,7 @@
                      <table class="table table-hover table-bordered">
                         <thead>
                            <tr>
+                              <th></th>
                               <th>Case number</th>
                               <th>Create Date</th>
                               <th>Place</th>
@@ -317,6 +321,7 @@
                         <tbody>
                         <?php foreach ($cases as $key => $value): ?>
                            <tr class='row-link' alt='<?php echo $value['id']; ?>' policy='<?php echo $value['policy_no'] ?>' title='Click to add claim' case_no='<?php echo $value['case_no']; ?>'>
+                              <td><?php echo form_checkbox('select_case'); ?></td>
                               <td><?php echo $value['case_no']; ?></td>
                               <td><?php echo $value['created']; ?></td>
                               <td><?php echo $value['province']; ?></td>
@@ -327,7 +332,8 @@
                               <td><?php echo $value['assign_to_name']; ?></td>
                               <td><?php echo $value['case_manager_name']; ?></td>
                               <td><?php echo $value['priority']; ?></td>
-                              <td><?php echo anchor('emergency_assistance/create_claim?policy='.$value['policy_no'].'&case_no='.$value['policy'], 'Detail'); ?></td>
+                              <!-- <td><?php echo anchor('emergency_assistance/create_claim?policy='.$value['policy_no'].'&case_no='.$value['case_no'], 'Detail'); ?></td> -->
+                              <td><?php echo anchor('emergency_assistance/edit_case/'.$value['id'].'?type=add_claim', 'Detail'); ?></td>
                            </tr>
                         <?php endforeach; ?>
                         </tbody>
@@ -443,7 +449,7 @@
                         <tbody>
                            <?php foreach ($claims as $key => $value): ?>
                            <tr>
-                              <td><?php echo form_checkbox("selectall", $value['id']); ?></td>
+                              <td><?php echo form_checkbox("claim", $value['id']); ?></td>
                               <td><?php echo $value['id']; ?></td>
                               <td><?php echo $value['policy_no']; ?></td>
                               <td><?php echo $value['claim_no']; ?></td>
@@ -453,12 +459,29 @@
                               <td><?php echo $value['dob']; ?></td>
                               <td><?php echo $value['claim_date']; ?></td>
                               <td>0</td>
-                              <td>0</td>
+                              <td><?php echo $value['claim_examiner']; ?></td>
                               <td><?php echo anchor("claim/examine_claim/".$value['id'], "Detail"); ?></td>
                            </tr>
                         <?php endforeach; ?>
                         </tbody>
                      </table>
+                  </div>
+                  <br/>
+                  <div class="row form-group">
+                     <div class="col-sm-12">
+                        <div class="col-sm-2">
+                              <button class="btn btn-primary show_button assign_to" disabled>Assign To <i class="fa fa-angle-double-right"></i> </button>
+                        </div>
+                        <div class="col-sm-8 employees-section" style="display:none">
+                           <div class="col-sm-4">
+                              <?php echo $claim_examiner; ?>
+                           </div>
+
+                           <div class="col-sm-3">
+                              <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save Assign</button> 
+                           </div>   
+                        </div>  
+                     </div>
                   </div>
                   <?php else:?>
                      <center><?php echo heading("No record available", 4); ?></center>
@@ -475,6 +498,7 @@
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
+var employee_id;
 $(document).ready(function() {
    $(".datepicker").datepicker({
         startDate: '-5y',
@@ -486,15 +510,79 @@ $(document).ready(function() {
       var id = $(this).attr("alt");
       var case_no = $(this).attr("case_no");
       var policy_no = $(this).attr("policy_no");
-      window.location = "<?php echo base_url("claim/create_claim/") ?>?policy="+policy_no+'&case_no='+case_no;
+      window.location = "<?php echo base_url("emergency_assistance/edit_case/") ?>"+id+"?type=add_claim";
    })
 
    // create claim once user clicked on policy
    $(".view-policy").click(function(){
       var data = $(this).attr("data");
 
+      // insert data to dom element to save temporary
+      localStorage.setItem("policy_data", data);
+
       // redirect it to view policy page
-      window.location = "<?php echo base_url("claim/create_claim") ?>?policy="+data;
+      window.location = "<?php echo base_url("emergency_assistance/view_policy?type=add_claim") ?>";
+   })
+})
+
+.on("change", "select[name=assign_user]", function(){                                  // assign value of claim examiner to employee_id 
+   var val = $(this).val();
+   employee_id = val;                                                                  // set selected employee
+})
+
+.on("click", "input[name=selectall]",  function(){                                     // select all checkboxes script
+
+   if($(this).is(":checked"))                                                          // check user click check or uncheck tickbox
+      $("input[name=claim]").prop("checked", true);
+   else
+      $("input[name=claim]").prop("checked", false);
+})
+.on("click", "input[name=claim], input[name=selectall]",  function(e){                 // enable disable buttons
+
+   e.stopPropagation();
+   var length = $("input[name=claim]:checked").length;
+   if(length)
+   {
+      $(".show_button").removeAttr("disabled");
+      if(length > 1)
+          $(".view_edit, .email_print").attr("disabled", "disabled");
+   }
+   else
+   {
+      $(".show_button").attr("disabled", "disabled");
+      $(".employees-section").hide();
+   }
+})
+.on("click", ".assign_to", function(){                                                 // on clicked assign to button
+   $(".employees-section, .save_assign").show();
+})
+.on("click", ".save_assign", function(){                                               // clicking on save assign button
+   
+   // check if employee selected or not
+   if(!employee_id)
+   {
+      alert("Please select claim examiner first.");
+      return false;
+   }
+
+   // assign claim examiner user to selected claim 
+   var claim = [];
+   $("input[name=claim]:checked").each(function(){
+      claim.push($(this).val());
+   })
+   var claim = claim.join(",");
+
+   // assign claim to emc manager here
+   $.ajax({
+      url: "<?php echo base_url("claim/assign_claim") ?>",
+      method: "post",
+      data:{claim:claim, employee_id: employee_id},
+      beforeSend: function(){
+         $(".right_col").addClass("csspinner load1");
+      },
+      success: function() {
+         window.location.reload();
+      }
    })
 })
 
