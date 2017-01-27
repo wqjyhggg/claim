@@ -398,6 +398,7 @@ class Common_model extends CI_Model
      * @param       $selected string
      * @param       $group group name. string/array ex- 'admin' and array("'admin'", "'manager'")
      * @param       $additional_conditions string, it should start from " and YOUR CONDITIONS" or " OR YOUR CONDITIONS"
+     * @param       $user_code string, used to prefix
     */
     public function getrusers($field_name, $selected, $group = "eacmanager", $empty = "--Assign To--", $additional_conditions = "", $user_code = FALSE)
     {
