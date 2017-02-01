@@ -1,0 +1,44 @@
+/* Connection to 192.168.1.253 closed at 2017-02-01 14:20:40 */
+/* Connecting to 192.168.1.253 via MySQL (TCP/IP), username root, using password: Yes ... */
+SELECT CONNECTION_ID();
+/* Connected. Thread-ID: 7630 */
+/* Characterset: utf8mb4 */
+SHOW STATUS;
+SHOW VARIABLES;
+USE `jf_claim_management`;
+SHOW CREATE TABLE `jf_claim_management`.`claim`;
+SHOW COLLATION;
+SHOW ENGINES;
+ALTER TABLE `claim`
+	CHANGE COLUMN `status` `status` ENUM('A','D') NOT NULL DEFAULT 'A' COMMENT 'D-deactive, A-active, stand for claimstatus active/inactive' AFTER `files`;
+SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME`='jf_claim_management';
+SHOW TABLE STATUS FROM `jf_claim_management`;
+SHOW FUNCTION STATUS WHERE `Db`='jf_claim_management';
+SHOW PROCEDURE STATUS WHERE `Db`='jf_claim_management';
+SHOW TRIGGERS FROM `jf_claim_management`;
+SHOW EVENTS FROM `jf_claim_management`;
+SHOW CREATE TABLE `jf_claim_management`.`claim`;
+/* Entering session "local server" */
+SHOW CREATE TABLE `jf_claim_management`.`claim`;
+ALTER TABLE `claim`
+	ADD COLUMN `is_complete` ENUM('N','Y') NOT NULL DEFAULT 'N' COMMENT 'N- No, Y-Yes' AFTER `status`;
+SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME`='jf_claim_management';
+SHOW TABLE STATUS FROM `jf_claim_management`;
+SHOW FUNCTION STATUS WHERE `Db`='jf_claim_management';
+SHOW PROCEDURE STATUS WHERE `Db`='jf_claim_management';
+SHOW TRIGGERS FROM `jf_claim_management`;
+SHOW EVENTS FROM `jf_claim_management`;
+SHOW CREATE TABLE `jf_claim_management`.`claim`;
+/* Entering session "local server" */
+SHOW CREATE TABLE `jf_claim_management`.`claim`;
+ALTER TABLE `claim`
+	CHANGE COLUMN `status` `status` VARCHAR(20) NOT NULL DEFAULT 'A' COMMENT 'D-deactive, A-active, stand for claimstatus active/inactive' AFTER `files`;
+SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME`='jf_claim_management';
+SHOW TABLE STATUS FROM `jf_claim_management`;
+SHOW FUNCTION STATUS WHERE `Db`='jf_claim_management';
+SHOW PROCEDURE STATUS WHERE `Db`='jf_claim_management';
+SHOW TRIGGERS FROM `jf_claim_management`;
+SHOW EVENTS FROM `jf_claim_management`;
+SHOW CREATE TABLE `jf_claim_management`.`claim`;
+/* Entering session "local server" */
+SHOW CREATE TABLE `jf_claim_management`.`claim`;

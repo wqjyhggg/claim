@@ -420,6 +420,15 @@ class Claim extends CI_Controller {
 		}
 		else
 		{
+			// get claim details
+			$joins[] = array(
+				'table' => 'users u1',
+				'on' => 'u1.id = claim.created_by',
+				'type' => 'LEFT'
+				);
+			$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('claim.id'=>$id), $joins);
+
+
 			//validate form input
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 
@@ -468,6 +477,11 @@ class Claim extends CI_Controller {
 						}
 					}
 				}
+
+				// get old files
+				$old_files = $this->data['claim_details']['files'];
+
+				$data['files'] = ($old_files?$old_files.",":"").implode(",", $file_names);
 
 				// insert values to database
 				$this->common_model->update("claim", $data, array('id'=>$id));
@@ -598,9 +612,6 @@ class Claim extends CI_Controller {
 					}
 				}
 
-				// update case no(7 length) to table
-				$this->common_model->update("claim", array("claim_no"=>str_pad($record_id, 7, 0, STR_PAD_LEFT)), array("id"=>$record_id));
-
 				// send success message
 				$this->session->set_flashdata('success', "Claim successfully updated");
 
@@ -610,14 +621,7 @@ class Claim extends CI_Controller {
 			else
 			{	
 
-				// get claim details
-				$joins[] = array(
-					'table' => 'users u1',
-					'on' => 'u1.id = claim.created_by',
-					'type' => 'LEFT'
-					);
-				$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('claim.id'=>$id), $joins);
-
+				
 				// get expenses climed items list
 				$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields = "`expenses_climed`.*", $conditions = array('expenses_climed.claim_id'=>$id));
 
@@ -681,6 +685,34 @@ class Claim extends CI_Controller {
 	{
 		$this->load->helper("download");
 		force_download('./assets/uploads/claim_files/' . $id . '/' . urldecode($file), NULL);
+	}
+
+	// Remove claim doc file here / Ajax request
+	public function delete_doc($file, $id) 
+	{
+		// remove doc file here
+		$file = urldecode($file);
+
+
+		// get claim docs
+		$joins[] = array(
+			'table' => 'users u1',
+			'on' => 'u1.id = claim.created_by',
+			'type' => 'LEFT'
+			);
+		$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.files", $conditions = array('claim.id'=>$id), $joins);
+
+		// remove claim document		
+		@unlink('./assets/uploads/claim_files/' . $id . '/' . urldecode($file));
+
+		// remove doc from db
+		$files = array_diff(str_getcsv($this->data['claim_details']['files']), array($file));
+
+		// update files to database
+		$this->common_model->update('claim', array('files'=>implode(',', $files)), array('id'=>$id));
+
+		echo TRUE;
+
 	}
 
 	// browse claim files
@@ -787,6 +819,7 @@ class Claim extends CI_Controller {
 		$template = $this->input->post("template");
 		$doc = $this->input->post("doc");
 		$case_id = $this->input->post("case_id");
+		$type = $this->input->post("type");
 
 		// create pdf from template	 using DOM PDF	
 		require_once './assets/dompdf/dompdf_config.inc.php';		
@@ -825,8 +858,22 @@ class Claim extends CI_Controller {
 		copy("./assets/temp/$filename", "./assets/uploads/intake_forms/$intake_form_id/$filename");
 		unlink("./assets/temp/$filename");
 
-		// send success message
-		$this->session->set_flashdata('success', "Email successfully sent.");
+		// check if claim is deny
+		if($type == 'deny')
+		{
+			// deny cliam and close its details
+			$this->common_model->update("claim", array('status'=>'denied'), array("id"=>$case_id));
+
+			// send success message
+			$this->session->set_flashdata('success', "Claim denied successfully.");
+		}
+		else
+		{
+
+			// send success message
+			$this->session->set_flashdata('success', "Email successfully sent.");
+		}
+
 
 		// send email notification to provider email address
 		$this->load->library('email');
@@ -861,6 +908,78 @@ class Claim extends CI_Controller {
 
 		echo TRUE;
 
+	}
+
+	// change status of claim - for ajax request
+	public function status($type = "accept") 
+	{
+		$claim_id = $this->input->post("claim_id");
+
+		if($type == 'accept')
+			$data = array(
+				'is_accepted'=>'Y'
+				);	
+		$this->common_model->update("claim", $data, array("id"=>$claim_id));
+
+		// send success message
+		$this->session->set_flashdata('success', "Claim  successfully accepted");
+
+		echo TRUE;
+
+	}
+
+	// redirect if needed, otherwise display the my tasks list
+	public function payments()
+	{
+		
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+
+			// get all providers list
+			$order_by = array(
+				'field'=>'id',
+				'order'=>'desc'
+				);
+
+			$joins = [];
+			$joins[] = array(
+				'table' => 'users u1',
+				'on' => 'u1.id = claim.assign_to',
+				'type' => 'LEFT'
+				);
+
+			// prepare conditions
+			$conditions = [];
+			if($this->input->get("claim")) 
+				$conditions['claim.id'] = $this->input->get("claim");
+			if($this->input->get("claim_no_claim")) 
+				$conditions['claim.claim_no'] = $this->input->get("claim_no_claim");
+			if($this->input->get("policy_claim")) 
+				$conditions['claim.policy_no'] = $this->input->get("policy_claim");
+			if($this->input->get("created")) 
+				$conditions['claim.created like'] = "%".$this->input->get("created")."%";
+			if($this->input->get("firstname_claim")) 
+				$conditions['claim.insured_first_name like'] = "%".$this->input->get("firstname_claim")."%";
+			if($this->input->get("lastname_claim")) 
+				$conditions['claim.insured_last_name like'] = "%".$this->input->get("lastname_claim")."%";
+
+			if($this->input->get("claim_date_from")) 
+				$conditions['claim.claim_date >= '] = $this->input->get("claim_date_from");
+			if($this->input->get("claim_date_to")) 
+				$conditions['claim.claim_date <= '] = $this->input->get("claim_date_to");
+
+			$fields = "concat_ws(' ', u1.first_name, u1.last_name) as claim_examiner, claim.id, claim.policy_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.claim_date, claim.status";
+			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "claim", $fields, $conditions, $joins, $order_by, $group_by = array());
+
+        	$this->template->write('title', SITE_TITLE.' - Payments', TRUE);
+	        $this->template->write_view('content', 'claim/payments', $this->data);
+	        $this->template->render();        
+		}
 	}
 
 

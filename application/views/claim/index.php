@@ -360,8 +360,8 @@
             </div>
             <div class="x_content"> 
 
-               <!-- search policy filter start -->       
-              <?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>           
+               <!-- search claim filter start -->       
+               <?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>           
                <div class="row">           
                   <div class="form-group col-sm-3">
                      <?php       
@@ -417,7 +417,7 @@
                   </div>
                </div> 
                <?php echo form_close(); ?>
-               <!-- search policy filter end -->
+               <!-- search claim filter end -->
                <div class="clearfix"><br/></div>
 
                <?php if($this->input->get("filter") == 'claim'): ?>

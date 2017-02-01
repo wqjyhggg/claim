@@ -9,6 +9,17 @@ Password: password
 
 
 #####################
+Feb, 01 2016 update:-
+#####################
+*****************************
+Claim and examine page update
+*****************************
+- Accept and decline Claim - done
+- Payment page design - done
+- Worked on examine claim page. - DONE
+
+
+#####################
 Jan, 27 2016 update:-
 #####################
 *****************************

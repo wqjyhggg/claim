@@ -20,7 +20,7 @@
 
 	<li> <a href="#" class="leftmeun"><i class="fa fa-list-alt"></i>Report</a> </li>
 
-	<li> <a href="#" class="leftmeun"><i class="fa fa-money"></i>Payments</a> </li>
+	<li> <?php echo anchor("claim/payments", '<i class="fa fa-money"></i>Payments</a>', array("class"=>'leftmeun')) ?> </li>
 
 	<li> <?php echo anchor("auth/logout", '<i class="fa fa-power-off"></i>Logout</a>', array("class"=>'leftmeun')) ?> </li>
 </ul>
