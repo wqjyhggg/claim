@@ -55,4 +55,5 @@ $route['translate_uri_dashes'] = FALSE;
 $route['download/(:any)__(:num)'] = 'emergency_assistance/download/$1/$2';
 $route['file/(:any)__(:num)'] = 'emergency_assistance/file/$1/$2';
 $route['claim_doc_download/(:any)__(:num)'] = 'claim/download/$1/$2';
+$route['claim_doc_delete/(:any)__(:num)'] = 'claim/delete_doc/$1/$2';
 $route['file_claim/(:any)__(:num)'] = 'claim/file/$1/$2';

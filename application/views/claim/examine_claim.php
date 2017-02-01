@@ -79,20 +79,20 @@
                               <?php 
                               $i = 1;
                               foreach ($expenses as $key => $value): $value['count'] = $i; ?>
-                              <tr class="edit_claim row-link" attr='<?php echo json_encode($value); ?>'>
-                                 <td><?php echo $i; ?></td>
-                                 <td><?php echo $value['claim_no'] ?></td>
-                                 <td><?php echo $value['invoice'] ?></td>
-                                 <td><?php echo $value['date_of_service'] ?></td>
-                                 <td><?php echo $value['coverage_code'] ?></td>
-                                 <td><?php echo $value['diagnosis'] ?></td>
-                                 <td><?php echo $value['amount_claimed'] ?></td>
-                                 <td><?php echo $value['amt_payable'] ?></td>
-                                 <td><?php echo $value['amt_deductable'] ?></td>
-                                 <td><?php echo $value['amt_insured'] ?></td>
-                                 <td><?php echo $value['amt_received'] ?></td>
-                                 <td><?php echo $value['comment'] ?></td>
-                              </tr>
+                                 <tr class="edit_claim row-link" attr='<?php echo json_encode($value); ?>'>
+                                    <td><?php echo $i; ?></td>
+                                    <td><?php echo $value['claim_no'] ?></td>
+                                    <td><?php echo $value['invoice'] ?></td>
+                                    <td><?php echo $value['date_of_service'] ?></td>
+                                    <td><?php echo $value['coverage_code'] ?></td>
+                                    <td><?php echo $value['diagnosis'] ?></td>
+                                    <td><?php echo $value['amount_claimed'] ?></td>
+                                    <td><?php echo $value['amt_payable'] ?></td>
+                                    <td><?php echo $value['amt_deductable'] ?></td>
+                                    <td><?php echo $value['amt_insured'] ?></td>
+                                    <td><?php echo $value['amt_received'] ?></td>
+                                    <td><?php echo $value['comment'] ?></td>
+                                 </tr>
                            <?php $i++;endforeach; ?>
                            </tbody>
                         </table>
@@ -286,7 +286,8 @@
                      <?php 
                         echo form_label('Pre-existion condition coverage:', 'existion_condition', array("class"=>'col-sm-12')); 
                         $existion_condition = array(
-                              "With Stable pre-existion condition coverage"=>'With Stable pre-existion condition coverage'
+                              "With stable pre-existing condition coverage"=>'With stable pre-existing condition coverage',
+                              'Without stable pre-existing condition coverage'=>'Without stable pre-existing condition coverage'
                            );
                         echo form_dropdown("existion_condition", $existion_condition, $this->input->get("existion_condition"), array("class"=>'form-control'));
                      ?>
@@ -854,7 +855,7 @@
                   <h2>ATTACHED LIST<small></small> <button class="btn btn-primary multiupload_files"  type="button">Upload Attached</button></h2>  
                   <div class="row">
                      <div class="col-sm-12">
-                        <div class="col-sm-3 uploaded_files">
+                        <div class="col-sm-12 uploaded_files">
                            <?php 
                               $files = $claim_details['files'] ? explode(",", $claim_details['files']) : array(); 
                               if(!empty($files)):
@@ -863,12 +864,11 @@
                                      <div class="col-sm-9" style="">
                                          <span class="file-label"><?php echo anchor("file_claim/".$file . '__' . $claim_details['id'], $file, array('target'=>'_blank')); ?></span>
                                          <?php echo anchor("file_claim/" . $file . '__' . $claim_details['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
-                                         <?php echo anchor("claim_doc_download/" . $file . '__' . $claim_details['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>                                                    
+                                         <?php echo anchor("claim_doc_download/" . $file . '__' . $claim_details['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>
+                                         <?php echo anchor("claim_doc_delete/" . $file . '__' . $claim_details['id'], '<i class="fa fa-trash row-link remove_doc"></i>', array('title'=>'Delete File')); ?>
                                      </div>
                                      <?php
                                  endforeach;
-                              else:
-                                 echo "no files attached";
                               endif;
                            ?>
                         </div>
@@ -893,7 +893,7 @@
                               'close'=>'Close',
                               'appeal'=>'Appeal'
                               );
-                           echo form_dropdown("status", $status, $this->input->get("status"), array("class"=>'form-control'));
+                           echo form_dropdown("status", $status, $this->common_model->field_val("status", $claim_details), array("class"=>'form-control'));
                         ?>
                      </div>
                   </div>
@@ -922,12 +922,15 @@
                      <div class="col-sm-1"> 
                         <input class="btn btn-primary" name="Deny" value="Deny" type="button">  
                      </div>
-                     <div class="col-sm-2"> 
+                     <div class="col-sm-2 deny_reasons" style="display:none"> 
                         <?php
                         $reason = array(
-                           ""=>'--Denial Reason--',
+                           ''=>'--Denial Reason--'                           
                            );
-                        echo form_dropdown("reason", $reason, $this->input->get("reason"), array("class"=>'form-control'))
+                        foreach($docs as $doc)
+                           $reason[$doc['id']] = $doc['name'];
+
+                        echo form_dropdown("reason", $reason, '', array('class'=>'form-control'))
                         ?>
                      </div>
                      <div class="col-sm-2"> 
@@ -982,6 +985,7 @@
                   <div class="form-group col-sm-12">
                      <?php  
                      echo form_input("email", "", array("class"=>"form-control col-sm-6 form-group email required", 'placeholder'=>'Email Address'));
+                     echo form_hidden('type', 'email'); // used for which action need to perform "email or deny claim"
                      ?>
                   </div>
                </div>
@@ -1358,6 +1362,11 @@
       $(".preview-template, .email-intakeform").removeAttr("disabled");
    })
 
+   .on("click", ".email_print", function(){
+         $("input[name=type]").val("email");  
+         $(".email-intakeform").text("Email");    
+   })
+
    // preview template script 
    .on("click", ".preview-template", function(){
       // get selected doc
@@ -1478,6 +1487,28 @@
       }
    })
 
+   
+   // delete attached document
+   .on("click",".remove_doc", function(e){
+
+      e.preventDefault();
+
+      var link = $(this).parent('a').attr("href");
+
+      if(confirm('Are you sure you want to delete? '))
+      {
+         // remove form area instant to make it visible fast
+         $(this).parent("a").parent("div").remove();
+
+         $.ajax({
+            url: link,
+            method: "get"
+         })
+      } else {
+         return false;
+      }
+   })
+
    // once user click over save intake form, we are just hold every value untill case is not submitted
    .on("click", '.save-intakeform', function(){
 
@@ -1515,7 +1546,7 @@
    })
 
    .on("click", ".move_down", function(){
-      $(".case_info").toggle();
+      $(".case_info").slideToggle('show');
       $(this).children("i").toggleClass("fa-angle-up").toggleClass("fa-angle-down");
    })
 
@@ -1569,7 +1600,8 @@
                province:$("#send_print_email  select[name=province_email]").val(), 
                template:template,
                case_id: "<?php echo $claim_details['id']; ?>",
-               doc: $("#send_print_email .select-doc.active").text()
+               doc: $("#send_print_email .select-doc.active").text(),
+               type: $("#send_print_email input[name=type]").val()
             },
             beforeSend: function(){
                $(".modal-content").addClass("csspinner load1");
@@ -1583,21 +1615,47 @@
 
    // once user clicked on accept button 
    .on("click", "input[name=Accept]", function(){
-      if(confirm('Are you sure you want to accept claim')){
-         // redirect to payment page
-         window.location = "<?php echo base_url("claim/payment?claim=".$claim_details['id']); ?>";
+      if(confirm('Are you sure you want to accept claim?')){
+
+         $.ajax({
+            url: "<?php echo base_url("claim/status/accept") ?>",
+            method: "post",
+            data:{
+               claim_id:"<?php echo $claim_details['id']; ?>", 
+            },
+            beforeSend: function(){
+               $(".main_container").addClass("csspinner load1");
+            },
+            success: function() {
+               // redirect to payment page
+               window.location = "<?php echo base_url("claim/payments?claim=".$claim_details['id']); ?>";
+            }
+         })
       } else {
          return false;
       }
    })
 
-   // once user clicked on accept button 
+   // when clicked over deny button
    .on("click", "input[name=Deny]", function(){
-      if(confirm('Are you sure you want to deny claim')){
-         // deny claim and close its details 
+      $(".deny_reasons").show();
+   })
 
-      } else {
-         return false;
+   // when user select any deny reason
+   .on("change", "select[name=reason]", function(){
+      if($(this).val()) {
+          if(confirm('Are you sure you want to deny claim?')){
+
+            // change email button label
+            $(".email-intakeform").text("Email and Deny Claim");
+
+            // deny claim and close its details      
+            $("input[name=type]").val("deny");
+            $('#print_template').modal('show'); 
+            $("div[doc="+$(this).val()+"]").trigger('click');
+         } else {
+            return false;
+         }
       }
    })
 
