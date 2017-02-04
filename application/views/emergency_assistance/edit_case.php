@@ -263,7 +263,7 @@
 
                   <?php if($ref == 'manage'): ?>
                      <div class="form-group col-sm-12">
-                        <h4>Create Reservers C$ <small></small></h4>
+                        <h4>Reservers C$ <small></small></h4>
                         <?php echo form_label('Create Reservers:', 'reserve_amount', array("class"=>'col-sm-12'));   ?>
                         <div class="form-group col-sm-4">
                            <?php                

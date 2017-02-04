@@ -68,37 +68,43 @@
                <div class="clearfix"><br/></div>
                
                <div class="table-responsive">
-                  <table class="table table-hover table-bordered">
-                     <thead>
-                        <tr>
-                           <th>No.</th>
-                           <th>Claim No.</th>
-                           <th>Invoice No.</th>
-                           <th>Service Date</th>
-                           <th>Coverage</th>
-                           <th>Diagnosis</th>
-                           <th>Amt Claimed</th>
-                           <th>Amt Payable</th>
-                           <th>Amt Deductable</th>
-                           <th>Amt Insured</th>
-                           <th>Pay To</th>
-                     </thead>
-                     <tbody>
-                        <tr>
-                           <td>1.</td>
-                           <td>0001221</td>
-                           <td>0012545</td>
-                           <td>Tony Su</td>
-                           <td>2016-10-23</td>
-                           <td>Blood Test</td>
-                           <td></td>
-                           <td>100</td>
-                           <td>500</td>
-                           <td>10</td>
-                           <td>Tomas</td>
-                        </tr>
-                     </tbody>
-                  </table>
+                  <?php 
+                  $i = 0;
+                  if(!empty($claims)):?>
+                        <table class="table table-hover table-bordered">
+                           <thead>
+                              <tr>
+                                 <th>No.</th>
+                                 <th>Claim No.</th>
+                                 <th>Invoice No.</th>
+                                 <th>Service Date</th>
+                                 <th>Coverage</th>
+                                 <th>Diagnosis</th>
+                                 <th>Amt Claimed</th>
+                                 <th>Amt Payable</th>
+                                 <th>Amt Deductable</th>
+                                 <th>Amt Insured</th>
+                                 <th>Pay To</th>
+                           </thead>
+                           <tbody>
+                              <?php foreach($claims as $val): ?>
+                                 <tr class="row-link select_payees" alt="<?php echo $val['claim_id'] ?>">
+                                    <td><?php echo ++$i; ?>.</td>
+                                    <td><?php echo $val['claim_no'] ?></td>
+                                    <td><?php echo $val['invoice'] ?></td>
+                                    <td><?php echo $val['date_of_service'] ?></td>
+                                    <td><?php echo $val['coverage_code'] ?></td>
+                                    <td><?php echo $val['diagnosis'] ?></td>
+                                    <td><?php echo $val['amount_claimed'] ?></td>
+                                    <td><?php echo $val['amt_payable'] ?></td>
+                                    <td><?php echo $val['amt_deductable'] ?></td>
+                                    <td><?php echo $val['amt_insured'] ?></td>
+                                    <td><?php echo $val['pay_to'] ?></td>
+                                 </tr>
+                           <?php  endforeach; ?>
+                           </tbody>
+                        </table>
+                  <?php endif; ?>
                </div>
                <h2>PAYEE INFORMATION<small></small></h2>
                <div class="row">
@@ -118,7 +124,7 @@
                   </div>
                </div>
                <div class="row">
-                  <div class="col-sm-12">
+                  <div class="col-sm-12 payees_items">
                      <table class="table table-hover table-bordered">
                         <thead>
                            <tr>
@@ -199,16 +205,58 @@
    </tbody>
 </table>
 
+<?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
+<script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
+$(document).ready(function() {
+   $(".datepicker").datepicker({
+        startDate: '-5y',
+        endDate: '+2y',
+    });
+});
+<?php
+if(!empty($this->input->get())) 
+{
+ ?>
+  $("#search_claim").show(); 
+ <?php
+}
+?>
 $(document).on("click", "button[name=search_claim]", function(){
    $("#search_claim").slideToggle("slow");
 })
-
 .on("click", ".add_payee", function(){
    var html = $(".payee-buffer").html();
    $(".payee-data").append(html);
 })
 .on("click", ".remove-payee", function(){
    $(this).parent("td").parent("tr").remove();
+})
+// when clicked on claim item history section
+.on('click', ".select_payees", function(){
+   var claim_id = $(this).attr('alt');
+
+   // settings for activate listing
+   $(".select_payees").removeClass('active-green');
+   $(this).addClass('active-green');
+
+   // get claimed items here
+   $.ajax({
+      url: "<?php echo base_url("claim/select_payees") ?>",
+      method: "post",
+      data:{
+         claim_id:claim_id, 
+      },
+      dataType:"json",
+      beforeSend: function(){
+         $(".main_container").addClass("csspinner load1");
+      },
+      success: function(result) {
+
+         // place data table to releted section
+         $(".payees_items").html(result.payees)
+         $(".main_container").removeClass("csspinner load1");
+      }
+   })
 })
 </script>

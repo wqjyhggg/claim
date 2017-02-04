@@ -178,6 +178,7 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
+			$this->form_validation->set_rules('case_no', 'Case No', 'is_unique[claim.case_no]');
 			$this->form_validation->set_rules('school_name', 'School Name', 'required');
 			$this->form_validation->set_rules('group_id', 'Group ID', 'required');
 
@@ -261,6 +262,11 @@ class Claim extends CI_Controller {
 					}
 				}
 
+
+				// update case no(7 length) to table
+				$claim_no = str_pad($record_id, 7, 0, STR_PAD_LEFT);
+				$this->common_model->update("claim", array("claim_no"=>$claim_no), array("id"=>$record_id));
+
 				// insert expenses_climed data
 				if(!empty($array['expenses_climed']))
 				{
@@ -269,6 +275,8 @@ class Claim extends CI_Controller {
 						$payee_data = array(
 							'claim_id'=>$record_id,
 							'invoice'=>$val,
+							'claim_no'=>$claim_no,
+							'case_no'=>$array['case_no'],
 							'provider_name'=>$array['expenses_climed']['provider_name'][$key],
 							'referencing_physician'=>$array['expenses_climed']['referencing_physician'][$key],
 							'coverage_code'=>$array['expenses_climed']['coverage_code'][$key],
@@ -287,7 +295,6 @@ class Claim extends CI_Controller {
 					}
 				}
 
-				// insert intake notes
 				// insert intake forms if exists
 				$no_of_form = $array['no_of_form'];
 
@@ -369,9 +376,6 @@ class Claim extends CI_Controller {
 					}
 				}
 
-				// update case no(7 length) to table
-				$this->common_model->update("claim", array("claim_no"=>str_pad($record_id, 7, 0, STR_PAD_LEFT)), array("id"=>$record_id));
-
 
 				// send success message
 				$this->session->set_flashdata('success', "Claim successfully created");
@@ -427,6 +431,7 @@ class Claim extends CI_Controller {
 				'type' => 'LEFT'
 				);
 			$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('claim.id'=>$id), $joins);
+			$this->data['id'] = $id;
 
 
 			//validate form input
@@ -517,33 +522,6 @@ class Claim extends CI_Controller {
 					}
 				}
 
-				// insert expenses_climed data
-				// if(!empty($array['expenses_climed']))
-				// {
-				// 	foreach($array['expenses_climed']['invoice'] as $key => $val)	
-				// 	{
-				// 		$payee_data = array(
-				// 			'claim_id'=>$record_id,
-				// 			'invoice'=>$val,
-				// 			'provider_name'=>$array['expenses_climed']['provider_name'][$key],
-				// 			'referencing_physician'=>$array['expenses_climed']['referencing_physician'][$key],
-				// 			'coverage_code'=>$array['expenses_climed']['coverage_code'][$key],
-				// 			'diagnosis'=>$array['expenses_climed']['diagnosis'][$key],
-				// 			'service_description'=>$array['expenses_climed']['service_description'][$key],
-				// 			'date_of_service'=>$array['expenses_climed']['date_of_service'][$key],
-				// 			'amount_billed'=>$array['expenses_climed']['amount_billed'][$key],
-				// 			'amount_client_paid'=>$array['expenses_climed']['amount_client_paid'][$key],
-				// 			'currency'=>$array['expenses_climed']['currency'][$key],
-				// 			'currency_rate'=>$array['expenses_climed']['currency_rate'][$key],
-				// 			'payee'=>$array['expenses_climed']['payee'][$key],
-				// 			'comment'=>$array['expenses_climed']['comment'][$key],
-				// 			'created'=>date('Y-m-d H:i:s')
-				// 			);
-				// 		$this->common_model->save("expenses_climed", $payee_data);
-				// 	}
-				// }
-
-				// insert intake notes
 				// insert intake forms if exists
 				$no_of_form = $array['no_of_form'];
 
@@ -620,6 +598,245 @@ class Claim extends CI_Controller {
 			}
 			else
 			{	
+				
+				// get expenses climed items list
+				$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields = "`expenses_climed`.*", $conditions = array('expenses_climed.claim_id'=>$id));
+
+				// get claim history
+				$fields = "expenses_climed.claim_id, expenses_climed.claim_no, expenses_climed.case_no,expenses_climed.claim_date,sum(expenses_climed.amount_claimed) as amount_claimed,sum(expenses_climed.amount_client_paid) as amount_client_paid,expenses_climed.currency,expenses_climed.pay_to";
+				$this->data['claim_history'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields, $conditions = array(), $joins = array(), $order_by = array(), $group_by = array('expenses_climed.claim_id'));
+				
+				// load dropdowns- countries, province, products data
+				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
+				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
+				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
+				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "");
+				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
+				$this->data['payees'] = $this->common_model->get_payees($field_name = "expenses_climed[payee][]", $selected = $this->input->post($field_name));
+
+				// get all documents for sending email/print.
+				$fields = "id, name, description";
+				$conditions = "type = 'claim'";
+				$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
+
+				// get all payees infomation
+				$fields = "*";
+				$conditions = "claim_id = '$id'";
+				$this->data['payees'] = $this->common_model->select($record = "list", $typecast = "array", $table = "payees", $fields, $conditions);
+
+				// get intake forms
+				$joins = [];
+				$joins[] = array(
+					'table' => 'users u1',
+					'on' => 'u1.id = intake_form.created_by',
+					'type' => 'LEFT'
+					);
+				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('intake_form.case_id'=>$id, 'type'=>'CLAIM'), $joins);
+
+				// load view data
+	        	$this->template->write('title', SITE_TITLE.' - Examine Claim', TRUE);
+		        $this->template->write_view('content', 'claim/examine_claim', $this->data);
+		        $this->template->render();  
+	        }      
+		}
+	}
+
+
+
+	// redirect if needed, otherwise display the edit case page
+	public function claim_detail($id)
+	{
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+			// get claim details
+			$joins[] = array(
+				'table' => 'users u1',
+				'on' => 'u1.id = claim.created_by',
+				'type' => 'LEFT'
+				);
+			$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('claim.id'=>$id), $joins);
+
+
+			//validate form input
+			$this->form_validation->set_rules('insured_first_name', 'Insured First Name', 'required');
+			$this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
+			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
+			$this->form_validation->set_rules('case_no', 'Case No', 'is_unique[claim.case_no]');
+			$this->form_validation->set_rules('school_name', 'School Name', 'required');
+			$this->form_validation->set_rules('group_id', 'Group ID', 'required');
+
+			if ($this->form_validation->run() == TRUE)
+			{
+				// prepare post data array
+				$data = [];
+				$array = $this->input->post();
+
+				foreach ($array as $key => $value) 
+				{
+					# code...
+					if($key <> "Examine" && $key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form" && !strpos($key, "ile_pdf"))
+						$data[$key] = $value;
+				}
+				$data['created'] = date('Y-m-d H:i:s');
+				$data['created_by'] = $this->ion_auth->user()->row()->id;
+
+				// upload claim pdf files to server
+				$files = @$_FILES['files_multi'];
+				$file_names = [];
+
+				// load upload class
+				$config['upload_path'] = './assets/uploads/claim_files/';
+				$config['allowed_types'] = '*';
+				$config['overwrite'] = FALSE;
+				$this->load->library('upload', $config);
+
+				// initialize upload config
+				$this->upload->initialize($config);
+				if(!empty($files))
+				{	foreach ($files['name'] as $key => $value) 
+					{	
+						if($files['name'][$key])
+						{
+							$_FILES['userfile']['name'] = $files['name'][$key];
+			                $_FILES['userfile']['type'] = $files['type'][$key];
+			                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+			                $_FILES['userfile']['error'] = $files['error'][$key];
+			                $_FILES['userfile']['size'] = $files['size'][$key];
+							
+							// upload file to server
+							$this->upload->do_upload();
+							$file_data = $this->upload->data();
+							$file_names[] = $file_data['file_name'];
+						}
+					}
+				}
+
+				// get old files
+				$old_files = $this->data['claim_details']['files'];
+
+				$data['files'] = ($old_files?$old_files.",":"").implode(",", $file_names);
+
+				// insert values to database
+				$this->common_model->update("claim", $data, array('id'=>$id));
+				$record_id = $id;
+
+				// move all files to that directory
+				if(!empty($file_names))
+					foreach ($file_names as $fname)
+					{
+						copy("./assets/uploads/claim_files/$fname", "./assets/uploads/claim_files/$record_id/$fname");
+						unlink("./assets/uploads/claim_files/$fname");
+					}
+
+				// insert payee information
+				if(!empty($array['payees']))
+				{	
+					foreach($array['payees']['bank'] as $key => $val)	
+					{
+						$payee_data = array(
+							'claim_id'=>$record_id,
+							'bank'=>$val,
+							'payee_name'=>$array['payees']['payee_name'][$key],
+							'account_cheque'=>$array['payees']['account_cheque'][$key],
+							'payment'=>$array['payees']['payment'][$key],
+							'payee_currency'=>$array['payees']['payee_currency'][$key],
+							'payee_currency_rate'=>$array['payees']['payee_currency_rate'][$key],
+							'created'=>date('Y-m-d H:i:s')
+							);
+						if($payee_id = $array['payees']['id'][$key])
+						{
+							unset($payee_data['created']);
+							$this->common_model->update("payees", $payee_data, array('id'=>$payee_id));	
+						} 
+						else
+						{
+							$this->common_model->save("payees", $payee_data);	
+						}
+					}
+				}
+
+				// insert intake notes
+				// insert intake forms if exists
+				$no_of_form = $array['no_of_form'];
+
+				// load upload class
+				$config['upload_path'] = './assets/uploads/intake_forms/';
+				$config['allowed_types'] = '*';
+				$config['overwrite'] = FALSE;
+				$this->load->library('upload', $config);
+
+				// initialize upload config
+				$this->upload->initialize($config);
+				if($no_of_form)
+				{
+					// add intake form batch
+					for($i = 1; $i <= $no_of_form; $i++)
+					{
+						// initialize file names array
+						$file_names = [];
+
+						// upload files to server
+						$files = $_FILES['files_'.$i];
+						if(!empty($files))
+						{	foreach ($files['name'] as $key => $value) 
+							{	
+								if($files['name'][$key])
+								{
+									$_FILES['userfile']['name'] = $files['name'][$key];
+					                $_FILES['userfile']['type'] = $files['type'][$key];
+					                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+					                $_FILES['userfile']['error'] = $files['error'][$key];
+					                $_FILES['userfile']['size'] = $files['size'][$key];
+									
+									$field_name = 'userfile';
+
+									// upload file to server
+									$this->upload->do_upload();
+									$file_data = $this->upload->data();
+									$file_names[] = $file_data['file_name'];
+								}
+							}
+						}
+
+						// generate data array
+						$data_intake = array(
+							'case_id' => $record_id,
+							'created_by' => $this->ion_auth->user()->row()->id,
+							'notes' => $array['notes_'.$i],
+							'created' => date("Y-m-d H:i:s"),
+							'docs' => implode(",", $file_names),
+							'type'=>'CLAIM'
+							);
+
+						// save values to database
+						$intake_form_id = $this->common_model->save("intake_form", $data_intake);
+
+						// create directory to identify intake files
+						@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+
+						// move all files to that directory
+						if(!empty($file_names))
+							foreach ($file_names as $fname)
+							{
+								copy("./assets/uploads/intake_forms/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
+								unlink("./assets/uploads/intake_forms/$fname");
+							}
+					}
+				}
+
+				// send success message
+				$this->session->set_flashdata('success', "Claim successfully updated");
+
+				// redirect them to the login page
+				redirect('claim/claim_detail/'.$id, 'refresh');
+			}
+			else
+			{	
 
 				
 				// get expenses climed items list
@@ -657,8 +874,8 @@ class Claim extends CI_Controller {
 				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('intake_form.case_id'=>$id, 'type'=>'CLAIM'), $joins);
 
 				// load view data
-	        	$this->template->write('title', SITE_TITLE.' - Examine Claim', TRUE);
-		        $this->template->write_view('content', 'claim/examine_claim', $this->data);
+	        	$this->template->write('title', SITE_TITLE.' - Claim Details', TRUE);
+		        $this->template->write_view('content', 'claim/claim_detail', $this->data);
 		        $this->template->render();  
 	        }      
 		}
@@ -753,6 +970,34 @@ class Claim extends CI_Controller {
 
 		// update values to database
 		$this->common_model->update("expenses_climed", $data, array('id'=>$this->input->post('id')));
+
+		// update all comman values
+		$claim_no = $this->input->post('claim_no');
+		$case_no = $this->input->post('case_no');
+		$currency = $this->input->post('currency');
+		$pay_to = $this->input->post('pay_to');
+		$claim_id = $this->input->post('claim_id');
+		$invoice = $this->input->post('invoice');
+		$data = array(
+			'claim_no'=>$claim_no,
+			'case_no'=>$case_no,
+			'currency'=>$currency,
+			'pay_to'=>$pay_to,
+			'invoice'=>$invoice,
+			);
+
+		// update these all values to claim database
+		$this->common_model->update("expenses_climed", $data, array('claim_id'=>$claim_id));
+
+		// update case number in claim database		
+		$data = array(
+			'claim_no'=>$claim_no,
+			'case_no'=>$case_no,
+			);
+
+		// update claim no and case no values to claim database
+		$this->common_model->update("claim", $data, array('id'=>$claim_id));
+
 		echo TRUE;
 	}
 
@@ -976,10 +1221,75 @@ class Claim extends CI_Controller {
 			$fields = "concat_ws(' ', u1.first_name, u1.last_name) as claim_examiner, claim.id, claim.policy_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.claim_date, claim.status";
 			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "claim", $fields, $conditions, $joins, $order_by, $group_by = array());
 
+
+			$joins = [];
+			$joins[] = array(
+				'table' => 'claim',
+				'on' => 'claim.id = expenses_climed.claim_id',
+				'type' => 'LEFT'
+				);
+			$fields = "expenses_climed.claim_id,expenses_climed.claim_no,expenses_climed.invoice,expenses_climed.date_of_service,expenses_climed.coverage_code,expenses_climed.diagnosis,expenses_climed.amt_payable,expenses_climed.amt_deductable,expenses_climed.amt_insured, expenses_climed.case_no, expenses_climed.claim_date, sum(expenses_climed.amount_claimed) as amount_claimed, sum(expenses_climed.amount_client_paid) as amount_client_paid, expenses_climed.currency, expenses_climed.pay_to";
+			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields, $conditions, $joins, $order_by = array(), $group_by = array('expenses_climed.claim_id'));
+
+
         	$this->template->write('title', SITE_TITLE.' - Payments', TRUE);
 	        $this->template->write_view('content', 'claim/payments', $this->data);
 	        $this->template->render();        
 		}
+	}
+
+	// for ajax request
+	public function claim_items(){
+
+		// generate data array
+		$claim_id = $this->input->post('claim_id');
+		$case_no = $this->input->post('case_no');
+
+		// get expenses climed items list
+		$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields = "`expenses_climed`.*", $conditions = array('expenses_climed.claim_id'=>$claim_id));
+
+		// get case info details if exists
+		$joins[] = array(
+			'table' => 'users u1',
+			'on' => 'u1.id = case.created_by',
+			'type' => 'LEFT'
+			);
+		$joins[] = array(
+			'table' => 'users u2',
+			'on' => 'u2.id = case.case_manager',
+			'type' => 'LEFT'
+			);
+		$joins[] = array(
+			'table' => 'users u3',
+			'on' => 'u3.id = case.assign_to',
+			'type' => 'LEFT'
+			);
+		$this->data['case_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name,  concat_ws(' ', u3.first_name, u3.last_name) as assign_to_name", $conditions = array('case.case_no'=>$case_no), $joins);
+
+		$data = array(
+			'claim_items'=>$this->parser->parse("claim/claim_items", $this->data, TRUE),
+			'case_info'=>$this->parser->parse("claim/case_info", $this->data, TRUE)
+			);
+		echo json_encode($data);
+
+	}
+
+	// for ajax request
+	public function select_payees(){
+
+		// generate data array
+		$claim_id = $this->input->post('claim_id');
+
+		// get all payees infomation
+		$fields = "*";
+		$conditions = "claim_id = '$claim_id'";
+		$this->data['payees'] = $this->common_model->select($record = "list", $typecast = "array", $table = "payees", $fields, $conditions);
+
+		$data = array(
+			'payees'=>$this->parser->parse("claim/select_payees", $this->data, TRUE)
+			);
+		echo json_encode($data);
+
 	}
 
 
