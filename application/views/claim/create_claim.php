@@ -61,7 +61,7 @@
                      </div>
                      <?php echo form_error("dob"); ?>
                   </div>
-                  <div class="col-sm-3">
+                  <div class="form-group col-sm-3">
                      <?php 
                         echo form_label('Policy#:', 'policy_no', array("class"=>'col-sm-12'));                            
                         echo form_input("policy_no", ($this->input->post("policy_no")?$this->input->post("policy_no"):$this->input->get("policy")), array("class"=>"form-control", 'placeholder'=>'Policy#'));
@@ -69,14 +69,21 @@
                         echo form_hidden("policy_info");
                      ?>
                   </div>
-                  <div class="col-sm-3">
+                  <div class="form-group col-sm-3">
+                     <?php 
+                        echo form_label('Case No#:', 'case_no', array("class"=>'col-sm-12'));                            
+                        echo form_input("case_no", ($this->input->post("case_no")?$this->input->post("case_no"):$this->input->get("policy")), array("class"=>"form-control", 'placeholder'=>'Case No#'));
+                        echo form_error("case_no");
+                     ?>
+                  </div>
+                  <div class="form-group col-sm-3">
                      <?php 
                         echo form_label('School Name:', 'school_name', array("class"=>'col-sm-12'));                            
                         echo form_input("school_name", $this->input->post("school_name"), array("class"=>"form-control", 'placeholder'=>'School Name'));
                         echo form_error("school_name");
                      ?>
                   </div>
-                  <div class="col-sm-3">
+                  <div class="form-group col-sm-3">
                      <?php 
                         echo form_label('Group ID:', 'group_id', array("class"=>'col-sm-12'));                            
                         echo form_input("group_id", $this->input->post("group_id"), array("class"=>"form-control", 'placeholder'=>'Group ID'));

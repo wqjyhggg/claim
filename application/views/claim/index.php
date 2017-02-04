@@ -216,7 +216,6 @@
                            <td><?php echo date("d/d/Y", strtotime($value['effective_date'])); ?></td>
                            <td>Which data goes here</td>
                            <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
-                           <!-- <td><?php echo anchor("claim/create_claim?policy_no=".$value['policy'], "Open"); ?></td> -->
                            <td><?php echo anchor("emergency_assistance/view_policy?type=add_claim", "Open"); ?></td>
                         </tr>
                         <?php endforeach; ?>
@@ -460,7 +459,7 @@
                               <td><?php echo $value['claim_date']; ?></td>
                               <td>0</td>
                               <td><?php echo $value['claim_examiner']; ?></td>
-                              <td><?php echo anchor("claim/examine_claim/".$value['id'], "Detail"); ?></td>
+                              <td><?php echo anchor("claim/claim_detail/".$value['id'], "Detail"); ?></td>
                            </tr>
                         <?php endforeach; ?>
                         </tbody>

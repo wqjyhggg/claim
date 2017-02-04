@@ -118,5 +118,3 @@ defined('API_KEY')					OR define('API_KEY', "bw3mLCG8N5PU3aGm");
 
 // for email notification
 defined('FROM_EMAIL')				OR define('FROM_EMAIL', "info@jfclaim.com");
-
-

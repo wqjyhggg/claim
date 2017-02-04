@@ -9,6 +9,17 @@ Password: password
 
 
 #####################
+Feb, 04 2016 update:-
+#####################
+*****************************
+Claim and examine page update
+*****************************
+- Payment page search, list and payee info while selecting any claim - done
+- Wdit claim and claim detail page- done
+- Worked on examine claim page to show case info.
+
+
+#####################
 Feb, 01 2016 update:-
 #####################
 *****************************
