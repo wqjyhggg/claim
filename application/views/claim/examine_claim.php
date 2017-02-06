@@ -16,6 +16,8 @@
             </div>
             <div class="x_content">
                <?php if(!empty($expenses)): ?>
+
+                  <?php echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal', 'method'=>'post', 'id'=>'save_item')); ?>
                   <div class="row">
                      <div class="table-responsive">
                         <?php if(!empty($claim_history)): ?>
@@ -101,7 +103,6 @@
                   <div class="edit-claim-item" style="display:none">
                      <h4 class="claim-label">##########</h4>
                      <div class="row">
-                        <?php echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal', 'method'=>'post', 'id'=>'save_item')); ?>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_hidden("id");
@@ -262,80 +263,20 @@
                            <?php echo form_label('&nbsp;', 'save', array("class"=>'col-sm-12')); ?>
                            <input class="btn btn-primary" name="Save" value="Save" type="submit">  
                        </div>
-                        <?php echo form_close(); ?>
                      </div> 
                   </div>
 
                   <hr/>
-               
-               <?php endif;?>
-               <h4 style="margin-top:25px;">POLICY INFO</h4>
-               <div class="row">
-                  <div class="form-group col-sm-4">
-                     <?php echo form_label('Arrival Date:', 'arrival_date', array("class"=>'col-sm-12'));   ?>
-                     <div class="input-group date">
-                        <?php           
-                        // get policy info here
-                        $policy_info = json_decode($claim_details['policy_info'], TRUE);
-                        echo form_input("arrival_date", $policy_info['arrival_date'], array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date'));
-                        ?>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                     </div>
+                  <h4 style="margin-top:25px;">POLICY INFO</h4>
+                  <div class="row policy_info">
+                     
                   </div>
-                  <div class="form-group col-sm-4">
-                     <?php echo form_label('Effective Date:', 'effective_date', array("class"=>'col-sm-12'));   ?>
-                     <div class="input-group date">
-                        <?php                
-                        echo form_input("effective_date", $policy_info['effective_date'], array("class"=>"form-control datepicker", 'placeholder'=>'Effective Date'));
-                        ?>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                     </div>
-                  </div>
-                  <div class="form-group col-sm-4">
-                     <?php echo form_label('Expiry Date:', 'expiry_date', array("class"=>'col-sm-12'));   ?>
-                     <div class="input-group date">
-                        <?php                
-                        echo form_input("expiry_date", $policy_info['expiry_date'], array("class"=>"form-control datepicker", 'placeholder'=>'Expiry Date'));
-                        ?>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                     </div>
-                  </div>
-
-
-                  <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Premium: $ 565.75', 'Premium', array("class"=>'col-sm-12'));
-                     ?>
-                  </div>
-                  <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Sum Insured: $ '.$policy_info['sum_insured'], 'Sum Insured', array("class"=>'col-sm-12'));
-                     ?>
-                  </div>
-                  <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Deductable Amount: $ '.$policy_info['deductible_amount'], 'Deductable Amount', array("class"=>'col-sm-12'));
-                     ?>
-                  </div>
-                  <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Pre-existion condition coverage:', 'existion_condition', array("class"=>'col-sm-12')); 
-                        $existion_condition = array(
-                              "With stable pre-existing condition coverage"=>'With stable pre-existing condition coverage',
-                              'Without stable pre-existing condition coverage'=>'Without stable pre-existing condition coverage'
-                           );
-                        echo form_dropdown("existion_condition", $existion_condition, $this->input->get("existion_condition"), array("class"=>'form-control'));
-                     ?>
-                  </div>
-               </div>
                <hr/>
 
-               <?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post')); ?>
                <h4 style="margin-top:25px;" class="move_down">CASE INFO <i class="fa fa-angle-down pull-right"></i></h4>
                <div class="case_info" style="display:none">
                   
                </div>
-
                <div class="row" style="margin-top:20px">
                   <div class="row">
                      <div class="col-sm-2">
@@ -380,7 +321,9 @@
                </div>
 
                <?php echo form_close(); ?>
-
+               
+               <?php endif;?>
+               
             </div>
          </div>
       </div>
@@ -1045,7 +988,7 @@
                city:$("#send_print_email  input[name=city_email]").val(), 
                province:$("#send_print_email  select[name=province_email]").val(), 
                template:template,
-               case_id: "<?php echo $claim_details['id']; ?>",
+               case_id: $(".select_payees.active-green").attr('alt'),
                doc: $("#send_print_email .select-doc.active").text(),
                type: $("#send_print_email input[name=type]").val()
             },
@@ -1067,14 +1010,14 @@
             url: "<?php echo base_url("claim/status/accept") ?>",
             method: "post",
             data:{
-               claim_id:"<?php echo $claim_details['id']; ?>", 
+               claim_id:$(".select_payees.active-green").attr('alt'), 
             },
             beforeSend: function(){
                $(".main_container").addClass("csspinner load1");
             },
             success: function() {
                // redirect to payment page
-               window.location = "<?php echo base_url("claim/payments?claim=".$claim_details['id']); ?>";
+               //window.location = "<?php //echo base_url("claim/payments?claim=".$claim_details['id']); ?>";
             }
          })
       } else {
@@ -1132,6 +1075,8 @@
             $(".claim_items").html(result.claim_items)
             $(".main_container").removeClass("csspinner load1");
             $(".case_info").html(result.case_info)
+            $(".policy_info").html(result.policy_info)
+            
          }
       })
    })

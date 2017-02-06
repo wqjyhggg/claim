@@ -1274,6 +1274,19 @@
       {
          $("input[name=street_address],input[name=city],input[name=province],input[name=telephone],input[name=email],input[name=post_code],input[name=arrival_date_canada],input[name=cellular]").val("");
       }
+   })
+
+
+   // when currency changed in payees section
+   .on("change", 'select[name="payees[payee_currency][]"]', function(){
+      if($(this).val() == 'CAD'){
+         // add currency rate option
+         $(this).parent("td").next("td").children("input").attr("readonly", "readonly").val("");
+      } else {
+         // remove currency rate option
+         $(this).parent("td").next("td").children("input").removeAttr("readonly");
+
+      }
    });
 
    <?php

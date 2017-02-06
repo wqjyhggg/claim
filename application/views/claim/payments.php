@@ -106,52 +106,56 @@
                         </table>
                   <?php endif; ?>
                </div>
-               <h2>PAYEE INFORMATION<small></small></h2>
-               <div class="row">
-                  <div class="col-sm-12">
-                     <div class="col-sm-3">
-                        <?php 
-                        echo form_radio("payment_type", "cheque", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Cheque
-                     </div>
-                     <div class="col-sm-3">
-                        <?php 
-                        echo form_radio("payment_type", "wire transfer", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Wire Transfer
-                     </div>
+               <div class="payee_section" style="display:none">
+                  <h2>PAYEE INFORMATION<small></small></h2>
+                  <?php echo form_open("claim/confirm_payment", array('class'=>'form-horizontal', 'method'=>'post', 'id'=>'confirm_payment')); echo form_hidden('claim_id') ?>
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <div class="col-sm-3">
+                           <?php 
+                           echo form_radio("payment_type", "cheque", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Cheque
+                        </div>
+                        <div class="col-sm-3">
+                           <?php 
+                           echo form_radio("payment_type", "wire transfer", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Wire Transfer
+                        </div>
 
-                     <div class="col-sm-3">
-                        <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button>
+                        <div class="col-sm-3">
+                           <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button>
+                        </div>
                      </div>
                   </div>
-               </div>
-               <div class="row">
-                  <div class="col-sm-12 payees_items">
-                     <table class="table table-hover table-bordered">
-                        <thead>
-                           <tr>
-                              <th>Bank Name</th>
-                              <th>Payee Name</th>
-                              <th>Account/Cheque#</th>
-                              <th>Payment</th>
-                              <th>Currency</th>
-                              <th>Currency Rate</th>
-                              <th>&nbsp;</th>                    
-                           </tr>
-                        </thead>
-                        <tbody class="payee-data">                                                     
-                        </tbody>
-                     </table>
+                  <div class="row">
+                     <div class="col-sm-12 payees_items">
+                        <table class="table table-hover table-bordered">
+                           <thead>
+                              <tr>
+                                 <th>Bank Name</th>
+                                 <th>Payee Name</th>
+                                 <th>Account/Cheque#</th>
+                                 <th>Payment</th>
+                                 <th>Currency</th>
+                                 <th>Currency Rate</th>
+                                 <th>&nbsp;</th>
+                              </tr>
+                           </thead>
+                           <tbody class="payee-data">                                                     
+                           </tbody>
+                        </table>
+                     </div>
                   </div>
-               </div>
-               <div class="row" style="margin-top:20px">
-                  <div class="col-sm-2">
-                     <input class="btn btn-primary" name="Confirm Payment" value="Confirm Payment" type="submit">   
+                  <div class="row" style="margin-top:20px">
+                     <div class="col-sm-2">
+                        <input class="btn btn-primary" name="Confirm_Payment" value="Confirm Payment" type="submit">   
+                     </div>
+                     <div class="col-sm-1">
+                        <?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
+                     </div>
+                     <div class="col-sm-2"> 
+                        <input class="btn btn-primary" name="Close_Claim" value="Close Claim" type="button">  
+                     </div>
                   </div>
-                  <div class="col-sm-1">
-                     <?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
-                  </div>
-                  <div class="col-sm-2"> 
-                     <input class="btn btn-primary" name="Examine" value="Close Claim" type="submit">  
-                  </div>
+                  <?php echo form_close(); ?>
                </div>
             </div>
          </div>
@@ -236,6 +240,9 @@ $(document).on("click", "button[name=search_claim]", function(){
 .on('click', ".select_payees", function(){
    var claim_id = $(this).attr('alt');
 
+   // enable payee section
+   $(".payee_section").slideDown();
+
    // settings for activate listing
    $(".select_payees").removeClass('active-green');
    $(this).addClass('active-green');
@@ -255,8 +262,53 @@ $(document).on("click", "button[name=search_claim]", function(){
 
          // place data table to releted section
          $(".payees_items").html(result.payees)
+
+         // show payment type here
+         $("input[value='"+result.payment_type+"']").prop("checked", true);
+
+         // place claim id
+         $("input[name=claim_id]").val(claim_id);
+
+         // remove loader function
          $(".main_container").removeClass("csspinner load1");
       }
    })
+})
+
+.on("submit", "#confirm_payment", function(e){
+   e.preventDefault();
+
+   var claim_id = $(".select_payees.active-green").attr('alt');
+
+   // confirm payment code goes here.
+   $.ajax({
+      url: $(this).attr("action"),
+      method: "post",
+      data:$(this).serialize(),
+      dataType:"json",
+      beforeSend: function(){
+         $(".main_container").addClass("csspinner load1");
+      },
+      success: function(result) {
+         window.location.reload();
+      }
+   })
+
+})
+
+.on("click", "input[name=Close_Claim]", function(e){
+   e.preventDefault();
+})
+
+// when currency changed in payees section
+.on("change", 'select[name="payees[payee_currency][]"]', function(){
+   if($(this).val() == 'CAD'){
+      // add currency rate option
+      $(this).parent("td").next("td").children("input").attr("readonly", "readonly").val("");
+   } else {
+      // remove currency rate option
+      $(this).parent("td").next("td").children("input").removeAttr("readonly");
+
+   }
 })
 </script>

@@ -415,7 +415,7 @@ class Claim extends CI_Controller {
 
 
 	// redirect if needed, otherwise display the edit case page
-	public function examine_claim($id)
+	public function examine_claim($id = 0)
 	{
 		if (!$this->ion_auth->logged_in())
 		{
@@ -600,7 +600,7 @@ class Claim extends CI_Controller {
 			{	
 				
 				// get expenses climed items list
-				$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields = "`expenses_climed`.*", $conditions = array('expenses_climed.claim_id'=>$id));
+				$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields = "`expenses_climed`.*", $conditions = $id?array('expenses_climed.claim_id'=>$id):array());
 
 				// get claim history
 				$fields = "expenses_climed.claim_id, expenses_climed.claim_no, expenses_climed.case_no,expenses_climed.claim_date,sum(expenses_climed.amount_claimed) as amount_claimed,sum(expenses_climed.amount_client_paid) as amount_client_paid,expenses_climed.currency,expenses_climed.pay_to";
@@ -1266,8 +1266,13 @@ class Claim extends CI_Controller {
 			);
 		$this->data['case_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name,  concat_ws(' ', u3.first_name, u3.last_name) as assign_to_name", $conditions = array('case.case_no'=>$case_no), $joins);
 
+		// get policy info from claim page
+		$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.policy_info", $conditions = array('claim.id'=>$claim_id));
+			
+
 		$data = array(
 			'claim_items'=>$this->parser->parse("claim/claim_items", $this->data, TRUE),
+			'policy_info'=>$this->parser->parse("claim/policy_info", $this->data, TRUE),
 			'case_info'=>$this->parser->parse("claim/case_info", $this->data, TRUE)
 			);
 		echo json_encode($data);
@@ -1280,17 +1285,64 @@ class Claim extends CI_Controller {
 		// generate data array
 		$claim_id = $this->input->post('claim_id');
 
+		// get payment type wire or cheque		
+		$fields = "payment_type, ";
+		$conditions = "id = '$claim_id'";
+		$this->data['data'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields, $conditions);
+
 		// get all payees infomation
 		$fields = "*";
 		$conditions = "claim_id = '$claim_id'";
 		$this->data['payees'] = $this->common_model->select($record = "list", $typecast = "array", $table = "payees", $fields, $conditions);
 
 		$data = array(
-			'payees'=>$this->parser->parse("claim/select_payees", $this->data, TRUE)
+			'payees'=>$this->parser->parse("claim/select_payees", $this->data, TRUE),
+			'payment_type'=>$this->data['data']['payment_type']
 			);
 		echo json_encode($data);
 
 	}
+
+
+	// for ajax request
+	public function confirm_payment(){
+
+		// generate data array
+		$claim_id = $this->input->post('claim_id');
+
+		$array = $this->input->post();
+
+		// get all payees list and insert it
+		// insert payee information
+		if(!empty($array['payees']))
+		{
+			// remove payees from db to reload new pay
+			$this->common_model->delete('payees', array('claim_id' => $claim_id));
+
+			foreach($array['payees']['bank'] as $key => $val)	
+			{
+
+				$payee_data = array(
+					'claim_id'=>$claim_id,
+					'bank'=>$val,
+					'payee_name'=>$array['payees']['payee_name'][$key],
+					'account_cheque'=>$array['payees']['account_cheque'][$key],
+					'payment'=>$array['payees']['payment'][$key],
+					'payee_currency'=>$array['payees']['payee_currency'][$key],
+					'payee_currency_rate'=>$array['payees']['payee_currency_rate'][$key],
+					'created'=>date('Y-m-d H:i:s')
+					);
+				$this->common_model->save("payees", $payee_data);
+			}
+		}
+
+		// update claim status to complete
+		$this->common_model->update("claim", array("is_complete"=>'Y', 'status'=>'paid'), array("id"=>$claim_id));
+
+		echo TRUE;
+
+	}
+
 
 
 }
