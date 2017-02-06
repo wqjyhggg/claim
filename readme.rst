@@ -9,6 +9,14 @@ Password: password
 
 
 #####################
+Feb, 06 2016 update:-
+#####################
+- Worked on payment page 
+- confirm payment and add multiple payees function- done
+- Worked on examine claim page to show the policy info section.
+
+
+#####################
 Feb, 04 2016 update:-
 #####################
 *****************************

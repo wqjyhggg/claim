@@ -1358,6 +1358,18 @@
       }
    })
 
+   // when currency changed
+   .on("change", 'select[name="payees[payee_currency][]"]', function(){
+      if($(this).val() == 'CAD'){
+         // add currency rate option
+         $(this).parent("td").next("td").children("input").attr("readonly", "readonly").val("");
+      } else {
+         // remove currency rate option
+         $(this).parent("td").next("td").children("input").removeAttr("readonly");
+
+      }
+   })
+
 // create input boxes where the requirement need
 var $outer = $(".outer-text");
 $outer.each(function(){
