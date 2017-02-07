@@ -12,8 +12,6 @@
 
 	<li> <?php echo anchor("claim", '<i class="fa fa-files-o"></i>Claim</a>', array("class"=>'leftmeun')) ?> </li>
 
-	<li> <a href="#" class="leftmeun"><i class="fa fa-upload"></i>Upload claim</a> </li>
-
 	<?php if ($this->ion_auth->is_casemamager()): ?>
 	<li> <?php echo anchor("emergency_assistance/schedule", '<i class="fa fa-calendar"></i>Schedule</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>

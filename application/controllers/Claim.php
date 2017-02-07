@@ -413,7 +413,6 @@ class Claim extends CI_Controller {
 	}
 
 
-
 	// redirect if needed, otherwise display the edit case page
 	public function examine_claim($id = 0)
 	{
@@ -486,7 +485,7 @@ class Claim extends CI_Controller {
 				// get old files
 				$old_files = $this->data['claim_details']['files'];
 
-				$data['files'] = ($old_files?$old_files.",":"").implode(",", $file_names);
+				$data['files'] = ($old_files ? $old_files."," : "").implode(",", $file_names);
 
 				// insert values to database
 				$this->common_model->update("claim", $data, array('id'=>$id));
@@ -632,6 +631,30 @@ class Claim extends CI_Controller {
 					'type' => 'LEFT'
 					);
 				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('intake_form.case_id'=>$id, 'type'=>'CLAIM'), $joins);
+
+
+				// get case info details if exists
+				$joins = [];
+				$joins[] = array(
+					'table' => 'users u1',
+					'on' => 'u1.id = case.created_by',
+					'type' => 'LEFT'
+					);
+				$joins[] = array(
+					'table' => 'users u2',
+					'on' => 'u2.id = case.case_manager',
+					'type' => 'LEFT'
+					);
+				$joins[] = array(
+					'table' => 'users u3',
+					'on' => 'u3.id = case.assign_to',
+					'type' => 'LEFT'
+					);
+				$this->data['case_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name,  concat_ws(' ', u3.first_name, u3.last_name) as assign_to_name", $conditions = array('case.case_no'=>$this->data['claim_details']['case_no']), $joins);
+
+
+				$this->data['policy_info'] = $this->parser->parse("claim/policy_info", $this->data, TRUE);
+				$this->data['case_info'] = $this->parser->parse("claim/case_info", $this->data, TRUE);
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Examine Claim', TRUE);
@@ -967,6 +990,12 @@ class Claim extends CI_Controller {
 		$data = $this->input->post();
 		unset($data['id']);
 		unset($data['Save']);
+		unset($data['arrival_date']);
+		unset($data['effective_date']);
+		unset($data['expiry_date']);
+		unset($data['existion_condition']);
+		unset($data['arrival_date']);
+		unset($data['arrival_date']);
 
 		// update values to database
 		$this->common_model->update("expenses_climed", $data, array('id'=>$this->input->post('id')));
@@ -997,6 +1026,9 @@ class Claim extends CI_Controller {
 
 		// update claim no and case no values to claim database
 		$this->common_model->update("claim", $data, array('id'=>$claim_id));
+
+		// update policy info data
+
 
 		echo TRUE;
 	}
@@ -1064,6 +1096,7 @@ class Claim extends CI_Controller {
 		$template = $this->input->post("template");
 		$doc = $this->input->post("doc");
 		$case_id = $this->input->post("case_id");
+		$claim_item_id = $this->input->post("claim_item_id");
 		$type = $this->input->post("type");
 
 		// create pdf from template	 using DOM PDF	
@@ -1107,7 +1140,7 @@ class Claim extends CI_Controller {
 		if($type == 'deny')
 		{
 			// deny cliam and close its details
-			$this->common_model->update("claim", array('status'=>'denied'), array("id"=>$case_id));
+			$this->common_model->update("expenses_climed", array('status'=>'denied'), array("id"=>$claim_item_id));
 
 			// send success message
 			$this->session->set_flashdata('success', "Claim denied successfully.");
@@ -1156,18 +1189,26 @@ class Claim extends CI_Controller {
 	}
 
 	// change status of claim - for ajax request
-	public function status($type = "accept") 
+	public function status($type = "accepted") 
 	{
-		$claim_id = $this->input->post("claim_id");
+		$claim_item_id = $this->input->post("claim_item_id");
 
-		if($type == 'accept')
-			$data = array(
-				'is_accepted'=>'Y'
-				);	
-		$this->common_model->update("claim", $data, array("id"=>$claim_id));
+		$data = array(
+			'status'=>$type
+			);	
+		$this->common_model->update("expenses_climed", $data, array("id"=>$claim_item_id));
 
 		// send success message
-		$this->session->set_flashdata('success', "Claim  successfully accepted");
+		if($type == "accepted")
+			$this->session->set_flashdata('success', "Claim item successfully accepted");
+
+		// send success message
+		if($type == "pending")
+			$this->session->set_flashdata('success', "Claim item successfully mark as pending");
+
+		// send success message
+		if($type == "record_exempt")
+			$this->session->set_flashdata('success', "Claim item successfully mark as record exempt");
 
 		echo TRUE;
 
@@ -1338,6 +1379,17 @@ class Claim extends CI_Controller {
 
 		// update claim status to complete
 		$this->common_model->update("claim", array("is_complete"=>'Y', 'status'=>'paid'), array("id"=>$claim_id));
+
+		echo TRUE;
+
+	}
+
+
+	// delete intake form here for ajax request
+	public function delete_payee($payee_id) 
+	{
+		// delete intake form
+		$this->common_model->delete('payees', array('id' => $payee_id));
 
 		echo TRUE;
 

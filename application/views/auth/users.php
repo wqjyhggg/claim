@@ -72,6 +72,7 @@
                   <table class="table table-hover table-bordered">
                      <thead>
                         <tr>
+                           <th><?php echo $this->pagination->sort("id", "UserID") ?></th>
                            <th><?php echo $this->pagination->sort("first_name", "First Name") ?></th>
                            <th><?php echo $this->pagination->sort("last_name", "Last Name") ?></th>
                            <th><?php echo $this->pagination->sort("email", "Email Address") ?></th>
@@ -83,6 +84,7 @@
                      <tbody>
                      <?php foreach ($users as $user):?>
                         <tr>
+                           <td>#<?php echo htmlspecialchars($user['id'],ENT_QUOTES,'UTF-8');?></td>
                            <td><?php echo htmlspecialchars($user['first_name'],ENT_QUOTES,'UTF-8');?></td>
                            <td><?php echo htmlspecialchars($user['last_name'],ENT_QUOTES,'UTF-8');?></td>
                            <td><?php echo htmlspecialchars($user['email'],ENT_QUOTES,'UTF-8');?></td>
