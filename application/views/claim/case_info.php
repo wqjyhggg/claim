@@ -4,29 +4,24 @@
       ?>
       <h4>Case Basic Info option<small></small></h4>
       <div class="row">
-      <div class="form-group col-sm-4">
-         <?php 
-            echo form_label('Case Number:', 'case_no', array("class"=>'col-sm-12'));  
-            ?>
+         <div class="form-group col-sm-4">
+            <?php echo form_label('Case Number:', 'case_no', array("class"=>'col-sm-12')); ?>
             <div class="form-group col-sm-12">
                <?php echo $case_details['case_no']; ?>
             </div>
-            <?php
-            echo form_error("case_no");
-         ?>
-      </div>
-      <div class="form-group col-sm-4">
-         <?php echo form_label('Create Date:', 'created', array("class"=>'col-sm-12')); ?>
-         <div class="form-group col-sm-12">
-            <?php echo date("Y-m-d", strtotime($case_details['created'])); ?>
          </div>
-      </div> 
-      <div class="form-group col-sm-4">
-         <?php echo form_label('Created By:', 'created_by', array("class"=>'col-sm-12')); ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['created_by']; ?>
+         <div class="form-group col-sm-4">
+            <?php echo form_label('Create Date:', 'created', array("class"=>'col-sm-12')); ?>
+            <div class="form-group col-sm-12">
+               <?php echo date("Y-m-d", strtotime($case_details['created'])); ?>
+            </div>
+         </div> 
+         <div class="form-group col-sm-4">
+            <?php echo form_label('Created By:', 'created_by', array("class"=>'col-sm-12')); ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['created_by']; ?>
+            </div>
          </div>
-      </div>
       </div> 
 
       <h4>Visiting Address<small></small></h4>

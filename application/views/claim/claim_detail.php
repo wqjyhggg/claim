@@ -1022,6 +1022,16 @@
    })
    .on("click", ".remove-payee", function(){
       $(this).parent("td").parent("tr").remove();
+
+      // remove payee from db if already stored
+      var payee_id = $(this).parent("td").parent("tr").find("input[name='payees[id][]']").val();
+      if(payee_id){         
+         $.ajax({
+            url: "<?php echo base_url("claim/delete_payee/") ?>"+payee_id,
+            method: "get"
+         })
+
+      }
    })
 
    // show email/print function

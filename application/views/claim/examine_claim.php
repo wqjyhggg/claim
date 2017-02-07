@@ -81,7 +81,7 @@
                               <?php 
                               $i = 1;
                               foreach ($expenses as $key => $value): $value['count'] = $i; ?>
-                                 <tr class="edit_claim row-link" attr='<?php echo json_encode($value); ?>'>
+                                 <tr class="edit_claim row-link <?php if($value['status']=='record_exempt') echo 'claim_record_exempt'; ?>" alt="<?php echo $value['id'] ?>" attr='<?php echo json_encode($value); ?>'>
                                     <td><?php echo $i; ?></td>
                                     <td><?php echo $value['claim_no'] ?></td>
                                     <td><?php echo $value['invoice'] ?></td>
@@ -259,25 +259,21 @@
                               echo form_input("comment", $this->input->post("comment"), array("class"=>"form-control", 'placeholder'=>'Comment'));
                            ?>
                         </div>
-                        <div class="col-sm-2"> 
-                           <?php echo form_label('&nbsp;', 'save', array("class"=>'col-sm-12')); ?>
-                           <input class="btn btn-primary" name="Save" value="Save" type="submit">  
-                       </div>
                      </div> 
                   </div>
 
                   <hr/>
                   <h4 style="margin-top:25px;">POLICY INFO</h4>
                   <div class="row policy_info">
-                     
+                     <?php echo $policy_info;  ?>
                   </div>
                <hr/>
 
                <h4 style="margin-top:25px;" class="move_down">CASE INFO <i class="fa fa-angle-down pull-right"></i></h4>
                <div class="case_info" style="display:none">
-                  
+                  <?php echo $case_info; ?>
                </div>
-               <div class="row" style="margin-top:20px">
+               <div class="row actions" style="margin-top:20px; display:none">
                   <div class="row">
                      <div class="col-sm-2">
                         <input class="btn btn-primary" name="Save" value="Save" type="submit">   
@@ -952,6 +948,9 @@
         minLength: 2,
         dataType: "json",
       });
+
+      // enable all buttons
+      $(".actions").show();
    })
 
    .on("submit", "#save_item", function(e){
@@ -988,7 +987,8 @@
                city:$("#send_print_email  input[name=city_email]").val(), 
                province:$("#send_print_email  select[name=province_email]").val(), 
                template:template,
-               case_id: $(".select_payees.active-green").attr('alt'),
+               case_id: $(".select_claim.active-green").attr('alt'),
+               claim_item_id:$(".edit_claim.active-green").attr('alt'), 
                doc: $("#send_print_email .select-doc.active").text(),
                type: $("#send_print_email input[name=type]").val()
             },
@@ -1004,20 +1004,66 @@
 
    // once user clicked on accept button 
    .on("click", "input[name=Accept]", function(){
-      if(confirm('Are you sure you want to accept claim?')){
+      if(confirm('Are you sure you want to accept claim item?')){
 
          $.ajax({
-            url: "<?php echo base_url("claim/status/accept") ?>",
+            url: "<?php echo base_url("claim/status/accepted") ?>",
             method: "post",
             data:{
-               claim_id:$(".select_payees.active-green").attr('alt'), 
+               claim_id:$(".select_claim.active-green").attr('alt'), 
+               claim_item_id:$(".edit_claim.active-green").attr('alt'), 
             },
             beforeSend: function(){
                $(".main_container").addClass("csspinner load1");
             },
             success: function() {
-               // redirect to payment page
-               //window.location = "<?php //echo base_url("claim/payments?claim=".$claim_details['id']); ?>";
+               window.location.reload();
+            }
+         })
+      } else {
+         return false;
+      }
+   })
+
+   // once user clicked on Investigate Pending button 
+   .on("click", "input[name='Investigate Pending']", function(){
+      if(confirm('Are you sure you want to mark this claim item as pending?')){
+
+         $.ajax({
+            url: "<?php echo base_url("claim/status/pending") ?>",
+            method: "post",
+            data:{
+               claim_id:$(".select_claim.active-green").attr('alt'), 
+               claim_item_id:$(".edit_claim.active-green").attr('alt'), 
+            },
+            beforeSend: function(){
+               $(".main_container").addClass("csspinner load1");
+            },
+            success: function() {
+               window.location.reload();
+            }
+         })
+      } else {
+         return false;
+      }
+   })
+
+   // once user clicked on Investigate Pending button 
+   .on("click", "input[name='Record Exempt']", function(){
+      if(confirm('Are you sure you want to mark this claim item as record exempt?')){
+
+         $.ajax({
+            url: "<?php echo base_url("claim/status/record_exempt") ?>",
+            method: "post",
+            data:{
+               claim_id:$(".select_claim.active-green").attr('alt'), 
+               claim_item_id:$(".edit_claim.active-green").attr('alt'), 
+            },
+            beforeSend: function(){
+               $(".main_container").addClass("csspinner load1");
+            },
+            success: function() {
+               window.location.reload();
             }
          })
       } else {

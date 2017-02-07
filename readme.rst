@@ -9,6 +9,15 @@ Password: password
 
 
 #####################
+Feb, 07 2016 update:-
+#####################
+- Enable save/accept/deny/investigate pending/record exampt related to claim item
+- Enable highlight when claim item record for exampt
+- User Management-> Create User page, here, not "EAC manager" , correct name is "EAC" - done
+- User Management page, Here add a UserID column - done
+
+
+#####################
 Feb, 06 2016 update:-
 #####################
 - Worked on payment page 
