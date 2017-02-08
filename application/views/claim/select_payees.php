@@ -3,10 +3,9 @@
       <tr>
          <th>Bank Name</th>
          <th>Payee Name</th>
-         <th>Account/Cheque#</th>
+         <th>Account#</th>
          <th>Payment</th>
-         <th>Currency</th>
-         <th>Currency Rate</th>
+         <th class="cheque_section">Address</th>
          <th>&nbsp;</th>                    
       </tr>
    </thead>
@@ -28,7 +27,7 @@
             </td>
             <td>
                <?php 
-                  echo form_input("payees[account_cheque][]", $value["account_cheque"], array("class"=>"form-control", 'placeholder'=>'Account/Cheque#'));
+                  echo form_input("payees[account_cheque][]", $value["account_cheque"], array("class"=>"form-control", 'placeholder'=>'Account'));
                ?>
             </td>
             <td>
@@ -36,19 +35,9 @@
                   echo form_input("payees[payment][]", $value["payment"], array("class"=>"form-control", 'placeholder'=>'Payment'));
                ?>
             </td>
-            <td>
+            <td class="cheque_section">
                <?php 
-               $payee_currency = array(
-                        "USD"=>'USD',
-                        "CAD"=>'CAD',
-                        "CNY"=>'CNY',
-                     );
-                  echo form_dropdown("payees[payee_currency][]", $payee_currency, $value["payee_currency"], array("class"=>'form-control'));
-               ?>
-            </td>
-            <td>
-               <?php 
-                  echo form_input("payees[payee_currency_rate][]", $value["payee_currency_rate"], array("class"=>"form-control", 'placeholder'=>'Currency Rate'));
+                  echo form_input("payees[address][]", $value["address"], array("class"=>"form-control", 'placeholder'=>'Address'));
                ?>
             </td>
             <td>

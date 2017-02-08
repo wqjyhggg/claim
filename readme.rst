@@ -9,6 +9,18 @@ Password: password
 
 
 #####################
+Feb, 08 2016 update:-
+#####################
+Please find attached reports for work update and these report contain some query, please reply asap.
+
+http://brsoftech.org/Documents/updated_requirement_doc_0.docx
+
+http://brsoftech.org/Documents/question_record_0.docx
+
+
+
+
+#####################
 Feb, 07 2016 update:-
 #####################
 - Enable save/accept/deny/investigate pending/record exampt related to claim item

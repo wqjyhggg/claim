@@ -117,7 +117,7 @@
                         </div>
                         <div class="col-sm-3">
                            <?php 
-                           echo form_radio("payment_type", "wire transfer", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Wire Transfer
+                           echo form_radio("payment_type", "direct deposit", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Direct Deposit
                         </div>
 
                         <div class="col-sm-3">
@@ -132,10 +132,9 @@
                               <tr>
                                  <th>Bank Name</th>
                                  <th>Payee Name</th>
-                                 <th>Account/Cheque#</th>
+                                 <th>Account</th>
                                  <th>Payment</th>
-                                 <th>Currency</th>
-                                 <th>Currency Rate</th>
+                                 <th class="cheque_section">Address</th>
                                  <th>&nbsp;</th>
                               </tr>
                            </thead>
@@ -187,21 +186,11 @@
                echo form_input("payees[payment][]", $this->input->post("payment"), array("class"=>"form-control", 'placeholder'=>'Payment'));
             ?>
          </td>
-         <td>
+         <td class="cheque_section">
             <?php 
-               $payee_currency = array(
-                     "USD"=>'USD',
-                     "CAD"=>'CAD',
-                     "CNY"=>'CNY',
-                  );
-               echo form_dropdown("payees[payee_currency][]", $payee_currency, $this->input->get("payee_currency"), array("class"=>'form-control'));
+               echo form_input("payees[address][]", $this->input->post("address"), array("class"=>"form-control", 'placeholder'=>'Address#'));
             ?>
-         </td>
-         <td>
-            <?php 
-               echo form_input("payees[payee_currency_rate][]", $this->input->post("payee_currency_rate"), array("class"=>"form-control", 'placeholder'=>'Currency Rate'));
-            ?>
-         </td>
+         </td>      
          <td>
             <i class="fa fa-trash row-link remove-payee"></i>
          </td>
@@ -271,6 +260,12 @@ $(document).on("click", "button[name=search_claim]", function(){
 
          // remove loader function
          $(".main_container").removeClass("csspinner load1");
+
+         if(result.payment_type == 'cheque'){
+            $(".cheque_section").show();
+         } else {
+            $(".cheque_section").hide();
+         }
       }
    })
 })
@@ -311,4 +306,14 @@ $(document).on("click", "button[name=search_claim]", function(){
 
    }
 })
+
+// once user select pay type
+.on("click", "input[name=payment_type]", function(){
+   if($(this).val() == 'cheque'){
+      $(".cheque_section").show();
+   } else {
+      $(".cheque_section").hide();
+   }
+})
+
 </script>

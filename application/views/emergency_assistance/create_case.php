@@ -98,7 +98,7 @@
                   </div>
                   <div class="form-group col-sm-4">
                      <?php 
-                        echo form_label('Assign To:', 'assign_to', array("class"=>'col-sm-12'));
+                        echo form_label('Follow Up EAC:', 'assign_to', array("class"=>'col-sm-12'));
                         echo $eacmanagers;
                         echo form_error("assign_to");
                      ?>
@@ -181,6 +181,13 @@
                      echo form_label('Third Party Recovery:', 'third_party_recovery', array("class"=>'col-sm-12'));  
                      echo form_checkbox("third_party_recovery", "Y", $this->common_model->field_val("third_party_recovery", $case_details), array());
                      echo form_error("third_party_recovery");
+                     ?>
+                  </div>  
+                  <div class="form-group col-sm-12">
+                     <?php               
+                     echo form_label('Medical Notes:', 'medical_notes', array("class"=>'col-sm-12'));  
+                     echo form_textarea("medical_notes", $this->common_model->field_val("medical_notes", $case_details), array("class"=>"form-control", 'placeholder'=>'Medical Notes', 'style'=>'height:87px'));
+                     echo form_error("medical_notes");
                      ?>
                   </div>                                             
                </div> 
@@ -346,10 +353,10 @@
       $("select[name=reason]").change(function(){
          if($(this).val() == 'Outpatient')
             $(".hospital_info").text("Doctor Info");
-         else if($(this).val() == 'Other')
-            $(".hospital_info").text("Doctor Info/Hospital Info");
-         else
+         else if($(this).val() == 'Inpatient')
             $(".hospital_info").text("Hospital Info");
+         else
+            $(".hospital_info").text("Doctor Info/Hospital Info");
       })
    })
 

@@ -316,6 +316,22 @@ div.today {
     color: #000;
     text-align: center;
 }
+.calendar li.red {
+    border: 1px solid #a0281c;
+    margin: 2px;
+    padding: 1px 5px;
+    background-color: #ff887c;
+    color: #000;
+    text-align: center;
+}
+.calendar li.green {
+    border: 1px solid #086b00;
+    margin: 2px;
+    padding: 1px 5px;
+    background-color: #51b749;
+    color: #000;
+    text-align: center;
+}
 
 /*loader css */
 .csspinner { position: relative; }
@@ -370,7 +386,8 @@ input[type=checkbox]{
     text-align: center;
 }
 .move_down {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #eee;
     cursor: pointer;
+    font-size: 14px !important;
     padding-bottom: 7px;
 }

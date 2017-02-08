@@ -2,8 +2,8 @@
    if(!empty($case_details))
    {
       ?>
-      <h4>Case Basic Info option<small></small></h4>
-      <div class="row">
+      <h4  class="move_down">Case Basic Info option<small></small>  <i class="fa fa-angle-down pull-right"></i></h4>
+      <div class="row"  style="display:none">
          <div class="form-group col-sm-4">
             <?php echo form_label('Case Number:', 'case_no', array("class"=>'col-sm-12')); ?>
             <div class="form-group col-sm-12">
@@ -24,133 +24,133 @@
          </div>
       </div> 
 
-      <h4>Visiting Address<small></small></h4>
-      <div class="row">
-      <div class="form-group col-sm-4">
-         <?php               
-         echo form_label('Street No.:', 'street_no', array("class"=>'col-sm-12'));  
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['street_no']; ?>
-         </div>
-      </div> 
-      <div class="form-group col-sm-4">
-         <?php               
-         echo form_label('Street Name.:', 'street_name', array("class"=>'col-sm-12')); 
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['street_name']; ?>
-         </div>
-      </div> 
-      <div class="form-group col-sm-4">
-         <?php               
-         echo form_label('City:', 'city', array("class"=>'col-sm-12'));
-         echo form_error("city");
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['city']; ?>
-         </div>
-      </div> 
+      <h4  class="move_down">Visiting Address<small></small>  <i class="fa fa-angle-down pull-right"></i></h4>
+      <div class="row"  style="display:none">
+         <div class="form-group col-sm-4">
+            <?php               
+            echo form_label('Street No.:', 'street_no', array("class"=>'col-sm-12'));  
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['street_no']; ?>
+            </div>
+         </div> 
+         <div class="form-group col-sm-4">
+            <?php               
+            echo form_label('Street Name.:', 'street_name', array("class"=>'col-sm-12')); 
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['street_name']; ?>
+            </div>
+         </div> 
+         <div class="form-group col-sm-4">
+            <?php               
+            echo form_label('City:', 'city', array("class"=>'col-sm-12'));
+            echo form_error("city");
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['city']; ?>
+            </div>
+         </div> 
 
-      <div class="form-group col-sm-4">
-         <?php 
-            echo form_label('Province:', 'province', array("class"=>'col-sm-12'));
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['province']; ?>
+         <div class="form-group col-sm-4">
+            <?php 
+               echo form_label('Province:', 'province', array("class"=>'col-sm-12'));
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['province']; ?>
+            </div>
          </div>
-      </div>
-      <div class="form-group col-sm-4">
-         <?php 
-            echo form_label('Country:', 'country', array("class"=>'col-sm-12'));
-            echo form_error("country");
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['country']; ?>
+         <div class="form-group col-sm-4">
+            <?php 
+               echo form_label('Country:', 'country', array("class"=>'col-sm-12'));
+               echo form_error("country");
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['country']; ?>
+            </div>
          </div>
-      </div>
-      <div class="form-group col-sm-2">
-         <?php               
-         echo form_label('Post Code:', 'post_code', array("class"=>'col-sm-12'));
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['post_code']; ?>
+         <div class="form-group col-sm-2">
+            <?php               
+            echo form_label('Post Code:', 'post_code', array("class"=>'col-sm-12'));
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['post_code']; ?>
+            </div>
          </div>
-      </div>
-      <div class="form-group col-sm-4">
-         <?php 
-            echo form_label('Assign To:', 'assign_to', array("class"=>'col-sm-12'));
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['assign_to_name']; ?>
+         <div class="form-group col-sm-4">
+            <?php 
+               echo form_label('Assign To:', 'assign_to', array("class"=>'col-sm-12'));
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['assign_to_name']; ?>
+            </div>
          </div>
-      </div>
-      <div class="form-group col-sm-4">
-         <?php 
-            echo form_label('Reason:', 'reason', array("class"=>'col-sm-12'));
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['reason']; ?>
-         </div>
-      </div>               
-      </div>
-
-      <h4>Caller Info<small></small></h4>
-      <div class="row">
-      <div class="form-group col-sm-4">
-         <?php               
-         echo form_label('First Name:', 'first_name', array("class"=>'col-sm-12')); 
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['first_name']; ?>
-         </div>
-      </div> 
-      <div class="form-group col-sm-4">
-         <?php               
-         echo form_label('Last Name.:', 'last_name', array("class"=>'col-sm-12')); 
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['last_name']; ?>
-         </div>
-      </div> 
-      <div class="form-group col-sm-4">
-         <?php               
-         echo form_label('Phone Number:', 'phone_number', array("class"=>'col-sm-12')); 
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['phone_number']; ?>
-         </div>
-      </div> 
-      <div class="form-group col-sm-4">
-         <?php               
-         echo form_label('Email:', 'email', array("class"=>'col-sm-12'));
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['email']; ?>
-         </div>
-      </div>
-      <div class="form-group col-sm-4">
-         <?php 
-            echo form_label('Relationship:', 'relations', array("class"=>'col-sm-12'));
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['relations']; ?>
-         </div>
-      </div>
-      <div class="form-group col-sm-4">
-         <?php 
-            echo form_label('Country:', 'country2', array("class"=>'col-sm-12'));
-         ?>
-         <div class="form-group col-sm-12">
-            <?php echo $case_details['country2']; ?>
-         </div>
-      </div>                              
+         <div class="form-group col-sm-4">
+            <?php 
+               echo form_label('Reason:', 'reason', array("class"=>'col-sm-12'));
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['reason']; ?>
+            </div>
+         </div>               
       </div>
 
+      <h4  class="move_down">Caller Info<small></small>  <i class="fa fa-angle-down pull-right"></i></h4>
+      <div class="row"  style="display:none">
+         <div class="form-group col-sm-4">
+            <?php               
+            echo form_label('First Name:', 'first_name', array("class"=>'col-sm-12')); 
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['first_name']; ?>
+            </div>
+         </div> 
+         <div class="form-group col-sm-4">
+            <?php               
+            echo form_label('Last Name.:', 'last_name', array("class"=>'col-sm-12')); 
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['last_name']; ?>
+            </div>
+         </div> 
+         <div class="form-group col-sm-4">
+            <?php               
+            echo form_label('Phone Number:', 'phone_number', array("class"=>'col-sm-12')); 
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['phone_number']; ?>
+            </div>
+         </div> 
+         <div class="form-group col-sm-4">
+            <?php               
+            echo form_label('Email:', 'email', array("class"=>'col-sm-12'));
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['email']; ?>
+            </div>
+         </div>
+         <div class="form-group col-sm-4">
+            <?php 
+               echo form_label('Relationship:', 'relations', array("class"=>'col-sm-12'));
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['relations']; ?>
+            </div>
+         </div>
+         <div class="form-group col-sm-4">
+            <?php 
+               echo form_label('Country:', 'country2', array("class"=>'col-sm-12'));
+            ?>
+            <div class="form-group col-sm-12">
+               <?php echo $case_details['country2']; ?>
+            </div>
+         </div>                              
+      </div>
 
 
-      <h4 class="hospital_info">Doctor Info/Hospital Info</h4>
-      <div class="row">
+
+      <h4  class="move_down hospital_info">Doctor Info/Hospital Info  <i class="fa fa-angle-down pull-right"></i></h4>
+      <div class="row"  style="display:none">
       <div class="form-group col-sm-4">
          <?php               
          echo form_label('Main Diagnosis:', 'diagnosis', array("class"=>'col-sm-12'));
@@ -177,8 +177,8 @@
       </div>                                             
       </div> 
 
-      <h4>Assistance Client Info<small></small></h4>
-      <div class="row">
+      <h4  class="move_down">Assistance Client Info<small></small>  <i class="fa fa-angle-down pull-right"></i></h4>
+      <div class="row"  style="display:none">
       <div class="form-group col-sm-4">
          <?php               
          echo form_label('Policy Number:', 'policy_no', array("class"=>'col-sm-12'));
@@ -211,8 +211,8 @@
       </div> 
 
 
-      <h4>Assign Case Manager<small></small></h4>
-      <div class="row">               
+      <h4  class="move_down">Assign Case Manager<small></small>  <i class="fa fa-angle-down pull-right"></i></h4>
+      <div class="row"  style="display:none">               
       <div class="form-group col-sm-4">
          <?php 
             echo form_label('Case Manager:', 'case_manager', array("class"=>'col-sm-12'));
@@ -231,7 +231,7 @@
       </div>
 
       <div class="form-group col-sm-12">
-         <h4>Reservers C$ <small></small></h4>
+         <h4>Reservers C$ <small></small>  </h4>
          <?php echo form_label('Reserve Amount:', 'reserve_amount', array("class"=>'col-sm-12'));   ?>
          <div class="form-group col-sm-4">
             <?php                
