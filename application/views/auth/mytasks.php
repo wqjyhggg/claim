@@ -26,7 +26,7 @@
                            <th>Created DateTime</th>
                            <th>Due Date</th>
                            <th>Outcome</th>
-                           <th>Follow Up EMC</th>
+                           <th>Follow Up EAC</th>
                            <th>Created By</th>
                            <th>Complition Date</th>
                            <th>Category</th>

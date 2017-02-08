@@ -26,6 +26,11 @@ class Emergency_assistance extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
+		elseif (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager())
+		{
+			// redirect them to the home page because they must be an administrator to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		}
 		else
 		{
 			// initialize variables
@@ -253,7 +258,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name, $case_details));
-				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Assign To--");
+				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Follow Up EAC--");
 				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--");
 				$this->data['reasons'] = $this->common_model->getreasons($field_name = "reason", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['relations'] = $this->common_model->getrelations($field_name = "relations", $selected = $this->common_model->field_val($field_name, $case_details));
@@ -274,6 +279,11 @@ class Emergency_assistance extends CI_Controller {
 		{
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
+		}
+		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager())
+		{
+			// redirect them to the home page because they must be an case manager or admin to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
 		}
 		else
 		{
@@ -339,7 +349,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "");
-				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Assign To--");
+				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Follow Up EAC--");
 				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--");
 				$this->data['reasons'] = $this->common_model->getreasons($field_name = "reason", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['relations'] = $this->common_model->getrelations($field_name = "relations", $selected = $this->common_model->field_val($field_name, $case_details));
@@ -420,7 +430,7 @@ class Emergency_assistance extends CI_Controller {
 		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager())
 		{
 			// redirect them to the home page because they must be an case manager or admin to view this
-			return show_error('You must be an authority to view this page.');
+			return show_error('Sorry, you don\'t have any permission to access this page.');
 		}
 		else
 		{
@@ -468,8 +478,14 @@ class Emergency_assistance extends CI_Controller {
 				$conditions['case.priority'] = $this->input->get("priority");
 			if($this->input->get("status")) 
 				$conditions['case.status'] = $this->input->get("status");
+			if($this->input->get("assigned_status") ==  'assigned') 
+				$conditions['case.assign_to != '] = '0';
+			if($this->input->get("assigned_status") ==  'unassigned') 
+				$conditions['case.assign_to'] = '0';
+			if($this->input->get("case_manager")) 
+				$conditions['case.case_manager'] = $this->input->get("case_manager");
 
-			$fields = "case.insured_address, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, case.insured_lastname, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
+			$fields = "case.insured_address, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, case.insured_lastname, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id, case.status";
 			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array(), $having = "", $limit, $offset);
 			$this->data['cases'] = $results['records'];
 
@@ -485,7 +501,7 @@ class Emergency_assistance extends CI_Controller {
 			// pagination end here
 
 			// get login user id
-			$case_manager = $this->ion_auth->user()->row()->id;
+			$this->data['case_manager'] = $case_manager = $this->ion_auth->user()->row()->id;
 
 			// timing shifts array
 			$shifts = array(
@@ -514,6 +530,10 @@ class Emergency_assistance extends CI_Controller {
 				$additional_conditions = " and users.parent_id = '$case_manager' and  schedule.schedule = '$value'";
             	$this->data['employees_'.$key] = $this->common_model->shift_users($field_name = "assign_to", $selected = $this->input->get($field_name), $group = "eacmanager", $empty = "--Select Employee--", $additional_conditions);
 			}
+
+			// get all case managers list			
+			$additional_conditions = " and users.id != '$case_manager'";
+        	$this->data['casemanagers'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--", $additional_conditions);
 
 			// get all documents for sending email/print.
 			$fields = "id, name, description";
@@ -875,40 +895,73 @@ class Emergency_assistance extends CI_Controller {
 	public function auto_schedule($emc, $year, $month) 
 	{
 
-		// get employee details
-		$conditions = array('users.id'=>$emc);
-		$schedule_details = $this->common_model->select($record = "first", $typecast = "array", $table = "users", $fields = "shift", $conditions);
-
-		if($schedule_details['shift'])
+		if($emc) 
 		{
-			// auto schedule to this employee for this month
-			for($i = 1; $i <= date('t', strtotime($year."-".$month)); $i++)
+			// get employee details
+			$conditions = array('users.id'=>$emc);
+			$schedule_details = $this->common_model->select($record = "first", $typecast = "array", $table = "users", $fields = "shift", $conditions);
+			if($schedule_details['shift'])
 			{
-				$data = array(
-					'schedule'=>$schedule_details['shift'],
-					'employee_id'=>$emc,
-					'date'=>$year."-".$month."-".$i,
-					'created'=>date("Y-m-d H:i:s")
-					);
-				if(time() < strtotime($year."-".$month."-".$i))
+				// auto schedule to this employee for this month
+				for($i = 1; $i <= date('t', strtotime($year."-".$month)); $i++)
 				{
-					// delete schedule if already exists
-					$this->common_model->delete('schedule', array('employee_id'=>$emc, 'date'=>$year."-".$month."-".$i));
+					$data = array(
+						'schedule'=>$schedule_details['shift'],
+						'employee_id'=>$emc,
+						'date'=>$year."-".$month."-".$i,
+						'created'=>date("Y-m-d H:i:s")
+						);
+					if(time() < strtotime($year."-".$month."-".$i))
+					{
+						// delete schedule if already exists
+						$this->common_model->delete('schedule', array('employee_id'=>$emc, 'date'=>$year."-".$month."-".$i));
 
-					// insert schedule data
-					$this->common_model->save("schedule", $data);
+						// insert schedule data
+						$this->common_model->save("schedule", $data);
+					}
 				}
+
+
+				echo TRUE;
 			}
-
-
-			echo TRUE;
-		}
+		} 
 		else
 		{
-			echo FALSE;
+			// get all eac's list
+			$fields = "shift, id";
+			$conditions = "users.parent_id = '".$this->ion_auth->user()->row()->id."'";
+			$users = $this->common_model->select($record = "list", $typecast = "array", $table = "users", $fields, $conditions);
+			if(!empty($users))
+			{
+				foreach ($users as $schedule_details) 
+				{
+					if($schedule_details['shift'])
+					{
+						// auto schedule to this employee for this month
+						for($i = 1; $i <= date('t', strtotime($year."-".$month)); $i++)
+						{
+							$data = array(
+								'schedule'=>$schedule_details['shift'],
+								'employee_id'=>$schedule_details['id'],
+								'date'=>$year."-".$month."-".$i,
+								'created'=>date("Y-m-d H:i:s")
+								);
+							if(time() < strtotime($year."-".$month."-".$i))
+							{
+								// delete schedule if already exists
+								$this->common_model->delete('schedule', array('employee_id'=>$schedule_details['id'], 'date'=>$year."-".$month."-".$i));
+
+								// insert schedule data
+								$this->common_model->save("schedule", $data);
+							}
+						}
+					}
+				}
+				echo TRUE;
+			}
+			else
+				echo FALSE;
 		}
-
-
 	}
 
 	// search users for ajax request
@@ -1060,10 +1113,10 @@ class Emergency_assistance extends CI_Controller {
 			$month = date('m');
 		}
 		// only accessible for case managers
-		if (!$this->ion_auth->is_casemamager())
+		if (!$this->ion_auth->is_casemamager() and !$this->ion_auth->is_eacmanager())
 		{
 			// redirect them to the home page because they must be an case manager to view this
-			return show_error('You must be an authority to view this page.');
+			return show_error('Sorry, you don\'t have any permission to access this page.');
 		}
 		 else if (!$this->ion_auth->logged_in())
 		{
@@ -1084,9 +1137,9 @@ class Emergency_assistance extends CI_Controller {
 
 			// get countries list
 			$this->data['countries'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->input->get("country2"), $key = "short_code", $value = "name");
-			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "emc", $this->data['emc'], $group = array("'eacmanager'"), $empty = "--Select Employee--", $additional_conditions = " and users.parent_id='".$this->ion_auth->user()->row()->id."'", $user_code = "EMC");
+			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "emc", $this->data['emc'], $group = array("'eacmanager'"), $empty = "--Select Employee--", $additional_conditions = " and users.parent_id='".$this->ion_auth->user()->row()->id."'", $user_code = "EAC");
 			
-        	$this->template->write('title', SITE_TITLE.' - Employee Schedule', TRUE);
+        	$this->template->write('title', SITE_TITLE.(!$this->ion_auth->is_casemamager()?' - My Work Schedule':' - Employee Schedule'), TRUE);
 	        $this->template->write_view('content', 'emergency_assistance/schedule', $this->data);
 	        $this->template->render();        
 		}
@@ -1110,10 +1163,10 @@ class Emergency_assistance extends CI_Controller {
 			$month = date('m');
 		}
 		// only accessible for case managers
-		if (!$this->ion_auth->is_casemamager())
+		if (!$this->ion_auth->is_casemamager() and !$this->ion_auth->is_eacmanager())
 		{
 			// redirect them to the home page because they must be an case manager to view this
-			return show_error('You must be an authority to view this page.');
+			return show_error('Sorry, you don\'t have any permission to access this page.');
 		}
 		else
 		{
@@ -1133,7 +1186,10 @@ class Emergency_assistance extends CI_Controller {
 				'type' => 'LEFT'
 				);
 			// prepare conditions
-			$conditions = "schedule.date like '%$year-$month%' and u1.parent_id = '$case_manager'";
+			if($this->ion_auth->is_casemamager())
+				$conditions = "schedule.date like '%$year-$month%' and u1.parent_id = '$case_manager'";
+			else
+				$conditions = "schedule.date like '%$year-$month%' and u1.id = '$case_manager'";
 
 			// if calender for specific employee
 			if($emc)
@@ -1146,7 +1202,7 @@ class Emergency_assistance extends CI_Controller {
 			if($emc)
 				$fields .= "GROUP_CONCAT(schedule.schedule ORDER BY  schedule.id ASC SEPARATOR '|') as data";
 			else
-				$fields .= "GROUP_CONCAT(concat_ws('-', concat_ws(' ', u1.first_name, u1.last_name), schedule.schedule) ORDER BY  schedule.id ASC SEPARATOR '|') as data";
+				$fields .= "GROUP_CONCAT(concat_ws('-', concat_ws('', 'EAC', LPAD(u1.id, 4, 0)), schedule.schedule) ORDER BY  schedule.id ASC SEPARATOR '|') as data";
 
 			$this->data['schedules'] = $this->common_model->select($record = "list", $typecast = "array", $table = "schedule", $fields, $conditions, $joins, $order_by, $group_by);
 
@@ -1201,7 +1257,7 @@ class Emergency_assistance extends CI_Controller {
 			// asigning process
 			foreach ($cases as $key => $value) 
 			{
-				$this->common_model->update("case", array("assign_to"=>$employee_id), array("id"=>$value));
+				$this->common_model->update("case", array("case_manager"=>$employee_id), array("id"=>$value));
 			}
 		}
 
@@ -1212,7 +1268,7 @@ class Emergency_assistance extends CI_Controller {
 			$conditions = "users.parent_id = '".$this->ion_auth->user()->row()->id."'";
 			$joins[] = array(
 				'table' => 'case',
-				'on' => 'users.id = case.assign_to',
+				'on' => 'users.id = case.case_manager',
 				'type' => 'LEFT'
 				);
 			$order_by = array(
@@ -1278,7 +1334,7 @@ class Emergency_assistance extends CI_Controller {
 		{
 			$this->common_model->update("case", array("status"=>'D'), array("id"=>$value));
 		}
-		$this->session->set_flashdata('success', "Case successfully deactivated.");
+		$this->session->set_flashdata('success', "Case inactive successfully.");
 
 		echo TRUE;
 

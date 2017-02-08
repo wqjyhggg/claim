@@ -495,6 +495,81 @@ class Ion_auth
 	}
 
 	/**
+	 * is_eacmanager
+	 *
+	 * @return bool
+	 * @author Bhawani Shankar
+	 **/
+	public function is_eacmanager($id=false)
+	{
+		$this->ion_auth_model->trigger_events(__FUNCTION__);
+
+		$group = str_replace("is_", "", __FUNCTION__);
+		
+		return $this->in_group($group, $id);
+	}
+
+	/**
+	 * is_callcenteragent
+	 *
+	 * @return bool
+	 * @author Bhawani Shankar
+	 **/
+	public function is_callcenteragent($id=false)
+	{
+		$this->ion_auth_model->trigger_events(__FUNCTION__);
+
+		$group = str_replace("is_", "", __FUNCTION__);
+		
+		return $this->in_group($group, $id);
+	}
+
+	/**
+	 * is_claimexaminer
+	 *
+	 * @return bool
+	 * @author Bhawani Shankar
+	 **/
+	public function is_claimexaminer($id=false)
+	{
+		$this->ion_auth_model->trigger_events(__FUNCTION__);
+
+		$group = str_replace("is_", "", __FUNCTION__);
+		
+		return $this->in_group($group, $id);
+	}
+
+	/**
+	 * is_claimsmanager
+	 *
+	 * @return bool
+	 * @author Bhawani Shankar
+	 **/
+	public function is_claimsmanager($id=false)
+	{
+		$this->ion_auth_model->trigger_events(__FUNCTION__);
+
+		$group = str_replace("is_", "", __FUNCTION__);
+		
+		return $this->in_group($group, $id);
+	}
+
+	/**
+	 * is_accountant
+	 *
+	 * @return bool
+	 * @author Bhawani Shankar
+	 **/
+	public function is_accountant($id=false)
+	{
+		$this->ion_auth_model->trigger_events(__FUNCTION__);
+
+		$group = str_replace("is_", "", __FUNCTION__);
+		
+		return $this->in_group($group, $id);
+	}
+
+	/**
 	 * in_group
 	 *
 	 * @param mixed group(s) to check

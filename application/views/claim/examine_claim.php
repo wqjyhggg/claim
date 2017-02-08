@@ -29,7 +29,6 @@
                                     <th>Claim Date</th>
                                     <th>Total Claimed</th>
                                     <th>Total Paid</th>
-                                    <th>Currency</th>
                                     <th>Pay To</th>
                                     <th>Cheque No</th>
                                     <th>Total Received</th>
@@ -43,7 +42,6 @@
                                     <td><?php echo $value['claim_date']; ?></td>
                                     <td><?php echo $value['amount_claimed']; ?></td>
                                     <td><?php echo $value['amount_client_paid']; ?></td>
-                                    <td><?php echo $value['currency']; ?></td>
                                     <td><?php echo $value['pay_to']; ?></td>
                                     <td><?php //echo $value['claim_no']; ?></td>
                                     <td><?php //echo $value['claim_no']; ?></td>
@@ -119,25 +117,8 @@
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
-                              echo form_label('Currency:', 'currency', array("class"=>'col-sm-12')); 
-                              $currency = array(
-                                    "USD"=>'USD',
-                                    "CAD"=>'CAD',
-                                    "CNY"=>'CNY',
-                                 );
-                              echo form_dropdown("currency", $currency, $this->input->get("currency"), array("class"=>'form-control'));
-                           ?>
-                        </div>
-                        <div class="form-group col-sm-3">
-                           <?php 
                               echo form_label('Case No:', 'case_no', array("class"=>'col-sm-12'));
                               echo form_input("case_no", $this->input->post("case_no"), array("class"=>"form-control", 'placeholder'=>'Case No'));
-                           ?>
-                        </div>
-                        <div class="form-group col-sm-3">
-                           <?php 
-                              echo form_label('Currency Rate:', 'currency_rate', array("class"=>'col-sm-12'));
-                              echo form_input("currency_rate", $this->input->post("currency_rate"), array("class"=>"form-control", 'placeholder'=>'Currency Rate'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
@@ -269,8 +250,8 @@
                   </div>
                <hr/>
 
-               <h4 style="margin-top:25px;" class="move_down">CASE INFO <i class="fa fa-angle-down pull-right"></i></h4>
-               <div class="case_info" style="display:none">
+               <h4 style="margin-top:35px;margin-bottom:26px;">CASE INFO </h4>
+               <div class="case_info">
                   <?php echo $case_info; ?>
                </div>
                <div class="row actions" style="margin-top:20px; display:none">
@@ -919,7 +900,7 @@
    })
 
    .on("click", ".move_down", function(){
-      $(".case_info").slideToggle('show');
+      $(this).next("div.row").slideToggle();
       $(this).children("i").toggleClass("fa-angle-up").toggleClass("fa-angle-down");
    })
 

@@ -27,6 +27,11 @@ class Claim extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
+		else if (!$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
+		{
+			// redirect them to the home page because they must be an claim manager or claim examiner to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		}
 		else
 		{
 			// initialize variables
@@ -143,7 +148,7 @@ class Claim extends CI_Controller {
 			}
 
 			// send case manager and eac managers list
-			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = $this->input->get($field_name), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Assign To--");
+			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = $this->input->get($field_name), $group = array("'eacmanager'", "'casemamager'"), $empty = "--EAC Follow up--");
 			$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--");
 
 			// send countries and province list
@@ -170,6 +175,11 @@ class Claim extends CI_Controller {
 		{
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
+		}
+		else if (!$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
+		{
+			// redirect them to the home page because they must be an claim manager or claim examiner to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
 		}
 		else
 		{
@@ -253,9 +263,7 @@ class Claim extends CI_Controller {
 							'bank'=>$val,
 							'payee_name'=>$array['payees']['payee_name'][$key],
 							'account_cheque'=>$array['payees']['account_cheque'][$key],
-							'payment'=>$array['payees']['payment'][$key],
-							'payee_currency'=>$array['payees']['payee_currency'][$key],
-							'payee_currency_rate'=>$array['payees']['payee_currency_rate'][$key],
+							'address'=>$array['payees']['address'][$key],
 							'created'=>date('Y-m-d H:i:s')
 							);
 						$this->common_model->save("payees", $payee_data);
@@ -285,8 +293,6 @@ class Claim extends CI_Controller {
 							'date_of_service'=>$array['expenses_climed']['date_of_service'][$key],
 							'amount_billed'=>$array['expenses_climed']['amount_billed'][$key],
 							'amount_client_paid'=>$array['expenses_climed']['amount_client_paid'][$key],
-							'currency'=>$array['expenses_climed']['currency'][$key],
-							'currency_rate'=>$array['expenses_climed']['currency_rate'][$key],
 							'payee'=>$array['expenses_climed']['payee'][$key],
 							'comment'=>$array['expenses_climed']['comment'][$key],
 							'created'=>date('Y-m-d H:i:s')
@@ -421,6 +427,11 @@ class Claim extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
+		else if (!$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
+		{
+			// redirect them to the home page because they must be an claim manager or claim examiner to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		}		
 		else
 		{
 			// get claim details
@@ -674,6 +685,11 @@ class Claim extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
+		else if (!$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
+		{
+			// redirect them to the home page because they must be an claim manager or claim examiner to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		}
 		else
 		{
 			// get claim details
@@ -766,9 +782,7 @@ class Claim extends CI_Controller {
 							'bank'=>$val,
 							'payee_name'=>$array['payees']['payee_name'][$key],
 							'account_cheque'=>$array['payees']['account_cheque'][$key],
-							'payment'=>$array['payees']['payment'][$key],
-							'payee_currency'=>$array['payees']['payee_currency'][$key],
-							'payee_currency_rate'=>$array['payees']['payee_currency_rate'][$key],
+							'address'=>$array['payees']['address'][$key],
 							'created'=>date('Y-m-d H:i:s')
 							);
 						if($payee_id = $array['payees']['id'][$key])
@@ -1223,6 +1237,11 @@ class Claim extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
+		else if (!$this->ion_auth->is_accountant())
+		{
+			// redirect them to the home page because they must be an claim manager or claim examiner to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		}
 		else
 		{
 
@@ -1369,8 +1388,7 @@ class Claim extends CI_Controller {
 					'payee_name'=>$array['payees']['payee_name'][$key],
 					'account_cheque'=>$array['payees']['account_cheque'][$key],
 					'payment'=>$array['payees']['payment'][$key],
-					'payee_currency'=>$array['payees']['payee_currency'][$key],
-					'payee_currency_rate'=>$array['payees']['payee_currency_rate'][$key],
+					'address'=>$array['payees']['address'][$key],
 					'created'=>date('Y-m-d H:i:s')
 					);
 				$this->common_model->save("payees", $payee_data);

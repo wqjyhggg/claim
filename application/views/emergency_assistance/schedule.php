@@ -1,7 +1,7 @@
 <duv>
    <div class="page-title">
       <div class="title_left">
-         <h3>Work Schedule</h3>         
+         <h3><?php if(!$this->ion_auth->is_casemamager()) echo "My "; ?>Work Schedule</h3>         
       </div>
    </div>
    <div class="clearfix"></div>
@@ -13,23 +13,24 @@
             <div class="x_title">
               <h2>Schedule Calendar<small></small></h2>
 
-              <div class="form-group col-sm-4 pull-right">
-                <div class="form-group col-sm-3">
-                 <?php 
-                  echo form_label('Employee:', 'emc', array("class"=>'col-sm-12'));                  
-                  $priority = array(
-                     ""=>'--Select Priority--',
-                     "HIGH"=>'High',
-                     "Normal"=>'Normal',
-                     );
-                     ?>
-                 </div>
-                 <div class="form-group col-sm-9">
-                     <?php echo $eacmanagers;?>
+              <?php if($this->ion_auth->is_casemamager()): ?>
+                <div class="form-group col-sm-4 pull-right">
+                  <div class="form-group col-sm-3">
+                   <?php 
+                    echo form_label('Employee:', 'emc', array("class"=>'col-sm-12'));                  
+                    $priority = array(
+                       ""=>'--Select Priority--',
+                       "HIGH"=>'High',
+                       "Normal"=>'Normal',
+                       );
+                       ?>
+                   </div>
+                   <div class="form-group col-sm-9">
+                       <?php echo $eacmanagers;?>
+                  </div>
                 </div>
-              </div>
-
-              <a href="javascript:void(0)" class="btn btn-primary pull-right auto-schedule"><i class="fa fa-clock-o"></i> Auto Schedule Whole EMCs</a>
+                <a href="javascript:void(0)" class="btn btn-primary pull-right auto-schedule"><i class="fa fa-clock-o"></i> Auto Schedule Whole EACs</a>
+              <?php endif; ?>
 
               <div class="clearfix"></div>
             </div>
@@ -207,6 +208,7 @@
           // in succss place return responce to list
           $(".calendar-data").html(data);
           $(".calendar-data").removeClass("csspinner load1");
+          load_colors();
        }
     })
   }
@@ -255,4 +257,23 @@
       return false;
     }
   })
+
+  // put different-2 colors according to time schedule
+  .ready(function(){
+    <?php if (!$this->ion_auth->is_casemamager()):?>
+      $("td").removeAttr('data-toggle');
+    <?php endif; ?>
+    load_colors();
+  })
+
+  function load_colors(){
+    $("li").each(function(){
+      if($(this).text().indexOf('pm-8pm') > 0){
+        $(this).addClass('red')
+      }
+      else if($(this).text().indexOf('pm-8am') > 0){
+        $(this).addClass('green')
+      }
+    })
+  }
 </script>

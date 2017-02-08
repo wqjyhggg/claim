@@ -471,7 +471,7 @@
 
                <!-- Intake Forms List Section -->
                <br/>
-               <h2 class="modal-title intake-heading">INTAKE FORMS <button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create InTakeForm</button></h2>
+               <h2 class="modal-title intake-heading">INTAKE FORMS </h2>
                <div class="row intake-forms-list col-sm-12">
 
                </div>
@@ -487,7 +487,7 @@
                      </div>
                      <div class="col-sm-3">
                         <?php 
-                        echo form_radio("payment_type", "wire transfer", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Wire Transfer
+                        echo form_radio("payment_type", "direct deposit", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Direct Deposit
                      </div>
 
                      <div class="col-sm-3">
@@ -500,12 +500,10 @@
                      <table class="table table-hover table-bordered">
                         <thead>
                            <tr>
-                              <th>Bank Name</th>
-                              <th>Payee Name</th>
-                              <th>Account/Cheque#</th>
-                              <th>Payment</th>
-                              <th>Currency</th>
-                              <th>Currency Rate</th>
+                              <th class="wire_transfer_section">Bank Name</th>
+                              <th class="cheque_section wire_transfer_section">Payee Name</th>
+                              <th class="wire_transfer_section">Account#</th>
+                              <th class="cheque_section">Address</th>
                               <th>&nbsp;</th>                    
                            </tr>
                         </thead>
@@ -533,7 +531,7 @@
                         echo form_label('Status:', 'status', array("class"=>'col-sm-12'));                  
                         $status = array(
                            ""=>'--Status--',
-                           'received'=>'Received',
+                           'accepted'=>'Accepted',
                            'processing'=>'Processing',
                            'pending'=>'Pending',
                            'denied'=>'Denied',
@@ -839,23 +837,6 @@
          </div> 
          <div class="col-sm-3">
             <?php 
-               echo form_label('Currency:', 'currency', array("class"=>'col-sm-12'));
-            $currency = array(
-                     "USD"=>'USD',
-                     "CAD"=>'CAD',
-                     "CNY"=>'CNY',
-                  );
-               echo form_dropdown("expenses_climed[currency][]", $currency, $this->input->get("currency"), array("class"=>'form-control'));
-            ?>
-         </div> 
-         <div class="col-sm-3">
-            <?php 
-               echo form_label('Currency Rate:', 'currency_rate', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[currency_rate][]", $this->input->post("currency_rate"), array("class"=>"form-control"));
-            ?>
-         </div> 
-         <div class="col-sm-3">
-            <?php 
                echo form_label('Payee:', 'payee', array("class"=>'col-sm-12'));
                echo $payees;
             ?>
@@ -876,41 +857,26 @@
 <table style="display:none">
    <tbody class="payee-buffer">
       <tr>
-         <td>
+         <td class="wire_transfer_section">
             <?php 
                echo form_input("payees[bank][]", $this->input->post("bank"), array("class"=>"form-control", 'placeholder'=>'Bank Name'));
             ?>
          </td>
-         <td>
+         <td class="cheque_section wire_transfer_section">
             <?php 
                echo form_input("payees[payee_name][]", $this->input->post("payee_name"), array("class"=>"form-control", 'placeholder'=>'Payee Name'));
             ?>
          </td>
-         <td>
+         <td class="wire_transfer_section">
             <?php 
-               echo form_input("payees[account_cheque][]", $this->input->post("account_cheque"), array("class"=>"form-control", 'placeholder'=>'Account/Cheque#'));
+               echo form_input("payees[account_cheque][]", $this->input->post("account_cheque"), array("class"=>"form-control", 'placeholder'=>'Account#'));
             ?>
-         </td>
-         <td>
+         </td> 
+         <td class="cheque_section">
             <?php 
-               echo form_input("payees[payment][]", $this->input->post("payment"), array("class"=>"form-control", 'placeholder'=>'Payment'));
+               echo form_input("payees[address][]", $this->input->post("address"), array("class"=>"form-control", 'placeholder'=>'Address#'));
             ?>
-         </td>
-         <td>
-            <?php 
-            $payee_currency = array(
-                     "USD"=>'USD',
-                     "CAD"=>'CAD',
-                     "CNY"=>'CNY',
-                  );
-               echo form_dropdown("payees[payee_currency][]", $payee_currency, $this->input->get("payee_currency"), array("class"=>'form-control'));
-            ?>
-         </td>
-         <td>
-            <?php 
-               echo form_input("payees[payee_currency_rate][]", $this->input->post("payee_currency_rate"), array("class"=>"form-control", 'placeholder'=>'Currency Rate'));
-            ?>
-         </td>
+         </td>         
          <td>
             <i class="fa fa-trash row-link remove-payee"></i>
          </td>
@@ -1287,7 +1253,18 @@
          $(this).parent("td").next("td").children("input").removeAttr("readonly");
 
       }
-   });
+   })
+
+   // once user select pay type
+   .on("click", "input[name=payment_type]", function(){
+      if($(this).val() == 'cheque'){
+         $(".wire_transfer_section").hide();
+         $(".cheque_section").show();
+      } else {
+         $(".cheque_section").hide();
+         $(".wire_transfer_section").show();
+      }
+   })
 
    <?php
    if($this->input->get('policy'))

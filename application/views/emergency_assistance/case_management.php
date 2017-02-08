@@ -64,16 +64,38 @@
                   ?>
                </div>
 
-
                <div class="form-group col-sm-3">
                   <?php 
-                  $options = array(
+                  $options_status = array(
                      ''=>'--Case Status--',
                      'A'=>'Active',
                      'D'=>'Inactive'
                      );
-                  echo form_dropdown("status", $options, $this->input->get("status"), array("class"=>"form-control"));
+                  echo form_dropdown("status", $options_status, $this->input->get("status"), array("class"=>"form-control"));
                   ?>
+               </div>
+
+               <div class="form-group col-sm-3">
+                  <?php 
+                  $options = array(
+                     ''=>'--Assigned Status--',
+                     'assigned'=>'Assigned',
+                     'unassigned'=>'Unassigned'
+                     );
+                  echo form_dropdown("assigned_status", $options, $this->input->get("assigned_status"), array("class"=>"form-control"));
+                  ?>
+               </div>
+
+               <div class="form-group col-sm-3">
+                  <?php 
+                  echo form_label('My Task:', 'case_manager', array("class"=>'col-sm-4')); 
+                  ?>
+                  <div class="form-group col-sm-8">
+                     <?php
+                     echo form_checkbox("case_manager", $case_manager, ($this->input->get("case_manager") == $case_manager ? TRUE : FALSE), array("id"=>'case_manager', 'class'=>'col-sm-1')); 
+                     echo form_label('Owned by Me', 'case_manager', array("class"=>'col-sm-10 pull-right', 'style'=>'margin-top: 3px;'));
+                     ?>
+                  </div>
                </div>
 
                <div class="form-group col-sm-3">
@@ -112,9 +134,10 @@
                            <th>Policy Number</th>
                            <th>Insured Name</th>
                            <th>DOB</th>
-                           <th>Assign to</th>
+                           <th>Follow Up EAC</th>
                            <th>Case Manager</th>
-                           <th>Priority</th>            
+                           <th>Priority</th>       
+                           <th>Status</th>            
                         </tr>
                      </thead>
                      <tbody>
@@ -128,7 +151,7 @@
                            case_no="<?php echo $value['case_no'] ?>"
                            casemanager_name="<?php echo $value['case_manager_name'] ?>"
                            >
-                           <th><?php echo form_checkbox("case", $value['id']); ?></th>
+                           <th><?php echo form_checkbox("case", $value['id'], FALSE, array('class'=>($case_manager <> $value['case_manager']?'own_by_other':''))); ?></th>
                            <td><?php echo $value['case_no']; ?></td>
                            <td><?php echo date('d/m/Y', strtotime($value['created'])); ?></td>
                            <td><?php echo $value['province']; ?></td>
@@ -139,6 +162,7 @@
                            <td><?php echo $value['assign_to_name']; ?></td>
                            <td><?php echo $value['case_manager_name']; ?></td>
                            <td><?php echo $value['priority']; ?></td>
+                           <td><?php echo @$options_status[$value['status']]; ?></td>
                         </tr>
                      <?php endforeach; ?>
                      </tbody>
@@ -152,45 +176,35 @@
                      </div>
                      <div class="col-sm-2">
                         <div class="col-sm-12">
-                           <button class="btn btn-primary show_button assign_to" disabled>Assign To <i class="fa fa-angle-double-right"></i> </button>
+                           <button class="btn btn-primary show_button assign_to" disabled>Transfer CM <i class="fa fa-angle-double-right"></i> </button>
                         </div>
                         <div class="col-sm-12">
-                           <button class="btn btn-primary show_button follow_up"  data-toggle="modal" data-target="#follow_reason" disabled>Follow Up <i class="fa fa-angle-double-right"></i></button>  
+                           <button class="btn btn-primary show_button follow_up"  data-toggle="modal" data-target="#follow_reason" disabled>EAC Follow Up <i class="fa fa-angle-double-right"></i></button>  
                         </div>   
                      </div>
                      <div class="col-sm-8 employees-section" style="display:none">
-                        <?php foreach ($employee_shift as $key => $value): ?>
-                        <div class="col-sm-4">
-                           <fieldset>
-                              <legend><?php echo $value; ?></legend>
-                              <?php
-                                 $list = "employees_".$key; 
-                                 echo $$list;
-                               ?>
-                           </fieldset>
-                           <div class="clearfix"><br/></div>
+                        <div class="col-sm-4">                           
+                           <?php echo $casemanagers;?>
                         </div>
-                        <?php endforeach; ?>
-
-                        <div class="col-sm-12">
-                           <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save Assign</button> 
+                        <div class="col-sm-2">
+                           <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save</button> 
                         </div>   
                      </div>  
                   </div>
                  
                   <div class="col-sm-12 form-group">
                      <div class="col-sm-2">
-                        <button class="btn btn-primary show_button view_edit" disabled>View/Edit Case</button>  
+                        <button class="btn btn-primary show_button view_edit editable" disabled>View/Edit Case</button>  
                      </div>
 
                      <div class="col-sm-2">    
                          <div class="col-sm-12">
-                           <button class="btn btn-primary show_button mark_inactive" disabled>Set Inactive</button>
+                           <button class="btn btn-primary show_button mark_inactive editable" disabled>Set Inactive</button>
                         </div>  
                      </div>
 
                      <div class="col-sm-2">    
-                        <button class="btn btn-primary show_button email_print"  data-toggle="modal" data-target="#print_template" disabled>Email/Print</button> 
+                        <button class="btn btn-primary show_button email_print editable"  data-toggle="modal" data-target="#print_template" disabled>Email/Print</button> 
                      </div> 
                   </div>            
                </div>
@@ -233,6 +247,22 @@
                      ?>
                   </div>
                   <div class="col-sm-12 follow-section">
+                     <?php foreach ($employee_shift as $key => $value): ?>
+                        <div class="col-sm-4">
+                           <fieldset>
+                              <legend><?php echo $value; ?></legend>
+                              <?php
+                                 $list = "employees_".$key; 
+                                 echo $$list;
+                               ?>
+                           </fieldset>
+                           <div class="clearfix"><br/></div>
+                        </div>
+                     <?php endforeach; ?>
+
+                     <div class="col-sm-12">
+                        <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save</button> 
+                     </div> 
                   </div>
                </div>
             </div>
@@ -394,7 +424,8 @@ $(document).ready(function() {
 
    e.stopPropagation();
    var length = $("input[name=case]:checked").length;
-   if(length)
+   var length_other = $("input[name=case].own_by_other:checked").length;
+   if(length && !length_other)
    {
       $(".show_button").removeAttr("disabled");
       if(length > 1)
@@ -403,24 +434,22 @@ $(document).ready(function() {
    else
    {
       $(".show_button").attr("disabled", "disabled");
+      if(length == 1)
+          $(".view_edit, .email_print").removeAttr("disabled");
+      if(length > 0)
+          $(".mark_inactive").removeAttr("disabled");
       $(".employees-section").hide();
    }
 }).on("click", ".assign_to", function(){                                               // on clicked assign to button
 
-   if($(".follow-section").children("div").hasClass('col-sm-4'))
-      $(".employees-section").html($(".follow-section").html());
-   $(".follow-section").html("");
-
    $(".employees-section, .save_assign").show();
+
 }).on("click", ".follow_up", function(){                                               // clicking on follow_up button
 
    // open popup screen why need to follow up this case and assign to emc user
-   $(".follow-section").html($(".employees-section").html());
-   $(".employees-section").html("");
-
-   $(".employees-section").show();
+   $(".employees-section").hide();
    $(".save_assign").hide();
-}).on("click", ".view_edit", function(){                                               // once manager click on "View/Edit"case button
+}).on("click", ".view_edit", function(){                                               // once manager click on "View/     Edit"case button
 
    var id = $("input[name=case]:checked").val();
    window.location = "<?php echo base_url("emergency_assistance/edit_case") ?>/"+id+"?ref=manage";
@@ -433,9 +462,9 @@ $(document).ready(function() {
 }).on("click", ".save_assign", function(){                                             // clicking on save assign button
    
    // check if employee selected or not
-   if(!employee_id)
+   if(!$("select[name=case_manager]").val())
    {
-      alert("Please select emc user first.");
+      alert("Please select case manager first.");
       return false;
    }
 
@@ -491,6 +520,7 @@ $(document).ready(function() {
          data:{cases:cases, employee_id: employee_id, notes: $("textarea[name=notes]").val() },
          beforeSend: function(){
             $(".right_col").addClass("csspinner load1");
+            $(".modal").addClass("csspinner");
          },
          success: function() {
             window.location.reload();
