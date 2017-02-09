@@ -330,7 +330,6 @@ class Common_model extends CI_Model
         // echo curl_error($curl);
 
         curl_close($curl);
-        // print_r($result); die;
 
         if(!empty(@$result['plan']))
         {   

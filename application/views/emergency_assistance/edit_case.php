@@ -8,7 +8,7 @@
       <div class="title_left">
          <h3>Case Details</h3>
          <?php
-         if($this->ion_auth->is_claimsmanager() OR $this->ion_auth->is_claimexaminer())
+         if(($this->ion_auth->is_claimsmanager() OR $this->ion_auth->is_claimexaminer()) and $this->input->get('type') == 'add_claim')
             echo anchor('claim/create_claim?policy='.$case_details['policy_no'].'&case_no='.$case_details['case_no'], '<i class="fa fa-plus-circle"></i> Create Claim', array("class"=>'btn btn-primary')) ?>   
       </div>
    </div>
@@ -101,7 +101,7 @@
                   </div>       
                   <div class="col-sm-2">
                      <label class="col-sm-12">&nbsp;</label>
-                     <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary')) ?>
+                     <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary search_provider')) ?>
                   </div>
                   <div class="form-group col-sm-4">
                      <?php 
@@ -206,6 +206,7 @@
                      echo form_label('Policy Number:', 'policy_no', array("class"=>'col-sm-12'));  
                      echo form_input("policy_no", $this->common_model->field_val("policy_no", $case_details), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
                      echo form_error("policy_no");
+                     echo form_hidden('policy_info', $case_details['policy_info']);
                      ?>
                   </div> 
                   <div class="form-group col-sm-4">
@@ -310,33 +311,48 @@
                </div> 
 
                <?php if(!empty($intake_forms)):  ?>
-               <h4 class="modal-title intake-heading" <?php if(!empty($intake_forms)): ?> style="display:none"<?php endif; ?>>Intake Froms</h4>
+               <h4 class="modal-title intake-heading" <?php if(empty($intake_forms)): ?> style="display:none"<?php endif; ?>>Intake Froms</h4>
                <div class="row intake-forms-list col-sm-12">
                   <?php 
+                     $i = 0;
                      foreach ($intake_forms as $key => $value):
+                        $i++;
                         ?>
                          <div class="col-sm-12 intake-forms">
-                             <div class="col-sm-12&quot;"><?php echo $value['notes'] ?></div>
-                             <div id="intake-files-1">
-                                 <div class="form-group col-sm-12 files">
+                              <div class="col-sm-2">
+                                 <div class="col-sm-12">
+                                    <?php echo $i.". #".$value['user_id'] ?>
+                                 </div>
+                                 <div class="col-sm-12">
+                                    <?php echo $value['created_by'] ?>
+                                 </div>
+                                 <div class="col-sm-12">
+                                    <?php echo $value['created']; ?>
+                                 </div>
+                              </div>
+                              <div class="col-sm-10">
+                                 <div class="col-sm-12"><?php echo $value['notes'] ?></div>
+                                 <div class="form-group col-sm-11 files">
+                                    <br/>
                                     <?php 
-                                       $files = $value['docs'] ? explode(",", $value['docs']) : array(); 
-                                       if(!empty($files)):
-                                          foreach ($files as $file):
-                                             ?>
-                                              <div class="col-sm-9" style="">
-                                                  <span class="file-label"><?php echo anchor("file/".$file . '__' . $value['id'], $file, array('target'=>'_blank')); ?></span>
-                                                  <?php echo anchor("file/" . $file . '__' . $value['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
-                                                  <?php echo anchor("download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>                                                     
-                                              </div>
-                                              <?php
-                                          endforeach;
-                                       endif;
+                                    $files = $value['docs'] ? explode(",", $value['docs']) : array(); 
+                                    if(!empty($files)):
+                                       foreach ($files as $file):
+                                          ?>
+                                           <div class="col-sm-9" style="">
+                                               <span class="file-label"><?php echo anchor("file/".$file . '__' . $value['id'], $file, array('target'=>'_blank')); ?></span>
+                                               <?php echo anchor("file/" . $file . '__' . $value['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
+                                               <?php echo anchor("download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>                                                     
+                                           </div>
+                                           <?php
+                                       endforeach;
+                                    endif;
                                     ?>
                                  </div>
-                             </div>
-                             <div class="col-sm-3&quot;"><i class="fa fa-remove row-link remove-form pull-right" alt="<?php echo $value['id']; ?>"></i></div>
-                             <div class="col-sm-12">By: <?php echo $value['created_by'] ?> on <i><?php echo date("Y-m-d", strtotime($value['created'])) ?></i></div>
+
+                                 <div class="col-sm-1&quot;"><i class="fa fa-remove row-link remove-form pull-right" alt="<?php echo $value['id']; ?>"></i></div>   
+                              </div>
+                                                        
                          </div>  
                         <?php
                         endforeach;
@@ -373,7 +389,7 @@
                   <label for="mail_label" class="col-sm-2">Mail Addres:</label>    
                   <div class="form-group col-sm-6">
                      <input name="priority" value="HIGH" id="mail_address" class="col-sm-1" type="checkbox">
-                     <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address</label>
+                     <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address with the policy</label>
                   </div>
                </div>
                <div>
@@ -644,7 +660,7 @@
       if(confirm('Are you sure you want to delete? '))
       {
          // remove form area instant to make it visible fast
-         $(this).parent("div").parent("div.intake-forms").remove();
+         $(this).parent("div").parent("div").parent("div.intake-forms").remove();
 
          $.ajax({
             url: "<?php echo base_url("emergency_assistance/deleteform/") ?>"+id,
@@ -808,6 +824,25 @@
       }
    })
 
+   // once user clicked on same with policy button
+   .on("click", "#mail_address", function(){
+
+      // get local data
+      var data = $.parseJSON($("input[name=policy_info]").val());
+      if($(this).is(":checked"))
+      {
+         // fill all json values to address fields
+         $("input[name=street_no_email]").val(data[0].street_number);
+         $("input[name=street_name_email]").val(data[0].street_name);
+         $("input[name=city_email]").val(data[0].city);
+         $("select[name=province_email]").val(data[0].province2);
+      }
+      else
+      {
+         $("input[name=street_no_email],input[name=street_name_email],input[name=city_email],select[name=province_email]").val("");
+      }
+   })
+
    // set validation on emc select list
    .on("change", "select[name=assign_to_follow]", function(){
 
@@ -857,6 +892,14 @@
          }
       })
    }
+})
+
+.on("click", '.search_provider', function(e){
+   e.preventDefault();
+   var href = $(this).attr("href")+"?street_no="+$("input[name=street_no]").val()+"&street_name="+$("input[name=street_name]").val()+"&city="+$("input[name=city]").val()+"&province="+$("select[name=province]").val()+"&country="+$("select[name=country2]").val()+"&post_code="+$("input[name=post_code]").val()+"";
+
+   $(this).target = "_blank";
+   window.open(href,"Search Providers", "width=1250,height=600"); 
 })
 
 // create input boxes where requirement need

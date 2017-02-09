@@ -14,7 +14,7 @@
                <div class="clearfix"></div>
             </div>
             <div class="x_content">
-               <?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post')); ?>
+               <?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post', 'onsubmit'=>'return validate()')); ?>
                <div class="row" style="margin-bottom:15px;">
                   <div class="form-group col-sm-3">
                      <?php 
@@ -72,7 +72,7 @@
                   <div class="form-group col-sm-3">
                      <?php 
                         echo form_label('Case No#:', 'case_no', array("class"=>'col-sm-12'));                            
-                        echo form_input("case_no", ($this->input->post("case_no")?$this->input->post("case_no"):$this->input->get("policy")), array("class"=>"form-control", 'placeholder'=>'Case No#'));
+                        echo form_input("case_no", ($this->input->post("case_no")?$this->input->post("case_no"):$this->input->get("case_no")), array("class"=>"form-control", 'placeholder'=>'Case No#'));
                         echo form_error("case_no");
                      ?>
                   </div>
@@ -593,7 +593,7 @@
                   <label for="mail_label" class="col-sm-2">Mail Address:</label>    
                   <div class="form-group col-sm-6">
                      <input name="same_address" value="1" id="mail_address" class="col-sm-1" type="checkbox">
-                     <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address</label>
+                     <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address with the policy</label>
                   </div>
                </div>
                <div>
@@ -894,6 +894,19 @@
            startDate: '-5y',
            endDate: '+2y',
        });
+
+      // load atleast one claim item form for first use
+      var html = $(".base-row").html();
+      $(".expenses-list").append(html);
+      $(".autocomplete_field").autocomplete({
+        serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
+        minLength: 2,
+        dataType: "json",
+      });
+      $(".datepicker").datepicker({
+           startDate: '-5y',
+           endDate: '+2y',
+       });
    })
    
    .on("click",".more_filters", function(){
@@ -1076,7 +1089,7 @@
                var files = '<div class="col-sm-9" style=""><input type="hidden" name="file_pdf_'+count+'" value="'+data.file_name+'" /><span class="file-label">'+data.file_name+'</span> <i class="fa fa-trash row-link" id="'+count+'"></i></div>';
 
                // generate html data
-               var html = '<div class="col-sm-12 intake-forms"><div class=col-sm-12"><input type="hidden" name="notes_'+count+'" value="'+notes+'" />' + notes + '</div><div id="intake-files-'+count+'">'+files+'</div> <div class=col-sm-3"><i class="fa fa-remove row-link remove-form pull-right"></i></div> <div class="col-sm-12">By: <?php echo $this->ion_auth->user()->row()->first_name; ?> on <i><?php echo date("Y-m-d"); ?></i></div></div>';
+               var html = '<div class="col-sm-12 intake-forms"><div class="col-sm-2"><div class="col-sm-12">'+count+'. #<?php echo $this->ion_auth->user()->row()->id; ?></div><div class="col-sm-12"><?php echo $this->ion_auth->user()->row()->first_name; ?></div><div class="col-sm-12"><?php echo date("Y-m-d H:i:s"); ?></div></div><div class="col-sm-10"><div class=col-sm-12"><input type="hidden" name="notes_'+count+'" value="'+notes+'" />' + notes + '</div><div id="intake-files-'+count+'" class="form-group col-sm-11">'+files+'</div><div class="col-sm-1&quot;"><i class="fa fa-remove row-link remove-form pull-right"></i></div></div></div>';
 
                // place every value to intake display area
                $(".intake-forms-list").append(html);
@@ -1147,7 +1160,7 @@
       if(confirm('Are you sure you want to delete? '))
       {
          // remove form area instant to make it visible fast
-         $(this).parent("div").parent("div.intake-forms").remove();
+         $(this).parent("div").parent("div").parent("div.intake-forms").remove();
 
          $.ajax({
             url: "<?php echo base_url("emergency_assistance/deleteform/") ?>"+id,
@@ -1158,7 +1171,7 @@
       }
    })
 
-   // once user click over save intake form, we are just hold every value untill case is not submitted
+   // once user click over save intake form, we are just hold every value untill claim is not submitted
    .on("click", '.save-intakeform', function(){
 
       // check notes field filled or not
@@ -1242,6 +1255,25 @@
       }
    })
 
+   // once user clicked on same with policy button
+   .on("click", "#mail_address", function(){
+
+      // get local data
+      var data = $.parseJSON(localStorage.getItem("policy_data"));
+      if($(this).is(":checked"))
+      {
+         // fill all json values to address fields
+         $("input[name=street_no_email]").val(data[0].street_number);
+         $("input[name=street_name_email]").val(data[0].street_name);
+         $("input[name=city_email]").val(data[0].city);
+         $("select[name=province_email]").val(data[0].province2);
+      }
+      else
+      {
+         $("input[name=street_no_email],input[name=street_name_email],input[name=city_email],select[name=province_email]").val("");
+      }
+   })
+
 
    // when currency changed in payees section
    .on("change", 'select[name="payees[payee_currency][]"]', function(){
@@ -1314,5 +1346,17 @@ $outer_select.each(function(){
    $(this).empty();
    $(this).append($("#products").html());
 });
+
+// to validate expenses items
+function validate(){
+   // check length of expenses items if not deleted
+   var length = $(".expenses-list .row").length;
+   if(!length){
+      alert("Please create alteast one expenses claimed item.");
+      $(".add_new_expenses").focus();
+      return false;
+   }
+   return true;
+}
 
 </script>

@@ -9,6 +9,15 @@ Password: password
 
 
 #####################
+Feb, 09 2016 update:-
+#####################
+Please find attached reports for work update and these report contain some query, please reply asap.
+
+http://brsoftech.org/Documents/JF_Claim_Update_and_Queries_0.docx
+
+
+
+#####################
 Feb, 08 2016 update:-
 #####################
 Please find attached reports for work update and these report contain some query, please reply asap.

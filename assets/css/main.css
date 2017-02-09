@@ -391,3 +391,9 @@ input[type=checkbox]{
     font-size: 14px !important;
     padding-bottom: 7px;
 }
+.intake-forms {
+    border: 1px solid;
+}
+.intake-forms .col-sm-10 {
+    border-left: 1px solid;
+}

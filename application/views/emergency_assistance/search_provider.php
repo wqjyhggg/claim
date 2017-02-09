@@ -122,13 +122,14 @@
                   </table>
                <!-- End Search List Section -->
 
-                  <div class="col-sm-12" style="text-align:center">
-                     <button class="btn btn-primary return_back">Return</button>  
-                  </div>
                </div>
             <?php else: ?>
                <center><?php echo heading("No record available", 4); ?></center>
             <?php endif ?>
+            
+            <div class="col-sm-12" style="text-align:center">
+               <button class="btn btn-primary return_back">Return</button>  
+            </div>
          </div>
       </div>
    </div>

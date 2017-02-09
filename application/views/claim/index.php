@@ -2,7 +2,7 @@
    <div class="page-title">
       <div class="title_left">
 
-         <?php echo anchor("claim/create_claim", '<i class="fa fa-plus-circle"></i> Create New Claim', array("class"=>'btn btn-primary')) ?>
+         <?php echo anchor("claim/create_claim", '<i class="fa fa-plus-circle"></i> Create New Claim', array("class"=>'btn btn-primary create_claim')) ?>
          
       </div>
    </div>
@@ -319,8 +319,8 @@
                         </thead>
                         <tbody>
                         <?php foreach ($cases as $key => $value): ?>
-                           <tr class='row-link' alt='<?php echo $value['id']; ?>' policy='<?php echo $value['policy_no'] ?>' title='Click to add claim' case_no='<?php echo $value['case_no']; ?>'>
-                              <td><?php echo form_checkbox('select_case'); ?></td>
+                           <tr alt='<?php echo $value['id']; ?>' policy='<?php echo $value['policy_no'] ?>'  case_no='<?php echo $value['case_no']; ?>'>
+                              <td class='row-link' title='Click to add claim'><?php echo form_checkbox('select_case'); ?></td>
                               <td><?php echo $value['case_no']; ?></td>
                               <td><?php echo $value['created']; ?></td>
                               <td><?php echo $value['province']; ?></td>
@@ -505,11 +505,26 @@ $(document).ready(function() {
     });
 
    // create claim once user clicked on case
-   $(".row-link").click(function() {
+   $(".create_claim").click(function(e) {
+      e.preventDefault();
       var id = $(this).attr("alt");
-      var case_no = $(this).attr("case_no");
-      var policy_no = $(this).attr("policy_no");
-      window.location = "<?php echo base_url("emergency_assistance/edit_case/") ?>"+id+"?type=add_claim";
+      var case_no = $("input[name=select_case]:checked").parent('td').parent('tr').attr("case_no");
+      var policy_no = $("input[name=select_case]:checked").parent('td').parent('tr').attr("policy");
+
+      var href = $(this).attr('href');
+      if(case_no || policy_no)
+         window.location = href+"?case_no="+case_no+"&policy="+policy_no;
+      else
+         window.location = href;
+   })
+
+   $("input[name=select_case]").click(function(){
+
+      // unset all selections
+      if($(this).is(":checked")){
+         $("input[name=select_case]").prop("checked",false);
+         $(this).prop("checked", true);
+      }
    })
 
    // create claim once user clicked on policy
