@@ -6,6 +6,7 @@
       $policy_info = json_decode($claim_details['policy_info'], TRUE);
       $policy_info = @$policy_info[0];
       echo form_input("arrival_date", @$policy_info['arrival_date'], array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date'));
+      echo form_hidden("policy_info", $claim_details['policy_info']);
       ?>
       <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
    </div>

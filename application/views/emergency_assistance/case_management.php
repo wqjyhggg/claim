@@ -148,6 +148,7 @@
                            insured_lastname="<?php echo $value['insured_lastname'] ?>"
                            insured_name="<?php echo $value['insured_name'] ?>"
                            policy_no="<?php echo $value['policy_no'] ?>"
+                           policy_info='<?php echo $value['policy_info'] ?>'
                            case_no="<?php echo $value['case_no'] ?>"
                            casemanager_name="<?php echo $value['case_manager_name'] ?>"
                            >
@@ -300,7 +301,7 @@
                   <label for="mail_label" class="col-sm-2">Mail Addres:</label>    
                   <div class="form-group col-sm-6">
                      <input name="priority" value="HIGH" id="mail_address" class="col-sm-1" type="checkbox">
-                     <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address</label>
+                     <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address with the policy</label>
                   </div>
                </div>
                <div>
@@ -701,6 +702,25 @@ $(document).ready(function() {
                window.location.reload();
             }
          })
+   }
+})
+
+// once user clicked on same with policy button
+.on("click", "#mail_address", function(){
+
+   // get local data
+   var data = $.parseJSON($("input[name=case]:checked").parent('th').parent('tr').attr('policy_info'));
+   if($(this).is(":checked"))
+   { 
+      // fill all json values to address fields
+      $("input[name=street_no]").val(data[0].street_number);
+      $("input[name=street_name]").val(data[0].street_name);
+      $("input[name=city]").val(data[0].city);
+      $("select[name=province]").val(data[0].province2);
+   }
+   else
+   {
+      $("input[name=street_no],input[name=street_name],input[name=city],select[name=province]").val("");
    }
 })
 

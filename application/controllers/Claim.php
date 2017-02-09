@@ -188,7 +188,7 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
-			$this->form_validation->set_rules('case_no', 'Case No', 'is_unique[claim.case_no]');
+			$this->form_validation->set_rules('case_no', 'Case No', '');
 			$this->form_validation->set_rules('school_name', 'School Name', 'required');
 			$this->form_validation->set_rules('group_id', 'Group ID', 'required');
 
@@ -401,7 +401,7 @@ class Claim extends CI_Controller {
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
-				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "");
+				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
 				$this->data['payees'] = $this->common_model->get_payees($field_name = "expenses_climed[payee][]", $selected = $this->input->post($field_name));
 
@@ -610,17 +610,17 @@ class Claim extends CI_Controller {
 			{	
 				
 				// get expenses climed items list
-				$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields = "`expenses_climed`.*", $conditions = $id?array('expenses_climed.claim_id'=>$id):array());
+				$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields = "`expenses_climed`.*", $conditions = ($id?array('expenses_climed.claim_id'=>$id):array()));
 
 				// get claim history
-				$fields = "expenses_climed.claim_id, expenses_climed.claim_no, expenses_climed.case_no,expenses_climed.claim_date,sum(expenses_climed.amount_claimed) as amount_claimed,sum(expenses_climed.amount_client_paid) as amount_client_paid,expenses_climed.currency,expenses_climed.pay_to";
+				$fields = "expenses_climed.claim_id, expenses_climed.claim_no, expenses_climed.case_no,expenses_climed.claim_date,sum(expenses_climed.amount_claimed) as amount_claimed, sum(expenses_climed.amount_client_paid) as amount_client_paid, expenses_climed.currency,expenses_climed.pay_to";
 				$this->data['claim_history'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields, $conditions = array(), $joins = array(), $order_by = array(), $group_by = array('expenses_climed.claim_id'));
 				
 				// load dropdowns- countries, province, products data
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
-				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "");
+				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
 				$this->data['payees'] = $this->common_model->get_payees($field_name = "expenses_climed[payee][]", $selected = $this->input->post($field_name));
 
@@ -641,7 +641,7 @@ class Claim extends CI_Controller {
 					'on' => 'u1.id = intake_form.created_by',
 					'type' => 'LEFT'
 					);
-				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('intake_form.case_id'=>$id, 'type'=>'CLAIM'), $joins);
+				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by, u1.id as user_id", $conditions = array('intake_form.case_id'=>$id, 'type'=>'CLAIM'), $joins);
 
 
 				// get case info details if exists
@@ -887,7 +887,7 @@ class Claim extends CI_Controller {
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
-				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "");
+				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
 				$this->data['payees'] = $this->common_model->get_payees($field_name = "expenses_climed[payee][]", $selected = $this->input->post($field_name));
 
@@ -908,7 +908,7 @@ class Claim extends CI_Controller {
 					'on' => 'u1.id = intake_form.created_by',
 					'type' => 'LEFT'
 					);
-				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('intake_form.case_id'=>$id, 'type'=>'CLAIM'), $joins);
+				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by, u1.id as user_id", $conditions = array('intake_form.case_id'=>$id, 'type'=>'CLAIM'), $joins);
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Claim Details', TRUE);

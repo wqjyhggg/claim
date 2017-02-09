@@ -94,7 +94,7 @@
                   </div>       
                   <div class="col-sm-2">
                      <label class="col-sm-12">&nbsp;</label>
-                     <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary', 'target'=>'_blank')) ?>
+                     <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary search_provider', 'target'=>'_blank')) ?>
                   </div>
                   <div class="form-group col-sm-4">
                      <?php 
@@ -199,6 +199,7 @@
                      echo form_label('Policy Number:', 'policy_no', array("class"=>'col-sm-12'));  
                      echo form_input("policy_no", $this->common_model->field_val("policy_no", $case_details), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
                      echo form_error("policy_no");
+                     echo form_hidden("policy_info");
                      ?>
                   </div> 
                   <div class="form-group col-sm-4">
@@ -381,7 +382,7 @@
       var files = $(".modal-body .files").clone();
 
       // generate html data
-      var html = '<div class="col-sm-12 intake-forms"><div class=col-sm-12"><input type="hidden" name="notes_'+count+'" value="'+notes+'" />' + notes + '</div><div id="intake-files-'+count+'"></div> <div class=col-sm-3"><i class="fa fa-remove row-link remove-form pull-right"></i></div> <div class="col-sm-12">By: <?php echo $this->ion_auth->user()->row()->first_name; ?> on <i><?php echo date("Y-m-d"); ?></i></div></div>';
+      var html = '<div class="col-sm-12 intake-forms"><div class="col-sm-2"><div class="col-sm-12">'+count+'. #<?php echo $this->ion_auth->user()->row()->id; ?></div><div class="col-sm-12"><?php echo $this->ion_auth->user()->row()->first_name; ?></div><div class="col-sm-12"><?php echo date("Y-m-d H:i:s"); ?></div></div><div class="col-sm-10"><div class=col-sm-12"><input type="hidden" name="notes_'+count+'" value="'+notes+'" />' + notes + '</div><div id="intake-files-'+count+'" class="form-group col-sm-11"></div><div class="col-sm-1&quot;"><i class="fa fa-remove row-link remove-form pull-right"></i></div></div></div>';
 
       // place every value to intake display area
       $(".intake-forms-list").append(html);
@@ -396,6 +397,31 @@
       $(".intake-heading").show()
    })
 
+   // get  policy information here
+   .on("change", "input[name=policy_no]", function(){
+      $.ajax({
+         url: "<?php echo base_url("emergency_assistance/get_policy_info"); ?>",
+         method:"get",
+         data:{policy:$(this).val()},
+         dataType: "json",
+         beforeSend: function(){
+            $(".nav-m22d").addClass("csspinner load1");
+         },
+         success: function(data){
+            if(typeof data.plan_list != "undefined" && data.plan_list.length)
+            {
+               localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
+               $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+            }
+            else{
+               alert("Sorry, policy information does not exists, please check policy no and try again");
+               $(this).val("");
+            }
+            $(".nav-m22d").removeClass("csspinner load1");
+         }
+      })
+   })
+
    // custom script for multi file upload
    $(document).on("click",".multiupload", function(){
       var count = $("input[type=file]").length;
@@ -408,27 +434,27 @@
 
       // place trigger clicked once file append in files class
       $('#file'+(count+1)).trigger("click");
-   });
+   })
 
    // delete files
-   $(document).on("click",".fa-trash", function(){
+   .on("click",".fa-trash", function(){
       $(this).parent("div").remove();
       $("#file"+$(this).attr("id")).remove();
-   });
+   })
 
 
    // delete intake-form
-   $(document).on("click",".fa-remove", function(){
+   .on("click",".fa-remove", function(){
       $(this).parent("div").parent("div.intake-forms").remove();
       var count = $(".intake-forms").length;
       if(!count) {
          // remove intake heading from here
          $(".intake-heading").hide();
       }
-   });
+   })
 
    // once auto file clicked
-   $(document).on("change","input[type=file]", function(){
+   .on("change","input[type=file]", function(){
 
       // validate file extension
       var ext = $(this).val().split('.').pop().toLowerCase();
@@ -440,14 +466,22 @@
       
       // display file name and delete button
       $(this).next("span.file-label").text($(this).val()).parent("div.col-sm-9").show();
-   });
+   })
 
    // reset form fields
-   $(document).on("click", ".create_intake_form", function() {
+   .on("click", ".create_intake_form", function() {
 
       // reset intake forms field
       $("textarea[name=intake_notes]").val("");
       $(".modal-body .files").html("");
+   })
+
+   .on("click", '.search_provider', function(e){
+      e.preventDefault();
+      var href = $(this).attr("href")+"?street_no="+$("input[name=street_no]").val()+"&street_name="+$("input[name=street_name]").val()+"&city="+$("input[name=city]").val()+"&province="+$("select[name=province]").val()+"&country="+$("select[name=country2]").val()+"&post_code="+$("input[name=post_code]").val()+"";
+
+      $(this).target = "_blank";
+      window.open(href, "Search Providers", "width=1250,height=600"); 
    })
 
 </script>

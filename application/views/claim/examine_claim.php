@@ -15,8 +15,7 @@
                <?php echo $message; ?>
             </div>
             <div class="x_content">
-               <?php if(!empty($expenses)): ?>
-
+               <?php if(!empty($claim_history)): ?>
                   <?php echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal', 'method'=>'post', 'id'=>'save_item')); ?>
                   <div class="row">
                      <div class="table-responsive">
@@ -327,7 +326,7 @@
                   <label for="mail_label" class="col-sm-2">Mail Addres:</label>    
                   <div class="form-group col-sm-6">
                      <input name="priority" value="HIGH" id="mail_address" class="col-sm-1" type="checkbox">
-                     <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address</label>
+                     <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address with the policy</label>
                   </div>
                </div>
                <div>
@@ -830,7 +829,7 @@
       if(confirm('Are you sure you want to delete? '))
       {
          // remove form area instant to make it visible fast
-         $(this).parent("div").parent("div.intake-forms").remove();
+         $(this).parent("div").parent("div").parent("div.intake-forms").remove();
 
          $.ajax({
             url: "<?php echo base_url("emergency_assistance/deleteform/") ?>"+id,
@@ -860,6 +859,25 @@
          })
       } else {
          return false;
+      }
+   })
+
+     // once user clicked on same with policy button
+   .on("click", "#mail_address", function(){
+
+      // get local data
+      var data = $.parseJSON($("input[name=policy_info]").val());
+      if($(this).is(":checked"))
+      {
+         // fill all json values to address fields
+         $("input[name=street_no_email]").val(data.street_number);
+         $("input[name=street_name_email]").val(data.street_name);
+         $("input[name=city_email]").val(data.city);
+         $("select[name=province_email]").val(data.province2);
+      }
+      else
+      {
+         $("input[name=street_no_email],input[name=street_name_email],input[name=city_email],select[name=province_email]").val("");
       }
    })
 

@@ -348,7 +348,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name, $case_details));
-				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "");
+				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
 				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Follow Up EAC--");
 				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--");
 				$this->data['reasons'] = $this->common_model->getreasons($field_name = "reason", $selected = $this->common_model->field_val($field_name, $case_details));
@@ -361,7 +361,7 @@ class Emergency_assistance extends CI_Controller {
 					'on' => 'u1.id = intake_form.created_by',
 					'type' => 'LEFT'
 					);
-				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('intake_form.case_id'=>$id), $joins);
+				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by, u1.id as user_id", $conditions = array('intake_form.case_id'=>$id), $joins);
 
 				// pass case id to server
 				$this->data['case_id'] = $id;
@@ -485,7 +485,7 @@ class Emergency_assistance extends CI_Controller {
 			if($this->input->get("case_manager")) 
 				$conditions['case.case_manager'] = $this->input->get("case_manager");
 
-			$fields = "case.insured_address, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, case.insured_lastname, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id, case.status";
+			$fields = "case.insured_address, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, case.insured_lastname, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id, case.status, case.policy_info";
 			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array(), $having = "", $limit, $offset);
 			$this->data['cases'] = $results['records'];
 
@@ -541,7 +541,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
 			
 			// get province list
-			$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->get("province"));
+			$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->get("province"), $key= "short_code", $value = "name");
 
 			// get products list
 			$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->get($field_name), FALSE, FALSE);
