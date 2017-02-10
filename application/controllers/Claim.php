@@ -382,6 +382,20 @@ class Claim extends CI_Controller {
 					}
 				}
 
+				// settings for my task section for case manager
+				$task_data = array(
+					'user_id'=>$this->ion_auth->user()->row()->id,
+					'item_id'=>$record_id,
+					'task_no'=>$claim_no,
+					'category'=>'Claims',
+					'type'=>'CLAIM',
+					'priority'=>'Normal',
+					'created_by'=>$this->ion_auth->user()->row()->id,
+					'created'=>date('Y-m-d H:i:s'),
+					'user_type'=>'claimsmanager'
+					);
+				// insert values to database
+				$this->common_model->save("mytask", $task_data);
 
 				// send success message
 				$this->session->set_flashdata('success', "Claim successfully created");
@@ -1193,6 +1207,38 @@ class Claim extends CI_Controller {
 		foreach ($claim as $key => $value) 
 		{
 			$this->common_model->update("claim", array("assign_to"=>$employee_id), array("id"=>$value));
+
+			// check task, if already exists
+			$task_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "mytask", $fields = "mytask.id", $conditions = array('item_id'=>$value, 'type'=>'CLAIM', 'user_type'=>'claimexaminer'));
+
+			if(!empty($task_details))
+			{
+				// update my task data
+				$data_task = array(
+					'user_id'=>$employee_id
+					);
+				$this->common_model->update("mytask", $data_task, array('item_id'=>$value, 'type'=>'CLAIM', 'user_type'=>'claimexaminer'));
+			} 
+			else 
+			{
+				// get case details here
+				$claim_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "claim", $fields = "created_by, created, claim_no", $conditions = array('claim.id'=>$value));
+
+				// create new task here
+				$task_data = array(
+					'user_id'=>$employee_id,
+					'item_id'=>$value,
+					'task_no'=>$claim_details['claim_no'],
+					'category'=>'Claims',
+					'type'=>'CLAIM',
+					'priority'=>'Normal',
+					'created_by'=>$claim_details['created_by'],
+					'created'=>$claim_details['created'],
+					'user_type'=>'claimexaminer'
+					);
+				// insert values to database
+				$this->common_model->save("mytask", $task_data);
+			}
 		}
 
 		// send success message

@@ -10,7 +10,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
          <div class="x_panel">
             <div class="x_title">
-               <h2 class="task_heading">My Tasks!<small></small></h2>
+               <h2>My Tasks! (5 Cases/2 Claims)<small></small></h2>
                <div class="clearfix"></div>
             </div>
             <div class="x_content">
@@ -21,7 +21,7 @@
                         <tr>
                            <th></th>
                            <th>No.</th>
-                           <th><?php echo $this->pagination->sort("priority", "Priority") ?></th>
+                           <th>Priority</th>
                            <th>Task No</th>
                            <th>Insured Name</th>
                            <th>Created DateTime</th>
@@ -34,18 +34,11 @@
                      </thead>
                      <tbody>
                         <?php $i = 0;
-                        $claims = [];
-                        $cases = [];
                         foreach ($records as $key => $value): 
                            $i++;
-                           if($value['type']=='CLAIM')
-                              $claims[] = $i;
-                           else
-                              $cases[] = $i;
-
                          ?>
-                           <tr <?php if($value['priority'] == 'HIGH') echo 'style="background-color:rgba(155, 243, 151, 0.44)"'; ?>>
-                              <td><?php echo anchor(($value['type']=='CLAIM'?'claim/claim_detail/'.$value['item_id']:'emergency_assistance/edit_case/'.$value['item_id']), '<i class="fa fa-edit"></i>', array('title'=>'Edit Task')) ?></td>
+                           <tr>
+                              <td><i class="fa fa-edit"></i></td>
                               <td><?php echo $i; ?>.</td>
                               <td><?php echo $value['priority']; ?></td>
                               <td><?php echo $value['task_no']; ?></td>
@@ -73,28 +66,3 @@
    </div>
    <!-- End List Section -->
 </duv>
-
-<script>
-<?php
-   $str = '';
-   if(count($claims) and count($cases))
-   {
-      $str = '('.count($cases).' Case'.(count($cases)>1?'s':'').'/'.count($claims).' Claim'.(count($claims)>1?'s':'').')';
-   }
-   elseif(count($claims))
-   {
-      $str = '('.count($claims).' Claim'.(count($claims)>1?'s':'').')';
-   }
-   elseif(count($cases))
-   {
-      $str = '('.count($cases).' Case'.(count($cases)>1?'s':'').')';
-   }
-   if($str)
-   {
-      ?>
-      $(".task_heading").text('My Tasks! <?php echo $str; ?>');
-      <?php
-   }
- ?>
- task_heading
-</script>

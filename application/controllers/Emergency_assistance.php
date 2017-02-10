@@ -167,7 +167,8 @@ class Emergency_assistance extends CI_Controller {
 				$record_id = $this->common_model->save("case", $data);
 
 				// update case no(7 length) to table
-				$this->common_model->update("case", array("case_no"=>str_pad($record_id, 7, 0, STR_PAD_LEFT)), array("id"=>$record_id));
+				$case_no = str_pad($record_id, 7, 0, STR_PAD_LEFT); 
+				$this->common_model->update("case", array("case_no"=>$case_no), array("id"=>$record_id));
 
 				// load upload class
 				$config['upload_path'] = './assets/uploads/intake_forms/';
@@ -237,6 +238,42 @@ class Emergency_assistance extends CI_Controller {
 					}
 				}
 
+				// settings for my task section for eac
+				if($array['assign_to'])
+				{
+					$task_data = array(
+						'user_id'=>$array['assign_to'],
+						'item_id'=>$record_id,
+						'task_no'=>$case_no,
+						'category'=>'Assistance',
+						'type'=>'CASE',
+						'priority'=>$array['priority'],
+						'created_by'=>$this->ion_auth->user()->row()->id,
+						'created'=>date('Y-m-d H:i:s'),
+						'user_type'=>'eac'
+						);
+					// insert values to database
+					$this->common_model->save("mytask", $task_data);
+				}
+
+				// settings for my task section for case manager
+				if($array['case_manager'])
+				{
+					$task_data = array(
+						'user_id'=>$array['case_manager'],
+						'item_id'=>$record_id,
+						'task_no'=>$case_no,
+						'category'=>'Assistance',
+						'type'=>'CASE',
+						'priority'=>$array['priority'],
+						'created_by'=>$this->ion_auth->user()->row()->id,
+						'created'=>date('Y-m-d H:i:s'),
+						'user_type'=>'casemanager'
+						);
+					// insert values to database
+					$this->common_model->save("mytask", $task_data);
+				}
+
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully created");
 
@@ -251,7 +288,7 @@ class Emergency_assistance extends CI_Controller {
 					'on' => 'u1.id = case.created_by',
 					'type' => 'LEFT'
 					);
-				$case_details = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('case.id'=>$id), $joins);
+				$case_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('case.id'=>$id), $joins);
 				$this->data['case_details'] = $case_details;
 				
 				// load dropdowns data
@@ -287,6 +324,19 @@ class Emergency_assistance extends CI_Controller {
 		}
 		else
 		{
+			// get case details
+			$joins[] = array(
+				'table' => 'users u1',
+				'on' => 'u1.id = case.created_by',
+				'type' => 'LEFT'
+				);
+			$joins[] = array(
+				'table' => 'users u2',
+				'on' => 'u2.id = case.case_manager',
+				'type' => 'LEFT'
+				);
+			$case_details = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, case.created_by as created_by_id", $conditions = array('case.id'=>$id), $joins);
+
 			//validate form input
 			$this->form_validation->set_rules('assign_to', 'Assign To', '');
 			$this->form_validation->set_rules('reason', 'Reason', 'required');
@@ -314,6 +364,52 @@ class Emergency_assistance extends CI_Controller {
 				// insert values to database
 				$this->common_model->update("case", $data, array('id'=>$id));
 
+				// update my task section if there casemanager updated
+				if($case_details['case_manager'] <> $array['case_manager'])
+				{
+					// update casemanager id
+					$data_task = array(
+						'priority'=>$array['priority'],
+						'user_id'=>$array['case_manager']
+						);
+					$this->common_model->update("mytask", $data_task, array('item_id'=>$id, 'type'=>'CASE', 'user_id'=>$case_details['case_manager'], 'user_type'=>'casemanager'));
+				}	
+
+				// update my task section if there follow up updated
+				if($case_details['assign_to'] <> $array['assign_to'] and $case_details['assign_to'])
+				{
+					// update followup id
+					$data_task = array(
+						'priority'=>$array['priority'],
+						'user_id'=>$array['assign_to']
+						);
+					$this->common_model->update("mytask", $data_task, array('item_id'=>$id, 'type'=>'CASE', 'user_id'=>$case_details['assign_to'], 'user_type'=>'eac'));
+				}
+
+				// update my task section if there is new eac assigned
+				if($case_details['assign_to'] <> $array['assign_to'] and !$case_details['assign_to'])
+				{
+					$task_data = array(
+						'user_id'=>$array['assign_to'],
+						'item_id'=>$id,
+						'task_no'=>$case_details['case_no'],
+						'category'=>'Assistance',
+						'type'=>'CASE',
+						'priority'=>$array['priority'],
+						'created_by'=>$case_details['created_by_id'],
+						'created'=>$case_details['created'],
+						 'user_type'=>'eac'
+						);
+					// insert values to database
+					$this->common_model->save("mytask", $task_data);
+				}			
+
+				// update priority to my task
+				$data_task = array(
+					'priority'=>$array['priority']
+					);
+				$this->common_model->update("mytask", $data_task, array('item_id'=>$id, 'type'=>'CASE'));
+
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully updated");
 
@@ -322,18 +418,6 @@ class Emergency_assistance extends CI_Controller {
 			}
 			else
 			{	
-				// verify case details
-				$joins[] = array(
-					'table' => 'users u1',
-					'on' => 'u1.id = case.created_by',
-					'type' => 'LEFT'
-					);
-				$joins[] = array(
-					'table' => 'users u2',
-					'on' => 'u2.id = case.case_manager',
-					'type' => 'LEFT'
-					);
-				$case_details = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name", $conditions = array('case.id'=>$id), $joins);
 				$this->data['case_details'] = $case_details;
 				if(empty($case_details))
 				{
@@ -532,7 +616,7 @@ class Emergency_assistance extends CI_Controller {
 			}
 
 			// get all case managers list			
-			$additional_conditions = " and users.id != '$case_manager'";
+			$additional_conditions = "";
         	$this->data['casemanagers'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--", $additional_conditions);
 
 			// get all documents for sending email/print.
@@ -1258,6 +1342,39 @@ class Emergency_assistance extends CI_Controller {
 			foreach ($cases as $key => $value) 
 			{
 				$this->common_model->update("case", array("case_manager"=>$employee_id), array("id"=>$value));
+				
+
+				// check task, if already exists
+				$task_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "mytask", $fields = "mytask.id", $conditions = array('item_id'=>$value, 'type'=>'CASE', 'user_type'=>'casemanager'));
+
+				if(!empty($task_details))
+				{
+					// update casemanager id to task table
+					$data_task = array(
+						'user_id'=>$employee_id
+						);
+					$this->common_model->update("mytask", $data_task, array('item_id'=>$value, 'type'=>'CASE', 'user_type'=>'casemanager'));
+				} 
+				else 
+				{
+					// get case details here
+					$case_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "case", $fields = "created_by, created, priority, case_no", $conditions = array('case.id'=>$value));
+
+					// create new task here
+					$task_data = array(
+						'user_id'=>$employee_id,
+						'item_id'=>$value,
+						'task_no'=>$case_details['case_no'],
+						'category'=>'Assistance',
+						'type'=>'CASE',
+						'priority'=>$case_details['priority'],
+						'created_by'=>$case_details['created_by'],
+						'created'=>$case_details['created'],
+						'user_type'=>'casemanager'
+						);
+					// insert values to database
+					$this->common_model->save("mytask", $task_data);
+				}
 			}
 		}
 
@@ -1283,8 +1400,39 @@ class Emergency_assistance extends CI_Controller {
 				foreach ($cases as $key => $value) 
 				{
 					$this->common_model->update("case", array("assign_to"=>$users['id']), array("id"=>$value));
-				}
-			
+
+					// check task, if already exists
+					$task_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "mytask", $fields = "mytask.id", $conditions = array('item_id'=>$value, 'type'=>'CASE', 'user_type'=>'eac'));
+
+					if(!empty($task_details))
+					{
+						// update my task data
+						$data_task = array(
+							'user_id'=>$users['id']
+							);
+						$this->common_model->update("mytask", $data_task, array('item_id'=>$value, 'type'=>'CASE', 'user_type'=>'eac'));
+					} 
+					else 
+					{
+						// get case details here
+						$case_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "case", $fields = "created_by, created, priority, case_no", $conditions = array('case.id'=>$value));
+
+						// create new task here
+						$task_data = array(
+							'user_id'=>$users['id'],
+							'item_id'=>$value,
+							'task_no'=>$case_details['case_no'],
+							'category'=>'Assistance',
+							'type'=>'CASE',
+							'priority'=>$case_details['priority'],
+							'created_by'=>$case_details['created_by'],
+							'created'=>$case_details['created'],
+							'user_type'=>'eac'
+							);
+						// insert values to database
+						$this->common_model->save("mytask", $task_data);
+					}
+				}			
 		}
 
 		echo TRUE;
@@ -1315,6 +1463,39 @@ class Emergency_assistance extends CI_Controller {
 
 			// save record in intake form as notes
 			$this->common_model->update("case", array("assign_to"=>$employee_id), array("id"=>$value));
+
+
+			// check task, if already exists
+			$task_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "mytask", $fields = "mytask.id", $conditions = array('item_id'=>$value, 'type'=>'CASE', 'user_type'=>'eac'));
+
+			if(!empty($task_details))
+			{
+				// update my task data
+				$data_task = array(
+					'user_id'=>$employee_id
+					);
+				$this->common_model->update("mytask", $data_task, array('item_id'=>$value, 'type'=>'CASE', 'user_type'=>'eac'));
+			} 
+			else 
+			{
+				// get case details here
+				$case_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "case", $fields = "created_by, created, priority, case_no", $conditions = array('case.id'=>$value));
+
+				// create new task here
+				$task_data = array(
+					'user_id'=>$employee_id,
+					'item_id'=>$value,
+					'task_no'=>$case_details['case_no'],
+					'category'=>'Assistance',
+					'type'=>'CASE',
+					'priority'=>$case_details['priority'],
+					'created_by'=>$case_details['created_by'],
+					'created'=>$case_details['created'],
+					'user_type'=>'eac'
+					);
+				// insert values to database
+				$this->common_model->save("mytask", $task_data);
+			}
 		}
 
 		$this->session->set_flashdata('success', "Follow up case successfully.");

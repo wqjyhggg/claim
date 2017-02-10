@@ -50,9 +50,133 @@ class Auth extends CI_Controller {
 		}
 		else
 		{
+
+			// get my tasks here
+			$table = "mytask";
+			$fields = "mytask.*, IF(type='CLAIM', concat_ws(' ', claim.insured_first_name, claim.insured_last_name), concat_ws(' ', case.insured_firstname, case.insured_lastname)) as insured_name, IF(type='CLAIM', '', LPAD(case.assign_to, 4, 0)) as followup_by";
+			$joins[] = array(
+				'table' => 'users',
+				'on' => 'users.id = mytask.created_by',
+				'type' => 'LEFT'
+				);
+			$joins[] = array(
+				'table' => 'case',
+				'on' => 'case.id = mytask.item_id',
+				'type' => 'LEFT'
+				);
+			$joins[] = array(
+				'table' => 'claim',
+				'on' => 'claim.id = mytask.item_id',
+				'type' => 'LEFT'
+				);
+			$order_by = array(
+				'field' => 'id',
+				'order' => 'desc'
+				);
+			$conditions = "mytask.user_id = '".$this->ion_auth->user()->row()->id."'";
+
+			// if sorting enabled
+			if($this->input->get("field")) 
+				$order_by = array(
+					'field' => $this->input->get("field"),
+					'order' => $this->input->get("order")
+					);
+			$limit = $this->limit; 
+			$offset = $this->uri->segment(3);
+
+			// get result
+			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table, $fields, $conditions, $joins, $order_by, $group_by=array(), $having = "", $limit, $offset);
+
+			$config['base_url'] = site_url('auth/mytasks');
+			$config['per_page'] = $limit;
+			$config['first_url'] = $config['base_url'].'?'.http_build_query($this->input->get());
+			if (count($this->input->get()) > 0)
+				$config['suffix'] = '?' . http_build_query($this->input->get(), '', "&");
+			$config['total_rows'] = $results['rows'];
+			$this->pagination->initialize($config); // initiaze pagination config
+			$this->data['records'] = $results['records'];
+			$this->data['pagination'] = $this->pagination->create_links(); # create pagination links
+			// pagination end here
+
+
+
         	$this->template->write('title', SITE_TITLE.' - My Tasks', TRUE);
 	        $this->template->write_view('content', 'auth/mytasks', $this->data);
 	        $this->template->render();        
+		}
+	}
+
+	// edit task page
+	public function edit_task($id = 0)
+	{
+
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+			// get case details
+			$joins = array();
+			$task_details = $this->common_model->select($record = "first", $typecast = "array", $table = "mytask", $fields = "mytask.*", $conditions = array('mytask.id'=>$id), $joins);
+
+			//validate form input
+			$this->form_validation->set_rules('assign_to', 'Assign To', '');
+			$this->form_validation->set_rules('reason', 'Reason', 'required');
+			$this->form_validation->set_rules('first_name', 'First Name', 'required');
+			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
+			$this->form_validation->set_rules('priority', 'Priority', 'required');
+			if($this->input->get("ref") == 'manage')
+				$this->form_validation->set_rules('reserve_amount', 'Create Reservers', 'number');
+
+			if ($this->form_validation->run() == TRUE)
+			{
+				// prepare post data array
+				$data = [];
+				$array = $this->input->post();
+				foreach ($array as $key => $value) 
+				{
+					# code...
+					$data[$key] = $value;
+
+					// for check third party recovery
+					if($key == 'third_party_recovery')
+						$data[$key] = $value ? $value : "N";
+				}
+
+				// insert values to database
+				$this->common_model->update("case", $data, array('id'=>$id));
+
+				// update priority to my task
+				$data_task = array(
+					'priority'=>$array['priority']
+					);
+				$this->common_model->update("mytask", $data_task, array('item_id'=>$id, 'type'=>'CASE'));
+
+				// send success message
+				$this->session->set_flashdata('success', "Case successfully updated");
+
+				// redirect them to the login page
+				redirect('emergency_assistance', 'refresh');
+			}
+			else
+			{	
+				$this->data['task_details'] = $task_details;
+				if(empty($task_details))
+				{
+					// send error message
+					$this->session->set_flashdata('error', "Something went wrong, please try after some time.");
+
+					// redirect them to the list page
+					redirect('emergency_assistance', 'refresh');
+				}
+
+				// load view data
+	        	$this->template->write('title', SITE_TITLE.' - Edit Task', TRUE);
+		        $this->template->write_view('content', 'auth/edit_task', $this->data);
+		        $this->template->render();  
+	        }      
 		}
 	}
 

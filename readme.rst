@@ -9,12 +9,21 @@ Password: password
 
 
 #####################
+Feb, 10 2016 update:-
+#####################
+- My task function integration while adding case and claim and assigning process.
+- Priority:  provide a sort order function:  click the Priority title , system can order the record by their priority( From High to Normal) - DONE
+- "Assign to " is modified as "Follow Up EAC" - DONE
+- For EAC/Case manager roles, only shows tasks which Category is "Assistance" For Claim Examiner/Claim manager roles, only shows tasks which Category is "Claims" If someone have two role (EAC/Case or Claim Examiner/Claim manger) can see his/her assistance and claim tasks. - DONE
+- Click this edit icon , then enter Case/Claim details page to edit the task. - DONE
+
+
+#####################
 Feb, 09 2016 update:-
 #####################
 Please find attached reports for work update and these report contain some query, please reply asap.
 
 http://brsoftech.org/Documents/JF_Claim_Update_and_Queries_0.docx
-
 
 
 #####################
