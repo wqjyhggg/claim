@@ -646,7 +646,7 @@
 
       $("tr[alt=<?php echo $id; ?>]").addClass('active-green');
       $(".datepicker").datepicker({
-           startDate: '-5y',
+           startDate: '-105y',
            endDate: '+2y',
        });
    })

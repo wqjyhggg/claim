@@ -3,7 +3,7 @@
       <div class="title_left">
          <h3>View Edit Emergency Assistance Case</h3>
 
-         <?php echo anchor("emergency_assistance/create_case", '<i class="fa fa-plus-circle"></i> New Case', array("class"=>'btn btn-primary')) ?>
+         <?php echo anchor("emergency_assistance/create_case", '<i class="fa fa-plus-circle"></i> New Case', array("class"=>'btn btn-primary create_case')) ?>
 
          <?php echo anchor("emergency_assistance/create_policy", '<i class="fa fa-plus-circle"></i> New Policy', array("class"=>'btn btn-primary')) ?>
 
@@ -60,7 +60,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("birthday_from", $this->input->get("birthday_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Birthdate From'));
+                     echo form_input("birthday", $this->input->get("birthday"), array("class"=>"form-control datepicker", 'placeholder'=>'Birthdate From'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -68,7 +68,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("birthday_to", $this->input->get("birthday_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Birthdate To'));
+                     echo form_input("birthday2", $this->input->get("birthday2"), array("class"=>"form-control datepicker", 'placeholder'=>'Birthdate To'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -218,7 +218,8 @@
                         </tbody>
                      <?php else:?>
                         <thead>
-                           <tr>
+                           <tr>                                   
+                              <td></td>
                               <th>Policy No</th>
                               <th>ID</th>
                               <th>Name</th>
@@ -233,6 +234,7 @@
                         <tbody>
                            <?php foreach ($policies as $key => $value): ?>
                            <tr class="view-policy" data='<?php echo json_encode($value); ?>'>
+                              <td><?php echo form_checkbox('select_policy', $value['policy']); ?></td>
                               <td><?php echo $value['policy']; ?></td>
                               <td><?php echo $value['plan_id']; ?></td>
                               <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
@@ -377,7 +379,7 @@
 <script>
 $(document).ready(function() {
    $(".datepicker").datepicker({
-        startDate: '-5y',
+        startDate: '-105y',
         endDate: '+2y',
     });
    $(".row-link").click(function() {
@@ -400,7 +402,31 @@ $(document).ready(function() {
       window.location = $(this).children("td.policies").children("a").attr("href");
    })
 
+   // create claim once user clicked on case
+   $(".create_case").click(function(e) {
+      e.preventDefault();
+      var id = $(this).attr("alt");
+      var policy_no = $("input[name=select_policy]:checked").val();
+
+      var href = $(this).attr('href');
+      if(policy_no)
+         window.location = href+"?policy="+policy_no;
+      else
+         window.location = href;
+   })
+
+   $("input[name=select_policy]").click(function(e){
+      e.stopPropagation()
+
+      // unset all selections
+      if($(this).is(":checked")){
+         $("input[name=select_policy]").prop("checked",false);
+         $(this).prop("checked", true);
+      }
+   })
+
 })
+
 
 // to make to check hidden filters to show
 <?php

@@ -197,7 +197,7 @@
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Policy Number:', 'policy_no', array("class"=>'col-sm-12'));  
-                     echo form_input("policy_no", $this->common_model->field_val("policy_no", $case_details), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
+                     echo form_input("policy_no", ($this->common_model->field_val("policy_no", $case_details)?$this->common_model->field_val("policy_no", $case_details):$this->input->get("policy")), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
                      echo form_error("policy_no");
                      echo form_hidden("policy_info");
                      ?>
@@ -412,6 +412,11 @@
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+               
+               $("input[name=insured_firstname]").val((data.plan_list[0].firstname));
+               $("input[name=insured_lastname]").val((data.plan_list[0].lastname));
+               $("textarea[name=insured_address]").val(data.plan_list[0].street_number+" "+data.plan_list[0].street_name);
+               $("input[name=dob]").val((data.plan_list[0].birthday));  
             }
             else{
                alert("Sorry, policy information does not exists, please check policy no and try again");
@@ -483,5 +488,41 @@
       $(this).target = "_blank";
       window.open(href, "Search Providers", "width=1250,height=600"); 
    })
+
+ <?php
+   if($this->input->get('policy'))
+   {
+      ?>
+      $.ajax({
+         url: "<?php echo base_url("emergency_assistance/get_policy_info"); ?>",
+         method:"get",
+         data:{policy:"<?php echo $this->input->get('policy'); ?>"},
+         dataType: "json",
+         beforeSend: function(){
+            $(".nav-m22d").addClass("csspinner load1");
+         },
+         success: function(data){
+            if(typeof data.plan_list != "undefined" && data.plan_list.length)
+            {
+               localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
+               $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+
+               $("input[name=insured_firstname]").val((data.plan_list[0].firstname));
+               $("input[name=insured_lastname]").val((data.plan_list[0].lastname));
+               $("textarea[name=insured_address]").val(data.plan_list[0].street_number+" "+data.plan_list[0].street_name);
+               $("input[name=dob]").val((data.plan_list[0].birthday));  
+
+            }
+            else{
+               alert("Sorry, policy information does not exists, please check policy no and try again");
+               $(this).val("");
+            }
+            $(".nav-m22d").removeClass("csspinner load1");
+         }
+      })
+      <?php
+   }
+   ?>
+
 
 </script>

@@ -55,7 +55,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("birthday_from", $this->input->get("birthday_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Birthdate From'));
+                     echo form_input("birthday", $this->input->get("birthday"), array("class"=>"form-control datepicker", 'placeholder'=>'Birthdate From'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -63,7 +63,7 @@
                <div class="form-group col-sm-3">
                   <div class="input-group date">
                      <?php 
-                     echo form_input("birthday_to", $this->input->get("birthday_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Birthdate To'));
+                     echo form_input("birthday2", $this->input->get("birthday2"), array("class"=>"form-control datepicker", 'placeholder'=>'Birthdate To'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
@@ -206,8 +206,8 @@
                      </thead>
                      <tbody>
                         <?php foreach ($policies as $key => $value): ?>
-                        <tr class="view-policy" data='<?php echo json_encode($value); ?>'>
-                           <td><?php echo form_checkbox('select_claim'); ?></td>
+                        <tr data = '<?php echo json_encode($value); ?>'>
+                           <td><?php echo form_checkbox('select_claim', $value['policy']); ?></td>
                            <td><?php echo $value['policy']; ?></td>
                            <td><?php echo $value['plan_id']; ?></td>
                            <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
@@ -216,7 +216,7 @@
                            <td><?php echo date("d/d/Y", strtotime($value['effective_date'])); ?></td>
                            <td>Which data goes here</td>
                            <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
-                           <td><?php echo anchor("emergency_assistance/view_policy?type=add_claim", "Open"); ?></td>
+                           <td><?php echo anchor("emergency_assistance/view_policy?type=add_claim", "Open", array('class'=>'view-policy')); ?></td>
                         </tr>
                         <?php endforeach; ?>
                      </tbody>
@@ -500,7 +500,7 @@
 var employee_id;
 $(document).ready(function() {
    $(".datepicker").datepicker({
-        startDate: '-5y',
+        startDate: '-105y',
         endDate: '+2y',
     });
 
@@ -510,10 +510,13 @@ $(document).ready(function() {
       var id = $(this).attr("alt");
       var case_no = $("input[name=select_case]:checked").parent('td').parent('tr').attr("case_no");
       var policy_no = $("input[name=select_case]:checked").parent('td').parent('tr').attr("policy");
+      var policy_no_1 = $("input[name=select_claim]:checked").val();
 
       var href = $(this).attr('href');
       if(case_no || policy_no)
          window.location = href+"?case_no="+case_no+"&policy="+policy_no;
+      else if(policy_no_1)
+         window.location = href+"?policy="+policy_no_1;
       else
          window.location = href;
    })
@@ -526,10 +529,20 @@ $(document).ready(function() {
          $(this).prop("checked", true);
       }
    })
+   
+   $("input[name=select_claim]").click(function(){
+
+      // unset all selections
+      if($(this).is(":checked")){
+         $("input[name=select_claim]").prop("checked",false);
+         $(this).prop("checked", true);
+      }
+   })
 
    // create claim once user clicked on policy
-   $(".view-policy").click(function(){
-      var data = $(this).attr("data");
+   $(".view-policy").click(function(e){
+      e.preventDefault();
+      var data = $(this).parent('td').parent('tr').attr("data");
 
       // insert data to dom element to save temporary
       localStorage.setItem("policy_data", data);
