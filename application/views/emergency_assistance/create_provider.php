@@ -96,7 +96,7 @@
                      <label class="col-sm-12">&nbsp;</label>
                      <button class="btn btn-primary">Save</button>
                      <?php echo anchor("emergency_assistance/", "Cancel", array("class"=>'btn btn-info')) ?>
-                     <button class="btn btn-primary">Batch upload From Excel</button>
+                     <?php echo anchor("emergency_assistance/provider_batch_upload", "Batch upload From Excel", array("class"=>'btn btn-primary')) ?>
                   </div>
                </div> 
 
@@ -116,7 +116,7 @@
 <script>
 $(document).ready(function() {
    $(".datepicker").datepicker({
-        startDate: '-5y',
+        startDate: '-105y',
         endDate: '+2y',
     });
 })

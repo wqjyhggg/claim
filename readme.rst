@@ -7,6 +7,13 @@ Username: admin@admin.com
 Password: password
 
 
+#####################
+Feb, 11 2016 update:-
+#####################
+Please find attached reports for work update and contain some in progress module regarding claim section
+
+http://brsoftech.org/Documents/update_report_20170211_0.docx
+
 
 #####################
 Feb, 10 2016 update:-

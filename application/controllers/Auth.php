@@ -119,46 +119,79 @@ class Auth extends CI_Controller {
 		{
 			// get case details
 			$joins = array();
-			$task_details = $this->common_model->select($record = "first", $typecast = "array", $table = "mytask", $fields = "mytask.*", $conditions = array('mytask.id'=>$id), $joins);
+			$fields = "mytask.*, IF(type='CLAIM', concat_ws(' ', claim.insured_first_name, claim.insured_last_name), concat_ws(' ', case.insured_firstname, case.insured_lastname)) as insured_name, IF(type='CLAIM', LPAD(claim.assign_to, 4, 0), LPAD(case.assign_to, 4, 0)) as assign_to";
+			$joins[] = array(
+				'table' => 'users',
+				'on' => 'users.id = mytask.created_by',
+				'type' => 'LEFT'
+				);
+			$joins[] = array(
+				'table' => 'case',
+				'on' => 'case.id = mytask.item_id',
+				'type' => 'LEFT'
+				);
+			$joins[] = array(
+				'table' => 'claim',
+				'on' => 'claim.id = mytask.item_id',
+				'type' => 'LEFT'
+				);
+			$order_by = array(
+				'field' => 'id',
+				'order' => 'desc'
+				);
+			$task_details = $this->common_model->select($record = "first", $typecast = "array", $table = "mytask", $fields, $conditions = array('mytask.id'=>$id), $joins);
 
 			//validate form input
-			$this->form_validation->set_rules('assign_to', 'Assign To', '');
-			$this->form_validation->set_rules('reason', 'Reason', 'required');
-			$this->form_validation->set_rules('first_name', 'First Name', 'required');
-			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
+			$this->form_validation->set_rules('assign_to', 'Assign To', 'required');
+			$this->form_validation->set_rules('due_date', 'Due Date', 'required');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
-			if($this->input->get("ref") == 'manage')
-				$this->form_validation->set_rules('reserve_amount', 'Create Reservers', 'number');
 
 			if ($this->form_validation->run() == TRUE)
 			{
-				// prepare post data array
-				$data = [];
-				$array = $this->input->post();
-				foreach ($array as $key => $value) 
-				{
-					# code...
-					$data[$key] = $value;
 
-					// for check third party recovery
-					if($key == 'third_party_recovery')
-						$data[$key] = $value ? $value : "N";
+				// update case/claim details
+				$data = array(
+					'assign_to'=>$this->input->post('assign_to'),
+					'priority'=>$this->input->post('priority'),
+					);
+
+				// prepare post data array
+				if($task_details['type'] == 'CASE')
+				{
+					// update values to database
+					$this->common_model->update("case", $data, array('id'=>$task_details['item_id']));
+
+
+					// update assign to data in task db
+					$data_task = array(
+						'user_id'=>$this->input->post('assign_to')
+						);
+					$this->common_model->update("mytask", $data_task, array('item_id'=>$task_details['item_id'], 'type'=>'CASE', 'user_type'=>'eac'));
+				}
+				else
+				{
+					// update values to database
+					$this->common_model->update("claim", $data, array('id'=>$task_details['item_id']));
+
+					// update assign to data in task db for claim type
+					$data_task = array(
+						'user_id'=>$this->input->post('assign_to')
+						);
+					$this->common_model->update("mytask", $data_task, array('item_id'=>$task_details['item_id'], 'type'=>'CLAIM', 'user_type'=>'claimexaminer'));
 				}
 
-				// insert values to database
-				$this->common_model->update("case", $data, array('id'=>$id));
-
-				// update priority to my task
+				// update data in task database
 				$data_task = array(
-					'priority'=>$array['priority']
+					'priority'=>$this->input->post('priority'),
+					'due_date'=>$this->input->post('due_date')
 					);
-				$this->common_model->update("mytask", $data_task, array('item_id'=>$id, 'type'=>'CASE'));
+				$this->common_model->update("mytask", $data_task, array('id'=>$id));
 
 				// send success message
-				$this->session->set_flashdata('success', "Case successfully updated");
+				$this->session->set_flashdata('success', "Task details successfully updated");
 
 				// redirect them to the login page
-				redirect('emergency_assistance', 'refresh');
+				redirect('auth/mytasks', 'refresh');
 			}
 			else
 			{	
@@ -171,6 +204,10 @@ class Auth extends CI_Controller {
 					// redirect them to the list page
 					redirect('emergency_assistance', 'refresh');
 				}
+				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $task_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Follow Up EAC--");
+
+				// get claim examiners
+				$this->data['claim_examiner'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $task_details)), $group = array("'claimexaminer'"), $empty = "--Select Claim Examiner--", $additional_conditions = "");
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Edit Task', TRUE);

@@ -45,8 +45,8 @@
 
                          ?>
                            <tr <?php if($value['priority'] == 'HIGH') echo 'style="background-color:rgba(155, 243, 151, 0.44)"'; ?>>
-                              <td><?php echo anchor(($value['type']=='CLAIM'?'claim/claim_detail/'.$value['item_id']:'emergency_assistance/edit_case/'.$value['item_id']), '<i class="fa fa-edit"></i>', array('title'=>'Edit Task')) ?></td>
-                              <td><?php echo $i; ?>.</td>
+                              <td><?php echo anchor('auth/edit_task/'.$value['id'], '<i class="fa fa-edit"></i>', array('title'=>'Edit Task')) ?></td>
+                              <td><?php echo anchor(($value['type']=='CLAIM'?'claim/claim_detail/'.$value['item_id']:'emergency_assistance/edit_case/'.$value['item_id']), $i, array('title'=>'Item Details')) ?>.</td>
                               <td><?php echo $value['priority']; ?></td>
                               <td><?php echo $value['task_no']; ?></td>
                               <td><?php echo $value['insured_name']; ?></td>
@@ -96,5 +96,4 @@
       <?php
    }
  ?>
- task_heading
 </script>

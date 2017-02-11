@@ -408,7 +408,7 @@
 var employee_id;
 $(document).ready(function() {
    $(".datepicker").datepicker({
-        startDate: '-5y',
+        startDate: '-105y',
         endDate: '+2y',
     });
 }).on("click", ".row-link", function(){                                                // open edit case page to enter reserver amount

@@ -891,7 +891,7 @@
 <script>
    $(document).ready(function() {
       $(".datepicker").datepicker({
-           startDate: '-5y',
+           startDate: '-105y',
            endDate: '+2y',
        });
 
@@ -904,7 +904,7 @@
         dataType: "json",
       });
       $(".datepicker").datepicker({
-           startDate: '-5y',
+           startDate: '-105y',
            endDate: '+2y',
        });
    })
@@ -931,7 +931,7 @@
         dataType: "json",
       });
       $(".datepicker").datepicker({
-           startDate: '-5y',
+           startDate: '-105y',
            endDate: '+2y',
        });
    })
@@ -1222,6 +1222,25 @@
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+
+               $("input[name=insured_first_name]").val(data.plan_list[0].firstname);
+               $("input[name=insured_last_name]").val(data.plan_list[0].lastname);
+               if(data.plan_list[0].gender == 'M')
+                  $("input[value=male]").prop('checked', true);
+               else
+                  $("input[value=female]").prop('checked', true);
+
+               $("input[name=personal_id]").val(data.plan_list[0].student_id);
+               $("input[name=dob]").val(data.plan_list[0].birthday);
+               $("input[name=school_name]").val(data.plan_list[0].institution);
+               $("input[name=group_id]").val();
+               $("input[name=apply_date]").val(data.plan_list[0].apply_date);
+               $("input[name=arrival_date]").val(data.plan_list[0].arrival_date);
+               $("input[name=guardian_name]").val();
+               $("input[name=guardian_phone]").val();
+
+
+
             }
             else{
                alert("Sorry, policy information does not exists, please check policy no and try again");
@@ -1315,6 +1334,22 @@
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+               
+               $("input[name=insured_first_name]").val(data.plan_list[0].firstname);
+               $("input[name=insured_last_name]").val(data.plan_list[0].lastname);
+               if(data.plan_list[0].gender == 'M')
+                  $("input[value=male]").prop('checked', true);
+               else
+                  $("input[value=female]").prop('checked', true);
+
+               $("input[name=personal_id]").val(data.plan_list[0].student_id);
+               $("input[name=dob]").val(data.plan_list[0].birthday);
+               $("input[name=school_name]").val(data.plan_list[0].institution);
+               $("input[name=group_id]").val();
+               $("input[name=apply_date]").val(data.plan_list[0].apply_date);
+               $("input[name=arrival_date]").val(data.plan_list[0].arrival_date);
+               $("input[name=guardian_name]").val();
+               $("input[name=guardian_phone]").val();
             }
             else{
                alert("Sorry, policy information does not exists, please check policy no and try again");
