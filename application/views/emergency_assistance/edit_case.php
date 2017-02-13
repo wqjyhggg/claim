@@ -20,13 +20,13 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
          <div class="x_panel">
             <div class="x_title">
-               <h2>Edit Case<small></small></h2>
+               <h2>Case Details<small></small></h2>
                <div class="clearfix"></div>
             </div>
             <div class="x_content"> 
 
-               <!-- search policy filter start -->       
-              <?php echo form_open("", array('class'=>'form-horizontal')); ?>
+               <!-- search policy filter start -->   
+               <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager() or $this->ion_auth->is_eacmanager()) echo form_open("", array('class'=>'form-horizontal')); ?>
 
                <h4>Case Basic Info option<small></small></h4>
                 <div class="row">
@@ -285,30 +285,32 @@
                      </div>
                   <?php endif;?>
 
-                  <div class="col-sm-12">
-                     <label class="col-sm-12">&nbsp;</label>
-                     <button class="btn btn-primary">Save</button>
-                     <button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create InTakeForm</button>
-                     <?php 
-                     if($ref == 'manage')
-                        echo anchor("emergency_assistance/case_management", "Cancel", array("class"=>'btn btn-info'));
-                     else                        
-                        echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info'));
-                     if($ref == 'manage'):
-                      ?>
-                        <button type="button" class="btn btn-primary follow_up"  data-toggle="modal" data-target="#follow_reason">Follow Up <i class="fa fa-angle-double-right"></i></button>
-                        <button type="button" class="btn btn-primary mark_inactive">Inactive</button>
-                     <?php else:?>
-                        <!-- put here email button -->
-                        <button insured_address="<?php echo nl2br($case_details['insured_address']) ?>"
-                           insured_lastname="<?php echo $case_details['insured_lastname'] ?>"
-                           insured_name="<?php echo $case_details['insured_name'] ?>"
-                           policy_no="<?php echo $case_details['policy_no'] ?>"
-                           case_no="<?php echo $case_details['case_no'] ?>"
-                           casemanager_name="<?php echo $case_details['case_manager_name'] ?>" class="btn btn-primary email_print" type="button"  data-toggle="modal" data-target="#print_template">Email/Print</button>
+                  <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager() or $this->ion_auth->is_eacmanager()): ?>
+                     <div class="col-sm-12">
+                        <label class="col-sm-12">&nbsp;</label>
+                        <button class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create InTakeForm</button>
+                        <?php 
+                        if($ref == 'manage')
+                           echo anchor("emergency_assistance/case_management", "Cancel", array("class"=>'btn btn-info'));
+                        else                        
+                           echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info'));
+                        if($ref == 'manage'):
+                         ?>
+                           <button type="button" class="btn btn-primary follow_up"  data-toggle="modal" data-target="#follow_reason">Follow Up <i class="fa fa-angle-double-right"></i></button>
+                           <button type="button" class="btn btn-primary mark_inactive">Inactive</button>
+                        <?php else:?>
+                           <!-- put here email button -->
+                           <button insured_address="<?php echo nl2br($case_details['insured_address']) ?>"
+                              insured_lastname="<?php echo $case_details['insured_lastname'] ?>"
+                              insured_name="<?php echo $case_details['insured_name'] ?>"
+                              policy_no="<?php echo $case_details['policy_no'] ?>"
+                              case_no="<?php echo $case_details['case_no'] ?>"
+                              casemanager_name="<?php echo $case_details['case_manager_name'] ?>" class="btn btn-primary email_print" type="button"  data-toggle="modal" data-target="#print_template">Email/Print</button>
 
-                     <?php endif; ?>
-                  </div>                                          
+                        <?php endif; ?>
+                     </div>                                          
+                  <?php endif; ?>
                </div> 
 
                <?php if(!empty($intake_forms)):  ?>
@@ -360,7 +362,7 @@
                   ?>
                </div>
                <?php endif; ?>
-               <?php echo form_close(); ?>
+               <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager() or $this->ion_auth->is_eacmanager())  echo form_close(); ?>
                <!-- search policy filter end -->
                <div class="clearfix"></div>
             </div>

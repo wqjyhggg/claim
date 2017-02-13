@@ -52,7 +52,7 @@
                   <div class="col-md-3 left_col">
                      <div class="left_col scroll-view">
                         <div class="navbar nav_title" style="border: 0;">
-                           <a class="site_title"><i class="fa fa-user"></i> <span>admin</span></a>
+                           <a class="site_title"><i class="fa fa-user"></i> <span><?php echo $this->ion_auth->user()->row()->first_name." ".$this->ion_auth->user()->row()->last_name ?></span></a>
                         </div>
                         <div class="clearfix"></div>
                         <!-- sidebar menu -->

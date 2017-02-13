@@ -14,12 +14,12 @@
                <div class="clearfix"></div>
             </div>
             <div class="x_content">
-               <?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post', 'onsubmit'=>'return validate()')); ?>
+               <?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post', 'onsubmit'=>'return validate_form()', 'id'=>'main_form')); ?>
                <div class="row" style="margin-bottom:15px;">
                   <div class="form-group col-sm-3">
                      <?php 
                         echo form_label('Insured First Name:', 'insured_first_name', array("class"=>'col-sm-12'));                            
-                        echo form_input("insured_first_name", $this->input->post("insured_first_name"), array("class"=>"form-control", 'placeholder'=>'Insured First Name'));
+                        echo form_input("insured_first_name", $this->input->post("insured_first_name"), array("class"=>"form-control required", 'placeholder'=>'Insured First Name'));
                         echo form_error("insured_first_name");
                      ?>
                   </div>
@@ -55,7 +55,7 @@
                      <?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">
                         <?php                
-                        echo form_input("dob", $this->input->post("dob"), array("class"=>"form-control datepicker", 'placeholder'=>'Date of Birth'));
+                        echo form_input("dob", $this->input->post("dob"), array("class"=>"form-control datepicker required", 'placeholder'=>'Date of Birth'));
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                      </div>
@@ -64,7 +64,7 @@
                   <div class="form-group col-sm-3">
                      <?php 
                         echo form_label('Policy#:', 'policy_no', array("class"=>'col-sm-12'));                            
-                        echo form_input("policy_no", ($this->input->post("policy_no")?$this->input->post("policy_no"):$this->input->get("policy")), array("class"=>"form-control", 'placeholder'=>'Policy#'));
+                        echo form_input("policy_no", ($this->input->post("policy_no")?$this->input->post("policy_no"):$this->input->get("policy")), array("class"=>"form-control required", 'placeholder'=>'Policy#'));
                         echo form_error("policy_no");
                         echo form_hidden("policy_info");
                      ?>
@@ -79,14 +79,14 @@
                   <div class="form-group col-sm-3">
                      <?php 
                         echo form_label('School Name:', 'school_name', array("class"=>'col-sm-12'));                            
-                        echo form_input("school_name", $this->input->post("school_name"), array("class"=>"form-control", 'placeholder'=>'School Name'));
+                        echo form_input("school_name", $this->input->post("school_name"), array("class"=>"form-control required", 'placeholder'=>'School Name'));
                         echo form_error("school_name");
                      ?>
                   </div>
                   <div class="form-group col-sm-3">
                      <?php 
                         echo form_label('Group ID:', 'group_id', array("class"=>'col-sm-12'));                            
-                        echo form_input("group_id", $this->input->post("group_id"), array("class"=>"form-control", 'placeholder'=>'Group ID'));
+                        echo form_input("group_id", $this->input->post("group_id"), array("class"=>"form-control required", 'placeholder'=>'Group ID'));
                         echo form_error("group_id");
                      ?>
                   </div>
@@ -480,16 +480,7 @@
 
                <h2>PAYEE INFORMATION<small></small></h2>
                <div class="row">
-                  <div class="col-sm-12">
-                     <div class="col-sm-3">
-                        <?php 
-                        echo form_radio("payment_type", "cheque", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Cheque
-                     </div>
-                     <div class="col-sm-3">
-                        <?php 
-                        echo form_radio("payment_type", "direct deposit", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Direct Deposit
-                     </div>
-
+                  <div class="col-sm-12">                     
                      <div class="col-sm-3">
                         <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button>
                      </div>
@@ -497,19 +488,8 @@
                </div>
                <div class="row">
                   <div class="col-sm-12">
-                     <table class="table table-hover table-bordered">
-                        <thead>
-                           <tr>
-                              <th class="wire_transfer_section">Bank Name</th>
-                              <th class="cheque_section wire_transfer_section">Payee Name</th>
-                              <th class="wire_transfer_section">Account#</th>
-                              <th class="cheque_section">Address</th>
-                              <th>&nbsp;</th>                    
-                           </tr>
-                        </thead>
-                        <tbody class="payee-data">                                                     
-                        </tbody>
-                     </table>
+                     <div class="payee-data">                                                     
+                     </div>
                   </div>
                </div>
 
@@ -750,13 +730,13 @@
          <div class="col-sm-3">
             <?php  
                echo form_label('Invoice#:', 'invoice', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control  required"));
             ?>
          </div>  
          <div class="col-sm-3">
             <?php 
                echo form_label('Name of Provider:', 'provider_name', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control required"));
             ?>
          </div>  
          <div class="col-sm-3">
@@ -802,13 +782,13 @@
                      'V08B - Cremation/Burial'=>'Cremation/Burial',
                      'V12 - Air Flight Accident'=>'Air Flight Accident'
                   );
-               echo form_dropdown("expenses_climed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control'));
+               echo form_dropdown("expenses_climed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control required'));
             ?>
          </div>  
          <div class="col-sm-3">
             <?php 
                echo form_label('Diagnosis:', 'diagnosis', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field"));
+               echo form_input("expenses_climed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field required"));
             ?>
          </div>  
          <div class="col-sm-3">
@@ -820,19 +800,19 @@
          <div class="col-sm-3">
             <?php 
                echo form_label('Date of Service:', 'date_of_service', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control  datepicker"));
+               echo form_input("expenses_climed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control  datepicker required"));
             ?>
          </div> 
          <div class="col-sm-3">
             <?php 
                echo form_label('Amount Billed:', 'amount_billed', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control required"));
             ?>
          </div> 
          <div class="col-sm-3">
             <?php 
                echo form_label('Amount Client Paid:', 'amount_client_paid', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control"));
+               echo form_input("expenses_climed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control required"));
             ?>
          </div> 
          <div class="col-sm-3">
@@ -854,35 +834,55 @@
    </div>
 </div>
 
-<table style="display:none">
-   <tbody class="payee-buffer">
-      <tr>
-         <td class="wire_transfer_section">
+<div style="display:none">
+   <div class="payee-buffer">
+      <div class="row"  style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
+         <div class="col-sm-12">
+            <div class="col-sm-2">
+               <?php 
+               echo form_radio("payment_type", "cheque", TRUE, array('class'=>'setpremium'));
+               echo form_label('Cheque:', 'Cheque');
+               ?>  
+            </div>
+            <div class="col-sm-2">
+               <?php 
+               echo form_radio("payment_type", "direct deposit", FALSE, array('class'=>'setpremium'));
+               echo form_label('Direct Deposit', 'Direct Deposit');
+               ?>  
+            </div>
+         </div>
+         <br/>
+         <div class="col-sm-3 wire_transfer_section" style="display:none">
             <?php 
+               echo form_label('Bank Name:', 'Bank Name', array("class"=>'col-sm-12'));
                echo form_input("payees[bank][]", $this->input->post("bank"), array("class"=>"form-control", 'placeholder'=>'Bank Name'));
             ?>
-         </td>
-         <td class="cheque_section wire_transfer_section">
+         </div>
+         <div class="col-sm-3 cheque_section wire_transfer_section">
             <?php 
+               echo form_label('Payee Name:', 'Payee Name', array("class"=>'col-sm-12'));
                echo form_input("payees[payee_name][]", $this->input->post("payee_name"), array("class"=>"form-control", 'placeholder'=>'Payee Name'));
             ?>
-         </td>
-         <td class="wire_transfer_section">
+         </div>
+         <div class="col-sm-3 wire_transfer_section" style="display:none">
             <?php 
+               echo form_label('Account#:', 'Account', array("class"=>'col-sm-12'));
                echo form_input("payees[account_cheque][]", $this->input->post("account_cheque"), array("class"=>"form-control", 'placeholder'=>'Account#'));
             ?>
-         </td> 
-         <td class="cheque_section">
+         </div>
+         <div class="col-sm-3 cheque_section">
             <?php 
-               echo form_input("payees[address][]", $this->input->post("address"), array("class"=>"form-control", 'placeholder'=>'Address#'));
+               echo form_label('Address:', 'Address', array("class"=>'col-sm-12'));
+               echo form_input("payees[address][]", $this->input->post("address"), array("class"=>"form-control", 'placeholder'=>'Address'));
             ?>
-         </td>         
-         <td>
-            <i class="fa fa-trash row-link remove-payee"></i>
-         </td>
-      </tr>                                                       
-   </tbody>
-</table>
+         </div>
+         <div class="col-sm-3">
+            <label class='col-sm-12'>&nbsp;</label>
+            <i class="col-sm-3 fa fa-trash row-link remove-payee"></i>
+         </div>
+      </div>
+   </div>
+</div>
 
 <script src="<?php echo base_url() ?>/assets/js/jQuery.print.js"></script>
 <script src="<?php echo base_url() ?>/assets/js/jquery.validate.min.js"></script>
@@ -890,6 +890,7 @@
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
    $(document).ready(function() {
+      // $('#main_form').validate()
       $(".datepicker").datepicker({
            startDate: '-105y',
            endDate: '+2y',
@@ -941,10 +942,16 @@
    
    .on("click", ".add_payee", function(){
       var html = $(".payee-buffer").html();
+
+      var length = $(".payee-data .row").length;
+
+      html = html.replace(/payment_type/g, "payment_type_"+(length+1));
+
       $(".payee-data").append(html);
    })
+
    .on("click", ".remove-payee", function(){
-      $(this).parent("td").parent("tr").remove();
+      $(this).parent("div").parent("div").remove();
    })
 
    // show email/print function
@@ -1307,13 +1314,14 @@
    })
 
    // once user select pay type
-   .on("click", "input[name=payment_type]", function(){
+   .on("click", "input[name^=payment_type]", function(){
+      var element = $(this).parent("div").parent("div").parent("div");
       if($(this).val() == 'cheque'){
-         $(".wire_transfer_section").hide();
-         $(".cheque_section").show();
+         element.find(".wire_transfer_section").hide();
+         element.find(".cheque_section").show();
       } else {
-         $(".cheque_section").hide();
-         $(".wire_transfer_section").show();
+         element.find(".cheque_section").hide();
+         element.find(".wire_transfer_section").show();
       }
    })
 
@@ -1383,7 +1391,7 @@ $outer_select.each(function(){
 });
 
 // to validate expenses items
-function validate(){
+function validate_form(){
    // check length of expenses items if not deleted
    var length = $(".expenses-list .row").length;
    if(!length){
@@ -1391,6 +1399,23 @@ function validate(){
       $(".add_new_expenses").focus();
       return false;
    }
+
+   // validate invoice required
+   var $validate = 1;
+   $("#main_form .required").map(function(){
+      if(!$(this).val()){
+         $validate = 0;
+         $(this).addClass('error-true');
+      }
+      else {
+         $(this).removeClass('error-true');
+      }
+   })
+   if(!$validate){
+      alert("Please fill all required fields.")
+      return false;
+   }
+
    return true;
 }
 

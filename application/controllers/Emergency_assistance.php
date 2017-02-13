@@ -26,7 +26,7 @@ class Emergency_assistance extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
-		elseif (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager())
+		elseif (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager() and !$this->ion_auth->is_eacmanager())
 		{
 			// redirect them to the home page because they must be an administrator to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
@@ -317,7 +317,7 @@ class Emergency_assistance extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
-		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager())
+		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager() and !$this->ion_auth->is_eacmanager() and !$this->ion_auth->is_claimexaminer() and !$this->ion_auth->is_claimsmanager())
 		{
 			// redirect them to the home page because they must be an case manager or admin to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');

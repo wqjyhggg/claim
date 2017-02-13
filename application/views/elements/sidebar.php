@@ -4,7 +4,7 @@
 	<?php endif; ?>
 	<li> <?php echo anchor("auth/mytasks", '<i class="fa fa-briefcase"></i>My Tasks</a>', array("class"=>'leftmeun')) ?> </li>
 
-	<?php if ($this->ion_auth->is_admin() OR $this->ion_auth->is_casemamager()): ?>
+	<?php if ($this->ion_auth->is_admin() OR $this->ion_auth->is_casemamager() OR $this->ion_auth->is_eacmanager()): ?>
 	<li> <?php echo anchor("emergency_assistance", '<i class="fa fa-briefcase"></i>Emergency assistance</a>', array("class"=>'leftmeun')) ?> </li>
 	<li>  <?php echo anchor("emergency_assistance/case_management", '<i class="fa fa-list-ul"></i>Case management</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>

@@ -99,7 +99,7 @@
                                     <td><?php echo $val['amt_payable'] ?></td>
                                     <td><?php echo $val['amt_deductable'] ?></td>
                                     <td><?php echo $val['amt_insured'] ?></td>
-                                    <td><?php echo $val['pay_to'] ?></td>
+                                    <td><?php echo $val['provider_name']?$val['provider_name']:$val['payee_name'] ?></td>
                                  </tr>
                            <?php  endforeach; ?>
                            </tbody>
@@ -112,35 +112,14 @@
                   <div class="row">
                      <div class="col-sm-12">
                         <div class="col-sm-3">
-                           <?php 
-                           echo form_radio("payment_type", "cheque", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Cheque
-                        </div>
-                        <div class="col-sm-3">
-                           <?php 
-                           echo form_radio("payment_type", "direct deposit", $this->input->post("payment_type"), array('class'=>'setpremium')); ?>  Direct Deposit
-                        </div>
-
-                        <div class="col-sm-3">
                            <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button>
                         </div>
                      </div>
                   </div>
                   <div class="row">
                      <div class="col-sm-12 payees_items">
-                        <table class="table table-hover table-bordered">
-                           <thead>
-                              <tr>
-                                 <th>Bank Name</th>
-                                 <th>Payee Name</th>
-                                 <th>Account</th>
-                                 <th>Payment</th>
-                                 <th class="cheque_section">Address</th>
-                                 <th>&nbsp;</th>
-                              </tr>
-                           </thead>
-                           <tbody class="payee-data">                                                     
-                           </tbody>
-                        </table>
+                        <div class="payee-data">                                                     
+                        </div>
                      </div>
                   </div>
                   <div class="row" style="margin-top:20px">
@@ -163,40 +142,55 @@
    <!-- End List Section -->
 </duv>
 
-<table style="display:none">
-   <tbody class="payee-buffer">
-      <tr>
-         <td>
+<div style="display:none">
+   <div class="payee-buffer">
+      <div class="row"  style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
+         <div class="col-sm-12">
+            <div class="col-sm-2">
+               <?php 
+               echo form_radio("payment_type", "cheque", TRUE, array('class'=>'setpremium'));
+               echo form_label('Cheque:', 'Cheque');
+               ?>  
+            </div>
+            <div class="col-sm-2">
+               <?php 
+               echo form_radio("payment_type", "direct deposit", FALSE, array('class'=>'setpremium'));
+               echo form_label('Direct Deposit', 'Direct Deposit');
+               ?>  
+            </div>
+         </div>
+         <br/>
+         <div class="col-sm-3 wire_transfer_section" style="display:none">
             <?php 
+               echo form_label('Bank Name:', 'Bank Name', array("class"=>'col-sm-12'));
                echo form_input("payees[bank][]", $this->input->post("bank"), array("class"=>"form-control", 'placeholder'=>'Bank Name'));
             ?>
-         </td>
-         <td>
+         </div>
+         <div class="col-sm-3 cheque_section wire_transfer_section">
             <?php 
+               echo form_label('Payee Name:', 'Payee Name', array("class"=>'col-sm-12'));
                echo form_input("payees[payee_name][]", $this->input->post("payee_name"), array("class"=>"form-control", 'placeholder'=>'Payee Name'));
             ?>
-         </td>
-         <td>
+         </div>
+         <div class="col-sm-3 wire_transfer_section" style="display:none">
             <?php 
-               echo form_input("payees[account_cheque][]", $this->input->post("account_cheque"), array("class"=>"form-control", 'placeholder'=>'Account/Cheque#'));
+               echo form_label('Account#:', 'Account', array("class"=>'col-sm-12'));
+               echo form_input("payees[account_cheque][]", $this->input->post("account_cheque"), array("class"=>"form-control", 'placeholder'=>'Account#'));
             ?>
-         </td>
-         <td>
+         </div>
+         <div class="col-sm-3 cheque_section">
             <?php 
-               echo form_input("payees[payment][]", $this->input->post("payment"), array("class"=>"form-control", 'placeholder'=>'Payment'));
+               echo form_label('Address:', 'Address', array("class"=>'col-sm-12'));
+               echo form_input("payees[address][]", $this->input->post("address"), array("class"=>"form-control", 'placeholder'=>'Address'));
             ?>
-         </td>
-         <td class="cheque_section">
-            <?php 
-               echo form_input("payees[address][]", $this->input->post("address"), array("class"=>"form-control", 'placeholder'=>'Address#'));
-            ?>
-         </td>      
-         <td>
-            <i class="fa fa-trash row-link remove-payee"></i>
-         </td>
-      </tr>                                                       
-   </tbody>
-</table>
+         </div>
+         <div class="col-sm-3">
+            <label class='col-sm-12'>&nbsp;</label>
+            <i class="col-sm-3 fa fa-trash row-link remove-payee"></i>
+         </div>
+      </div>
+   </div>
+</div>
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
@@ -220,10 +214,34 @@ $(document).on("click", "button[name=search_claim]", function(){
 })
 .on("click", ".add_payee", function(){
    var html = $(".payee-buffer").html();
+
+   var length = $(".payee-data .row").length;
+
+   html = html.replace(/payment_type/g, "payment_type_"+(length+1));
+
    $(".payee-data").append(html);
 })
 .on("click", ".remove-payee", function(){
-   $(this).parent("td").parent("tr").remove();
+
+   if(confirm('Are you sure you want to remove payee?')){
+      $(this).parent("div").parent("div").remove();
+
+      // remove payee from db if already stored
+      var payee_id = $(this).parent("div").parent("div").find("input[name='payees[id][]']").val();
+      if(payee_id){         
+         $.ajax({
+            url: "<?php echo base_url("claim/delete_payee/") ?>"+payee_id,
+            method: "get"
+         })
+      }
+   }
+
+   // remap payment_type names to avoide errors
+   $count = 0;
+   $(".payee-data .row").map(function(){
+      $count++;
+      $(this).find('input[name^=payment_type]').attr('name', 'payment_type_'+$count);
+   })
 })
 // when clicked on claim item history section
 .on('click', ".select_payees", function(){
@@ -250,22 +268,14 @@ $(document).on("click", "button[name=search_claim]", function(){
       success: function(result) {
 
          // place data table to releted section
-         $(".payees_items").html(result.payees)
-
-         // show payment type here
-         $("input[value='"+result.payment_type+"']").prop("checked", true);
+         $(".payee-data").html(result.payees)
 
          // place claim id
          $("input[name=claim_id]").val(claim_id);
 
          // remove loader function
          $(".main_container").removeClass("csspinner load1");
-
-         if(result.payment_type == 'cheque'){
-            $(".cheque_section").show();
-         } else {
-            $(".cheque_section").hide();
-         }
+         
       }
    })
 })
@@ -307,12 +317,15 @@ $(document).on("click", "button[name=search_claim]", function(){
    }
 })
 
-// once user select pay type
-.on("click", "input[name=payment_type]", function(){
+ // once user select pay type
+.on("click", "input[name^=payment_type]", function(){
+   var element = $(this).parent("div").parent("div").parent("div");
    if($(this).val() == 'cheque'){
-      $(".cheque_section").show();
+      element.find(".wire_transfer_section").hide();
+      element.find(".cheque_section").show();
    } else {
-      $(".cheque_section").hide();
+      element.find(".cheque_section").hide();
+      element.find(".wire_transfer_section").show();
    }
 })
 
