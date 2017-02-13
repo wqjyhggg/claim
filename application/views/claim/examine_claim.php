@@ -39,11 +39,11 @@
                                     <td><?php echo $value['claim_no']; ?></td>
                                     <td><?php echo $value['case_no']; ?></td>
                                     <td><?php echo $value['claim_date']; ?></td>
-                                    <td><?php echo $value['amount_claimed']; ?></td>
-                                    <td><?php echo $value['amount_client_paid']; ?></td>
-                                    <td><?php echo $value['pay_to']; ?></td>
+                                    <td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
+                                    <td><?php echo $value['amount_client_paid']?$value['amount_client_paid']:0; ?></td>
+                                    <td><?php echo $value['payee_name']?$value['payee_name']:$value['provider_name']; ?></td>
                                     <td><?php //echo $value['claim_no']; ?></td>
-                                    <td><?php //echo $value['claim_no']; ?></td>
+                                    <td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
                                  </tr>
                               <?php endforeach; ?>
                               </tbody>
@@ -85,11 +85,11 @@
                                     <td><?php echo $value['date_of_service'] ?></td>
                                     <td><?php echo $value['coverage_code'] ?></td>
                                     <td><?php echo $value['diagnosis'] ?></td>
-                                    <td><?php echo $value['amount_claimed'] ?></td>
-                                    <td><?php echo $value['amt_payable'] ?></td>
-                                    <td><?php echo $value['amt_deductable'] ?></td>
-                                    <td><?php echo $value['amt_insured'] ?></td>
-                                    <td><?php echo $value['amt_received'] ?></td>
+                                    <td><?php echo $value['amount_claimed']?$value['amount_claimed']:0 ?></td>
+                                    <td><?php echo $value['amt_payable']?$value['amt_payable']:0 ?></td>
+                                    <td><?php echo $value['amt_deductable']?$value['amt_deductable']:0 ?></td>
+                                    <td><?php echo $value['amt_insured']?$value['amt_insured']:0 ?></td>
+                                    <td><?php echo $value['amt_received']?$value['amt_received']:0 ?></td>
                                     <td><?php echo $value['comment'] ?></td>
                                  </tr>
                            <?php $i++;endforeach; ?>
@@ -105,25 +105,25 @@
                               echo form_hidden("id");
                               echo form_hidden("claim_id");
                               echo form_label('Claim No.:', 'claim_no', array("class"=>'col-sm-12'));                           
-                              echo form_input("claim_no", $this->input->post("claim_no"), array("class"=>"form-control", 'placeholder'=>'Claim No.'));
+                              echo form_input("claim_no", $this->input->post("claim_no"), array("class"=>"form-control required", 'placeholder'=>'Claim No.', 'readonly'=>'readonly'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Pay To:', 'pay_to', array("class"=>'col-sm-12'));                           
-                              echo form_input("pay_to", $this->input->post("pay_to"), array("class"=>"form-control", 'placeholder'=>'Pay To'));
+                              echo $payees;
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Case No:', 'case_no', array("class"=>'col-sm-12'));
-                              echo form_input("case_no", $this->input->post("case_no"), array("class"=>"form-control", 'placeholder'=>'Case No'));
+                              echo form_input("case_no", $this->input->post("case_no"), array("class"=>"form-control", 'placeholder'=>'Case No', 'readonly'=>'readonly' ));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Invoice No:', 'invoice', array("class"=>'col-sm-12'));
-                              echo form_input("invoice", $this->input->post("invoice"), array("class"=>"form-control", 'placeholder'=>'Invoice No'));
+                              echo form_input("invoice", $this->input->post("invoice"), array("class"=>"form-control required", 'placeholder'=>'Invoice No'));
                            ?>
                         </div>
 
@@ -131,7 +131,7 @@
                            <?php echo form_label('Claim Date:', 'claim_date', array("class"=>'col-sm-12'));   ?>
                            <div class="input-group date">
                               <?php                
-                              echo form_input("claim_date", $this->input->post("claim_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Claim Date'));
+                              echo form_input("claim_date", $this->input->post("claim_date"), array("class"=>"form-control datepicker required", 'placeholder'=>'Claim Date'));
                               ?>
                               <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                            </div>
@@ -140,7 +140,7 @@
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Cellular:', 'cellular', array("class"=>'col-sm-12'));
-                              echo form_input("cellular", $this->input->post("cellular"), array("class"=>"form-control", 'placeholder'=>'Cellular'));
+                              echo form_input("cellular", $this->input->post("cellular"), array("class"=>"form-control required", 'placeholder'=>'Cellular'));
                            ?>
                         </div>
 
@@ -182,55 +182,55 @@
                                     'V08B - Cremation/Burial'=>'Cremation/Burial',
                                     'V12 - Air Flight Accident'=>'Air Flight Accident'
                                  );
-                              echo form_dropdown("coverage_code", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control', 'placeholder'=>'Coverage Code'));
+                              echo form_dropdown("coverage_code", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control required', 'placeholder'=>'Coverage Code'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Amt Client Paid:', 'amount_client_paid', array("class"=>'col-sm-12'));
-                              echo form_input("amount_client_paid", $this->input->post("amount_client_paid"), array("class"=>"form-control", 'placeholder'=>'Amt Client Paid'));
+                              echo form_input("amount_client_paid", $this->input->post("amount_client_paid"), array("class"=>"form-control required", 'placeholder'=>'Amt Client Paid'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Reason:', 'reason', array("class"=>'col-sm-12'));
-                              echo form_input("reason", $this->input->post("reason"), array("class"=>"form-control", 'placeholder'=>'Reason'));
+                              echo form_input("reason", $this->input->post("reason"), array("class"=>"form-control required", 'placeholder'=>'Reason'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Diagnosis:', 'diagnosis', array("class"=>'col-sm-12'));
-                              echo form_input("diagnosis", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field", 'placeholder'=>'Diagnosis'));
+                              echo form_input("diagnosis", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field required", 'placeholder'=>'Diagnosis'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Amt Claimed:', 'amount_claimed', array("class"=>'col-sm-12'));
-                              echo form_input("amount_claimed", $this->input->post("amount_claimed"), array("class"=>"form-control", 'placeholder'=>'Amt Claimed'));
+                              echo form_input("amount_claimed", $this->input->post("amount_claimed"), array("class"=>"form-control required", 'placeholder'=>'Amt Claimed'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Amt Deductable:', 'amt_deductable', array("class"=>'col-sm-12'));
-                              echo form_input("amt_deductable", $this->input->post("amt_deductable"), array("class"=>"form-control", 'placeholder'=>'Amt Deductable'));
+                              echo form_input("amt_deductable", $this->input->post("amt_deductable"), array("class"=>"form-control required", 'placeholder'=>'Amt Deductable'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Amt Insured:', 'amt_insured', array("class"=>'col-sm-12'));
-                              echo form_input("amt_insured", $this->input->post("amt_insured"), array("class"=>"form-control", 'placeholder'=>'Amt Insured'));
+                              echo form_input("amt_insured", $this->input->post("amt_insured"), array("class"=>"form-control required", 'placeholder'=>'Amt Insured'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Amt Received:', 'amt_received', array("class"=>'col-sm-12'));
-                              echo form_input("amt_received", $this->input->post("amt_received"), array("class"=>"form-control", 'placeholder'=>'Amt Received'));
+                              echo form_input("amt_received", $this->input->post("amt_received"), array("class"=>"form-control required", 'placeholder'=>'Amt Received'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
                            <?php 
                               echo form_label('Amt Payable:', 'amt_payable', array("class"=>'col-sm-12'));
-                              echo form_input("amt_payable", $this->input->post("amt_payable"), array("class"=>"form-control", 'placeholder'=>'Amt Payable'));
+                              echo form_input("amt_payable", $this->input->post("amt_payable"), array("class"=>"form-control required", 'placeholder'=>'Amt Payable'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
@@ -270,10 +270,13 @@
                      <div class="col-sm-2"> 
                         <label style="float: right; font-size: 25px;"> Decision </label>
                      </div>
-                     <div class="col-sm-2"> 
+                     <div class="col-sm-3 my_decision"> 
+                        &nbsp;  
+                     </div>
+                     <div class="col-sm-2 accept_decision"> 
                         <input class="btn btn-primary" name="Accept" value="Accept" type="button">  
                      </div>
-                     <div class="col-sm-1"> 
+                     <div class="col-sm-1 deny_decision"> 
                         <input class="btn btn-primary" name="Deny" value="Deny" type="button">  
                      </div>
                      <div class="col-sm-2 deny_reasons" style="display:none"> 
@@ -284,7 +287,7 @@
                         foreach($docs as $doc)
                            $reason[$doc['id']] = $doc['name'];
 
-                        echo form_dropdown("reason", $reason, '', array('class'=>'form-control'))
+                        echo form_dropdown("deny_reason", $reason, '', array('class'=>'form-control'))
                         ?>
                      </div>
                      <div class="col-sm-2"> 
@@ -924,6 +927,22 @@
 
    .on("click", ".edit_claim", function(){
 
+      $("input").removeClass('error-true');
+      <?php 
+
+      $str = "";
+      if(!empty($custom_payees))
+         foreach ($custom_payees as $key => $value) {
+            $str .= '<option value="custom_'.$value['id'].'">'.$value['payee_name'].'</option>';
+         }
+
+      if($str){
+         ?>
+         $("select[name=payee]").append('<?php echo $str; ?>');
+         <?php
+      }
+      ?>
+
       // settings for activate listing
       $(".edit_claim").removeClass('active-green');
       $(this).addClass('active-green');
@@ -931,9 +950,18 @@
       var data = $.parseJSON($(this).attr("attr"));
 
       // place all values to input fields
+      var decision = "";
       $.each(data, function( index, value ) {
          $(".edit-claim-item input[name="+index+"]").val(value);
-         $(".edit-claim-item select[name="+index+"]").val(value);
+
+         if(index == 'third_party_payee' && value != '0')
+         {
+            $(".edit-claim-item select[name=payee]").val("custom_"+value);
+         } else {
+            $(".edit-claim-item select[name="+index+"]").val(value);
+         }
+         if(index == 'status')
+            decision = value;
       });
 
       // change label
@@ -950,6 +978,15 @@
 
       // enable all buttons
       $(".actions").show();
+
+      // enable buttons according to claim Decision
+      if(decision == '' || decision == 'pending' || decision == null){
+         $(".accept_decision, .deny_decision").show();
+         $(".my_decision").hide();
+      } else {
+         $(".accept_decision, .deny_decision").hide();
+         $(".my_decision").show().html('<label style="float: left; font-size: 25px;">: '+decision+' </label>');         
+      }
    })
 
    .on("submit", "#save_item", function(e){
@@ -957,16 +994,16 @@
       var href = $(this).attr("action");
 
       $.ajax({
-            url: href,
-            method: "post",
-            data:$(this).serialize(),
-            beforeSend: function(){
-               $(".modal-content").addClass("csspinner load1");
-            },
-            success: function() {
-               window.location.reload();
-            }
-         })
+         url: href,
+         method: "post",
+         data:$(this).serialize(),
+         beforeSend: function(){
+            $(".modal-content").addClass("csspinner load1");
+         },
+         success: function() {
+            window.location.reload();
+         }
+      })
    })
 
    // send email print to recepient email:-
@@ -1003,20 +1040,56 @@
 
    // once user clicked on accept button 
    .on("click", "input[name=Accept]", function(){
+
+
+      // validate required fields
+      var $validate = 1;
+      $(".edit-claim-item .required").map(function(){
+         if(!$(this).val()){
+            $validate = 0;
+            $(this).addClass('error-true');
+         }
+         else {
+            $(this).removeClass('error-true');
+         }
+      })
+
+      if(!$validate){
+         alert("Please fill all required fields.")
+         return false;
+      }
+
+      else if(!parseFloat($("input[name=amt_payable]").val())){   
+         $("input[name=amt_payable]").focus().addClass('error-true');
+         alert("Please enter amount payable.")
+         return false;
+      }
       if(confirm('Are you sure you want to accept claim item?')){
 
+         var href = $("#save_item").attr("action");
+
          $.ajax({
-            url: "<?php echo base_url("claim/status/accepted") ?>",
+            url: href,
             method: "post",
-            data:{
-               claim_id:$(".select_claim.active-green").attr('alt'), 
-               claim_item_id:$(".edit_claim.active-green").attr('alt'), 
-            },
+            data:$("#save_item").serialize(),
             beforeSend: function(){
-               $(".main_container").addClass("csspinner load1");
+               $(".modal-content, .main_container").addClass("csspinner load1");
             },
             success: function() {
-               window.location.reload();
+               $.ajax({
+                  url: "<?php echo base_url("claim/status/accepted") ?>",
+                  method: "post",
+                  data:{
+                     claim_id:$(".select_claim.active-green").attr('alt'), 
+                     claim_item_id:$(".edit_claim.active-green").attr('alt'), 
+                  },
+                  beforeSend: function(){
+                     $(".main_container").addClass("csspinner load1");
+                  },
+                  success: function() {
+                     window.location.reload();
+                  }
+               })
             }
          })
       } else {
@@ -1072,11 +1145,29 @@
 
    // when clicked over deny button
    .on("click", "input[name=Deny]", function(){
+
+      // validate required fields
+      var $validate = 1;
+      $(".edit-claim-item .required").map(function(){
+         if(!$(this).val()){
+            $validate = 0;
+            $(this).addClass('error-true');
+         }
+         else {
+            $(this).removeClass('error-true');
+         }
+      })
+
+      if(!$validate){
+         alert("Please fill all required fields.")
+         return false;
+      }
+
       $(".deny_reasons").show();
    })
 
    // when user select any deny reason
-   .on("change", "select[name=reason]", function(){
+   .on("change", "select[name=deny_reason]", function(){
       if($(this).val()) {
           if(confirm('Are you sure you want to deny claim?')){
 
@@ -1148,3 +1239,4 @@ $outer_select.each(function(){
 });
 
 </script>
+

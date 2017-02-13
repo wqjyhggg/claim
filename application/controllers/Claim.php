@@ -185,7 +185,7 @@ class Claim extends CI_Controller {
 		{
 			//validate form input
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name', 'required');
-			$this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
+			// $this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 			$this->form_validation->set_rules('case_no', 'Case No', '');
@@ -201,7 +201,7 @@ class Claim extends CI_Controller {
 				foreach ($array as $key => $value) 
 				{
 					# code...
-					if($key <> "Examine" && $key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form" && !strpos($key, "ile_pdf"))
+					if($key <> "Examine" && $key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form" && !strpos($key, "ile_pdf") && !strpos($key, "ayment_type"))
 						$data[$key] = $value;
 				}
 				$data['created'] = date('Y-m-d H:i:s');
@@ -242,6 +242,8 @@ class Claim extends CI_Controller {
 				// insert values to database
 				$record_id = $this->common_model->save("claim", $data);
 
+
+
 				// create directory to copy/shift files
 				@mkdir('./assets/uploads/claim_files/'.$record_id, 0777);
 
@@ -259,6 +261,7 @@ class Claim extends CI_Controller {
 					foreach($array['payees']['bank'] as $key => $val)	
 					{
 						$payee_data = array(
+							'payment_type'=>$array['payment_type_'.($key+1)],
 							'claim_id'=>$record_id,
 							'bank'=>$val,
 							'payee_name'=>$array['payees']['payee_name'][$key],
@@ -269,7 +272,6 @@ class Claim extends CI_Controller {
 						$this->common_model->save("payees", $payee_data);
 					}
 				}
-
 
 				// update case no(7 length) to table
 				$claim_no = str_pad($record_id, 7, 0, STR_PAD_LEFT);
@@ -627,8 +629,19 @@ class Claim extends CI_Controller {
 				$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields = "`expenses_climed`.*", $conditions = ($id?array('expenses_climed.claim_id'=>$id):array()));
 
 				// get claim history
-				$fields = "expenses_climed.claim_id, expenses_climed.claim_no, expenses_climed.case_no,expenses_climed.claim_date,sum(expenses_climed.amount_claimed) as amount_claimed, sum(expenses_climed.amount_client_paid) as amount_client_paid, expenses_climed.currency,expenses_climed.pay_to";
-				$this->data['claim_history'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields, $conditions = array(), $joins = array(), $order_by = array(), $group_by = array('expenses_climed.claim_id'));
+				$joins = array();
+				$joins[] = array(
+					'table' => 'provider',
+					'on' => 'provider.id = expenses_climed.payee',
+					'type' => 'LEFT'
+					);
+				$joins[] = array(
+					'table' => 'payees',
+					'on' => 'payees.id = expenses_climed.third_party_payee',
+					'type' => 'LEFT'
+					);
+				$fields = "expenses_climed.claim_id, expenses_climed.claim_no, expenses_climed.case_no,expenses_climed.claim_date,sum(expenses_climed.amount_claimed) as amount_claimed, sum(expenses_climed.amount_client_paid) as amount_client_paid, expenses_climed.currency,expenses_climed.pay_to, sum(expenses_climed.amt_received) as amt_received, provider.name as provider_name, payees.payee_name";
+				$this->data['claim_history'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields, $conditions = array(), $joins, $order_by = array(), $group_by = array('expenses_climed.claim_id'));
 				
 				// load dropdowns- countries, province, products data
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
@@ -636,7 +649,7 @@ class Claim extends CI_Controller {
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
-				$this->data['payees'] = $this->common_model->get_payees($field_name = "expenses_climed[payee][]", $selected = $this->input->post($field_name));
+				$this->data['payees'] = $this->common_model->get_payees($field_name = "payee", $selected = $this->input->post($field_name), $key='id', $val='name');
 
 				// get all documents for sending email/print.
 				$fields = "id, name, description";
@@ -646,7 +659,7 @@ class Claim extends CI_Controller {
 				// get all payees infomation
 				$fields = "*";
 				$conditions = "claim_id = '$id'";
-				$this->data['payees'] = $this->common_model->select($record = "list", $typecast = "array", $table = "payees", $fields, $conditions);
+				$this->data['custom_payees'] = $this->common_model->select($record = "list", $typecast = "array", $table = "payees", $fields, $conditions);
 
 				// get intake forms
 				$joins = [];
@@ -732,7 +745,7 @@ class Claim extends CI_Controller {
 				foreach ($array as $key => $value) 
 				{
 					# code...
-					if($key <> "Examine" && $key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form" && !strpos($key, "ile_pdf"))
+					if($key <> "Examine" && $key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_climed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form" && !strpos($key, "ile_pdf") && !strpos($key, "ayment_type"))
 						$data[$key] = $value;
 				}
 				$data['created'] = date('Y-m-d H:i:s');
@@ -792,6 +805,7 @@ class Claim extends CI_Controller {
 					foreach($array['payees']['bank'] as $key => $val)	
 					{
 						$payee_data = array(
+         					'payment_type'=>$array['payment_type_'.($key+1)],
 							'claim_id'=>$record_id,
 							'bank'=>$val,
 							'payee_name'=>$array['payees']['payee_name'][$key],
@@ -799,7 +813,7 @@ class Claim extends CI_Controller {
 							'address'=>$array['payees']['address'][$key],
 							'created'=>date('Y-m-d H:i:s')
 							);
-						if($payee_id = $array['payees']['id'][$key])
+						if($payee_id = @$array['payees']['id'][$key])
 						{
 							unset($payee_data['created']);
 							$this->common_model->update("payees", $payee_data, array('id'=>$payee_id));	
@@ -1023,7 +1037,15 @@ class Claim extends CI_Controller {
 		unset($data['expiry_date']);
 		unset($data['existion_condition']);
 		unset($data['arrival_date']);
-		unset($data['arrival_date']);
+		unset($data['policy_info']);
+		unset($data['deny_reason']);
+
+		if(strpos($data['payee'], 'ustom_')) {
+			$data['third_party_payee'] = str_replace('custom_', '', $data['payee']);
+			$data['payee'] = 0;
+		} else {
+			$data['third_party_payee'] = 0;			
+		}
 
 		// update values to database
 		$this->common_model->update("expenses_climed", $data, array('id'=>$this->input->post('id')));
@@ -1041,7 +1063,14 @@ class Claim extends CI_Controller {
 			'currency'=>$currency,
 			'pay_to'=>$pay_to,
 			'invoice'=>$invoice,
+			'payee'=>$this->input->post('payee')
 			);
+		if(strpos($data['payee'], 'ustom_')) {
+			$data['third_party_payee'] = str_replace('custom_', '', $data['payee']);
+			$data['payee'] = 0;
+		} else {
+			$data['third_party_payee'] = 0;			
+		}
 
 		// update these all values to claim database
 		$this->common_model->update("expenses_climed", $data, array('claim_id'=>$claim_id));
@@ -1253,6 +1282,8 @@ class Claim extends CI_Controller {
 	{
 		$claim_item_id = $this->input->post("claim_item_id");
 
+		if($type == 'record_exempt')
+			$type = "record exempt";
 		$data = array(
 			'status'=>$type
 			);	
@@ -1328,13 +1359,24 @@ class Claim extends CI_Controller {
 			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "claim", $fields, $conditions, $joins, $order_by, $group_by = array());
 
 
+			$conditions['expenses_climed.status'] = 'accepted';
 			$joins = [];
 			$joins[] = array(
 				'table' => 'claim',
 				'on' => 'claim.id = expenses_climed.claim_id',
 				'type' => 'LEFT'
 				);
-			$fields = "expenses_climed.claim_id,expenses_climed.claim_no,expenses_climed.invoice,expenses_climed.date_of_service,expenses_climed.coverage_code,expenses_climed.diagnosis,expenses_climed.amt_payable,expenses_climed.amt_deductable,expenses_climed.amt_insured, expenses_climed.case_no, expenses_climed.claim_date, sum(expenses_climed.amount_claimed) as amount_claimed, sum(expenses_climed.amount_client_paid) as amount_client_paid, expenses_climed.currency, expenses_climed.pay_to";
+			$joins[] = array(
+				'table' => 'provider',
+				'on' => 'provider.id = expenses_climed.payee',
+				'type' => 'LEFT'
+				);
+			$joins[] = array(
+				'table' => 'payees',
+				'on' => 'payees.id = expenses_climed.third_party_payee',
+				'type' => 'LEFT'
+				);
+			$fields = "expenses_climed.claim_id,expenses_climed.claim_no,expenses_climed.invoice,expenses_climed.date_of_service,expenses_climed.coverage_code,expenses_climed.diagnosis,expenses_climed.amt_payable,expenses_climed.amt_deductable,expenses_climed.amt_insured, expenses_climed.case_no, expenses_climed.claim_date, sum(expenses_climed.amount_claimed) as amount_claimed, sum(expenses_climed.amount_client_paid) as amount_client_paid, expenses_climed.currency, expenses_climed.pay_to, provider.name as provider_name, payees.payee_name";
 			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_climed", $fields, $conditions, $joins, $order_by = array(), $group_by = array('expenses_climed.claim_id'));
 
 
@@ -1391,19 +1433,13 @@ class Claim extends CI_Controller {
 		// generate data array
 		$claim_id = $this->input->post('claim_id');
 
-		// get payment type wire or cheque		
-		$fields = "payment_type, ";
-		$conditions = "id = '$claim_id'";
-		$this->data['data'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields, $conditions);
-
 		// get all payees infomation
 		$fields = "*";
 		$conditions = "claim_id = '$claim_id'";
 		$this->data['payees'] = $this->common_model->select($record = "list", $typecast = "array", $table = "payees", $fields, $conditions);
 
 		$data = array(
-			'payees'=>$this->parser->parse("claim/select_payees", $this->data, TRUE),
-			'payment_type'=>$this->data['data']['payment_type']
+			'payees'=>$this->parser->parse("claim/select_payees", $this->data, TRUE)
 			);
 		echo json_encode($data);
 
@@ -1419,25 +1455,28 @@ class Claim extends CI_Controller {
 		$array = $this->input->post();
 
 		// get all payees list and insert it
-		// insert payee information
 		if(!empty($array['payees']))
-		{
-			// remove payees from db to reload new pay
-			$this->common_model->delete('payees', array('claim_id' => $claim_id));
-
+		{		
 			foreach($array['payees']['bank'] as $key => $val)	
 			{
-
 				$payee_data = array(
+ 					'payment_type'=>$array['payment_type_'.($key+1)],
 					'claim_id'=>$claim_id,
 					'bank'=>$val,
 					'payee_name'=>$array['payees']['payee_name'][$key],
 					'account_cheque'=>$array['payees']['account_cheque'][$key],
-					'payment'=>$array['payees']['payment'][$key],
 					'address'=>$array['payees']['address'][$key],
 					'created'=>date('Y-m-d H:i:s')
 					);
-				$this->common_model->save("payees", $payee_data);
+				if($payee_id = @$array['payees']['id'][$key])
+				{
+					unset($payee_data['created']);
+					$this->common_model->update("payees", $payee_data, array('id'=>$payee_id));	
+				} 
+				else
+				{
+					$this->common_model->save("payees", $payee_data);	
+				}
 			}
 		}
 
