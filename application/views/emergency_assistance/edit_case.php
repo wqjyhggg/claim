@@ -89,7 +89,7 @@
                   <div class="form-group col-sm-4">
                      <?php 
                         echo form_label('Country:', 'country', array("class"=>'col-sm-12'));
-                        echo $country2;
+                        echo $country;
                         echo form_error("country");
                      ?>
                   </div>
@@ -160,7 +160,7 @@
                   <div class="form-group col-sm-4">
                      <?php 
                         echo form_label('Country:', 'country2', array("class"=>'col-sm-12'));
-                        echo $country;
+                        echo $country2;
                         echo form_error("country2");
                      ?>
                   </div>                              

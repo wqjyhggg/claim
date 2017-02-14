@@ -431,7 +431,8 @@ class Emergency_assistance extends CI_Controller {
 				// load dropdowns data
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name, $case_details));
-				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name, $case_details));
+				$this->data['province'] = $this->get_provinces($type = 'return', $case_details['country'], $case_details['province']);
+
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
 				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Follow Up EAC--");
 				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--");
@@ -1796,6 +1797,7 @@ class Emergency_assistance extends CI_Controller {
 		}
 	}
 
+	// get policy information from jfinsurance database
 	function get_policy_info()
 	{
 
@@ -1831,5 +1833,20 @@ class Emergency_assistance extends CI_Controller {
 
 	}
 
+	// get provinces list from country name
+	function get_provinces($type = 'return', $country_name = '', $selected = '')
+	{
+		// get country id from name
+		$country_name = urldecode($country_name);
+		$country_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "country", $fields = "`country`.id", $conditions = array('country.name'=>$country_name));
+		$country_id = @$country_details['id'];
+		$conditions = "province.country_id = '$country_id'";
+
+		if($type == 'return')
+			return $this->common_model->getprovinces($field_name = "province", $selected, $key = "name", $value = "name", $conditions);
+		else
+			echo $this->common_model->getprovinces($field_name = "province", $selected, $key = "name", $value = "name", $conditions);
+		
+	}
 
 }

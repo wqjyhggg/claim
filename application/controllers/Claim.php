@@ -53,11 +53,19 @@ class Claim extends CI_Controller {
 					'on' => 'u1.id = claim.assign_to',
 					'type' => 'LEFT'
 					);
+				$joins[] = array(
+					'table' => 'expenses_climed',
+					'on' => 'claim.id = expenses_climed.claim_id',
+					'type' => 'LEFT'
+					);
 
 				// prepare conditions
 				$conditions = [];
+				$conditions['expenses_climed.status'] = 'accepted';
 				if($this->input->get("claim_no_claim")) 
 					$conditions['claim.claim_no'] = $this->input->get("claim_no_claim");
+				if($this->input->get("status")) 
+					$conditions['claim.status'] = $this->input->get("status");
 				if($this->input->get("policy_claim")) 
 					$conditions['claim.policy_no'] = $this->input->get("policy_claim");
 				if($this->input->get("created")) 
@@ -72,8 +80,8 @@ class Claim extends CI_Controller {
 				if($this->input->get("claim_date_to")) 
 					$conditions['claim.claim_date <= '] = $this->input->get("claim_date_to");
 
-				$fields = "concat_ws(' ', u1.first_name, u1.last_name) as claim_examiner, claim.id, claim.policy_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.claim_date, claim.status";
-				$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "claim", $fields, $conditions, $joins, $order_by, $group_by = array());
+				$fields = "concat_ws(' ', u1.first_name, u1.last_name) as claim_examiner, claim.id, claim.policy_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.claim_date, claim.status, sum(expenses_climed.amount_claimed) as amount_claimed";
+				$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "claim", $fields, $conditions, $joins, $order_by, $group_by = array('expenses_climed.claim_id'));
 			}
 			else if($this->input->get("filter") == 'case') 
 			{
@@ -1433,13 +1441,19 @@ class Claim extends CI_Controller {
 		// generate data array
 		$claim_id = $this->input->post('claim_id');
 
+		// get claim details
+		$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "status, is_complete", $conditions = array('claim.id'=>$claim_id));
+		
+
 		// get all payees infomation
 		$fields = "*";
 		$conditions = "claim_id = '$claim_id'";
 		$this->data['payees'] = $this->common_model->select($record = "list", $typecast = "array", $table = "payees", $fields, $conditions);
 
 		$data = array(
-			'payees'=>$this->parser->parse("claim/select_payees", $this->data, TRUE)
+			'payees'=>$this->parser->parse("claim/select_payees", $this->data, TRUE),
+			'status'=>$this->data['claim_details']['status'],
+			'is_complete'=>$this->data['claim_details']['is_complete']
 			);
 		echo json_encode($data);
 
@@ -1447,7 +1461,7 @@ class Claim extends CI_Controller {
 
 
 	// for ajax request
-	public function confirm_payment(){
+	public function confirm_payment($type = ''){
 
 		// generate data array
 		$claim_id = $this->input->post('claim_id');
@@ -1481,8 +1495,7 @@ class Claim extends CI_Controller {
 		}
 
 		// update claim status to complete
-		$this->common_model->update("claim", array("is_complete"=>'Y', 'status'=>'paid'), array("id"=>$claim_id));
-
+		$this->common_model->update("claim", array("is_complete"=>'Y', 'status'=>$type?$type:'paid'), array("id"=>$claim_id));
 		echo TRUE;
 
 	}

@@ -102,18 +102,24 @@
       <script>
          //Check to see if the window is top if not then display button
          $(window).scroll(function(){
-          if ($(this).scrollTop() > 100) {
-            $('.scrollToTop').fadeIn();
-          } else {
-            $('.scrollToTop').fadeOut();
-          }
+            if ($(this).scrollTop() > 100) {
+               $('.scrollToTop').fadeIn();
+            } else {
+               $('.scrollToTop').fadeOut();
+            }
          });
          
          //Click event to scroll to top
          $('.scrollToTop').click(function(){
-          $('html, body').animate({scrollTop : 0},800);
-          return false;
+            $('html, body').animate({scrollTop : 0},800);
+            return false;
          });
+
+         // get provinces list
+         $(document).on("change", "select[name=country]", function(){
+            var url = ("<?php echo base_url('emergency_assistance/get_provinces/print/') ?>"+$(this).val());
+            $("select[name=province]").load(encodeURI(url));
+         })
          
       </script>
       <!-- Bootstrap -->

@@ -123,13 +123,13 @@
                      </div>
                   </div>
                   <div class="row" style="margin-top:20px">
-                     <div class="col-sm-2">
+                     <div class="col-sm-2 confirm_button">
                         <input class="btn btn-primary" name="Confirm_Payment" value="Confirm Payment" type="submit">   
                      </div>
                      <div class="col-sm-1">
                         <?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
                      </div>
-                     <div class="col-sm-2"> 
+                     <div class="col-sm-2 close_button"> 
                         <input class="btn btn-primary" name="Close_Claim" value="Close Claim" type="button">  
                      </div>
                   </div>
@@ -275,15 +275,39 @@ $(document).on("click", "button[name=search_claim]", function(){
 
          // remove loader function
          $(".main_container").removeClass("csspinner load1");
+
+         // enable disable confirm payment and close claim operation
+         if(result.status == 'paid'){
+            $(".confirm_button").hide();
+            $(".close_button").show();
+
+            $(".add_payee").hide();
+            $(".remove-payee").remove();
+         }
+         else if(result.status == 'closed'){
+            $(".confirm_button").hide();
+            $(".close_button").hide();
+
+            $(".add_payee").hide();
+            $(".remove-payee").remove();
+         }
+         else{
+            $(".add_payee").show();
+         }
          
       }
    })
 })
 
+// once user clicked over confirm payment button
 .on("submit", "#confirm_payment", function(e){
    e.preventDefault();
 
    var claim_id = $(".select_payees.active-green").attr('alt');
+
+   if(!confirm('Are you sure you want to confirm payment for this claim?')){
+      return false;
+   }
 
    // confirm payment code goes here.
    $.ajax({
@@ -298,11 +322,32 @@ $(document).on("click", "button[name=search_claim]", function(){
          window.location.reload();
       }
    })
-
 })
 
+// once user clicked over close claim button
 .on("click", "input[name=Close_Claim]", function(e){
    e.preventDefault();
+
+   var claim_id = $(".select_payees.active-green").attr('alt');
+
+   if(!confirm('Are you sure you want to close this claim?')){
+      return false;
+   }
+
+   // confirm payment code goes here.
+   $.ajax({
+      url: $("#confirm_payment").attr("action")+"/closed",
+      method: "post",
+      data:$("#confirm_payment").serialize(),
+      dataType:"json",
+      beforeSend: function(){
+         $(".main_container").addClass("csspinner load1");
+      },
+      success: function(result) {
+         window.location.reload();
+      }
+   })
+
 })
 
 // when currency changed in payees section

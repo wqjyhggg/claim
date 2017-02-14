@@ -222,7 +222,7 @@ class Common_model extends CI_Model
         $result = $this->db->get();
 
         $array = array();
-        if ($dropdown)
+        if ($dropdown and  $empty)
             $array = array("" => $empty);
 
         if($result->num_rows() > 0) 
@@ -261,9 +261,9 @@ class Common_model extends CI_Model
      * @param       $key string - option value
      * @param       $key string - option label
     */
-    public function getcountries($field_name, $selected, $key = "name", $value = "name")
+    public function getcountries($field_name, $selected = 1, $key = "name", $value = "name")
     {
-        $record = $this->get_ref($table = "country", $key, $value, $dropdown=TRUE, $empty = "--Select Country--");
+        $record = $this->get_ref($table = "country", $key, $value, $dropdown=TRUE, $empty = "");
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
     
@@ -275,12 +275,13 @@ class Common_model extends CI_Model
      * @param       $key string - option value
      * @param       $key string - option label
     */
-    public function getprovinces($field_name, $selected, $key= "name", $value = "name")
+    public function getprovinces($field_name, $selected, $key= "name", $value = "name", $conditions = "country_id = '1'")
     {
-        $record = $this->get_ref($table = "province", $key, $value, $dropdown=TRUE, $empty = "--Select Province--");       
+        $record = $this->get_ref($table = "province", $key, $value, $dropdown=TRUE, $empty = "", $conditions);       
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
-    
+
+
     /**
      * Return a list of provinces
      *

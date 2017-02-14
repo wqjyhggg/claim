@@ -920,6 +920,7 @@
       $(".intake-heading").show()
    })
 
+   // to load, show/hide contents
    .on("click", ".move_down", function(){
       $(this).next("div.row").slideToggle();
       $(this).children("i").toggleClass("fa-angle-up").toggleClass("fa-angle-down");

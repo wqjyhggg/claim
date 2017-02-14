@@ -386,13 +386,13 @@
                      echo form_input("claim_no_claim", $this->input->get("claim_no_claim"), array("class"=>"form-control", 'placeholder'=>'Claim Number'));
                      ?>
                   </div>  
-                  <div class="form-group col-sm-3">
+                  <div class="form-group col-sm-2">
                      <?php 
                         echo form_label('Our Product:', 'product_short', array("class"=>'col-sm-12'));                  
                         echo $products;
                      ?>
                   </div>
-                  <div class="form-group col-sm-3">
+                  <div class="form-group col-sm-2">
                      <?php echo form_label('Claim Date From:', 'claim_date_from', array("class"=>'col-sm-12')); ?>
                      <div class="input-group date">
                         <?php    
@@ -401,7 +401,7 @@
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                      </div>
                   </div>
-                  <div class="form-group col-sm-3">
+                  <div class="form-group col-sm-2">
                      <?php echo form_label('Claim Date To:', 'claim_date_to', array("class"=>'col-sm-12')); ?>
                      <div class="input-group date">
                         <?php 
@@ -410,9 +410,27 @@
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                      </div>
                   </div>
-                  <div class="col-sm-3">
-                     <label class="col-sm-12">&nbsp;</label>
-                     <button class="btn btn-primary" name="filter" value="claim">Display Claim</button>
+                  <div class="form-group col-sm-2">
+                     <?php
+                        echo form_label('Claim Status:', 'status', array("class"=>'col-sm-12'));
+                        $status = array(
+                           ""=>'--Status--',
+                           'accepted'=>'Accepted',
+                           'processing'=>'Processing',
+                           'pending'=>'Pending',
+                           'denied'=>'Denied',
+                           'paid'=>'Paid',
+                           'recovered'=>'Recovered',
+                           'closed'=>'Close',
+                           'appeal'=>'Appeal'
+                           );
+                        echo form_dropdown("status", $status, $this->input->get("status"), array("class"=>'form-control'));
+                        ?>
+                     </div>
+                     <div class="col-sm-2">
+                        <label class="col-sm-12">&nbsp;</label>
+                        <button class="btn btn-primary" name="filter" value="claim">Display Claim</button>
+                     </div>
                   </div>
                </div> 
                <?php echo form_close(); ?>
@@ -457,7 +475,7 @@
                               <td><?php echo $value['gender']; ?></td>
                               <td><?php echo $value['dob']; ?></td>
                               <td><?php echo $value['claim_date']; ?></td>
-                              <td>0</td>
+                              <td><?php echo $value['amount_claimed'] ?></td>
                               <td><?php echo $value['claim_examiner']; ?></td>
                               <td><?php echo anchor("claim/claim_detail/".$value['id'], "Detail"); ?></td>
                            </tr>
