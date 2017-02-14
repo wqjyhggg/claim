@@ -122,8 +122,8 @@
                      </div>
                   </div>
 
-                  <h4>Address in Canada</h4>
-                  <div class="row">
+                  <h4 class="move_down">Address in Canada <i class="fa fa-angle-down pull-right"></i></h4>
+                  <div class="row"  style="display:none">
                      <!-- <div class="col-sm-12">
                         <div class="input-group col-sm-3" style="margin-bottom:10px">
                            <?php  
@@ -185,8 +185,8 @@
                         ?>
                      </div>
                   </div>              
-                  <h4>Name and Address of Family Physician in Country of Origin</h4>
-                  <div class="row">
+                  <h4 class="move_down">Name and Address of Family Physician in Country of Origin <i class="fa fa-angle-down pull-right"></i></h4>
+                  <div class="row" style="display:none">
                      <div class="col-sm-12">
                         <div class="form-group col-sm-3">
                            <?php 
@@ -239,8 +239,8 @@
                      </div>
                   </div>
 
-                  <h4>Name and Address of Family Physician in Canada</h4>
-                  <div class="row">
+                  <h4  class="move_down">Name and Address of Family Physician in Canada <i class="fa fa-angle-down pull-right"></i></h4>
+                  <div class="row" style="display:none">
                      <div class="col-sm-12">
                         <div class="form-group col-sm-3">
                            <?php 
@@ -287,8 +287,8 @@
                      </div>
                   </div>
 
-                  <h2>OTHER INSURANCE COVERAGE<small></small></h2>
-                  <div class="row">
+                  <h2 class="move_down">OTHER INSURANCE COVERAGE<small></small> <i class="fa fa-angle-down pull-right"></i></h2>
+                  <div class="row" style="display:none">
 
                      <div class="col-sm-12">
                         <div class="row">
@@ -349,8 +349,8 @@
                      </div>
                   </div>
 
-                  <h2>MEDICAL INFORMATION<small></small></h2>
-                  <div class="row">
+                  <h2 class="move_down">MEDICAL INFORMATION<small></small> <i class="fa fa-angle-down pull-right"></i></h2>
+                  <div class="row" style="display:none">
                      <div class="col-sm-12">
                         <div class="row">
                            <div class="form-group col-sm-12">
@@ -450,13 +450,13 @@
                      </div>
                   </div>
 
+                  <?php if(!empty($intake_forms)): ?>
                   <!-- Intake Forms List Section -->
                   <br/>
-                  <h2 class="modal-title intake-heading">INTAKE FORMS 
+                  <h2 class="modal-title intake-heading move_down">INTAKE FORMS  <i class="fa fa-angle-down pull-right"></i> 
                   </h2>
-                  <div class="row intake-forms-list col-sm-12">
+                  <div class="row intake-forms-list col-sm-12" style="display:none">
                      <?php 
-                     if(!empty($intake_forms)):
                         $i = 0;
                         foreach ($intake_forms as $key => $value):
                            $i++;
@@ -499,14 +499,13 @@
                          </div>   
                            <?php
                         endforeach;
-                     endif;
                      ?>
                   </div>
                   <input type="hidden" name="no_of_form" value="0"/> <!-- used to knnow how many forms added in this page -->
                   <!-- end intake forms list  -->
-                 
-                  <h2>PAYEE INFORMATION  <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button></h2>
-                  <div class="row">
+                  <?php endif; ?>
+                  <h2 class="move_down">PAYEE INFORMATION  <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button> <i class="fa fa-angle-down pull-right"></i></h2>
+                  <div class="row"  style="display:none">
                      <div class="col-sm-12">
                         <div class="payee-data">
                            <?php                              
@@ -567,7 +566,7 @@
                   </div>
 
                   <br/>
-                  <h2>ATTACHED LIST<small></small> <button class="btn btn-primary multiupload_files"  type="button">Upload Attached</button></h2>  
+                  <h2>ATTACHED LIST<small></small> <button class="btn btn-primary multiupload_files"  type="button">Upload Attached</button> </h2>  
                   <div class="row">
                      <div class="col-sm-12">
                         <div class="col-sm-12 uploaded_files">
@@ -996,6 +995,12 @@
       $(".more_items").toggle();
    })
 
+   // to load, show/hide contents
+   .on("click", ".move_down", function(){
+      $(this).next("div.row").slideToggle();
+      $(this).children("i").toggleClass("fa-angle-up").toggleClass("fa-angle-down");
+   })
+
    // fuzzy search
    .on("click", ".autocomplete_field", function() {
       $(".autocomplete_field").autocomplete({
@@ -1213,10 +1218,10 @@
       if($(this).is(":checked"))
       {
          // fill all json values to address fields
-         $("input[name=street_no_email]").val('<?php echo @$policy_info['street_number'] ?>');
-         $("input[name=street_name_email]").val('<?php echo @$policy_info['street_name'] ?>');
-         $("input[name=city_email]").val('<?php echo @$policy_info['city'] ?>');
-         $("select[name=province_email]").val('<?php echo @$policy_info['province2'] ?>');
+         $("input[name=street_no_email]").val('<?php echo @$policy_info[0]['street_number'] ?>');
+         $("input[name=street_name_email]").val('<?php echo @$policy_info[0]['street_name'] ?>');
+         $("input[name=city_email]").val('<?php echo @$policy_info[0]['city'] ?>');
+         $("select[name=province_email]").val('<?php echo @$policy_info[0]['province2'] ?>');
       }
       else
       {
@@ -1278,11 +1283,6 @@
 
       // save intake heading
       $(".intake-heading").show()
-   })
-
-   .on("click", ".move_down", function(){
-      $(".case_info").slideToggle('show');
-      $(this).children("i").toggleClass("fa-angle-up").toggleClass("fa-angle-down");
    })
 
    .on("click", ".edit_claim", function(){
