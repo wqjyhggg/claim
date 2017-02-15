@@ -69,7 +69,8 @@
                   $options_status = array(
                      ''=>'--Case Status--',
                      'A'=>'Active',
-                     'D'=>'Inactive'
+                     'D'=>'Inactive',
+                     'C'=>'Close'
                      );
                   echo form_dropdown("status", $options_status, $this->input->get("status"), array("class"=>"form-control"));
                   ?>
@@ -201,6 +202,13 @@
                      <div class="col-sm-2">    
                          <div class="col-sm-12">
                            <button class="btn btn-primary show_button mark_inactive editable" disabled>Set Inactive</button>
+                        </div>  
+                     </div>
+
+
+                     <div class="col-sm-2">    
+                         <div class="col-sm-12">
+                           <button class="btn btn-primary show_button mark_close editable" disabled>Set Close</button>
                         </div>  
                      </div>
 
@@ -438,7 +446,10 @@ $(document).ready(function() {
       if(length == 1)
           $(".view_edit, .email_print").removeAttr("disabled");
       if(length > 0)
+      {
           $(".mark_inactive").removeAttr("disabled");
+          $(".mark_close").removeAttr("disabled");
+      }
       $(".employees-section").hide();
    }
 }).on("click", ".assign_to", function(){                                               // on clicked assign to button
@@ -530,8 +541,38 @@ $(document).ready(function() {
    }
 })
 
-// clicking on save assign button
+// clicking on mark as inactive button
 .on("click", ".mark_inactive", function(){                                           
+   
+   if(!confirm('Are you sure you want to mark inactive selected cases?'))
+      return false;     
+
+   // selected cases 
+   var cases = [];
+   $("input[name=case]:checked").each(function(){
+      cases.push($(this).val());
+   })
+   var cases = cases.join(",");
+
+   // assign cases to emc manager here
+   $.ajax({
+      url: "<?php echo base_url("emergency_assistance/updatestatus/D") ?>",
+      method: "post",
+      data:{cases:cases, employee_id: employee_id},
+      beforeSend: function(){
+         $(".right_col").addClass("csspinner load1");
+      },
+      success: function() {
+         window.location.reload();
+      }
+   })
+})
+
+// clicking on mark as close button
+.on("click", ".mark_close", function(){  
+
+   if(!confirm('Are you sure you want to close selected cases?'))
+      return false;                                         
    
    // selected cases 
    var cases = [];
@@ -542,7 +583,7 @@ $(document).ready(function() {
 
    // assign cases to emc manager here
    $.ajax({
-      url: "<?php echo base_url("emergency_assistance/mark_inactive") ?>",
+      url: "<?php echo base_url("emergency_assistance/updatestatus/C") ?>",
       method: "post",
       data:{cases:cases, employee_id: employee_id},
       beforeSend: function(){
@@ -552,7 +593,10 @@ $(document).ready(function() {
          window.location.reload();
       }
    })
-}).on("click", ".auto_assign", function(){                                             // clicking on save assign button
+})
+
+// clicking on save assign button
+.on("click", ".auto_assign", function(){
    
    // assign emc user to selected cases 
    var cases = [];
