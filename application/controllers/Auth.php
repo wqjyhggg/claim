@@ -53,7 +53,7 @@ class Auth extends CI_Controller {
 
 			// get my tasks here
 			$table = "mytask";
-			$fields = "mytask.*, IF(type='CLAIM', concat_ws(' ', claim.insured_first_name, claim.insured_last_name), concat_ws(' ', case.insured_firstname, case.insured_lastname)) as insured_name, IF(type='CLAIM', '', LPAD(case.assign_to, 4, 0)) as followup_by";
+			$fields = "mytask.*, IF(mytask.type='CLAIM', concat_ws(' ', claim.insured_first_name, claim.insured_last_name), concat_ws(' ', case.insured_firstname, case.insured_lastname)) as insured_name, IF(type='CLAIM', '', LPAD(case.assign_to, 4, 0)) as followup_by, IF(mytask.type='CLAIM', claim.status, case.status) as task_status, IF(type='CLAIM', LPAD(claim.assign_to, 4, 0), LPAD(case.assign_to, 4, 0)) as assign_to";
 			$joins[] = array(
 				'table' => 'users',
 				'on' => 'users.id = mytask.created_by',
@@ -97,8 +97,6 @@ class Auth extends CI_Controller {
 			$this->data['records'] = $results['records'];
 			$this->data['pagination'] = $this->pagination->create_links(); # create pagination links
 			// pagination end here
-
-
 
         	$this->template->write('title', SITE_TITLE.' - My Tasks', TRUE);
 	        $this->template->write_view('content', 'auth/mytasks', $this->data);

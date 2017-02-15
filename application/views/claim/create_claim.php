@@ -9,13 +9,11 @@
    <div class="row">
       <div class="col-md-12 col-sm-12 col-xs-12">
          <div class="x_panel">
-            <div class="x_title">
-               <h2>CLAIMANT INFORMATION<small></small></h2>
-               <div class="clearfix"></div>
-            </div>
             <div class="x_content">
                <?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post', 'onsubmit'=>'return validate_form()', 'id'=>'main_form')); ?>
-               <div class="row" style="margin-bottom:15px;">
+
+               <h4 class="move_down"> Claimant Information <i class="fa fa-angle-down pull-right"></i></h4>
+               <div class="row" style="margin-bottom:15px;display:none">
                   <div class="form-group col-sm-3">
                      <?php 
                         echo form_label('Insured First Name:', 'insured_first_name', array("class"=>'col-sm-12'));                            
@@ -48,9 +46,8 @@
                         echo form_error("personal_id");
                      ?>
                   </div>
-               </div>
-
-               <div class="row">
+               
+                  <div class="clearfix"></div>
                   <div class="form-group col-sm-3">
                      <?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">
@@ -90,8 +87,7 @@
                         echo form_error("group_id");
                      ?>
                   </div>
-               </div>
-               <div class="row">
+                  <div class="clearfix"></div>
                   <div class="form-group col-sm-3">
                      <?php echo form_label('Enroll Date:', 'apply_date', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">
@@ -124,8 +120,8 @@
                   </div>
                </div>
 
-               <h4>Address in Canada</h4>
-               <div class="row">
+               <h4 class="move_down">Address in Canada <i class="fa fa-angle-down pull-right"></i></h4>
+               <div class="row" style="display:none">
                   <div class="col-sm-12">
                      <div class="input-group col-sm-3" style="margin-bottom:10px">
                         <?php  
@@ -187,8 +183,8 @@
                      ?>
                   </div>
                </div>              
-               <h4>Name and Address of Family Physician in Country of Origin</h4>
-               <div class="row">
+               <h4 class="move_down">Name and Address of Family Physician in Country of Origin <i class="fa fa-angle-down pull-right"></i></h4>
+               <div class="row" style="display:none">
                   <div class="col-sm-12">
                      <div class="form-group col-sm-3">
                         <?php 
@@ -241,8 +237,8 @@
                   </div>
                </div>
 
-               <h4>Name and Address of Family Physician in Canada</h4>
-               <div class="row">
+               <h4 class="move_down">Name and Address of Family Physician in Canada <i class="fa fa-angle-down pull-right"></i></h4>
+               <div class="row" style="display:none">
                   <div class="col-sm-12">
                      <div class="form-group col-sm-3">
                         <?php 
@@ -289,8 +285,8 @@
                   </div>
                </div>
 
-               <h2>OTHER INSURANCE COVERAGE<small></small></h2>
-               <div class="row">
+               <h2 class="move_down">Other Insurance Coverage <small></small><i class="fa fa-angle-down pull-right"></i></h2>
+               <div class="row" style="display:none">
 
                   <div class="col-sm-12">
                      <div class="row">
@@ -357,8 +353,8 @@
                   </div>
                </div>
 
-               <h2>MEDICAL INFORMATION<small></small></h2>
-               <div class="row">
+               <h2 class="move_down">Medical Information<small></small> <i class="fa fa-angle-down pull-right"></i></h2>
+               <div class="row" style="display:none">
                   <div class="col-sm-12">
                      <div class="row">
                         <div class="form-group col-sm-12">
@@ -458,8 +454,9 @@
                   </div>
                </div>
 
-               <h2>EXPENSES CLAIMED<small></small> 
-                   <button class="btn btn-primary add_new_expenses" type="button">Add new expenses item </button>
+               <h2 class="move_down">Expenses Claimed<small></small> 
+                   <button class="btn btn-primary add_new_expenses" type="button">Add new expenses item </button> 
+                   <i class="fa fa-angle-up pull-right"></i>
                </h2>
                <div class="row">
                   <div class="col-sm-12">
@@ -471,21 +468,14 @@
 
                <!-- Intake Forms List Section -->
                <br/>
-               <h2 class="modal-title intake-heading">INTAKE FORMS </h2>
+               <h2 class="modal-title intake-heading move_down" style="display:none">Intake Forms </h2>
                <div class="row intake-forms-list col-sm-12">
 
                </div>
                <input type="hidden" name="no_of_form" value="0"/> <!-- used to knnow how many forms added in this page -->
                <!-- end intake forms list  -->
 
-               <h2>PAYEE INFORMATION<small></small></h2>
-               <div class="row">
-                  <div class="col-sm-12">                     
-                     <div class="col-sm-3">
-                        <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button>
-                     </div>
-                  </div>
-               </div>
+               <h2 class="move_down">Payee Information<small></small> <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button>  <i class="fa fa-angle-up pull-right"></i></h2>
                <div class="row">
                   <div class="col-sm-12">
                      <div class="payee-data">                                                     
@@ -493,8 +483,7 @@
                   </div>
                </div>
 
-               <br/>
-               <h2>ATTACHED LIST<small></small> <button class="btn btn-primary multiupload_files"  type="button">Upload Attached</button></h2>  
+               <h2 style="border-bottom: 1px solid #eee;font-size: 14px !important; padding-bottom: 7px;">Attached List<small></small> <button class="btn btn-primary multiupload_files"  type="button">Upload Attached</button> </h2>  
                <div class="row">
                   <div class="col-sm-12">
                      <div class="col-sm-3 uploaded_files">
@@ -504,7 +493,6 @@
                      </div>
                   </div>
                </div>
-               <br/>
                <div class="row">
                   <div class="col-sm-3">
                      <?php 
@@ -730,19 +718,19 @@
          <div class="col-sm-3">
             <?php  
                echo form_label('Invoice#:', 'invoice', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control  required"));
+               echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control  required"));
             ?>
          </div>  
          <div class="col-sm-3">
             <?php 
                echo form_label('Name of Provider:', 'provider_name', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control required"));
+               echo form_input("expenses_claimed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control required"));
             ?>
          </div>  
          <div class="col-sm-3">
             <?php 
                echo form_label('Name of Referring Physician:', 'referencing_physician', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control"));
             ?>
          </div>  
          <div class="col-sm-3">
@@ -782,37 +770,37 @@
                      'V08B - Cremation/Burial'=>'Cremation/Burial',
                      'V12 - Air Flight Accident'=>'Air Flight Accident'
                   );
-               echo form_dropdown("expenses_climed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control required'));
+               echo form_dropdown("expenses_claimed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control required'));
             ?>
          </div>  
          <div class="col-sm-3">
             <?php 
                echo form_label('Diagnosis:', 'diagnosis', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field required"));
+               echo form_input("expenses_claimed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field required"));
             ?>
          </div>  
          <div class="col-sm-3">
             <?php 
                echo form_label('Description of Services:', 'service_description', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[service_description][]", $this->input->post("service_description"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[service_description][]", $this->input->post("service_description"), array("class"=>"form-control"));
             ?>
          </div>  
          <div class="col-sm-3">
             <?php 
                echo form_label('Date of Service:', 'date_of_service', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control  datepicker required"));
+               echo form_input("expenses_claimed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control  datepicker required"));
             ?>
          </div> 
          <div class="col-sm-3">
             <?php 
                echo form_label('Amount Billed:', 'amount_billed', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control required"));
+               echo form_input("expenses_claimed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control required"));
             ?>
          </div> 
          <div class="col-sm-3">
             <?php 
                echo form_label('Amount Client Paid:', 'amount_client_paid', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control required"));
+               echo form_input("expenses_claimed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control required"));
             ?>
          </div> 
          <div class="col-sm-3">
@@ -824,7 +812,7 @@
          <div class="col-sm-3">
             <?php 
                echo form_label('Comment:', 'comment', array("class"=>'col-sm-12'));
-               echo form_input("expenses_climed[comment][]", $this->input->post("comment"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[comment][]", $this->input->post("comment"), array("class"=>"form-control"));
             ?>
          </div> 
          <div class="col-sm-3">
@@ -890,7 +878,15 @@
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
    $(document).ready(function() {
-      // $('#main_form').validate()
+
+      // show area once any error occured
+      $(".alert-error").map(function(){
+         if($(this).text()){
+            $(this).closest('.row').show();
+            $(this).closest('.row').prev('.move_down').children('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+         }
+      })
+
       $(".datepicker").datepicker({
            startDate: '-105y',
            endDate: '+2y',
@@ -923,7 +919,7 @@
       });
     }) 
    
-   .on("click", ".add_new_expenses", function(){
+   .on("click", ".add_new_expenses", function(e){
       var html = $(".base-row").html();
       $(".expenses-list").append(html);
       $(".autocomplete_field").autocomplete({
@@ -935,6 +931,12 @@
            startDate: '-105y',
            endDate: '+2y',
        });
+
+
+      $(this).parent('.move_down').next('.row').show();
+
+      $(this).next('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+      e.stopPropagation()
    })
    .on("click", ".remove_claim", function(){
       $(this).parent("div").parent("div").remove();
@@ -948,6 +950,11 @@
       html = html.replace(/payment_type/g, "payment_type_"+(length+1));
 
       $(".payee-data").append(html);
+
+      $(this).parent('.move_down').next('.row').show();
+
+      $(this).next('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+      e.stopPropagation()
    })
 
    .on("click", ".remove-payee", function(){
@@ -990,10 +997,10 @@
       .replace("{clinic_name}", $("input[name=clinic_name]").val())
       .replace("{insured_dob}", $("input[name=dob]").val())
 
-      .replace("{policy_holder}", $("input[name=policy_holder]").val())
+      .replace("{policy_holder}", $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
       .replace("{policy_no}", $("input[name=policy_no]").val())
       .replace("{policy_no}", $("input[name=policy_no]").val())
-      .replace("{policy_no}", $("input[name=policy_no]").val()); 
+      .replace("{coverage_period}", data[0].effective_date+" to  "+data[0].expiry_date); 
 
       $(".doc-"+id+" .doc-desc").html(str);
 
@@ -1003,6 +1010,12 @@
       // enable disable buttons
       $(".print").attr("disabled", "disabled");
       $(".preview-template, .email-intakeform").removeAttr("disabled");
+   })
+
+   // to load, show/hide contents
+   .on("click", ".move_down", function(){
+      $(this).next("div.row").slideToggle();
+      $(this).children("i").toggleClass("fa-angle-up").toggleClass("fa-angle-down");
    })
 
    // fill autofill on key type
@@ -1108,6 +1121,9 @@
 
                // place every value to intake display area
                $(".intake-forms-list").append(html);
+
+               // show intake heading here
+               $(".intake-heading").show();
 
                // close model popup
                $('#print_template').modal('hide');
@@ -1420,7 +1436,15 @@ function validate_form(){
       }
    })
    if(!$validate){
-      alert("Please fill all required fields.")
+      alert("Please fill all required fields.");
+
+
+      // show area once any error occured
+      $(".error-true").map(function(){
+         $(this).closest('.row').show();
+         $(this).closest('.row').prev('.move_down').children('i').removeClass('fa-angle-down').addClass('fa-angle-up');         
+      })
+
       return false;
    }
 

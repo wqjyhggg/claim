@@ -35,7 +35,7 @@
                               </thead>
                               <tbody>
                                  <?php foreach ($claim_history as $key => $value): ?>
-                                 <tr class="select_claim row-link" alt="<?php echo $value['claim_id']; ?>" case_no="<?php echo $value['case_no']; ?>">
+                                 <tr class="select_claim row-link" data='<?php echo json_encode($value) ?>' alt="<?php echo $value['claim_id']; ?>" case_no="<?php echo $value['case_no']; ?>">
                                     <td><?php echo $value['claim_no']; ?></td>
                                     <td><?php echo $value['case_no']; ?></td>
                                     <td><?php echo $value['claim_date']; ?></td>
@@ -486,17 +486,17 @@
       <tr>
          <td>
             <?php 
-               echo form_input("expenses_climed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control"));
             ?>
          </td>  
          <td>
             <?php 
-               echo form_input("expenses_climed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control"));
             ?>
          </td>  
          <td>
             <?php 
-               echo form_input("expenses_climed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control"));
             ?>
          </td>  
          <td>
@@ -535,32 +535,32 @@
                      'V08B - Cremation/Burial'=>'Cremation/Burial',
                      'V12 - Air Flight Accident'=>'Air Flight Accident'
                   );
-               echo form_dropdown("expenses_climed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control'));
+               echo form_dropdown("expenses_claimed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control'));
             ?>
          </td>  
          <td>
             <?php 
-               echo form_input("expenses_climed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field"));
+               echo form_input("expenses_claimed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field"));
             ?>
          </td>  
          <td>
             <?php 
-               echo form_input("expenses_climed[service_description][]", $this->input->post("service_description"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[service_description][]", $this->input->post("service_description"), array("class"=>"form-control"));
             ?>
          </td>  
          <td>
             <?php 
-               echo form_input("expenses_climed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
             <?php 
-               echo form_input("expenses_climed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
             <?php 
-               echo form_input("expenses_climed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
@@ -570,22 +570,22 @@
                      "CAD"=>'CAD',
                      "CNY"=>'CNY',
                   );
-               echo form_dropdown("expenses_climed[currency][]", $currency, $this->input->get("currency"), array("class"=>'form-control'));
+               echo form_dropdown("expenses_claimed[currency][]", $currency, $this->input->get("currency"), array("class"=>'form-control'));
             ?>
          </td> 
          <td>
             <?php 
-               echo form_input("expenses_climed[currency_rate][]", $this->input->post("currency_rate"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[currency_rate][]", $this->input->post("currency_rate"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
             <?php 
-               echo form_input("expenses_climed[payee][]", $this->input->post("payee"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[payee][]", $this->input->post("payee"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
             <?php 
-               echo form_input("expenses_climed[comment][]", $this->input->post("comment"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[comment][]", $this->input->post("comment"), array("class"=>"form-control"));
             ?>
          </td> 
          <td>
@@ -698,15 +698,32 @@
       // get selected case details object
       var obj = $(".email_print");
 
+      // get policy info
+      var data = $.parseJSON($("input[name=policy_info]").val());
+
+      // parse case data details
+      var claim_data = $.parseJSON($(".select_claim.active-green").attr('data'));
+
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
-      str = str.replace(/{insured_name}/gi, obj.attr("insured_name"))
-      .replace("{insured_address}", obj.attr("insured_address"))
-      .replace("{insured_lastname}", obj.attr("insured_lastname"))
-      .replace("{policy_no}", obj.attr("policy_no"))
-      .replace("{case_no}", obj.attr("case_no"))
+      str = str.replace(/{insured_name}/gi, claim_data.insured_first_name+' '+claim_data.insured_last_name)
+      .replace(/{claimant_name}/gi, claim_data.insured_first_name+' '+claim_data.insured_last_name)
+      .replace("{insured_address}", claim_data.street_address+' '+claim_data.city+' '+claim_data.province)
+      .replace("{insured_lastname}", claim_data.insured_last_name)
+      .replace("{policy_no}", claim_data.policy_no)
+      .replace("{case_no}", claim_data.case_no)
       .replace("{policy_coverage_info}", "{policy_coverage_info}")
-      .replace("{casemanager_name}", obj.attr("casemanager_name"));
+      .replace("{casemanager_name}", '<?php echo $this->ion_auth->user()->row()->first_name ?>')
+      .replace("{claimexaminer_name}", claim_data.claimexaminer_name)
+      .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')
+
+      .replace("{clinic_name}", claim_data.clinic_name)
+      .replace("{insured_dob}", claim_data.dob)
+
+      .replace("{policy_holder}", claim_data.insured_first_name+' '+claim_data.insured_last_name)
+      .replace("{policy_no}", claim_data.policy_no)
+      .replace("{policy_no}", claim_data.policy_no)
+      .replace("{coverage_period}", data.effective_date+" to "+data.expiry_date); 
 
       $(".doc-"+id+" .doc-desc").html(str);
 

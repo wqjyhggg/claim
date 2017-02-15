@@ -27,15 +27,19 @@
                            <th>Created DateTime</th>
                            <th>Due Date</th>
                            <th>Outcome</th>
-                           <th>Follow Up EAC</th>
+                           <th>Assign to</th>
                            <th>Created By</th>
-                           <th>Complition Date</th>
                            <th>Category</th>
                      </thead>
                      <tbody>
                         <?php $i = 0;
                         $claims = [];
                         $cases = [];
+                        $status = array(
+                           'C'=>'Closed',
+                           'D'=>'Deactive',
+                           'A'=>'Active'
+                           );
                         foreach ($records as $key => $value): 
                            $i++;
                            if($value['type']=='CLAIM')
@@ -52,10 +56,9 @@
                               <td><?php echo $value['insured_name']; ?></td>
                               <td><?php echo date('Y-m-d h:i a', strtotime($value['created'])); ?></td>
                               <td><?php echo $value['due_date']; ?></td>
-                              <td><?php echo $value['outcome']; ?></td>
-                              <td><?php echo $value['followup_by']?"EAC".$value['followup_by']:""; ?></td>
+                              <td><?php echo @$status[$value['task_status']]?@$status[$value['task_status']]:@ucfirst($value['task_status']); ?></td>
+                              <td><?php echo intval($value['assign_to'])?($value['type'] == 'CLAIM'?'CLE'.$value['assign_to']:'EAC'.$value['assign_to']):''; ?></td>
                               <td><?php echo $value['created_by']; ?></td>
-                              <td><?php echo $value['completion_date']; ?></td>
                               <td><?php echo $value['category']; ?></td>
                            </tr>
                         <?php endforeach; ?>

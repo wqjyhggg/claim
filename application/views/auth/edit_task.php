@@ -74,13 +74,13 @@
                      {
                         echo form_label('Follow Up EAC:', 'assigned_to', array("class"=>'col-sm-12'));
                         echo $eacmanagers;
-                        echo form_error("assigned_to");
+                        echo form_error("assign_to");
                      }
                      else
                      {
                         echo form_label('Assign Claim Examiner:', 'assigned_to', array("class"=>'col-sm-12'));
                         echo $claim_examiner;
-                        echo form_error("assigned_to");
+                        echo form_error("assign_to");
                      }                        
                      ?>
                   </div>

@@ -13,7 +13,9 @@
             <div class="x_content">
                <?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post')); ?>
                <div class="case_info">
-                  <div class="row">
+
+                  <h4 class="move_down"> Claimant Information <i class="fa fa-angle-down pull-right"></i></h4>
+                  <div class="row" style="display:none">
                      <div class="form-group col-sm-3">
                         <?php 
                            echo form_label('Insured First Name:', 'insured_first_name', array("class"=>'col-sm-12'));                            
@@ -46,9 +48,7 @@
                            echo form_error("personal_id");
                         ?>
                      </div>
-                  </div>
-
-                  <div class="row">
+                     <div class="clearfix"></div>
                      <div class="form-group col-sm-3">
                         <?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
                         <div class="input-group date">
@@ -88,8 +88,8 @@
                            echo form_error("group_id");
                         ?>
                      </div>
-                  </div>
-                  <div class="row">
+                  
+                     <div class="clearfix"></div>
                      <div class="form-group col-sm-3">
                         <?php echo form_label('Enroll Date:', 'apply_date', array("class"=>'col-sm-12'));   ?>
                         <div class="input-group date">
@@ -287,7 +287,7 @@
                      </div>
                   </div>
 
-                  <h2 class="move_down">OTHER INSURANCE COVERAGE<small></small> <i class="fa fa-angle-down pull-right"></i></h2>
+                  <h2 class="move_down">Other Insurance Coverage <i class="fa fa-angle-down pull-right"></i></h2>
                   <div class="row" style="display:none">
 
                      <div class="col-sm-12">
@@ -349,7 +349,7 @@
                      </div>
                   </div>
 
-                  <h2 class="move_down">MEDICAL INFORMATION<small></small> <i class="fa fa-angle-down pull-right"></i></h2>
+                  <h2 class="move_down">Medical Information <small></small> <i class="fa fa-angle-down pull-right"></i></h2>
                   <div class="row" style="display:none">
                      <div class="col-sm-12">
                         <div class="row">
@@ -450,6 +450,134 @@
                      </div>
                   </div>
 
+
+                  <h2 class="move_down">Expenses Claimed 
+                      <button class="btn btn-primary add_new_expenses" type="button">Add new expenses item </button>  <i class="fa fa-angle-down pull-right"></i> 
+                  </h2>
+                  <div class="row" style="display:none">
+                     <div class="col-sm-12">
+                        <div class="expenses-list">
+                           <!-- list all expenses items list here -->
+                           <?php 
+                           if(!empty($expenses_claimed)):
+                              foreach ($expenses_claimed as $key => $value):
+                              ?>
+                           <div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
+                              <div class="col-sm-3">
+                                 <?php  
+                                    echo form_label('Invoice#:', 'invoice', array("class"=>'col-sm-12'));
+                                    echo form_input("expenses_claimed[invoice][]", $value['invoice'], array("class"=>"form-control  required"));
+                                    echo form_hidden('expenses_claimed[id][]', $value['id']);
+                                 ?>
+                              </div>  
+                              <div class="col-sm-3">
+                                 <?php 
+                                    echo form_label('Name of Provider:', 'provider_name', array("class"=>'col-sm-12'));
+                                    echo form_input("expenses_claimed[provider_name][]", $value['provider_name'], array("class"=>"form-control required"));
+                                 ?>
+                              </div>  
+                              <div class="col-sm-3">
+                                 <?php 
+                                    echo form_label('Name of Referring Physician:', 'referencing_physician', array("class"=>'col-sm-12'));
+                                    echo form_input("expenses_claimed[referencing_physician][]", $value['referencing_physician'], array("class"=>"form-control"));
+                                 ?>
+                              </div>  
+                              <div class="col-sm-3">
+                                 <?php 
+                                    echo form_label('Coverage Code:', 'coverage_code', array("class"=>'col-sm-12'));
+                                       $coverage_code = array(
+                                          ""=>'Coverage code',
+                                          'V01 - Hospitalization'=>'Hospitalization',
+                                          'V02A - Medical Services'=>'Medical Services',
+                                          'V02A - Doctor Visit'=>'Doctor Visit',
+                                          'V02A - Emergency Visit'=>'Emergency Visit',
+                                          'V02A - Specialist Visit'=>'Specialist Visit',
+                                          'V02A - Others'=>'Others',
+                                          'V02B - Diagnoistic Services'=>'Diagnoistic Services',
+                                          'V02B - X-Ray'=>'X-Ray',
+                                          'V02B - Ultrasound'=>'Ultrasound',
+                                          'V02B - Urine Test'=>'Urine Test',
+                                          'V02B - Blood Test'=>'Blood Test',
+                                          'V02B - CT Scans'=>' CT Scans',
+                                          'V02B - MRI'=>'MRI',
+                                          'V02B - Others'=>'Others',
+                                          'V13 - Private Duty Nursing'=>'Private Duty Nursing',
+                                          'V01A - Out-Patient Treatment'=>'Out-Patient Treatment',
+                                          'V07 - Prescription Drugs'=>'Prescription Drugs',
+                                          'V01B - Medical Appliances'=>'Medical Appliances',
+                                          'V04A - Ambulance'=>'Ambulance',
+                                          'V02A - Paramedical Services'=>'Paramedical Services',
+                                          'V02D - Acupuncture'=>'Acupuncture',
+                                          'V02E - Osteopath'=>'Osteopath',
+                                          'V02F - Physiotherapy'=>'Physiotherapy',
+                                          'V02G - Chiropractor'=>'Chiropractor',
+                                          'V02H - Chiropodist'=>'Chiropodist',
+                                          'V02J - Podiatrist'=>'Podiatrist',
+                                          'V06 - Accidental Dental'=>'Accidental Dental',
+                                          'V06B - Relief of Dental Pain'=>'Relief of Dental Pain',
+                                          'V08A - Return of Remains'=>'Return of Remains',
+                                          'V08B - Cremation/Burial'=>'Cremation/Burial',
+                                          'V12 - Air Flight Accident'=>'Air Flight Accident'
+                                       );
+                                    echo form_dropdown("expenses_claimed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control required'));
+                                 ?>
+                              </div>  
+                              <div class="col-sm-3">
+                                 <?php 
+                                    echo form_label('Diagnosis:', 'diagnosis', array("class"=>'col-sm-12'));
+                                    echo form_input("expenses_claimed[diagnosis][]", $value['diagnosis'], array("class"=>"form-control autocomplete_field required"));
+                                 ?>
+                              </div>  
+                              <div class="col-sm-3">
+                                 <?php 
+                                    echo form_label('Description of Services:', 'service_description', array("class"=>'col-sm-12'));
+                                    echo form_input("expenses_claimed[service_description][]", $value['service_description'], array("class"=>"form-control"));
+                                 ?>
+                              </div>  
+                              <div class="col-sm-3">
+                                 <?php 
+                                    echo form_label('Date of Service:', 'date_of_service', array("class"=>'col-sm-12'));
+                                    echo form_input("expenses_claimed[date_of_service][]", $value['date_of_service'], array("class"=>"form-control  datepicker required"));
+                                 ?>
+                              </div> 
+                              <div class="col-sm-3">
+                                 <?php 
+                                    echo form_label('Amount Billed:', 'amount_billed', array("class"=>'col-sm-12'));
+                                    echo form_input("expenses_claimed[amount_billed][]", $value['amount_billed'], array("class"=>"form-control required"));
+                                 ?>
+                              </div> 
+                              <div class="col-sm-3">
+                                 <?php 
+                                    echo form_label('Amount Client Paid:', 'amount_client_paid', array("class"=>'col-sm-12'));
+                                    echo form_input("expenses_claimed[amount_client_paid][]", $value['amount_client_paid'], array("class"=>"form-control required"));
+                                 ?>
+                              </div> 
+                              <div class="col-sm-3">
+                                 <?php 
+                                    echo form_label('Payee:', 'payee', array("class"=>'col-sm-12'));
+                                    echo $payees_list;
+                                    echo form_hidden('expenses_claimed[payee_id][]', ($value['payee']?$value['payee']:'custom_'.$value['third_party_payee']));
+                                 ?>
+                              </div> 
+                              <div class="col-sm-3">
+                                 <?php 
+                                    echo form_label('Comment:', 'comment', array("class"=>'col-sm-12'));
+                                    echo form_input("expenses_claimed[comment][]", $value['comment'], array("class"=>"form-control"));
+                                 ?>
+                              </div> 
+                              <div class="col-sm-3">
+                                 <i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i>
+                              </div>
+                           </div>
+                           <?php
+                              endforeach;
+                           endif;
+                           ?>                                                                                  
+                        </div>
+                     </div>
+                  </div>
+
+
                   <?php if(!empty($intake_forms)): ?>
                   <!-- Intake Forms List Section -->
                   <br/>
@@ -504,7 +632,7 @@
                   <input type="hidden" name="no_of_form" value="0"/> <!-- used to knnow how many forms added in this page -->
                   <!-- end intake forms list  -->
                   <?php endif; ?>
-                  <h2 class="move_down">PAYEE INFORMATION  <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button> <i class="fa fa-angle-down pull-right"></i></h2>
+                  <h2 class="move_down">Payee Information  <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button> <i class="fa fa-angle-down pull-right"></i></h2>
                   <div class="row"  style="display:none">
                      <div class="col-sm-12">
                         <div class="payee-data">
@@ -566,8 +694,8 @@
                   </div>
 
                   <br/>
-                  <h2>ATTACHED LIST<small></small> <button class="btn btn-primary multiupload_files"  type="button">Upload Attached</button> </h2>  
-                  <div class="row">
+                  <h2  class="move_down">Attached List <small></small> <button class="btn btn-primary multiupload_files"  type="button">Upload Attached</button>  <i class="fa fa-angle-down pull-right"></i> </h2>  
+                  <div class="row" style="display:none">
                      <div class="col-sm-12">
                         <div class="col-sm-12 uploaded_files">
                            <?php 
@@ -816,26 +944,30 @@
 </div>
 <!-- end intake form model here -->
 
-<table style="display:none">
-   <tbody class="base-row">
-      <tr>
-         <td>
-            <?php 
-               echo form_input("expenses_climed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control"));
+<div style="display:none">
+   <div class="base-row">
+      <div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
+         <div class="col-sm-3">
+            <?php  
+               echo form_label('Invoice#:', 'invoice', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control  required"));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
-               echo form_input("expenses_climed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control"));
+               echo form_label('Name of Provider:', 'provider_name', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control required"));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
-               echo form_input("expenses_climed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control"));
+               echo form_label('Name of Referring Physician:', 'referencing_physician', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control"));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
+               echo form_label('Coverage Code:', 'coverage_code', array("class"=>'col-sm-12'));
                   $coverage_code = array(
                      ""=>'Coverage code',
                      'V01 - Hospitalization'=>'Hospitalization',
@@ -870,66 +1002,57 @@
                      'V08B - Cremation/Burial'=>'Cremation/Burial',
                      'V12 - Air Flight Accident'=>'Air Flight Accident'
                   );
-               echo form_dropdown("expenses_climed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control'));
+               echo form_dropdown("expenses_claimed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control required'));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
-               echo form_input("expenses_climed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field"));
+               echo form_label('Diagnosis:', 'diagnosis', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field required"));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
-               echo form_input("expenses_climed[service_description][]", $this->input->post("service_description"), array("class"=>"form-control"));
+               echo form_label('Description of Services:', 'service_description', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[service_description][]", $this->input->post("service_description"), array("class"=>"form-control"));
             ?>
-         </td>  
-         <td>
+         </div>  
+         <div class="col-sm-3">
             <?php 
-               echo form_input("expenses_climed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control"));
+               echo form_label('Date of Service:', 'date_of_service', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control  datepicker required"));
             ?>
-         </td> 
-         <td>
+         </div> 
+         <div class="col-sm-3">
             <?php 
-               echo form_input("expenses_climed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control"));
+               echo form_label('Amount Billed:', 'amount_billed', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control required"));
             ?>
-         </td> 
-         <td>
+         </div> 
+         <div class="col-sm-3">
             <?php 
-               echo form_input("expenses_climed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control"));
+               echo form_label('Amount Client Paid:', 'amount_client_paid', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control required"));
             ?>
-         </td> 
-         <td>
+         </div> 
+         <div class="col-sm-3">
             <?php 
-            $currency = array(
-                     "USD"=>'USD',
-                     "CAD"=>'CAD',
-                     "CNY"=>'CNY',
-                  );
-               echo form_dropdown("expenses_climed[currency][]", $currency, $this->input->get("currency"), array("class"=>'form-control'));
+               echo form_label('Payee:', 'payee', array("class"=>'col-sm-12'));
+               echo $payees_list;
             ?>
-         </td> 
-         <td>
+         </div> 
+         <div class="col-sm-3">
             <?php 
-               echo form_input("expenses_climed[currency_rate][]", $this->input->post("currency_rate"), array("class"=>"form-control"));
+               echo form_label('Comment:', 'comment', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[comment][]", $this->input->post("comment"), array("class"=>"form-control"));
             ?>
-         </td> 
-         <td>
-            <?php 
-               echo form_input("expenses_climed[payee][]", $this->input->post("payee"), array("class"=>"form-control"));
-            ?>
-         </td> 
-         <td>
-            <?php 
-               echo form_input("expenses_climed[comment][]", $this->input->post("comment"), array("class"=>"form-control"));
-            ?>
-         </td> 
-         <td>
-            <i class="fa fa-trash row-link remove_claim"></i>
-         </td>
-      </tr>
-   </tbody>
-</table>
-
+         </div> 
+         <div class="col-sm-3">
+            <i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i>
+         </div>
+      </div>
+   </div>
+</div>
 <div style="display:none">
    <div class="payee-buffer">
       <div class="row"  style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
@@ -986,6 +1109,38 @@
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
    $(document).ready(function() {
+
+      // get policy data
+      <?php 
+      $policy_info = json_decode($claim_details['policy_info'], TRUE);
+
+      // to add third pary payees on this list.
+      $str = "";
+      if(!empty($payees))
+         foreach ($payees as $key => $value) {
+            $str .= '<option value="custom_'.$value['id'].'">'.$value['payee_name'].'</option>';
+         }
+
+      if($str){
+         ?>
+         $("select[name='expenses_claimed[payee][]']").append('<?php echo $str; ?>');
+         <?php
+      }
+      ?>
+
+      // show area once any error occured
+      $(".alert-error").map(function(){
+         if($(this).text()){
+            $(this).closest('.row').show();
+            $(this).closest('.row').prev('.move_down').children('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+         }
+      })
+
+      // select default payee
+      $("input[name='expenses_claimed[payee_id][]']").map(function(){
+         $(this).prev('select').val($(this).val());       
+      })
+
       $(".datepicker").datepicker({
            startDate: '-105y',
            endDate: '+2y',
@@ -1009,15 +1164,46 @@
         dataType: "json",
       });
     }) 
-   .on("click", ".add_new_expenses", function(){
+
+   // once user clicked over add new expenses button
+   .on("click", ".add_new_expenses", function(e){
       var html = $(".base-row").html();
       $(".expenses-list").append(html);
+      $(".autocomplete_field").autocomplete({
+        serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
+        minLength: 2,
+        dataType: "json",
+      });
+      $(".datepicker").datepicker({
+           startDate: '-105y',
+           endDate: '+2y',
+       });
+
+
+      $(this).parent('.move_down').next('.row').show();
+
+      $(this).next('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+      e.stopPropagation()
    })
+
+   // once user clicked over remove claim function
    .on("click", ".remove_claim", function(){
-      $(this).parent("td").parent("tr").remove();
+
+      if(confirm('Are you sure you want to remove claim item?')){
+         $(this).parent("div").parent("div").remove();
+
+         // remove payee from db if already stored
+         var id = $(this).parent("div").parent("div").find("input[name='expenses_claimed[id][]']").val();
+         if(id){         
+            $.ajax({
+               url: "<?php echo base_url("claim/delete_claim_item/") ?>"+id,
+               method: "get"
+            })
+         }
+      }
    })
    
-   .on("click", ".add_payee", function(){
+   .on("click", ".add_payee", function(e){
       var html = $(".payee-buffer").html();
 
       var length = $(".payee-data .row").length;
@@ -1025,7 +1211,13 @@
       html = html.replace(/payment_type/g, "payment_type_"+(length+1));
 
       $(".payee-data").append(html);
+
+      $(this).parent('.move_down').next('.row').show();
+
+      $(this).next('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+      e.stopPropagation()
    })
+
    .on("click", ".remove-payee", function(){
 
       if(confirm('Are you sure you want to remove payee?')){
@@ -1068,13 +1260,24 @@
 
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
-      str = str.replace(/{insured_name}/gi, obj.attr("insured_name"))
-      .replace("{insured_address}", obj.attr("insured_address"))
-      .replace("{insured_lastname}", obj.attr("insured_lastname"))
-      .replace("{policy_no}", obj.attr("policy_no"))
-      .replace("{case_no}", obj.attr("case_no"))
+      str = str.replace(/{insured_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
+      .replace(/{claimant_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
+      .replace("{insured_address}", $("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val())
+      .replace("{insured_lastname}", $("input[name=insured_last_name]").val())
+      .replace("{policy_no}", $("input[name=policy_no]").val())
+      .replace("{case_no}", $("input[name=case_no]").val())
       .replace("{policy_coverage_info}", "{policy_coverage_info}")
-      .replace("{casemanager_name}", obj.attr("casemanager_name"));
+      .replace("{casemanager_name}", '<?php echo $this->ion_auth->user()->row()->first_name ?>')
+      .replace("{claimexaminer_name}", '<?php echo $claim_details['claimexaminer_name']; ?>')
+      .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')
+
+      .replace("{clinic_name}", $("input[name=clinic_name]").val())
+      .replace("{insured_dob}", $("input[name=dob]").val())
+
+      .replace("{policy_holder}", $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
+      .replace("{policy_no}", $("input[name=policy_no]").val())
+      .replace("{policy_no}", $("input[name=policy_no]").val())
+      .replace("{coverage_period}", "<?php echo @$policy_info[0]['effective_date']." to ".@$policy_info[0]['expiry_date'] ?>"); 
 
       $(".doc-"+id+" .doc-desc").html(str);
 
@@ -1213,8 +1416,6 @@
 
    // once user clicked on same with policy button
    .on("click", "#mail_address", function(){
-      // get policy data
-      <?php $policy_info = json_decode($claim_details['policy_info'], TRUE); ?>
       if($(this).is(":checked"))
       {
          // fill all json values to address fields
@@ -1437,5 +1638,6 @@ $outer_select.each(function(){
    $(this).empty();
    $(this).append($("#products").html());
 });
+
 
 </script>

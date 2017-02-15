@@ -917,7 +917,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->data['countries'] = $this->common_model->getcountries($field_name = "country", $selected = $this->input->get("country"));
 
 			// get province list
-			$this->data['provinces'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->get("province"));
+			$this->data['provinces'] = $this->get_provinces($type = 'return', $country_name = $this->input->get("country"), $selected = $this->input->get("province"));
 
 			// load view data
         	$this->template->write('title', SITE_TITLE.' - Search Provider', TRUE);
@@ -1606,7 +1606,7 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	//mark inactive cases for ajax request
-	public function mark_inactive() 
+	public function updatestatus($status = 'D') 
 	{
 		$cases = $this->input->post("cases");	
 		$cases = explode(",", $cases);
@@ -1614,9 +1614,12 @@ class Emergency_assistance extends CI_Controller {
 		// mark deactivate process
 		foreach ($cases as $key => $value) 
 		{
-			$this->common_model->update("case", array("status"=>'D'), array("id"=>$value));
+			$this->common_model->update("case", array("status"=>$status), array("id"=>$value));
 		}
-		$this->session->set_flashdata('success', "Case inactive successfully.");
+		if($status == 'D')
+			$this->session->set_flashdata('success', "Cases inactive successfully.");
+		else
+			$this->session->set_flashdata('success', "Cases closed successfully.");
 
 		echo TRUE;
 
