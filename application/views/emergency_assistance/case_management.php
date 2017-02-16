@@ -6,7 +6,7 @@
 <duv>
    <div class="page-title">
       <div class="title_left">
-         <h3>Case Management</h3>         
+         <h3>Case Management</h3>
       </div>
    </div>
    <div class="clearfix"></div>
@@ -20,24 +20,24 @@
             <h2>Case Filter<small></small></h2>
             <div class="clearfix"></div>
          </div>
-         <div class="x_content"> 
+         <div class="x_content">
 
-            <!-- search case filter start -->       
-           <?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>           
-            <div class="row">           
+            <!-- search case filter start -->
+           <?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>
+            <div class="row">
                <div class="form-group col-sm-3">
-                  <?php               
+                  <?php
                   echo form_input("case_no", $this->input->get("case_no"), array("class"=>"form-control", 'placeholder'=>'Case No'));
                   ?>
-               </div>     
+               </div>
                <div class="form-group col-sm-3">
-                  <?php          
+                  <?php
                   echo form_input("policy_no", $this->input->get("policy_no"), array("class"=>"form-control", 'placeholder'=>'Policy No'));
                   ?>
-               </div> 
+               </div>
                <div class="form-group col-sm-3">
                   <div class="input-group date">
-                     <?php 
+                     <?php
                      echo form_input("created_from", $this->input->get("created_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Create Date From'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -45,7 +45,7 @@
                </div>
                <div class="form-group col-sm-3">
                   <div class="input-group date">
-                     <?php 
+                     <?php
                      echo form_input("created_to", $this->input->get("created_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Create Date To'));
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -53,19 +53,19 @@
                </div>
 
                <div class="form-group col-sm-3">
-                  <?php 
+                  <?php
                   echo form_input("insured_lastname", $this->input->get("insured_lastname"), array("class"=>"form-control", 'placeholder'=>'Insured Last Name'));
                   ?>
                </div>
 
                <div class="form-group col-sm-3">
-                  <?php 
+                  <?php
                   echo form_input("insured_firstname", $this->input->get("insured_firstname"), array("class"=>"form-control", 'placeholder'=>'Insured First Name'));
                   ?>
                </div>
 
                <div class="form-group col-sm-3">
-                  <?php 
+                  <?php
                   $options_status = array(
                      ''=>'--Case Status--',
                      'A'=>'Active',
@@ -77,7 +77,7 @@
                </div>
 
                <div class="form-group col-sm-3">
-                  <?php 
+                  <?php
                   $options = array(
                      ''=>'--Assigned Status--',
                      'assigned'=>'Assigned',
@@ -88,34 +88,34 @@
                </div>
 
                <div class="form-group col-sm-3">
-                  <?php 
-                  echo form_label('My Task:', 'case_manager', array("class"=>'col-sm-4')); 
+                  <?php
+                  echo form_label('My Task:', 'case_manager', array("class"=>'col-sm-4'));
                   ?>
                   <div class="form-group col-sm-8">
                      <?php
-                     echo form_checkbox("case_manager", $case_manager, ($this->input->get("case_manager") == $case_manager ? TRUE : FALSE), array("id"=>'case_manager', 'class'=>'col-sm-1')); 
+                     echo form_checkbox("case_manager", $case_manager, ($this->input->get("case_manager") == $case_manager ? TRUE : FALSE), array("id"=>'case_manager', 'class'=>'col-sm-1'));
                      echo form_label('Owned by Me', 'case_manager', array("class"=>'col-sm-10 pull-right', 'style'=>'margin-top: 3px;'));
                      ?>
                   </div>
                </div>
 
                <div class="form-group col-sm-3">
-                  <?php 
-                  echo form_label('Priority:', 'priority_label', array("class"=>'col-sm-4')); 
+                  <?php
+                  echo form_label('Priority:', 'priority_label', array("class"=>'col-sm-4'));
                   ?>
                   <div class="form-group col-sm-6">
                      <?php
-                     echo form_checkbox("priority", "HIGH", ($this->input->get("priority") == 'HIGH' ? TRUE : FALSE), array("id"=>'priority', 'class'=>'col-sm-1')); 
+                     echo form_checkbox("priority", "HIGH", ($this->input->get("priority") == 'HIGH' ? TRUE : FALSE), array("id"=>'priority', 'class'=>'col-sm-1'));
                      echo form_label('High', 'priority', array("class"=>'col-sm-10 pull-right', 'style'=>'margin-top: 3px;'));
                      ?>
                   </div>
                </div>
-  
+
                <div class="col-sm-3">
                   <button class="btn btn-primary" name="filter" value="case">Search</button>
                   <?php echo anchor("emergency_assistance/case_management", "Reset", array('class'=>'btn btn-info')); ?>
                </div>
-            </div> 
+            </div>
             <?php echo form_close(); ?>
             <!-- search case filter end -->
             <div class="clearfix"><br/></div>
@@ -137,8 +137,8 @@
                            <th>DOB</th>
                            <th>Follow Up EAC</th>
                            <th>Case Manager</th>
-                           <th>Priority</th>       
-                           <th>Status</th>            
+                           <th>Priority</th>
+                           <th>Status</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -181,41 +181,41 @@
                            <button class="btn btn-primary show_button assign_to" disabled>Transfer CM <i class="fa fa-angle-double-right"></i> </button>
                         </div>
                         <div class="col-sm-12">
-                           <button class="btn btn-primary show_button follow_up"  data-toggle="modal" data-target="#follow_reason" disabled>EAC Follow Up <i class="fa fa-angle-double-right"></i></button>  
-                        </div>   
+                           <button class="btn btn-primary show_button follow_up"  data-toggle="modal" data-target="#follow_reason" disabled>EAC Follow Up <i class="fa fa-angle-double-right"></i></button>
+                        </div>
                      </div>
                      <div class="col-sm-8 employees-section" style="display:none">
-                        <div class="col-sm-4">                           
+                        <div class="col-sm-4">
                            <?php echo $casemanagers;?>
                         </div>
                         <div class="col-sm-2">
-                           <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save</button> 
-                        </div>   
-                     </div>  
+                           <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save</button>
+                        </div>
+                     </div>
                   </div>
-                 
+
                   <div class="col-sm-12 form-group">
                      <div class="col-sm-2">
-                        <button class="btn btn-primary show_button view_edit editable" disabled>View/Edit Case</button>  
+                        <button class="btn btn-primary show_button view_edit editable" disabled>View/Edit Case</button>
                      </div>
 
-                     <div class="col-sm-2">    
+                     <div class="col-sm-2">
                          <div class="col-sm-12">
                            <button class="btn btn-primary show_button mark_inactive editable" disabled>Set Inactive</button>
-                        </div>  
+                        </div>
                      </div>
 
 
-                     <div class="col-sm-2">    
+                     <div class="col-sm-2">
                          <div class="col-sm-12">
                            <button class="btn btn-primary show_button mark_close editable" disabled>Set Close</button>
-                        </div>  
+                        </div>
                      </div>
 
-                     <div class="col-sm-2">    
-                        <button class="btn btn-primary show_button email_print editable"  data-toggle="modal" data-target="#print_template" disabled>Email/Print</button> 
-                     </div> 
-                  </div>            
+                     <div class="col-sm-2">
+                        <button class="btn btn-primary show_button email_print editable"  data-toggle="modal" data-target="#print_template" disabled>Email/Print</button>
+                     </div>
+                  </div>
                </div>
 
                <?php else:?>
@@ -240,7 +240,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Follow up case</h4>
       </div>
-      <?php 
+      <?php
          echo form_open_multipart("emergency_assistance/follow_up_cases", array("id"=>'follow_up_cases'));
        ?>
       <div class="modal-body">
@@ -251,7 +251,7 @@
                   echo form_label('Please Enter The Reason:', 'notes', array("class"=>'col-sm-12'));
                   ?>
                   <div class="col-sm-12">
-                     <?php  
+                     <?php
                      echo form_textarea("notes", "", array("class"=>"form-control col-sm-6 form-group required", 'placeholder'=>'Please Enter The Reason'));
                      ?>
                   </div>
@@ -261,7 +261,7 @@
                            <fieldset>
                               <legend><?php echo $value; ?></legend>
                               <?php
-                                 $list = "employees_".$key; 
+                                 $list = "employees_".$key;
                                  echo $$list;
                                ?>
                            </fieldset>
@@ -270,8 +270,8 @@
                      <?php endforeach; ?>
 
                      <div class="col-sm-12">
-                        <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save</button> 
-                     </div> 
+                        <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save</button>
+                     </div>
                   </div>
                </div>
             </div>
@@ -299,14 +299,14 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Print/email Template Letter</h4>
       </div>
-      <?php 
+      <?php
          echo form_open_multipart("emergency_assistance/send_print_email", array("id"=>'send_print_email'));
        ?>
       <div class="modal-body">
           <div class="row">
             <div class="col-sm-6">
                <div>
-                  <label for="mail_label" class="col-sm-2">Mail Addres:</label>    
+                  <label for="mail_label" class="col-sm-2">Mail Addres:</label>
                   <div class="form-group col-sm-6">
                      <input name="priority" value="HIGH" id="mail_address" class="col-sm-1" type="checkbox">
                      <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address with the policy</label>
@@ -317,7 +317,7 @@
                   echo form_label('To:', 'email', array("class"=>'col-sm-12'));
                   ?>
                   <div class="form-group col-sm-12">
-                     <?php  
+                     <?php
                      echo form_input("email", "", array("class"=>"form-control col-sm-6 form-group email required", 'placeholder'=>'Email Address'));
                      ?>
                   </div>
@@ -326,67 +326,69 @@
             <div class="form-group col-sm-12">
 
                <div class="form-group col-sm-3">
-                  <?php               
-                  echo form_label('Street No.:', 'street_no', array("class"=>'col-sm-12'));  
+                  <?php
+                  echo form_label('Street No.:', 'street_no', array("class"=>'col-sm-12'));
                   echo form_input("street_no", "", array("class"=>"form-control required", 'placeholder'=>'Street No.'));
                   echo form_error("street_no");
                   ?>
-               </div> 
+               </div>
                <div class="form-group col-sm-3">
-                  <?php               
-                  echo form_label('Street Name.:', 'street_name', array("class"=>'col-sm-12'));  
+                  <?php
+                  echo form_label('Street Name.:', 'street_name', array("class"=>'col-sm-12'));
                   echo form_input("street_name", "", array("class"=>"form-control required", 'placeholder'=>'Street Name.'));
                   echo form_error("street_name");
                   ?>
-               </div> 
+               </div>
                <div class="form-group col-sm-3">
-                  <?php               
-                  echo form_label('City:', 'city', array("class"=>'col-sm-12'));  
+                  <?php
+                  echo form_label('City:', 'city', array("class"=>'col-sm-12'));
                   echo form_input("city", "", array("class"=>"form-control required", 'placeholder'=>'City'));
                   echo form_error("city");
                   ?>
-               </div> 
+               </div>
 
                <div class="form-group col-sm-3">
-                  <?php 
+                  <?php
                      echo form_label('Province:', 'province', array("class"=>'col-sm-12'));
                      echo $province;
-                     echo form_error("province"); 
+                     echo form_error("province");
                   ?>
                </div>
 
-               <?php 
+               <?php
                   echo form_label('Select Template:', 'select_template', array("class"=>'col-sm-12'));
                ?>
                <div class="form-group col-sm-12">
                   <?php foreach($docs as $doc): ?>
                      <div class="select-doc col-sm-2" doc="<?php echo $doc['id'] ?>">
                         <i class="fa fa-file-word-o large"></i>
-                        <?php echo $doc['name'] ?> 
+                        <?php echo $doc['name'] ?>
                      </div>
                   <?php endforeach; ?>
                </div>
-            </div>  
+            </div>
             <div class="form-group col-sm-12 docfiles">
                <?php foreach($docs as $doc): ?>
                   <div class="col-sm-12 doc-description doc-<?php echo $doc['id'] ?>" style="display:none">
                      <div class="col-sm-12 doc_title">
-                        <?php echo heading($doc['name']); ?> 
+                        <?php echo heading($doc['name']); ?>
                      </div>
                      <div class="col-sm-12 doc-desc">
                         <?php
                            // find and replace text
                            $find = array(
                               '{otc_logo}',
+                              '{otc_logo_big}',
                               '{current_date}'
                               );
                            $replace = array(
                               img(array('src'=>'assets/img/otc.jpg','width'=>'90', 'height'=>'50')),
+                              img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')),
                               date("F d, Y")
                               );
                          echo str_replace($find, $replace, $doc['description']);
                         ?>
-                     </div>                     
+                     </div>
                   </div>
                <?php endforeach; ?>
             </div>
@@ -472,7 +474,7 @@ $(document).ready(function() {
    $(this).val(val);
    employee_id = val;                                                                  // set selected employee
 }).on("click", ".save_assign", function(){                                             // clicking on save assign button
-   
+
    // check if employee selected or not
    if(!$("select[name=case_manager]").val())
    {
@@ -480,7 +482,7 @@ $(document).ready(function() {
       return false;
    }
 
-   // assign emc user to selected cases 
+   // assign emc user to selected cases
    var cases = [];
    $("input[name=case]:checked").each(function(){
       cases.push($(this).val());
@@ -502,8 +504,8 @@ $(document).ready(function() {
 })
 
 // clicking on follow button
-.on("submit", "#follow_up_cases", function(e){                                            
-   
+.on("submit", "#follow_up_cases", function(e){
+
    // prevent form to submit
    e.preventDefault();
 
@@ -518,7 +520,7 @@ $(document).ready(function() {
          return false;
       }
 
-      // assign emc user to selected cases 
+      // assign emc user to selected cases
       var cases = [];
       $("input[name=case]:checked").each(function(){
          cases.push($(this).val());
@@ -542,12 +544,12 @@ $(document).ready(function() {
 })
 
 // clicking on mark as inactive button
-.on("click", ".mark_inactive", function(){                                           
-   
-   if(!confirm('Are you sure you want to mark inactive selected cases?'))
-      return false;     
+.on("click", ".mark_inactive", function(){
 
-   // selected cases 
+   if(!confirm('Are you sure you want to mark inactive selected cases?'))
+      return false;
+
+   // selected cases
    var cases = [];
    $("input[name=case]:checked").each(function(){
       cases.push($(this).val());
@@ -569,12 +571,12 @@ $(document).ready(function() {
 })
 
 // clicking on mark as close button
-.on("click", ".mark_close", function(){  
+.on("click", ".mark_close", function(){
 
    if(!confirm('Are you sure you want to close selected cases?'))
-      return false;                                         
-   
-   // selected cases 
+      return false;
+
+   // selected cases
    var cases = [];
    $("input[name=case]:checked").each(function(){
       cases.push($(this).val());
@@ -597,8 +599,8 @@ $(document).ready(function() {
 
 // clicking on save assign button
 .on("click", ".auto_assign", function(){
-   
-   // assign emc user to selected cases 
+
+   // assign emc user to selected cases
    var cases = [];
    $("input[name=case]:checked").each(function(){
       cases.push($(this).val());
@@ -620,13 +622,13 @@ $(document).ready(function() {
             window.location.reload();
          }
       })
-   } 
+   }
    else
       return false;
 }).on("click", ".select-doc", function(){                                              // show email/print function
-   
+
    // hide all doc files here
-   $(".doc-description").hide(); 
+   $(".doc-description").hide();
    $(".select-doc").removeClass("active");
 
    // get doc if
@@ -660,7 +662,7 @@ $(document).ready(function() {
 
 })
 
-// preview template script 
+// preview template script
 .on("click", ".preview-template", function(){
    // get selected doc
    $(this).toggleClass("active-preview");
@@ -689,7 +691,7 @@ $(document).ready(function() {
          $(this).empty();
          if(!$(this).hasClass("area"))
             $(this).append("<input class='outer-text' value='" + text + "'></input>");
-         else        
+         else
             $(this).append("<textarea  style='width:100%' rows='6'>"+ text +"</textarea>");
       });
 
@@ -705,7 +707,7 @@ $(document).ready(function() {
       // disable print button
       $(".print").attr("disabled", "disabled");
    }
-   
+
 })
 
 // print button script here
@@ -724,17 +726,17 @@ $(document).ready(function() {
    e.preventDefault();
    var doc_id = $(".select-doc.active").attr("doc");
    var template = $(".doc-"+doc_id).children("div.doc-desc").html();
-   if($(this).valid()) 
+   if($(this).valid())
    {
       $.ajax({
             url: "<?php echo base_url("emergency_assistance/send_print_email") ?>",
             method: "post",
             data:{
-               email:$("input[name=email]").val(), 
-               street_no:$("input[name=street_no]").val(), 
-               street_name:$("input[name=street_name]").val(), 
-               city:$("input[name=city]").val(), 
-               province:$("select[name=province]").val(), 
+               email:$("input[name=email]").val(),
+               street_no:$("input[name=street_no]").val(),
+               street_name:$("input[name=street_name]").val(),
+               city:$("input[name=city]").val(),
+               province:$("select[name=province]").val(),
                template:template,
                case_id: $("input[name=case]:checked").val(),
                doc: $(".select-doc.active").text()
@@ -755,7 +757,7 @@ $(document).ready(function() {
    // get local data
    var data = $.parseJSON($("input[name=case]:checked").parent('th').parent('tr').attr('policy_info'));
    if($(this).is(":checked"))
-   { 
+   {
       // fill all json values to address fields
       $("input[name=street_no]").val(data[0].street_number);
       $("input[name=street_name]").val(data[0].street_name);
@@ -776,7 +778,7 @@ $outer.each(function(){
    $(this).empty();
    if(!$(this).hasClass("area"))
       $(this).append("<input class='outer-text' value='" + text + "'></input>");
-   else        
+   else
       $(this).append("<textarea  style='width:100%' rows='6' value=''>"+ text +"</textarea>");
 });
 

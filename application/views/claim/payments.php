@@ -88,7 +88,7 @@
                            </thead>
                            <tbody>
                               <?php foreach($claims as $val): ?>
-                                 <tr class="row-link select_payees" alt="<?php echo $val['claim_id'] ?>">
+                                 <tr class="row-link select_payees" alt="<?php echo $val['claim_id'] ?>" discount="<?php echo $val['discount'] ?>">
                                     <td><?php echo ++$i; ?>.</td>
                                     <td><?php echo $val['claim_no'] ?></td>
                                     <td><?php echo $val['invoice'] ?></td>
@@ -107,7 +107,7 @@
                   <?php endif; ?>
                </div>
                <div class="payee_section" style="display:none">
-                  <h2>PAYEE INFORMATION<small></small></h2>
+                  <h2>PAYEE INFORMATION <div class="pull-right discount_section">&nbsp;</div></h2>
                   <?php echo form_open("claim/confirm_payment", array('class'=>'form-horizontal', 'method'=>'post', 'id'=>'confirm_payment')); echo form_hidden('claim_id') ?>
                   <div class="row">
                      <div class="col-sm-12">
@@ -246,9 +246,14 @@ $(document).on("click", "button[name=search_claim]", function(){
 // when clicked on claim item history section
 .on('click', ".select_payees", function(){
    var claim_id = $(this).attr('alt');
+   var discount = $(this).attr('discount');
 
    // enable payee section
    $(".payee_section").slideDown();
+
+   if(discount != '0'){
+      $('.discount_section').html('<i class="fa fa-ticket"></i> '+discount+'% discount');
+   }
 
    // settings for activate listing
    $(".select_payees").removeClass('active-green');

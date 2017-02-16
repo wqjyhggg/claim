@@ -8,7 +8,7 @@
       <div class="title_left">
          <h3>Case Details</h3>
          <?php
-         if(($this->ion_auth->is_claimsmanager() OR $this->ion_auth->is_claimexaminer()) and $this->input->get('type') == 'add_claim')
+         if(($this->ion_auth->is_admin() OR $this->ion_auth->is_claimsmanager() OR $this->ion_auth->is_claimexaminer()) and $this->input->get('type') == 'add_claim')
             echo anchor('claim/create_claim?policy='.$case_details['policy_no'].'&case_no='.$case_details['case_no'], '<i class="fa fa-plus-circle"></i> Create Claim', array("class"=>'btn btn-primary')) ?>   
       </div>
    </div>
@@ -461,10 +461,12 @@
                            // find and replace text
                            $find = array(
                               '{otc_logo}',
+                              '{otc_logo_big}',
                               '{current_date}'
                               );
                            $replace = array(
                               img(array('src'=>'assets/img/otc.jpg','width'=>'90', 'height'=>'50')),
+                              img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')),
                               date("F d, Y")
                               );
                          echo str_replace($find, $replace, $doc['description']);
