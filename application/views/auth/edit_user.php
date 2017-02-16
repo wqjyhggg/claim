@@ -79,14 +79,7 @@
 
               </div>
 
-              <div class="row">              
-                <div class="col-sm-6 form-group manager_panel" style="display:none">
-                  <?php echo form_label('Case Manager', 'parent_id', array("class"=>'col-sm-12'));?>
-                  <div class="col-sm-12 input-group">
-                    <?php echo $casemamager;?>
-                  </div>
-                </div>
-                
+              <div class="row">                
                 <div class="col-sm-6 form-group manager_panel" style="display:none">
                   <?php echo form_label('Select Shift', 'shift', array("class"=>'col-sm-12'));?>
                   <div class="col-sm-12 input-group">

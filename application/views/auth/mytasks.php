@@ -25,7 +25,6 @@
                            <th>Task No</th>
                            <th>Insured Name</th>
                            <th>Created DateTime</th>
-                           <th>Due Date</th>
                            <th>Outcome</th>
                            <th>Assign to</th>
                            <th>Created By</th>
@@ -55,7 +54,6 @@
                               <td><?php echo $value['task_no']; ?></td>
                               <td><?php echo $value['insured_name']; ?></td>
                               <td><?php echo date('Y-m-d h:i a', strtotime($value['created'])); ?></td>
-                              <td><?php echo $value['due_date']; ?></td>
                               <td><?php echo @$status[$value['task_status']]?@$status[$value['task_status']]:@ucfirst($value['task_status']); ?></td>
                               <td><?php echo intval($value['assign_to'])?($value['type'] == 'CLAIM'?'CLE'.$value['assign_to']:'EAC'.$value['assign_to']):''; ?></td>
                               <td><?php echo $value['created_by']; ?></td>

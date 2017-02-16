@@ -141,7 +141,6 @@ class Auth extends CI_Controller {
 
 			//validate form input
 			$this->form_validation->set_rules('assign_to', 'Assign To', 'required');
-			$this->form_validation->set_rules('due_date', 'Due Date', 'required');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
 			if ($this->form_validation->run() == TRUE)
@@ -180,8 +179,7 @@ class Auth extends CI_Controller {
 
 				// update data in task database
 				$data_task = array(
-					'priority'=>$this->input->post('priority'),
-					'due_date'=>$this->input->post('due_date')
+					'priority'=>$this->input->post('priority')
 					);
 				$this->common_model->update("mytask", $data_task, array('id'=>$id));
 
@@ -391,7 +389,6 @@ class Auth extends CI_Controller {
                 'last_name'  => $this->input->post('last_name'),
                 'company'    => $this->input->post('company'),
                 'phone'      => $this->input->post('phone'),
-                'parent_id'  => $this->input->post('parent_id'),
                 'shift'  => $this->input->post('shift'),
             );
         }
@@ -483,9 +480,6 @@ class Auth extends CI_Controller {
             );
             $this->data['groups'] = $groups;
 
-            // select case manager
-            $this->data['casemamager'] = $this->common_model->getrusers($field_name = "parent_id", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--");
-
 			$this->template->write('title', SITE_TITLE.' - Create User', TRUE);
 	        $this->template->write_view('content', 'auth/create_user', $this->data);
 	        $this->template->render();    
@@ -533,7 +527,6 @@ class Auth extends CI_Controller {
 					'last_name'  => $this->input->post('last_name'),
 					'company'    => $this->input->post('company'),
 					'phone'      => $this->input->post('phone'),
-                	'parent_id'  => $this->input->post('parent_id'),
                 	'shift'  => $this->input->post('shift'),
 				);
 
@@ -650,9 +643,6 @@ class Auth extends CI_Controller {
             '2pm-8pm'=>'2pm-8pm',
             '8pm-8am'=>'8pm-8am',
         );
-
-	    // select case manager
-	    $this->data['casemamager'] = $this->common_model->getrusers($field_name = "parent_id", $this->form_validation->set_value('parent_id', $user->parent_id), $group = "casemamager", $empty = "--Select Case Manager--");
 
 		$this->template->write('title', SITE_TITLE.' - Edit User', TRUE);
         $this->template->write_view('content', 'auth/edit_user', $this->data);

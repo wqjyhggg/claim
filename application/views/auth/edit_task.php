@@ -45,17 +45,6 @@
                      ?>
                   </div>
 
-                  <div class="form-group col-sm-6">
-                     <?php echo form_label('Due Date:', 'due_date', array("class"=>'col-sm-12'));   ?>
-                     <div class="input-group date">
-                        <?php                
-                        echo form_input("due_date", $this->common_model->field_val("due_date", $task_details), array("class"=>"form-control datepicker", 'placeholder'=>'Due Date'));
-                        echo form_error("due_date");
-                        ?>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                     </div>
-                  </div>  
-
                   <div class="col-sm-6">
                      <div class="col-sm-4">
                         <?php 
@@ -68,6 +57,7 @@
                         echo form_radio("priority", "HIGH", ($this->common_model->field_val("priority", $task_details)=='HIGH'?TRUE:FALSE), array('class'=>'setpremium')); ?>  High
                      </div>
                   </div>
+                  <div class="clearfix"></div>
                   <div class="form-group col-sm-6">
                      <?php
                      if($task_details['type'] == 'CASE')

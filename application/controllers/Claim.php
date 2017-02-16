@@ -27,7 +27,7 @@ class Claim extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
-		else if (!$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
+		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
 		{
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
@@ -184,7 +184,7 @@ class Claim extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
-		else if (!$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
+		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
 		{
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
@@ -433,8 +433,16 @@ class Claim extends CI_Controller {
 
 				// get all documents for sending email/print.
 				$fields = "id, name, description";
-				$conditions = "type = 'claim'";
+				$access_types = $this->get_access_list();
+				if($access_types)
+					$conditions = "type in (".implode(', ', $access_types).")";
+				else
+					$conditions = "type in (0)";
 				$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
+
+				// get all word documents
+				$fields = "id, title, content";
+				$this->data['word_templates'] = $this->common_model->select($record = "list", $typecast = "array", $table = "word_comments", $fields);
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Create Claim', TRUE);
@@ -453,7 +461,7 @@ class Claim extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
-		else if (!$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
+		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
 		{
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
@@ -673,7 +681,11 @@ class Claim extends CI_Controller {
 
 				// get all documents for sending email/print.
 				$fields = "id, name, description";
-				$conditions = "type = 'claim'";
+				$access_types = $this->get_access_list();
+				if($access_types)
+					$conditions = "type in (".implode(', ', $access_types).")";
+				else
+					$conditions = "type in (0)";
 				$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
 
 				// get all payees infomation
@@ -714,6 +726,10 @@ class Claim extends CI_Controller {
 				$this->data['policy_info'] = $this->parser->parse("claim/policy_info", $this->data, TRUE);
 				$this->data['case_info'] = $this->parser->parse("claim/case_info", $this->data, TRUE);
 
+				// get all word documents
+				$fields = "id, title, content";
+				$this->data['word_templates'] = $this->common_model->select($record = "list", $typecast = "array", $table = "word_comments", $fields);
+
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Examine Claim', TRUE);
 		        $this->template->write_view('content', 'claim/examine_claim', $this->data);
@@ -732,7 +748,7 @@ class Claim extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
-		else if (!$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
+		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
 		{
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
@@ -987,7 +1003,11 @@ class Claim extends CI_Controller {
 
 				// get all documents for sending email/print.
 				$fields = "id, name, description";
-				$conditions = "type = 'claim'";
+				$access_types = $this->get_access_list();
+				if($access_types)
+					$conditions = "type in (".implode(', ', $access_types).")";
+				else
+					$conditions = "type in (0)";
 				$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
 
 				// get all payees infomation
@@ -1008,6 +1028,10 @@ class Claim extends CI_Controller {
 					'type' => 'LEFT'
 					);
 				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by, u1.id as user_id", $conditions = array('intake_form.case_id'=>$id, 'type'=>'CLAIM'), $joins);
+
+				// get all word documents
+				$fields = "id, title, content";
+				$this->data['word_templates'] = $this->common_model->select($record = "list", $typecast = "array", $table = "word_comments", $fields);
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Claim Details', TRUE);
@@ -1385,7 +1409,7 @@ class Claim extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
-		else if (!$this->ion_auth->is_accountant())
+		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_accountant())
 		{
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
@@ -1447,7 +1471,7 @@ class Claim extends CI_Controller {
 				'on' => 'payees.id = expenses_claimed.third_party_payee',
 				'type' => 'LEFT'
 				);
-			$fields = "expenses_claimed.claim_id,expenses_claimed.claim_no,expenses_claimed.invoice,expenses_claimed.date_of_service,expenses_claimed.coverage_code,expenses_claimed.diagnosis,expenses_claimed.amt_payable,expenses_claimed.amt_deductable,expenses_claimed.amt_insured, expenses_claimed.case_no, expenses_claimed.claim_date, sum(expenses_claimed.amount_claimed) as amount_claimed, sum(expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency, expenses_claimed.pay_to, provider.name as provider_name, payees.payee_name";
+			$fields = "expenses_claimed.claim_id,expenses_claimed.claim_no,expenses_claimed.invoice,expenses_claimed.date_of_service,expenses_claimed.coverage_code,expenses_claimed.diagnosis,expenses_claimed.amt_payable,expenses_claimed.amt_deductable,expenses_claimed.amt_insured, expenses_claimed.case_no, expenses_claimed.claim_date, sum(expenses_claimed.amount_claimed) as amount_claimed, sum(expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency, expenses_claimed.pay_to, provider.name as provider_name, payees.payee_name, provider.discount";
 			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields, $conditions, $joins, $order_by = array(), $group_by = array('expenses_claimed.claim_id'));
 
 
@@ -1584,6 +1608,34 @@ class Claim extends CI_Controller {
 
 	}
 
+	// return list of role for current user
+	function get_access_list()
+	{
+		$id = $this->ion_auth->user()->row()->id;
 
+		$joins[] = array(
+			'table' => 'groups',
+			'on' => 'groups.id = users_groups.group_id',
+			'type' => 'INNER'
+			);
+		$roles = $this->common_model->select($record = "list", $typecast = "array", $table = "users_groups", $fields = "groups.name", $conditions = array('users_groups.user_id'=>$id), $joins);
+
+		$return = [];
+		if(!empty($roles))
+			foreach ($roles as $key => $value) {
+				if($value['name'] == 'eacmanager')
+					$return[] = "'eac'";
+
+				else if($value['name'] == 'casemamager')
+					$return[] = "'case'";
+
+				else if($value['name'] == 'claimexaminer' OR $value['name'] == 'claimsmanager')
+					$return[] = "'claim'";
+
+				else
+					$return[] = "'".$value['name']."'";
+			}
+		return $return;
+	}
 
 }

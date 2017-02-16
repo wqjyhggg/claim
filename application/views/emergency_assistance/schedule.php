@@ -1,7 +1,7 @@
 <duv>
    <div class="page-title">
       <div class="title_left">
-         <h3><?php if(!$this->ion_auth->is_casemamager()) echo "My "; ?>Work Schedule</h3>         
+         <h3>Work Schedule</h3>         
       </div>
    </div>
    <div class="clearfix"></div>
@@ -13,7 +13,8 @@
             <div class="x_title">
               <h2>Schedule Calendar<small></small></h2>
 
-              <?php if($this->ion_auth->is_casemamager()): ?>
+              <?php if($this->ion_auth->is_casemamager() OR $this->ion_auth->is_admin()): ?>
+
                 <div class="form-group col-sm-4 pull-right">
                   <div class="form-group col-sm-3">
                    <?php 
@@ -29,7 +30,10 @@
                        <?php echo $eacmanagers;?>
                   </div>
                 </div>
-                <a href="javascript:void(0)" class="btn btn-primary pull-right auto-schedule"><i class="fa fa-clock-o"></i> Auto Schedule Whole EACs</a>
+
+                <a href="javascript:void(0)"  class="btn btn-primary pull-right auto-schedule"><i class="fa fa-clock-o"></i> Auto Schedule Whole EACs</a>
+
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#clear_schedule_template" class="btn btn-primary pull-right"><i class="fa fa-trash"></i> Clear Schedule</a>
               <?php endif; ?>
 
               <div class="clearfix"></div>
@@ -95,6 +99,27 @@
   </div>
 </div>
 <!-- end intake form model here -->
+
+<!-- Email print doc content here -->
+<div id="clear_schedule_template" class="modal fade" role="dialog">
+  <div class="modal-dialog  modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Clear EAC Schedule</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+         <label class="col-sm-12">In Progress....</label>      
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- end here -->
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
@@ -260,7 +285,7 @@
 
   // put different-2 colors according to time schedule
   .ready(function(){
-    <?php if (!$this->ion_auth->is_casemamager()):?>
+    <?php if (!$this->ion_auth->is_casemamager() and !$this->ion_auth->is_admin()):?>
       $("td").removeAttr('data-toggle');
     <?php endif; ?>
     load_colors();

@@ -15,43 +15,43 @@
                <h4 class="move_down"> Claimant Information <i class="fa fa-angle-down pull-right"></i></h4>
                <div class="row" style="margin-bottom:15px;display:none">
                   <div class="form-group col-sm-3">
-                     <?php 
-                        echo form_label('Insured First Name:', 'insured_first_name', array("class"=>'col-sm-12'));                            
+                     <?php
+                        echo form_label('Insured First Name:', 'insured_first_name', array("class"=>'col-sm-12'));
                         echo form_input("insured_first_name", $this->input->post("insured_first_name"), array("class"=>"form-control required", 'placeholder'=>'Insured First Name'));
                         echo form_error("insured_first_name");
                      ?>
                   </div>
                   <div class="col-sm-3">
-                     <?php 
-                        echo form_label('Insured Last Name:', 'insured_last_name', array("class"=>'col-sm-12'));                            
+                     <?php
+                        echo form_label('Insured Last Name:', 'insured_last_name', array("class"=>'col-sm-12'));
                         echo form_input("insured_last_name", $this->input->post("insured_last_name"), array("class"=>"form-control", 'placeholder'=>'Insured Last Name'));
                      ?>
                   </div>
                   <div class="col-sm-3">
                      <div class="col-sm-4">
-                        <?php 
+                        <?php
                         echo form_label('&nbsp;', 'gender', array("class"=>'col-sm-12'));
                         echo form_radio("gender", "male", $this->input->post("gender"), array('class'=>'setpremium')); ?>  Male
                      </div>
                      <div class="col-sm-5">
-                        <?php 
+                        <?php
                         echo form_label('&nbsp;', 'gender', array("class"=>'col-sm-12'));
                         echo form_radio("gender", "female", $this->input->post("gender"), array('class'=>'setpremium')); ?>  Female
                      </div>
                   </div>
                   <div class="col-sm-3">
-                     <?php 
+                     <?php
                         echo form_label('ID', 'id', array("class"=>'col-sm-12'));
                         echo form_input("personal_id", $this->input->post("personal_id"), array("class"=>"form-control", 'placeholder'=>'ID'));
                         echo form_error("personal_id");
                      ?>
                   </div>
-               
+
                   <div class="clearfix"></div>
                   <div class="form-group col-sm-3">
                      <?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">
-                        <?php                
+                        <?php
                         echo form_input("dob", $this->input->post("dob"), array("class"=>"form-control datepicker required", 'placeholder'=>'Date of Birth'));
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -59,30 +59,30 @@
                      <?php echo form_error("dob"); ?>
                   </div>
                   <div class="form-group col-sm-3">
-                     <?php 
-                        echo form_label('Policy#:', 'policy_no', array("class"=>'col-sm-12'));                            
+                     <?php
+                        echo form_label('Policy#:', 'policy_no', array("class"=>'col-sm-12'));
                         echo form_input("policy_no", ($this->input->post("policy_no")?$this->input->post("policy_no"):$this->input->get("policy")), array("class"=>"form-control required", 'placeholder'=>'Policy#'));
                         echo form_error("policy_no");
                         echo form_hidden("policy_info");
                      ?>
                   </div>
                   <div class="form-group col-sm-3">
-                     <?php 
-                        echo form_label('Case No#:', 'case_no', array("class"=>'col-sm-12'));                            
+                     <?php
+                        echo form_label('Case No#:', 'case_no', array("class"=>'col-sm-12'));
                         echo form_input("case_no", ($this->input->post("case_no")?$this->input->post("case_no"):$this->input->get("case_no")), array("class"=>"form-control", 'placeholder'=>'Case No#'));
                         echo form_error("case_no");
                      ?>
                   </div>
                   <div class="form-group col-sm-3">
-                     <?php 
-                        echo form_label('School Name:', 'school_name', array("class"=>'col-sm-12'));                            
+                     <?php
+                        echo form_label('School Name:', 'school_name', array("class"=>'col-sm-12'));
                         echo form_input("school_name", $this->input->post("school_name"), array("class"=>"form-control required", 'placeholder'=>'School Name'));
                         echo form_error("school_name");
                      ?>
                   </div>
                   <div class="form-group col-sm-3">
-                     <?php 
-                        echo form_label('Group ID:', 'group_id', array("class"=>'col-sm-12'));                            
+                     <?php
+                        echo form_label('Group ID:', 'group_id', array("class"=>'col-sm-12'));
                         echo form_input("group_id", $this->input->post("group_id"), array("class"=>"form-control required", 'placeholder'=>'Group ID'));
                         echo form_error("group_id");
                      ?>
@@ -91,7 +91,7 @@
                   <div class="form-group col-sm-3">
                      <?php echo form_label('Enroll Date:', 'apply_date', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">
-                        <?php                
+                        <?php
                         echo form_input("apply_date", $this->input->post("apply_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Enroll Date'));
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -100,20 +100,20 @@
                   <div class="form-group col-sm-3">
                      <?php echo form_label('Arrival Date in Canada:', 'arrival_date', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">
-                        <?php                
+                        <?php
                         echo form_input("arrival_date", $this->input->post("arrival_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Arrival Date in Canada'));
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                      </div>
                   </div>
                   <div class="form-group col-sm-3">
-                     <?php 
+                     <?php
                         echo form_label('Full Name of Guardian if applicable:', 'guardian_name', array("class"=>'col-sm-12'));
                         echo form_input("guardian_name", $this->input->post("guardian_name"), array("class"=>"form-control", 'placeholder'=>'Full Name of Guardian if applicable'));
                         ?>
                   </div>
                   <div class="form-group col-sm-3">
-                     <?php 
+                     <?php
                         echo form_label('Guardian Phone#:', 'guardian_phone', array("class"=>'col-sm-12'));
                         echo form_input("guardian_phone", $this->input->post("guardian_phone"), array("class"=>"form-control", 'placeholder'=>'Guardian Phone#'));
                         ?>
@@ -124,43 +124,43 @@
                <div class="row" style="display:none">
                   <div class="col-sm-12">
                      <div class="input-group col-sm-3" style="margin-bottom:10px">
-                        <?php  
+                        <?php
                         echo form_checkbox("same_policy", "Y", $this->input->post("same_policy"), array('class'=>'setpremium', 'style'=>'margin-left:10px')); ?>  Same with policy
                      </div>
                   </div>
-                  
+
                   <div class="form-group col-sm-3">
-                     <?php 
+                     <?php
                         echo form_label('Street Address:', 'street_address', array("class"=>'col-sm-12'));
                         echo form_input("street_address", $this->input->post("street_address"), array("class"=>"form-control", 'placeholder'=>'Street Address'));
                      ?>
                   </div>
                   <div class="form-group col-sm-3">
-                     <?php 
-                        echo form_label('City/Town:', 'city', array("class"=>'col-sm-12'));                           
+                     <?php
+                        echo form_label('City/Town:', 'city', array("class"=>'col-sm-12'));
                         echo form_input("city", $this->input->post("city"), array("class"=>"form-control", 'placeholder'=>'City/Town'));
                      ?>
                   </div>
                   <div class="form-group col-sm-3">
-                     <?php 
-                        echo form_label('Province:', 'province', array("class"=>'col-sm-12'));                           
+                     <?php
+                        echo form_label('Province:', 'province', array("class"=>'col-sm-12'));
                         echo form_input("province", $this->input->post("province"), array("class"=>"form-control", 'placeholder'=>'Province'));
                      ?>
                   </div>
                   <div class="form-group col-sm-3">
-                     <?php 
+                     <?php
                         echo form_label('Telephone:', 'telephone', array("class"=>'col-sm-12'));
                         echo form_input("telephone", $this->input->post("telephone"), array("class"=>"form-control", 'placeholder'=>'Telephone'));
                      ?>
                   </div>
                   <div class="form-group col-sm-3">
-                     <?php 
+                     <?php
                         echo form_label('Email:', 'email', array("class"=>'col-sm-12'));
                         echo form_input("email", $this->input->post("email"), array("class"=>"form-control", 'placeholder'=>'Email'));
                      ?>
                   </div>
                   <div class="form-group col-sm-3">
-                     <?php 
+                     <?php
                         echo form_label('PostCode:', 'post_code', array("class"=>'col-sm-12'));
                         echo form_input("post_code", $this->input->post("post_code"), array("class"=>"form-control", 'placeholder'=>'PostCode'));
                      ?>
@@ -169,7 +169,7 @@
                   <div class="form-group col-sm-3">
                      <?php echo form_label('Date of Arrival in Canada:', 'arrival_date_canada', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">
-                        <?php                
+                        <?php
                         echo form_input("arrival_date_canada", $this->input->post("arrival_date_canada"), array("class"=>"form-control datepicker", 'placeholder'=>'Date of Arrival in Canada'));
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -177,60 +177,60 @@
                   </div>
 
                   <div class="form-group col-sm-3">
-                     <?php 
+                     <?php
                         echo form_label('Cellular:', 'cellular', array("class"=>'col-sm-12'));
                         echo form_input("cellular", $this->input->post("cellular"), array("class"=>"form-control", 'placeholder'=>'Cellular'));
                      ?>
                   </div>
-               </div>              
+               </div>
                <h4 class="move_down">Name and Address of Family Physician in Country of Origin <i class="fa fa-angle-down pull-right"></i></h4>
                <div class="row" style="display:none">
                   <div class="col-sm-12">
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('Name:', 'physician_name', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('Name:', 'physician_name', array("class"=>'col-sm-12'));
                            echo form_input("physician_name", $this->input->post("physician_name"), array("class"=>"form-control", 'placeholder'=>'Name'));
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('Clinic Name or Address:', 'clinic_name', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('Clinic Name or Address:', 'clinic_name', array("class"=>'col-sm-12'));
                            echo form_input("clinic_name", $this->input->post("clinic_name"), array("class"=>"form-control", 'placeholder'=>'Clinic Name or Address'));
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                         <?php 
-                           echo form_label('Street Address:', 'physician_street_address', array("class"=>'col-sm-12'));                           
+                         <?php
+                           echo form_label('Street Address:', 'physician_street_address', array("class"=>'col-sm-12'));
                            echo form_input("physician_street_address", $this->input->post("physician_street_address"), array("class"=>"form-control", 'placeholder'=>'Street Address'));
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('City/Town:', 'physician_city', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('City/Town:', 'physician_city', array("class"=>'col-sm-12'));
                            echo form_input("physician_city", $this->input->post("physician_city"), array("class"=>"form-control", 'placeholder'=>'City/Town'));
                         ?>
-                     </div>                           
+                     </div>
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('Country:', 'country', array("class"=>'col-sm-12'));       
+                        <?php
+                           echo form_label('Country:', 'country', array("class"=>'col-sm-12'));
                            echo $country;
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('Post Code:', 'physician_post_code', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('Post Code:', 'physician_post_code', array("class"=>'col-sm-12'));
                            echo form_input("physician_post_code", $this->input->post("physician_post_code"), array("class"=>"form-control", 'placeholder'=>'Post Code'));
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('Telephone:', 'physician_telephone', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('Telephone:', 'physician_telephone', array("class"=>'col-sm-12'));
                            echo form_input("physician_telephone", $this->input->post("physician_telephone"), array("class"=>"form-control", 'placeholder'=>'Telephone'));
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('Alt Telephone:', 'physician_alt_telephone', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('Alt Telephone:', 'physician_alt_telephone', array("class"=>'col-sm-12'));
                            echo form_input("physician_alt_telephone", $this->input->post("physician_alt_telephone"), array("class"=>"form-control", 'placeholder'=>'Alt Telephone'));
                         ?>
                      </div>
@@ -241,44 +241,44 @@
                <div class="row" style="display:none">
                   <div class="col-sm-12">
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('Name:', 'physician_name_canada', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('Name:', 'physician_name_canada', array("class"=>'col-sm-12'));
                            echo form_input("physician_name_canada", $this->input->post("physician_name_canada"), array("class"=>"form-control", 'placeholder'=>'Name'));
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('Clinic Name or Address:', 'clinic_name_canada', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('Clinic Name or Address:', 'clinic_name_canada', array("class"=>'col-sm-12'));
                            echo form_input("clinic_name_canada", $this->input->post("clinic_name_canada"), array("class"=>"form-control", 'placeholder'=>'Clinic Name or Address'));
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                         <?php 
-                           echo form_label('Street Address:', 'physician_street_address_canada', array("class"=>'col-sm-12'));                           
+                         <?php
+                           echo form_label('Street Address:', 'physician_street_address_canada', array("class"=>'col-sm-12'));
                            echo form_input("physician_street_address_canada", $this->input->post("physician_street_address_canada"), array("class"=>"form-control", 'placeholder'=>'Street Address'));
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('City/Town:', 'physician_city_canada', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('City/Town:', 'physician_city_canada', array("class"=>'col-sm-12'));
                            echo form_input("physician_city_canada", $this->input->post("physician_city_canada"), array("class"=>"form-control", 'placeholder'=>'City/Town'));
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('Post Code:', 'physician_post_code_canada', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('Post Code:', 'physician_post_code_canada', array("class"=>'col-sm-12'));
                            echo form_input("physician_post_code_canada", $this->input->post("physician_post_code_canada"), array("class"=>"form-control", 'placeholder'=>'Post Code'));
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('Telephone:', 'physician_telephone_canada', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('Telephone:', 'physician_telephone_canada', array("class"=>'col-sm-12'));
                            echo form_input("physician_telephone_canada", $this->input->post("physician_telephone_canada"), array("class"=>"form-control", 'placeholder'=>'Telephone'));
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
-                        <?php 
-                           echo form_label('Alt Telephone:', 'physician_alt_telephone_canada', array("class"=>'col-sm-12'));                           
+                        <?php
+                           echo form_label('Alt Telephone:', 'physician_alt_telephone_canada', array("class"=>'col-sm-12'));
                            echo form_input("physician_alt_telephone_canada", $this->input->post("physician_alt_telephone_canada"), array("class"=>"form-control", 'placeholder'=>'Alt Telephone'));
                         ?>
                      </div>
@@ -295,56 +295,56 @@
                               Do you, your spouse or your parents/guardians have any other medical or travel insurance coverage?
                            </div>
                            <div class="col-sm-1">
-                              <?php 
+                              <?php
                               echo form_radio("travel_insurance_coverage_guardians", "Y", $this->input->post("travel_insurance_coverage_guardians"), array('class'=>'setpremium')); ?>  Yes
                            </div>
                            <div class="col-sm-1">
-                              <?php 
+                              <?php
                               echo form_radio("travel_insurance_coverage_guardians", "N", $this->input->post("travel_insurance_coverage_guardians"), array('class'=>'setpremium')); ?>  No
                            </div>
 
                            <div class="col-sm-12">
-                              If yes, provide details of other insurance company coverage below. If no, confirm by checking the box below. 
+                              If yes, provide details of other insurance company coverage below. If no, confirm by checking the box below.
                            </div>
                         </div>
                         <div class="col-sm-3">
-                           <?php 
+                           <?php
                               echo form_label('Full Name:', 'full_name', array("class"=>'col-sm-12'));
                               echo form_input("full_name", $this->input->post("full_name"), array("class"=>"form-control", 'placeholder'=>'Full Name'));
                            ?>
                         </div>
                         <div class="col-sm-3">
-                           <?php 
+                           <?php
                               echo form_label('Employee Name:', 'employee_name', array("class"=>'col-sm-12'));
                               echo form_input("employee_name", $this->input->post("employee_name"), array("class"=>"form-control", 'placeholder'=>'Employee Name'));
                            ?>
                         </div>
                         <div class="col-sm-3">
-                           <?php 
+                           <?php
                               echo form_label('Full Name:', 'full_name', array("class"=>'col-sm-12'));
                               echo form_input("full_name", $this->input->post("full_name"), array("class"=>"form-control", 'placeholder'=>'Full Name'));
                            ?>
                         </div>
                         <div class="col-sm-3">
-                           <?php 
+                           <?php
                               echo form_label('Street Address:', 'employee_street_address', array("class"=>'col-sm-12'));
                               echo form_input("employee_street_address", $this->input->post("employee_street_address"), array("class"=>"form-control", 'placeholder'=>'Street Address'));
                            ?>
                         </div>
                         <div class="col-sm-3">
-                           <?php 
+                           <?php
                               echo form_label('City/Town:', 'city_town', array("class"=>'col-sm-12'));
                               echo form_input("city_town", $this->input->post("city_town"), array("class"=>"form-control", 'placeholder'=>'City/Town'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
-                           <?php 
-                              echo form_label('Country:', 'country2', array("class"=>'col-sm-12'));       
+                           <?php
+                              echo form_label('Country:', 'country2', array("class"=>'col-sm-12'));
                               echo $country2;
                            ?>
                         </div>
                         <div class="col-sm-3">
-                           <?php 
+                           <?php
                               echo form_label('Telephone:', 'employee_telephone', array("class"=>'col-sm-12'));
                               echo form_input("employee_telephone", $this->input->post("employee_telephone"), array("class"=>"form-control", 'placeholder'=>'Telephone'));
                            ?>
@@ -358,22 +358,22 @@
                   <div class="col-sm-12">
                      <div class="row">
                         <div class="form-group col-sm-12">
-                           <?php 
-                              echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class"=>'col-sm-12'));                           
+                           <?php
+                              echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class"=>'col-sm-12'));
                               echo form_textarea("medical_description", $this->input->post("medical_description"), array("class"=>"form-control", 'placeholder'=>'Brief description of your sickness or injury'));
                            ?>
-                        </div>  
+                        </div>
 
                         <div class="col-sm-6">
-                           <?php 
-                              echo form_label('Date symptoms or injury first appeared:', 'date_symptoms', array("class"=>'col-sm-12'));                           
+                           <?php
+                              echo form_label('Date symptoms or injury first appeared:', 'date_symptoms', array("class"=>'col-sm-12'));
                               echo form_input("date_symptoms", $this->input->post("date_symptoms"), array("class"=>"form-control datepicker", 'placeholder'=>'Date symptoms or injury first appeared'));
                            ?>
-                        </div>  
+                        </div>
 
                         <div class="col-sm-6">
-                           <?php 
-                              echo form_label('Date you first saw physician for this condition:', 'date_first_physician', array("class"=>'col-sm-12'));                           
+                           <?php
+                              echo form_label('Date you first saw physician for this condition:', 'date_first_physician', array("class"=>'col-sm-12'));
                               echo form_input("date_first_physician", $this->input->post("date_first_physician"), array("class"=>"form-control datepicker", 'placeholder'=>'Date you first saw physician for this condition'));
                            ?>
                         </div>
@@ -382,16 +382,16 @@
                               Do you, your spouse or your parents/guardians have any other medical or travel insurance coverage?
                            </div>
                            <div class="col-sm-1">
-                              <?php 
+                              <?php
                               echo form_radio("travel_insurance_coverage", "Y", $this->input->post("travel_insurance_coverage"), array('class'=>'setpremium')); ?>  Yes
                            </div>
                            <div class="col-sm-1">
-                              <?php 
+                              <?php
                               echo form_radio("travel_insurance_coverage", "N", $this->input->post("travel_insurance_coverage"), array('class'=>'setpremium')); ?>  No
                            </div>
 
                            <div class="col-sm-12" style="margin-bottom:10px">
-                              If yes, provide details of other insurance company coverage below. If no, confirm by checking the box below. 
+                              If yes, provide details of other insurance company coverage below. If no, confirm by checking the box below.
                            </div>
 
 
@@ -399,7 +399,7 @@
                               <div class="col-sm-3">
                                  <?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_1', array("class"=>'col-sm-12'));   ?>
                                  <div class="input-group date">
-                                    <?php                
+                                    <?php
                                     echo form_input("medication_date_1", $this->input->post("medication_date_1"), array("class"=>"form-control datepicker", 'placeholder'=>'Date (MM/DD/YYYY)'));
                                     ?>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -407,17 +407,17 @@
                               </div>
 
                               <div class="col-sm-3">
-                                 <?php 
-                                    echo form_label('Medication:', 'medication_1', array("class"=>'col-sm-12'));                           
+                                 <?php
+                                    echo form_label('Medication:', 'medication_1', array("class"=>'col-sm-12'));
                                     echo form_input("medication_1", $this->input->post("medication_1"), array("class"=>"form-control", 'placeholder'=>'Medication'));
                                  ?>
-                              </div> 
+                              </div>
                            </div>
                            <div class="form-group col-sm-12">
                               <div class="col-sm-3">
                                  <?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_2', array("class"=>'col-sm-12'));   ?>
                                  <div class="input-group date">
-                                    <?php                
+                                    <?php
                                     echo form_input("medication_date_2", $this->input->post("medication_date_2"), array("class"=>"form-control datepicker", 'placeholder'=>'Date (MM/DD/YYYY)'));
                                     ?>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -425,28 +425,28 @@
                               </div>
 
                               <div class="col-sm-3">
-                                 <?php 
-                                    echo form_label('Medication:', 'medication_2', array("class"=>'col-sm-12'));                           
+                                 <?php
+                                    echo form_label('Medication:', 'medication_2', array("class"=>'col-sm-12'));
                                     echo form_input("medication_2", $this->input->post("medication_2"), array("class"=>"form-control", 'placeholder'=>'Medication'));
                                  ?>
-                              </div> 
+                              </div>
                            </div>
                            <div class="form-group col-sm-12">
                               <div class="col-sm-3">
                                  <?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_3', array("class"=>'col-sm-12'));   ?>
                                  <div class="input-group date">
-                                    <?php                
+                                    <?php
                                     echo form_input("medication_date_3", $this->input->post("medication_date_3"), array("class"=>"form-control datepicker", 'placeholder'=>'Date (MM/DD/YYYY)'));
                                     ?>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                  </div>
                               </div>
                               <div class="col-sm-3">
-                                 <?php 
-                                    echo form_label('Medication:', 'medication_3', array("class"=>'col-sm-12'));                           
+                                 <?php
+                                    echo form_label('Medication:', 'medication_3', array("class"=>'col-sm-12'));
                                     echo form_input("medication_3", $this->input->post("medication_3"), array("class"=>"form-control", 'placeholder'=>'Medication'));
                                  ?>
-                              </div> 
+                              </div>
                            </div>
                         </div>
 
@@ -454,14 +454,14 @@
                   </div>
                </div>
 
-               <h2 class="move_down">Expenses Claimed<small></small> 
-                   <button class="btn btn-primary add_new_expenses" type="button">Add new expenses item </button> 
+               <h2 class="move_down">Expenses Claimed<small></small>
+                   <button class="btn btn-primary add_new_expenses" type="button">Add new expenses item </button>
                    <i class="fa fa-angle-up pull-right"></i>
                </h2>
                <div class="row">
                   <div class="col-sm-12">
                      <div class="expenses-list">
-                                                                               
+
                      </div>
                   </div>
                </div>
@@ -478,12 +478,12 @@
                <h2 class="move_down">Payee Information<small></small> <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button>  <i class="fa fa-angle-up pull-right"></i></h2>
                <div class="row">
                   <div class="col-sm-12">
-                     <div class="payee-data">                                                     
+                     <div class="payee-data">
                      </div>
                   </div>
                </div>
 
-               <h2 style="border-bottom: 1px solid #eee;font-size: 14px !important; padding-bottom: 7px;">Attached List<small></small> <button class="btn btn-primary multiupload_files"  type="button">Upload Attached</button> </h2>  
+               <h2 style="border-bottom: 1px solid #eee;font-size: 14px !important; padding-bottom: 7px;">Attached List<small></small> <button class="btn btn-primary multiupload_files"  type="button">Upload Attached</button> </h2>
                <div class="row">
                   <div class="col-sm-12">
                      <div class="col-sm-3 uploaded_files">
@@ -495,8 +495,8 @@
                </div>
                <div class="row">
                   <div class="col-sm-3">
-                     <?php 
-                        echo form_label('Status:', 'status', array("class"=>'col-sm-12'));                  
+                     <?php
+                        echo form_label('Status:', 'status', array("class"=>'col-sm-12'));
                         $status = array(
                            ""=>'--Status--',
                            'accepted'=>'Accepted',
@@ -515,16 +515,16 @@
 
                <div class="row" style="margin-top:20px">
                   <div class="col-sm-2">
-                     <input class="btn btn-primary" name="Save" value="Save" type="submit">   
+                     <input class="btn btn-primary" name="Save" value="Save" type="submit">
                   </div>
                   <div class="col-sm-2">
                      <?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
                   </div>
-                  <div class="col-sm-2"> 
-                     <input class="btn btn-primary" name="Examine" value="Examine" type="submit">  
+                  <div class="col-sm-2">
+                     <input class="btn btn-primary" name="Examine" value="Examine" type="submit">
                   </div>
-                  <div class="col-sm-2"> 
-                     <input class="btn btn-primary email_print" data-toggle="modal"  name="Email" value="Email/Print" type="button" data-target="#print_template">      
+                  <div class="col-sm-2">
+                     <input class="btn btn-primary email_print" data-toggle="modal"  name="Email" value="Email/Print" type="button" data-target="#print_template">
                   </div>
                </div>
 
@@ -551,14 +551,14 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Print/email Template Letter</h4>
       </div>
-      <?php 
+      <?php
          echo form_open_multipart("case/send_print_email", array("id"=>'send_print_email'));
        ?>
       <div class="modal-body">
           <div class="row">
             <div class="col-sm-6">
                <div>
-                  <label for="mail_label" class="col-sm-2">Mail Address:</label>    
+                  <label for="mail_label" class="col-sm-2">Mail Address:</label>
                   <div class="form-group col-sm-6">
                      <input name="same_address" value="1" id="mail_address" class="col-sm-1" type="checkbox">
                      <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address with the policy</label>
@@ -569,7 +569,7 @@
                   echo form_label('To:', 'email', array("class"=>'col-sm-12'));
                   ?>
                   <div class="form-group col-sm-12">
-                     <?php  
+                     <?php
                      echo form_input("email", "", array("class"=>"form-control col-sm-6 form-group email required", 'placeholder'=>'Email Address'));
                      ?>
                   </div>
@@ -578,67 +578,69 @@
             <div class="form-group col-sm-12">
 
                <div class="form-group col-sm-3">
-                  <?php               
-                  echo form_label('Street No.:', 'street_no_email', array("class"=>'col-sm-12'));  
+                  <?php
+                  echo form_label('Street No.:', 'street_no_email', array("class"=>'col-sm-12'));
                   echo form_input("street_no_email", "", array("class"=>"form-control required", 'placeholder'=>'Street No.'));
                   echo form_error("street_no_email");
                   ?>
-               </div> 
+               </div>
                <div class="form-group col-sm-3">
-                  <?php               
-                  echo form_label('Street Name.:', 'street_name_email', array("class"=>'col-sm-12'));  
+                  <?php
+                  echo form_label('Street Name.:', 'street_name_email', array("class"=>'col-sm-12'));
                   echo form_input("street_name_email", "", array("class"=>"form-control required", 'placeholder'=>'Street Name.'));
                   echo form_error("street_name_email");
                   ?>
-               </div> 
+               </div>
                <div class="form-group col-sm-3">
-                  <?php               
-                  echo form_label('City:', 'city_email', array("class"=>'col-sm-12'));  
+                  <?php
+                  echo form_label('City:', 'city_email', array("class"=>'col-sm-12'));
                   echo form_input("city_email", "", array("class"=>"form-control required", 'placeholder'=>'City'));
                   echo form_error("city");
                   ?>
-               </div> 
+               </div>
 
                <div class="form-group col-sm-3">
-                  <?php 
+                  <?php
                      echo form_label('Province:', 'province_email', array("class"=>'col-sm-12'));
                      echo $province2;
-                     echo form_error("province_email"); 
+                     echo form_error("province_email");
                   ?>
                </div>
 
-               <?php 
+               <?php
                   echo form_label('Select Template:', 'select_template', array("class"=>'col-sm-12'));
                ?>
                <div class="form-group col-sm-12">
                   <?php foreach($docs as $doc): ?>
                      <div class="select-doc col-sm-2" doc="<?php echo $doc['id'] ?>">
                         <i class="fa fa-file-word-o large"></i>
-                        <?php echo $doc['name'] ?> 
+                        <?php echo $doc['name'] ?>
                      </div>
                   <?php endforeach; ?>
                </div>
-            </div>  
+            </div>
             <div class="form-group col-sm-12 docfiles">
                <?php foreach($docs as $doc): ?>
                   <div class="col-sm-12 doc-description doc-<?php echo $doc['id'] ?>" style="display:none">
                      <div class="col-sm-12 doc_title">
-                        <?php echo heading($doc['name']); ?> 
+                        <?php echo heading($doc['name']); ?>
                      </div>
                      <div class="col-sm-12 doc-desc">
                         <?php
                            // find and replace text
                            $find = array(
                               '{otc_logo}',
+                              '{otc_logo_big}',
                               '{current_date}'
                               );
                            $replace = array(
                               img(array('src'=>'assets/img/otc.jpg','width'=>'90', 'height'=>'50')),
+                              img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')),
                               date("F d, Y")
                               );
                          echo str_replace($find, $replace, $doc['description']);
                         ?>
-                     </div>                     
+                     </div>
                   </div>
                <?php endforeach; ?>
             </div>
@@ -656,7 +658,7 @@
 
   </div>
 </div>
-<!-- end here --> 
+<!-- end here -->
 
 <!-- Create Intake Form Modal -->
 <div id="create_intake_form" class="modal fade" role="dialog">
@@ -671,25 +673,25 @@
       <div class="modal-body">
           <div class="row">
             <div class="form-group col-sm-6">
-               <?php 
+               <?php
                   echo form_label('Intake Form #:', 'form_id', array("class"=>'col-sm-12'));
                ?>
                <div class="form-group col-sm-12">
                   ####
                </div>
-            </div>              
+            </div>
             <div class="form-group col-sm-6">
-               <?php      
-               echo form_label('Create Date:', 'create_date', array("class"=>'col-sm-12')); 
+               <?php
+               echo form_label('Create Date:', 'create_date', array("class"=>'col-sm-12'));
                ?>
                <div class="form-group col-sm-12">
-                  <?php       
+                  <?php
                   echo date("Y-m-d");
                   ?>
                </div>
             </div>
             <div class="form-group col-sm-12">
-               <?php 
+               <?php
                   echo form_label('Intake Notes:', 'intake_notes', array("class"=>'col-sm-12'));
                   echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class"=>"form-control", 'placeholder'=>'Intake Notes', 'style'=>"height:100px"));
                   echo form_error("intake_notes");
@@ -716,25 +718,25 @@
    <div class="base-row">
       <div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
          <div class="col-sm-3">
-            <?php  
+            <?php
                echo form_label('Invoice#:', 'invoice', array("class"=>'col-sm-12'));
                echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control  required"));
             ?>
-         </div>  
+         </div>
          <div class="col-sm-3">
-            <?php 
+            <?php
                echo form_label('Name of Provider:', 'provider_name', array("class"=>'col-sm-12'));
                echo form_input("expenses_claimed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control required"));
             ?>
-         </div>  
+         </div>
          <div class="col-sm-3">
-            <?php 
+            <?php
                echo form_label('Name of Referring Physician:', 'referencing_physician', array("class"=>'col-sm-12'));
                echo form_input("expenses_claimed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control"));
             ?>
-         </div>  
+         </div>
          <div class="col-sm-3">
-            <?php 
+            <?php
                echo form_label('Coverage Code:', 'coverage_code', array("class"=>'col-sm-12'));
                   $coverage_code = array(
                      ""=>'Coverage code',
@@ -772,49 +774,49 @@
                   );
                echo form_dropdown("expenses_claimed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control required'));
             ?>
-         </div>  
+         </div>
          <div class="col-sm-3">
-            <?php 
+            <?php
                echo form_label('Diagnosis:', 'diagnosis', array("class"=>'col-sm-12'));
                echo form_input("expenses_claimed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field required"));
             ?>
-         </div>  
+         </div>
          <div class="col-sm-3">
-            <?php 
+            <?php
                echo form_label('Description of Services:', 'service_description', array("class"=>'col-sm-12'));
                echo form_input("expenses_claimed[service_description][]", $this->input->post("service_description"), array("class"=>"form-control"));
             ?>
-         </div>  
+         </div>
          <div class="col-sm-3">
-            <?php 
+            <?php
                echo form_label('Date of Service:', 'date_of_service', array("class"=>'col-sm-12'));
                echo form_input("expenses_claimed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control  datepicker required"));
             ?>
-         </div> 
+         </div>
          <div class="col-sm-3">
-            <?php 
+            <?php
                echo form_label('Amount Billed:', 'amount_billed', array("class"=>'col-sm-12'));
                echo form_input("expenses_claimed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control required"));
             ?>
-         </div> 
+         </div>
          <div class="col-sm-3">
-            <?php 
+            <?php
                echo form_label('Amount Client Paid:', 'amount_client_paid', array("class"=>'col-sm-12'));
                echo form_input("expenses_claimed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control required"));
             ?>
-         </div> 
+         </div>
          <div class="col-sm-3">
-            <?php 
+            <?php
                echo form_label('Payee:', 'payee', array("class"=>'col-sm-12'));
                echo $payees;
             ?>
-         </div> 
+         </div>
          <div class="col-sm-3">
-            <?php 
+            <?php
                echo form_label('Comment:', 'comment', array("class"=>'col-sm-12'));
                echo form_input("expenses_claimed[comment][]", $this->input->post("comment"), array("class"=>"form-control"));
             ?>
-         </div> 
+         </div>
          <div class="col-sm-3">
             <i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i>
          </div>
@@ -827,39 +829,39 @@
       <div class="row"  style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
          <div class="col-sm-12">
             <div class="col-sm-2">
-               <?php 
+               <?php
                echo form_radio("payment_type", "cheque", TRUE, array('class'=>'setpremium'));
                echo form_label('Cheque:', 'Cheque');
-               ?>  
+               ?>
             </div>
             <div class="col-sm-2">
-               <?php 
+               <?php
                echo form_radio("payment_type", "direct deposit", FALSE, array('class'=>'setpremium'));
                echo form_label('Direct Deposit', 'Direct Deposit');
-               ?>  
+               ?>
             </div>
          </div>
          <br/>
          <div class="col-sm-3 wire_transfer_section" style="display:none">
-            <?php 
+            <?php
                echo form_label('Bank Name:', 'Bank Name', array("class"=>'col-sm-12'));
                echo form_input("payees[bank][]", $this->input->post("bank"), array("class"=>"form-control", 'placeholder'=>'Bank Name'));
             ?>
          </div>
          <div class="col-sm-3 cheque_section wire_transfer_section">
-            <?php 
+            <?php
                echo form_label('Payee Name:', 'Payee Name', array("class"=>'col-sm-12'));
                echo form_input("payees[payee_name][]", $this->input->post("payee_name"), array("class"=>"form-control", 'placeholder'=>'Payee Name'));
             ?>
          </div>
          <div class="col-sm-3 wire_transfer_section" style="display:none">
-            <?php 
+            <?php
                echo form_label('Account#:', 'Account', array("class"=>'col-sm-12'));
                echo form_input("payees[account_cheque][]", $this->input->post("account_cheque"), array("class"=>"form-control", 'placeholder'=>'Account#'));
             ?>
          </div>
          <div class="col-sm-3 cheque_section">
-            <?php 
+            <?php
                echo form_label('Address:', 'Address', array("class"=>'col-sm-12'));
                echo form_input("payees[address][]", $this->input->post("address"), array("class"=>"form-control", 'placeholder'=>'Address'));
             ?>
@@ -870,6 +872,17 @@
          </div>
       </div>
    </div>
+</div>
+
+<!-- word templates here -->
+<div style="display:none" class="word_templates">
+<?php if(!empty($word_templates)): ?>
+   <ul>
+   <?php foreach($word_templates as $tmp): ?>
+      <li style='list-style: outside none none;'><?php echo form_checkbox('word_doc', $tmp['content']).' <b>'.$tmp['title'].'</b>: '.$tmp['content'] ?></li>
+   <?php endforeach; ?>
+   </ul>
+<?php endif; ?>
 </div>
 
 <script src="<?php echo base_url() ?>/assets/js/jQuery.print.js"></script>
@@ -905,7 +918,7 @@
            endDate: '+2y',
        });
    })
-   
+
    .on("click",".more_filters", function(){
       $(".more_items").toggle();
    })
@@ -917,8 +930,8 @@
         minLength: 2,
         dataType: "json",
       });
-    }) 
-   
+    })
+
    .on("click", ".add_new_expenses", function(e){
       var html = $(".base-row").html();
       $(".expenses-list").append(html);
@@ -941,7 +954,7 @@
    .on("click", ".remove_claim", function(){
       $(this).parent("div").parent("div").remove();
    })
-   
+
    .on("click", ".add_payee", function(){
       var html = $(".payee-buffer").html();
 
@@ -962,10 +975,10 @@
    })
 
    // show email/print function
-   .on("click", ".select-doc", function(){                                              
-      
+   .on("click", ".select-doc", function(){
+
       // hide all doc files here
-      $(".doc-description").hide(); 
+      $(".doc-description").hide();
       $(".select-doc").removeClass("active");
 
       // get doc if
@@ -978,7 +991,7 @@
       // get selected case details object
       var obj = $(".email_print");
 
-      // get policy info      
+      // get policy info
       var data = $.parseJSON(localStorage.getItem("policy_data"));
 
       // replace string from casemanager name etc
@@ -1000,7 +1013,7 @@
       .replace("{policy_holder}", $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
       .replace("{policy_no}", $("input[name=policy_no]").val())
       .replace("{policy_no}", $("input[name=policy_no]").val())
-      .replace("{coverage_period}", data[0].effective_date+" to  "+data[0].expiry_date); 
+      .replace("{coverage_period}", data[0].effective_date+" to  "+data[0].expiry_date);
 
       $(".doc-"+id+" .doc-desc").html(str);
 
@@ -1023,7 +1036,7 @@
       $(".company_name input").val($(this).val());
    })
 
-   // preview template script 
+   // preview template script
    .on("click", ".preview-template", function(){
       // get selected doc
       $(this).toggleClass("active-preview");
@@ -1039,6 +1052,19 @@
             $(this).remove();
          });
 
+         // show selected word templates
+         $(".outer_custom_comment").each(function(){
+            var text = [];
+            $("input[name=word_doc]:checked").each(function(){
+               text.push(" - "+$(this).val());
+            })
+            var text = text.join("<br>");
+            text += "<br>";
+            $(this).html(text.replace(/\n/g, "<br>"));
+            $(this).children('ul').remove();
+         });
+
+
          // enable print button
          $(".print").removeAttr("disabled");
       }
@@ -1052,7 +1078,7 @@
             $(this).empty();
             if(!$(this).hasClass("area"))
                $(this).append("<input class='outer-text' value='" + text + "'></input>");
-            else        
+            else
                $(this).append("<textarea  style='width:100%' rows='6'>"+ text +"</textarea>");
          });
 
@@ -1065,10 +1091,20 @@
             $(this).append($("#products").html()).children("select").val(text);
          });
 
+         // create word template selection for deny reason
+         var $outer = $(".outer_custom_comment");
+         $outer.each(function(){
+            var text = $.trim($('.word_templates').html());
+
+            $(this).empty();
+            $(this).append(text);
+         });
+
+
          // disable print button
          $(".print").attr("disabled", "disabled");
       }
-      
+
    })
 
    // print button script here
@@ -1087,18 +1123,18 @@
       e.preventDefault();
       var doc_id = $(".select-doc.active").attr("doc");
       var template = $(".doc-"+doc_id).children("div.doc-desc").html();
-      if($(this).valid()) 
+      if($(this).valid())
       {
          $.ajax({
             url: "<?php echo base_url("claim/send_print_email") ?>",
             method: "post",
             dataType:"json",
             data:{
-               email:$("#send_print_email input[name=email]").val(), 
-               street_no:$("#send_print_email input[name=street_no_email]").val(), 
-               street_name:$("#send_print_email input[name=street_name_email]").val(), 
-               city:$("#send_print_email input[name=city_email]").val(), 
-               province:$("#send_print_email select[name=province_email]").val(), 
+               email:$("#send_print_email input[name=email]").val(),
+               street_no:$("#send_print_email input[name=street_no_email]").val(),
+               street_name:$("#send_print_email input[name=street_name_email]").val(),
+               city:$("#send_print_email input[name=city_email]").val(),
+               province:$("#send_print_email select[name=province_email]").val(),
                template:template,
                doc: $("#send_print_email .select-doc.active").text()
             },
@@ -1109,7 +1145,7 @@
                // create new intake form - - count no of intake forms
                var count = $(".intake-forms").length + 1;
 
-               // place no of form in hidden field 
+               // place no of form in hidden field
                $("input[name=no_of_form]").val(count);
 
                // get notes and files
@@ -1215,7 +1251,7 @@
       // count no of intake forms
       var count = $(".intake-forms").length + 1;
 
-      // place no of form in hidden field 
+      // place no of form in hidden field
       $("input[name=no_of_form]").val(count);
 
       // get notes and files
@@ -1366,7 +1402,7 @@
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
-               
+
                $("input[name=insured_first_name]").val(data.plan_list[0].firstname);
                $("input[name=insured_last_name]").val(data.plan_list[0].lastname);
                if(data.plan_list[0].gender == 'M')
@@ -1402,10 +1438,23 @@ $outer.each(function(){
    $(this).empty();
    if(!$(this).hasClass("area"))
       $(this).append("<input class='outer-text' value='" + text + "'></input>");
-   else        
+   else
       $(this).append("<textarea  style='width:100%' rows='6' value=''>"+ text +"</textarea>");
 });
 
+// create word template selection for deny reason
+var $outer = $(".outer_custom_comment");
+$outer.each(function(){
+   var text = $.trim($('.word_templates').html());
+
+   $(this).empty();
+   $(this).append(text);
+});
+
+
+
+
+// create a dropdown list for product selection
 var $outer_select = $(".select-product");
 $outer_select.each(function(){
    var text = $.trim($(this).text());
@@ -1442,7 +1491,7 @@ function validate_form(){
       // show area once any error occured
       $(".error-true").map(function(){
          $(this).closest('.row').show();
-         $(this).closest('.row').prev('.move_down').children('i').removeClass('fa-angle-down').addClass('fa-angle-up');         
+         $(this).closest('.row').prev('.move_down').children('i').removeClass('fa-angle-down').addClass('fa-angle-up');
       })
 
       return false;
@@ -1451,4 +1500,6 @@ function validate_form(){
    return true;
 }
 
+
+// outer_custom_comment
 </script>
