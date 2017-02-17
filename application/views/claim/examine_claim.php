@@ -62,6 +62,7 @@
                               <tr>
                                  <th>No</th>
                                  <th>Claim No</th>
+                                 <th>Claim Item No</th>
                                  <th>Invoice No</th>
                                  <th>Service Date</th>
                                  <th>Coverage</th>
@@ -81,6 +82,7 @@
                                  <tr class="edit_claim row-link <?php if($value['status']=='record_exempt') echo 'claim_record_exempt'; ?>" alt="<?php echo $value['id'] ?>" attr='<?php echo json_encode($value); ?>'>
                                     <td><?php echo $i; ?></td>
                                     <td><?php echo $value['claim_no'] ?></td>
+                                    <td><?php echo $value['claim_item_no'] ?></td>
                                     <td><?php echo $value['invoice'] ?></td>
                                     <td><?php echo $value['date_of_service'] ?></td>
                                     <td><?php echo $value['coverage_code'] ?></td>

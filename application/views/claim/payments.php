@@ -76,6 +76,7 @@
                               <tr>
                                  <th>No.</th>
                                  <th>Claim No.</th>
+                                 <th>Claim Item No.</th>
                                  <th>Invoice No.</th>
                                  <th>Service Date</th>
                                  <th>Coverage</th>
@@ -91,6 +92,7 @@
                                  <tr class="row-link select_payees" alt="<?php echo $val['claim_id'] ?>" discount="<?php echo $val['discount'] ?>">
                                     <td><?php echo ++$i; ?>.</td>
                                     <td><?php echo $val['claim_no'] ?></td>
+                                    <td><?php echo $val['claim_item_no'] ?></td>
                                     <td><?php echo $val['invoice'] ?></td>
                                     <td><?php echo $val['date_of_service'] ?></td>
                                     <td><?php echo $val['coverage_code'] ?></td>
@@ -251,8 +253,10 @@ $(document).on("click", "button[name=search_claim]", function(){
    // enable payee section
    $(".payee_section").slideDown();
 
-   if(discount != '0'){
+   if(discount != '0' && discount != ''){
       $('.discount_section').html('<i class="fa fa-ticket"></i> '+discount+'% discount');
+   } else {
+      $('.discount_section').html('');
    }
 
    // settings for activate listing

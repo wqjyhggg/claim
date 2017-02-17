@@ -289,13 +289,16 @@ class Claim extends CI_Controller {
 
 				// insert expenses_claimed data
 				if(!empty($array['expenses_claimed']))
-				{
+				{	
+					$i = 0;
 					foreach($array['expenses_claimed']['invoice'] as $key => $val)	
 					{
+						$i++;
 						$payee_data = array(
 							'claim_id'=>$record_id,
 							'invoice'=>$val,
 							'claim_no'=>$claim_no,
+							'claim_item_no'=>$claim_no.'_'.$i,
 							'case_no'=>$array['case_no'],
 							'provider_name'=>$array['expenses_claimed']['provider_name'][$key],
 							'referencing_physician'=>$array['expenses_claimed']['referencing_physician'][$key],
@@ -769,6 +772,13 @@ class Claim extends CI_Controller {
 			$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', u2.first_name, u2.last_name) as claimexaminer_name", $conditions = array('claim.id'=>$id), $joins);
 
 
+
+			// get all expenses items
+			$fields = "*";
+			$conditions = "claim_id = '$id'";
+			$this->data['expenses_claimed'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields, $conditions);
+
+
 			//validate form input
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name', 'required');
 			$this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
@@ -869,12 +879,15 @@ class Claim extends CI_Controller {
 				// insert expenses_claimed data
 				if(!empty($array['expenses_claimed']))
 				{
+					$i = count($this->data['expenses_claimed']);
 					foreach($array['expenses_claimed']['invoice'] as $key => $val)	
 					{
+						$i++;
 						$item_data = array(
 							'claim_id'=>$record_id,
 							'invoice'=>$val,
 							'case_no'=>$array['case_no'],
+							'claim_item_no'=>$this->data['claim_details']['claim_no'].'_'.$i,
 							'provider_name'=>$array['expenses_claimed']['provider_name'][$key],
 							'referencing_physician'=>$array['expenses_claimed']['referencing_physician'][$key],
 							'coverage_code'=>$array['expenses_claimed']['coverage_code'][$key],
@@ -898,6 +911,7 @@ class Claim extends CI_Controller {
 						if($item_id = @$array['expenses_claimed']['id'][$key])
 						{
 							unset($item_data['created']);
+							// unset($item_data['claim_item_no']);
 							$this->common_model->update("expenses_claimed", $item_data, array('id'=>$item_id));	
 						} 
 						else
@@ -1014,11 +1028,6 @@ class Claim extends CI_Controller {
 				$fields = "*";
 				$conditions = "claim_id = '$id'";
 				$this->data['payees'] = $this->common_model->select($record = "list", $typecast = "array", $table = "payees", $fields, $conditions);
-
-				// get all expenses items
-				$fields = "*";
-				$conditions = "claim_id = '$id'";
-				$this->data['expenses_claimed'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields, $conditions);
 
 				// get intake forms
 				$joins = [];
@@ -1144,44 +1153,6 @@ class Claim extends CI_Controller {
 
 		// update values to database
 		$this->common_model->update("expenses_claimed", $data, array('id'=>$this->input->post('id')));
-
-		// update all comman values
-		$claim_no = $this->input->post('claim_no');
-		$case_no = $this->input->post('case_no');
-		$currency = $this->input->post('currency');
-		$pay_to = $this->input->post('pay_to');
-		$claim_id = $this->input->post('claim_id');
-		$invoice = $this->input->post('invoice');
-		$data = array(
-			'claim_no'=>$claim_no,
-			'case_no'=>$case_no,
-			'currency'=>$currency,
-			'pay_to'=>$pay_to,
-			'invoice'=>$invoice,
-			'payee'=>$this->input->post('payee')
-			);
-		if(strpos($data['payee'], 'ustom_')) {
-			$data['third_party_payee'] = str_replace('custom_', '', $data['payee']);
-			$data['payee'] = 0;
-		} else {
-			$data['third_party_payee'] = 0;			
-		}
-
-		// update these all values to claim database
-		$this->common_model->update("expenses_claimed", $data, array('claim_id'=>$claim_id));
-
-		// update case number in claim database		
-		$data = array(
-			'claim_no'=>$claim_no,
-			'case_no'=>$case_no,
-			);
-
-		// update claim no and case no values to claim database
-		$this->common_model->update("claim", $data, array('id'=>$claim_id));
-
-		// update policy info data
-
-
 		echo TRUE;
 	}
 
@@ -1471,9 +1442,8 @@ class Claim extends CI_Controller {
 				'on' => 'payees.id = expenses_claimed.third_party_payee',
 				'type' => 'LEFT'
 				);
-			$fields = "expenses_claimed.claim_id,expenses_claimed.claim_no,expenses_claimed.invoice,expenses_claimed.date_of_service,expenses_claimed.coverage_code,expenses_claimed.diagnosis,expenses_claimed.amt_payable,expenses_claimed.amt_deductable,expenses_claimed.amt_insured, expenses_claimed.case_no, expenses_claimed.claim_date, sum(expenses_claimed.amount_claimed) as amount_claimed, sum(expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency, expenses_claimed.pay_to, provider.name as provider_name, payees.payee_name, provider.discount";
-			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields, $conditions, $joins, $order_by = array(), $group_by = array('expenses_claimed.claim_id'));
-
+			$fields = "expenses_claimed.claim_id,expenses_claimed.claim_item_no,expenses_claimed.claim_no,expenses_claimed.invoice,expenses_claimed.date_of_service,expenses_claimed.coverage_code,expenses_claimed.diagnosis,expenses_claimed.amt_payable,expenses_claimed.amt_deductable,expenses_claimed.amt_insured, expenses_claimed.case_no, expenses_claimed.claim_date, (expenses_claimed.amount_claimed) as amount_claimed, (expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency, expenses_claimed.pay_to, provider.name as provider_name, payees.payee_name, provider.discount";
+			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields, $conditions, $joins);
 
         	$this->template->write('title', SITE_TITLE.' - Payments', TRUE);
 	        $this->template->write_view('content', 'claim/payments', $this->data);
