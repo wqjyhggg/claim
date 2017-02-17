@@ -102,7 +102,7 @@
 
 <!-- Email print doc content here -->
 <div id="clear_schedule_template" class="modal fade" role="dialog">
-  <div class="modal-dialog  modal-lg">
+  <div class="modal-dialog ">
 
     <!-- Modal content-->
     <div class="modal-content">
@@ -110,11 +110,38 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Clear EAC Schedule</h4>
       </div>
+      <?php echo form_open("emergency_assistance/clear_schedule", array("id"=>'clear_schedule')); ?>
       <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-sm-3">
+              <?php
+              echo form_label('Select Date:', 'selected_date', array("class"=>'col-sm-12'));
+              echo form_input("selected_date", "", array("class"=>"form-control required selected_date", 'placeholder'=>'Select Date'));
+              echo form_error("selected_date");
+              ?>
+            </div>
+            <div class="form-group col-sm-6">
+              <?php
+              echo form_label('Select Week:', 'selected_week', array("class"=>'col-sm-12'));
+              echo form_input("selected_week", "", array("class"=>"form-control required selected_week", 'placeholder'=>'Select Week'));
+              echo form_error("selected_week");
+              ?>
+            </div>
+            <div class="form-group col-sm-3">
+              <?php
+              echo form_label('Select Month:', 'selected_month', array("class"=>'col-sm-12'));
+              echo form_input("selected_month", "", array("class"=>"form-control required selected_month", 'placeholder'=>'Select Month'));
+              echo form_error("selected_month");
+              ?>
+            </div>
+         </div>
       </div>
       <div class="modal-footer">
-         <label class="col-sm-12">In Progress....</label>      
+         <label class="col-sm-12">&nbsp;</label>
+         <button class="btn btn-primary save-intakeform">Submit</button>
+         <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>    
       </div>
+      <?php echo form_close(); ?>
     </div>
 
   </div>
@@ -123,7 +150,38 @@
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
+<style>
+.bootstrap-datetimepicker-widget .datepicker-days table tbody tr:hover {
+  background-color: #eee;
+}
+</style>
 <script>
+
+  $(document).ready(function(){
+    $(".selected_date").datepicker({
+      startDate: '-105y',
+      endDate: '+2y',
+     });
+
+    $('.selected_month').datepicker({
+      autoclose: true,
+      minViewMode: 1,
+      format: 'yyyy-mm'
+    });
+
+    $(".selected_week").datepicker({
+      format: 'yyyy-mm-dd',
+       forceParse :false
+    }).on("changeDate", function(e) {
+        //console.log(e.date);
+        var date = e.date;
+        startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
+        endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay()+6);
+        $('.selected_week').datepicker('update', startDate);
+        $('.selected_week').val(startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate() + ' to ' + endDate.getFullYear() + '-' + (endDate.getMonth() + 1) + '-' + endDate.getDate()  );
+    });
+  })
+
    var date, type, day;
 
    // to check model should not open in blank dates
@@ -144,6 +202,40 @@
       day = $(this).children("h4").text();
       search_users(type);
    })
+
+   // on submit clear function
+  .on("submit", "#clear_schedule", function(e){
+    e.preventDefault();
+    $.ajax({
+         url: $(this).attr('action')+"?employee_id="+$("select[name=emc]").val(),
+         method: "post",
+         data: $(this).serialize(),
+         beforeSend: function(){
+
+            // show ajax loader here
+            $("#clear_schedule").addClass("csspinner load1");
+         },
+         success: function(data){
+
+            // in succss place return responce to list
+            $("#clear_schedule").removeClass("csspinner load1");
+
+            // reload calendar            
+            reload_calendar()
+         }
+      })
+  })
+
+  // reset all fields
+  .on("click", "input[name=selected_date]", function(){
+    $("input[name=selected_week], input[name=selected_month]").val('');
+  })
+  .on("click", "input[name=selected_week]", function(){
+    $("input[name=selected_date], input[name=selected_month]").val('');
+  })
+  .on("click", "input[name=selected_month]", function(){
+    $("input[name=selected_date], input[name=selected_week]").val('');
+  })
 
    // save schedule of employees
    $(document).on("change", ".select_schedule", function() {

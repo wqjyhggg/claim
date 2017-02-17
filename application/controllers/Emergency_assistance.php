@@ -1890,4 +1890,39 @@ class Emergency_assistance extends CI_Controller {
 
 	}
 
+	// to clear schedule for eac users
+	function clear_schedule()
+	{
+		$date = $this->input->post('selected_date');
+		$selected_week = $this->input->post('selected_week');
+		$selected_month = $this->input->post('selected_month');
+
+		$employee_id = $this->input->get('employee_id');
+
+		if($date)
+		{
+			$conditions = array(
+					'date'=>$date,
+				);
+		}
+		if($selected_week)
+		{
+			$dates = explode(' to ', $selected_week);
+			$conditions = array();
+			$conditions['date >= '] = $dates[0];
+			$conditions['date <= '] = $dates[1];
+		}
+		if($selected_month)
+		{
+			$conditions = array(
+					'date like '=>"%$selected_month%",
+				);
+		}
+		if($employee_id)
+			$conditions['employee_id'] = $employee_id;
+
+		$this->common_model->delete('schedule', $conditions);
+		echo $this->db->last_query();
+		echo TRUE;
+	}
 }

@@ -1286,6 +1286,7 @@
 
       .replace("{clinic_name}", $("input[name=clinic_name]").val())
       .replace("{insured_dob}", $("input[name=dob]").val())
+      .replace("{insured_diagnosis}", $("input[name='expenses_claimed[diagnosis][]']").val())
 
       .replace("{policy_holder}", $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
       .replace("{policy_no}", $("input[name=policy_no]").val())
