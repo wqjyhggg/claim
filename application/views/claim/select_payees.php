@@ -43,6 +43,12 @@ if(!empty($payees)): $i = 0;
             ?>
          </div>
          <div class="col-sm-3">
+            <?php 
+               echo form_label('Payment:', 'Payment', array("class"=>'col-sm-12'));
+               echo form_input("payees[payment][]", $value["payment"], array("class"=>"form-control", 'placeholder'=>'Payment'));
+            ?>
+         </div>
+         <div class="col-sm-3">
             <label class='col-sm-12'>&nbsp;</label>
             <i class="col-sm-3 fa fa-trash row-link remove-payee"></i>
          </div>

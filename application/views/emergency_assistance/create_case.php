@@ -135,6 +135,7 @@
                      echo form_error("phone_number");
                      ?>
                   </div> 
+                  <div class="clearfix"></div>
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Email:', 'email', array("class"=>'col-sm-12'));  
@@ -220,6 +221,17 @@
                      </div>
                   </div> 
                   <div class="form-group col-sm-4">
+                     <?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
+                     <div class="input-group date">
+                        <?php                
+                        echo form_input("dob", $this->common_model->field_val("dob", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Day of Birth'));
+                        ?>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                     </div>
+                        <?php echo form_error("dob"); ?>
+                  </div> 
+                  <div class="clearfix"></div>
+                  <div class="form-group col-sm-4">
                      <?php echo form_label('Insured Address:', 'insured_address', array("class"=>'col-sm-12'));   ?>
                      <div class="form-group col-sm-12">
                         <?php                
@@ -227,17 +239,7 @@
                         echo form_error("insured_address");
                         ?>
                      </div>
-                  </div>  
-                  <div class="form-group col-sm-4">
-                     <?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
-                     <div class="input-group date">
-                        <?php                
-                        echo form_input("dob", $this->common_model->field_val("dob", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Day of Birth'));
-                        echo form_error("dob");
-                        ?>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                     </div>
-                  </div>                                              
+                  </div>                                               
                </div> 
 
 
@@ -341,6 +343,12 @@
   </div>
 </div>
 <!-- end intake form model here -->
+
+<div style="display:none">
+   <div id="products">
+      <?php echo $products; ?>
+   </div>
+</div>
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
@@ -450,7 +458,7 @@
 
    // delete intake-form
    .on("click",".fa-remove", function(){
-      $(this).parent("div").parent("div.intake-forms").remove();
+      $(this).parent("div").parent("div").parent("div.intake-forms").remove();
       var count = $(".intake-forms").length;
       if(!count) {
          // remove intake heading from here

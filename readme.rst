@@ -8,6 +8,29 @@ Password: password
 
 
 #####################
+Feb, 20 2016 update:-
+#####################
+
+Solve 90 bugs from bug id #Bug_01 to #Bug_100. some in middle are in progress, almost 90 bugs are solved.
+https://docs.google.com/spreadsheets/d/1JCmMo8hY4xgyHdQysug1A4XT_35177fhahKTlIHmup0/edit#gid=0
+
+
+#####################
+Feb, 18 2016 update:-
+#####################
+
+- Clear Eac schedule issue - DONE
+- In Emergency Assistance and Case management functions, when clicking the Intake Froms
+(Notes) attached file preview and download icon, system shows error messages"404 Page Not Found
+The page you requested was not found." please check and fix it. - DONE
+- payment page, Amt payable should be editable. - DONE
+
+- and do a update log --- who modify it from old value to new value, update datetime.
+BR Dev:- Ok, we will create update log but could you please tell us where we need to show these log records
+
+
+
+#####################
 Feb, 17 2016 update:-
 #####################
 Please find attached reports for work update

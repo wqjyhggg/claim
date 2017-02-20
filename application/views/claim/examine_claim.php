@@ -739,9 +739,9 @@
       .replace("{policy_no}", claim_data.policy_no)
       .replace("{policy_no}", claim_data.policy_no);
       if(data)
-         str.replace("{coverage_period}", data.effective_date+" to "+data.expiry_date);
+         str = str.replace("{coverage_period}", data.effective_date+" to "+data.expiry_date);
       else
-         str.replace("{coverage_period}", '');
+        str =  str.replace("{coverage_period}", '');
 
       $(".doc-"+id+" .doc-desc").html(str);
 

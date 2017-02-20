@@ -24,6 +24,7 @@
                         <?php 
                            echo form_label('Policy No:', 'policy_no', array("class"=>'col-sm-12'));                            
                            echo form_input("policy_no", $this->input->post("policy_no"), array("class"=>"form-control", 'placeholder'=>'Policy No'));
+                           echo form_error('policy_no');
                         ?>
                      </div>
                   </div>
@@ -174,6 +175,7 @@
                               <?php 
                                  echo form_label('School Phone:', 'institution_phone', array("class"=>'col-sm-12'));                           
                                  echo form_input("institution_phone", $this->input->post("institution_phone"), array("class"=>"form-control", 'placeholder'=>'School Phone'));
+                                 echo form_error("institution_phone");
                               ?>
                            </div>
                         </div>
@@ -204,7 +206,7 @@
                               <?php echo form_label('Birth Date:', 'birthday', array("class"=>'col-sm-12'));   ?>
                               <div class="input-group date">
                                  <?php                
-                                 echo form_input("birthday", $this->input->post("birthday"), array("class"=>"form-control datepicker", 'placeholder'=>'Birth Date'));
+                                 echo form_input("birthday", $this->input->post("birthday"), array("class"=>"form-control birthday", 'placeholder'=>'Birth Date'));
                                  ?>
                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                               </div>
@@ -280,12 +282,14 @@
                               <?php 
                                  echo form_label('Phone1:', 'phone1', array("class"=>'col-sm-12'));                           
                                  echo form_input("phone1", $this->input->post("phone1"), array("class"=>"form-control", 'placeholder'=>'Phone1'));
+                                 echo form_error("phone1");
                               ?>
                            </div>
                            <div class="col-sm-3">
                               <?php 
                                  echo form_label('Phone2:', 'phone2', array("class"=>'col-sm-12'));                           
                                  echo form_input("phone2", $this->input->post("phone2"), array("class"=>"form-control", 'placeholder'=>'Phone2'));
+                                 echo form_error("Phone2");
                               ?>
                            </div>
                         </div>
@@ -308,6 +312,7 @@
                               <?php 
                                  echo form_label('Contact Phone:', 'contact_phone', array("class"=>'col-sm-12'));                           
                                  echo form_input("contact_phone", $this->input->post("contact_phone"), array("class"=>"form-control", 'placeholder'=>'Contact Phone'));
+                                 echo form_error("contact_phone");
                               ?>
                            </div>
                            <div class="col-sm-3">
@@ -361,6 +366,10 @@
       $(".datepicker").datepicker({
            startDate: '-105y',
            endDate: '+2y',
+       });
+        $(".birthday").datepicker({
+           startDate: '-105y',
+           endDate: '0',
        });
    })
    $(document).on("click",".more_filters", function(){

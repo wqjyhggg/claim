@@ -115,6 +115,10 @@
             return false;
          });
 
+         $(document).on("submit", "form", function(){
+            // $("input[type=submit], button").attr('disabled', 'disabled');
+         })
+
          // get provinces list
          $(document).on("change", "select[name=country]", function(){
             var url = ("<?php echo base_url('emergency_assistance/get_provinces/print/') ?>"+$(this).val());

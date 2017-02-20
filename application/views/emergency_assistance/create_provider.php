@@ -18,14 +18,14 @@
                      <?php 
                         echo form_label('Name:', 'name', array("class"=>'col-sm-12'));                               
                         echo form_input("name", $this->input->post("name"), array("class"=>"form-control", 'placeholder'=>'Name'));
-                        echo form_error("discount");
+                        echo form_error("name");
                      ?>
                   </div>
                   <div class="form-group col-sm-6">
                      <?php      
                         echo form_label('Address:', 'address', array("class"=>'col-sm-12'));        
                         echo form_input("address", $this->input->post("address"), array("class"=>"form-control", 'placeholder'=>'Address'));
-                        echo form_error("discount");
+                        echo form_error("address");
                      ?>
                   </div>
                   <div class="form-group col-sm-6">

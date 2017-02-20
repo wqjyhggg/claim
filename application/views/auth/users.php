@@ -12,7 +12,7 @@
      <div class="col-md-12 col-sm-12 col-xs-12">
        <div class="x_panel">
          <div class="x_content">
-           <?php echo form_open("auth/users", array('class'=>'form-horizontal', 'method'=>'get')); ?>
+           <?php echo form_open("auth/Users", array('class'=>'form-horizontal', 'method'=>'get')); ?>
              <div class="row">
                <div class="form-group col-sm-3">
                   <?php echo form_dropdown("groups", $groups, $this->input->get("groups"), array("class"=>'form-control')) ?>
