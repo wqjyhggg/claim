@@ -153,14 +153,14 @@
                            case_no="<?php echo $value['case_no'] ?>"
                            casemanager_name="<?php echo $value['case_manager_name'] ?>"
                            >
-                           <th><?php echo form_checkbox("case", $value['id'], FALSE, array('class'=>($case_manager <> $value['case_manager']?'own_by_other':''))); ?></th>
+                           <th><?php echo form_checkbox("case", $value['id'], FALSE, array('class'=>($case_manager <> $value['case_manager']?'own_by_other':''), ($value['status'] == 'C'?'disabled':'')=>'')); ?></th>
                            <td><?php echo $value['case_no']; ?></td>
                            <td><?php echo date('d/m/Y', strtotime($value['created'])); ?></td>
                            <td><?php echo $value['province']; ?></td>
                            <td><?php echo $value['reason']; ?></td>
                            <td><?php echo $value['policy_no']; ?></td>
                            <td><?php echo $value['insured_name']; ?></td>
-                           <td><?php echo date('d/m/Y', strtotime($value['dob'])); ?></td>
+                           <td><?php echo ($value['dob']<>'N/A')?date('d/m/Y', strtotime($value['dob'])):'N/A'; ?></td>
                            <td><?php echo $value['assign_to_name']; ?></td>
                            <td><?php echo $value['case_manager_name']; ?></td>
                            <td><?php echo $value['priority']; ?></td>
@@ -431,6 +431,8 @@ $(document).ready(function() {
       $("input[name=case]").prop("checked", true);
    else
       $("input[name=case]").prop("checked", false);
+
+   $("input[name=case]:disabled").prop("checked", false);
 }).on("click", "input[name=case], input[name=selectall]",  function(e){                // enable disable buttons
 
    e.stopPropagation();

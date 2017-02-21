@@ -26,7 +26,7 @@
             <div class="x_content"> 
 
                <!-- search policy filter start -->   
-               <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager() or $this->ion_auth->is_eacmanager()) echo form_open("", array('class'=>'form-horizontal')); ?>
+               <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager() or $this->ion_auth->is_eacmanager()) echo form_open('emergency_assistance/edit_case/'.$case_details['id'].'?ref='.$this->input->get('ref'), array('class'=>'form-horizontal')); ?>
 
                <h4>Case Basic Info option<small></small></h4>
                 <div class="row">
@@ -143,6 +143,7 @@
                      echo form_error("phone_number");
                      ?>
                   </div> 
+                  <div class="clearfix"></div>
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Email:', 'email', array("class"=>'col-sm-12'));  
@@ -187,7 +188,7 @@
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Third Party Recovery:', 'third_party_recovery', array("class"=>'col-sm-12'));  
-                     echo form_checkbox("third_party_recovery", "Y", $this->common_model->field_val("third_party_recovery", $case_details), array());
+                     echo form_checkbox("third_party_recovery", "Y", ($this->common_model->field_val("third_party_recovery", $case_details) == 'Y'?TRUE:FALSE), array());
                      echo form_error("third_party_recovery");
                      ?>
                   </div>   
@@ -227,6 +228,17 @@
                         ?>
                      </div>
                   </div> 
+                  <div class="form-group col-sm-4">
+                     <?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
+                     <div class="input-group date">
+                        <?php                
+                        echo form_input("dob", $this->common_model->field_val("dob", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Day of Birth'));
+                        ?>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                     </div>
+                     <?php echo form_error("dob"); ?>
+                  </div> 
+                  <div class="clearfix"></div>
 
                   <div class="form-group col-sm-4">
                      <?php echo form_label('Insured Address:', 'insured_address', array("class"=>'col-sm-12'));   ?>
@@ -236,17 +248,7 @@
                         echo form_error("insured_address");
                         ?>
                      </div>
-                  </div>   
-                  <div class="form-group col-sm-4">
-                     <?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
-                     <div class="input-group date">
-                        <?php                
-                        echo form_input("dob", $this->common_model->field_val("dob", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Day of Birth'));
-                        echo form_error("dob");
-                        ?>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                     </div>
-                  </div>                                              
+                  </div>                                                
                </div> 
 
 
@@ -296,10 +298,24 @@
                         else                        
                            echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info'));
                         if($ref == 'manage'):
-                         ?>
+                           ?>                        
                            <button type="button" class="btn btn-primary follow_up"  data-toggle="modal" data-target="#follow_reason">Follow Up <i class="fa fa-angle-double-right"></i></button>
+                        <?php
+                           if($case_details['status'] == 'A')
+                           {
+                         ?>
                            <button type="button" class="btn btn-primary mark_inactive">Inactive</button>
-                        <?php else:?>
+                        <?php 
+                           }
+                           else 
+                           {
+                              ?>
+                           <button type="button" class="btn btn-primary mark_active">Activate</button>
+                        <?php 
+
+                           }  
+
+                        else:?>
                            <!-- put here email button -->
                            <button insured_address="<?php echo nl2br($case_details['insured_address']) ?>"
                               insured_lastname="<?php echo $case_details['insured_lastname'] ?>"
@@ -401,7 +417,7 @@
                   ?>
                   <div class="form-group col-sm-12">
                      <?php  
-                     echo form_input("email", "", array("class"=>"form-control col-sm-6 form-group email required", 'placeholder'=>'Email Address'));
+                     echo form_input("email_template", "", array("class"=>"form-control col-sm-6 form-group email required", 'placeholder'=>'Email Address'));
                      ?>
                   </div>
                </div>
@@ -606,6 +622,12 @@
 </div>
 <!-- end intake form model here -->
 
+<div style="display:none">
+   <div id="products">
+      <?php echo $products; ?>
+   </div>
+</div>
+
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script src="<?php echo base_url() ?>/assets/js/jQuery.print.js"></script>
@@ -691,14 +713,41 @@
 
       // assign cases to emc manager here
       $.ajax({
-         url: "<?php echo base_url("emergency_assistance/mark_inactive") ?>",
+         url: "<?php echo base_url("emergency_assistance/update_case_status/D") ?>",
          method: "post",
          data:{cases:"<?php echo $case_id; ?>"},
          beforeSend: function(){
             $(".right_col").addClass("csspinner load1");
          },
          success: function() {
-            window.location = "<?php echo base_url("emergency_assistance/case_management") ?>";
+            window.location.reload();
+         }
+      })
+   })
+
+   // clicking on save assign button
+   .on("click", ".mark_active", function(){
+
+      if(!confirm("Are you sure you want to activate case?"))
+         return false;
+
+      // selected cases 
+      var cases = [];
+      $("input[name=case]:checked").each(function(){
+         cases.push($(this).val());
+      })
+      var cases = cases.join(",");
+
+      // assign cases to emc manager here
+      $.ajax({
+         url: "<?php echo base_url("emergency_assistance/update_case_status/A") ?>",
+         method: "post",
+         data:{cases:"<?php echo $case_id; ?>"},
+         beforeSend: function(){
+            $(".right_col").addClass("csspinner load1");
+         },
+         success: function() {
+            window.location.reload();
          }
       })
    })
@@ -720,15 +769,21 @@
       // get selected case details object
       var obj = $(".email_print");
 
+      var data = $("input[name=policy_info]").val()?$.parseJSON($("input[name=policy_info]").val()):'';
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
       str = str.replace(/{insured_name}/gi, obj.attr("insured_name"))
+      .replace("{claimant_name}", obj.attr("insured_name"))
       .replace("{insured_address}", obj.attr("insured_address"))
       .replace("{insured_lastname}", obj.attr("insured_lastname"))
       .replace("{policy_no}", obj.attr("policy_no"))
       .replace("{case_no}", obj.attr("case_no"))
       .replace("{policy_coverage_info}", "{policy_coverage_info}")
       .replace("{casemanager_name}", obj.attr("casemanager_name"));
+      if(data)
+         str = str.replace("{coverage_period}", data[0].effective_date+" to "+data[0].expiry_date);
+      else
+         str = str.replace("{coverage_period}", '');
 
       $(".doc-"+id+" .doc-desc").html(str);
 
@@ -810,7 +865,7 @@
             url: "<?php echo base_url("emergency_assistance/send_print_email") ?>",
             method: "post",
             data:{
-               email:$("input[name=email]").val(), 
+               email:$("input[name=email_template]").val(), 
                street_no:$("input[name=street_no_email]").val(), 
                street_name:$("input[name=street_name_email]").val(), 
                city:$("input[name=city_email]").val(), 

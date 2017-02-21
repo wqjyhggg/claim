@@ -160,6 +160,7 @@
   $(document).ready(function(){
     $(".selected_date").datepicker({
       startDate: '-105y',
+      autoclose: true,
       endDate: '+2y',
      });
 
@@ -219,6 +220,9 @@
 
             // in succss place return responce to list
             $("#clear_schedule").removeClass("csspinner load1");
+
+            // clear schedule
+            $('#clear_schedule_template').modal('hide');
 
             // reload calendar            
             reload_calendar()

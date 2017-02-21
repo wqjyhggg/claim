@@ -295,9 +295,9 @@ class Auth extends CI_Controller {
 			if($this->input->get("status")) 
 				$conditions['users.active'] = $this->input->get("status");
 			if($this->input->get("last_name")) 
-				$conditions['users.last_name'] = $this->input->get("last_name");
+				$conditions['users.last_name'] = trim($this->input->get("last_name"));
 			if($this->input->get("first_name")) 
-				$conditions['users.first_name'] = $this->input->get("first_name");
+				$conditions['users.first_name'] = trim($this->input->get("first_name"));
 			if($this->input->get("email")) 
 				$conditions['users.email like '] = "%".$this->input->get("email")."%";
 
@@ -346,6 +346,20 @@ class Auth extends CI_Controller {
 		}
 	}
 
+	// custom name validation
+	function alpha_dash_space($fullname)
+	{
+		if (! preg_match('/^[a-zA-Z\s]+$/', $fullname)) 
+		{
+			$this->form_validation->set_message('alpha_dash_space', 'The %s field may only contain alpha characters & White spaces');
+			return FALSE;
+		} 
+		else 
+		{
+			return TRUE;
+		}
+	}
+
 	// create a new user
 	public function create_user()
     {
@@ -362,8 +376,9 @@ class Auth extends CI_Controller {
         $this->data['identity_column'] = $identity_column;
 
         // validate form input
-        $this->form_validation->set_rules('first_name', $this->lang->line('create_user_validation_fname_label'), 'required');
-        $this->form_validation->set_rules('last_name', $this->lang->line('create_user_validation_lname_label'), 'required');
+        $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
+        $this->form_validation->set_rules('first_name', $this->lang->line('create_user_validation_fname_label'), 'required|callback_alpha_dash_space');
+        $this->form_validation->set_rules('last_name', $this->lang->line('create_user_validation_lname_label'), 'required|callback_alpha_dash_space');
         if($identity_column!=='email')
         {
             $this->form_validation->set_rules('identity',$this->lang->line('create_user_validation_identity_label'),'required|is_unique['.$tables['users'].'.'.$identity_column.']');
@@ -373,10 +388,11 @@ class Auth extends CI_Controller {
         {
             $this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'required|valid_email|is_unique[' . $tables['users'] . '.email]');
         }
-        $this->form_validation->set_rules('phone', $this->lang->line('create_user_validation_phone_label'), 'trim');
+        $this->form_validation->set_rules('phone', $this->lang->line('create_user_validation_phone_label'), 'trim|numeric|min_length[9]|max_length[15]');
         $this->form_validation->set_rules('company', $this->lang->line('create_user_validation_company_label'), 'trim');
         $this->form_validation->set_rules('password', $this->lang->line('create_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', $this->lang->line('create_user_validation_password_confirm_label'), 'required');
+        $this->form_validation->set_rules('groups[]', 'Member of groups', 'required');
 
         if ($this->form_validation->run() == true)
         {
@@ -407,7 +423,7 @@ class Auth extends CI_Controller {
 
             // check to see if we are creating the user
             // redirect them back to the admin page
-            $this->session->set_flashdata('message', $this->ion_auth->messages());
+            $this->session->set_flashdata('message', array('timeout' => 1000) , $this->ion_auth->messages());
             redirect("auth/users", 'refresh');
         }
         else
@@ -501,9 +517,10 @@ class Auth extends CI_Controller {
 		$currentGroups = $this->ion_auth->get_users_groups($id)->result();
 
 		// validate form input
-		$this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'required');
-		$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required');
-		$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required');
+		$this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'required|callback_alpha_dash_space');
+		$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required|callback_alpha_dash_space');
+		$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required|numeric|min_length[9]|max_length[15]');
+        $this->form_validation->set_rules('groups[]', 'Member of groups', 'required');
 	
 		if ($this->input->post())
 		{

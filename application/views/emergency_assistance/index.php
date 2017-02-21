@@ -40,10 +40,11 @@
                   echo form_input("policy", $this->input->get("policy"), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
                   ?>
                </div>               
-               <div class="col-sm-3">
+               <div class="col-sm-5">
                   <label class="col-sm-12">&nbsp;</label>
                   <button class="btn btn-primary"  name="filter" value="policy">Search</button>
                   <a href="javascript:void(0)" class="btn btn-info more_filters">More Filter</a>
+                  <?php echo anchor("emergency_assistance", 'Reset', array("class"=>'btn btn-primary')) ?>
                </div>
             </div>            
             <div class="row more_items" style="display:none">               

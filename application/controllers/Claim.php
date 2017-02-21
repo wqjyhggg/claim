@@ -104,6 +104,7 @@ class Claim extends CI_Controller {
 
 				// prepare conditions
 				$conditions = [];
+				$conditions['case.status'] = 'A';
 				if($this->input->get("case_no")) 
 					$conditions['case.case_no'] = $this->input->get("case_no");
 				if($this->input->get("policy_no")) 
@@ -126,6 +127,11 @@ class Claim extends CI_Controller {
 				// prepare post data array
 				$this->data['params'] = $this->input->get();
 				$this->data['params']['key'] = API_KEY;
+
+				// trim all the input values
+				foreach ($this->data['params'] as $k => $v) {
+					$this->data['params'][$k] = trim($v);
+				}
 
 				// search policy code here
 				$url =  API_URL."search";
@@ -431,7 +437,7 @@ class Claim extends CI_Controller {
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
-				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
+				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE);
 				$this->data['payees'] = $this->common_model->get_payees($field_name = "expenses_claimed[payee][]", $selected = $this->input->post($field_name), $key='id', $val='name');
 
 				// get all documents for sending email/print.
@@ -836,11 +842,17 @@ class Claim extends CI_Controller {
 				// get old files
 				$old_files = $this->data['claim_details']['files'];
 
-				$data['files'] = ($old_files?$old_files.",":"").implode(",", $file_names);
+				if(empty($file_names))
+					$data['files'] = ($old_files);
+				else
+					$data['files'] = ($old_files ? $old_files."," : "").implode(",", $file_names);
 
 				// insert values to database
 				$this->common_model->update("claim", $data, array('id'=>$id));
 				$record_id = $id;
+
+				// create folder if not exists
+				@mkdir('./assets/uploads/claim_files/'.$record_id, 0777);
 
 				// move all files to that directory
 				if(!empty($file_names))
@@ -1012,7 +1024,7 @@ class Claim extends CI_Controller {
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
-				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
+				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE);
 				$this->data['payees_list'] = $this->common_model->get_payees($field_name = "expenses_claimed[payee][]", $selected = $this->input->post($field_name), $key='id', $val='name');
 
 				// get all documents for sending email/print.
@@ -1534,6 +1546,7 @@ class Claim extends CI_Controller {
  					'payment_type'=>$array['payment_type_'.($key+1)],
 					'claim_id'=>$claim_id,
 					'bank'=>$val,
+					'payment'=>$array['payees']['payment'][$key],
 					'payee_name'=>$array['payees']['payee_name'][$key],
 					'account_cheque'=>$array['payees']['account_cheque'][$key],
 					'address'=>$array['payees']['address'][$key],

@@ -82,6 +82,11 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['params'] = $this->input->get();
 				$this->data['params']['key'] = API_KEY;
 
+				// trim all the input values
+				foreach ($this->data['params'] as $k => $v) {
+					$this->data['params'][$k] = trim($v);
+				}
+
 				// search policy code here
 				$url =  API_URL."search";
 				$curl = curl_init();
@@ -128,6 +133,20 @@ class Emergency_assistance extends CI_Controller {
 		}
 	}
 
+	// custom name validation
+	function alpha_dash_space($fullname)
+	{
+		if (! preg_match('/^[a-zA-Z\s]+$/', $fullname)) 
+		{
+			$this->form_validation->set_message('alpha_dash_space', 'The %s field may only contain alpha characters & White spaces');
+			return FALSE;
+		} 
+		else 
+		{
+			return TRUE;
+		}
+	}
+
 	// redirect if needed, otherwise display the create case page
 	public function create_case($id = 0)
 	{
@@ -141,8 +160,17 @@ class Emergency_assistance extends CI_Controller {
 			//validate form input
 			$this->form_validation->set_rules('assign_to', 'Assign To', '');
 			$this->form_validation->set_rules('reason', 'Reason', 'required');
-			$this->form_validation->set_rules('first_name', 'First Name', 'required');
+			$this->form_validation->set_rules('first_name', 'First Name', 'required|callback_alpha_dash_space');
+			$this->form_validation->set_rules('last_name', 'Last Name', 'callback_alpha_dash_space');
+        	$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
+        	$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
+			$this->form_validation->set_rules('relations', 'Relations', 'required');
+
+			$this->form_validation->set_rules('insured_firstname', 'Insured First Name', 'required');
+			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
+
+			$this->form_validation->set_rules('insured_address', 'Address', 'required');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
 			if ($this->form_validation->run() == TRUE)
@@ -191,7 +219,7 @@ class Emergency_assistance extends CI_Controller {
 						$file_names = [];
 
 						// upload files to server
-						$files = $_FILES['files_'.$i];
+						$files = @$_FILES['files_'.$i];
 						if(!empty($files))
 						{	foreach ($files['name'] as $key => $value) 
 							{	
@@ -229,6 +257,7 @@ class Emergency_assistance extends CI_Controller {
 						@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
 
 						// move all files to that directory
+
 						if(!empty($file_names))
 							foreach ($file_names as $fname)
 							{
@@ -278,7 +307,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->session->set_flashdata('success', "Case successfully created");
 
 				// redirect them to the login page
-				redirect('emergency_assistance/edit_case/' . $record_id, 'refresh');
+				redirect('emergency_assistance', 'refresh');
 			}
 			else
 			{	
@@ -296,9 +325,13 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Follow Up EAC--");
-				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--");
+
+				$additional_conditions = " and users.active = '1'";
+				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--", $additional_conditions);
+
 				$this->data['reasons'] = $this->common_model->getreasons($field_name = "reason", $selected = $this->common_model->field_val($field_name, $case_details));
-				$this->data['relations'] = $this->common_model->getrelations($field_name = "relations", $selected = $this->common_model->field_val($field_name, $case_details));
+				$this->data['relations'] = $this->common_model->getrelations($field_name = "relations", $selected = $this->common_model->field_val($field_name, $case_details));		
+				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE);
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Create Case', TRUE);
@@ -340,11 +373,21 @@ class Emergency_assistance extends CI_Controller {
 			//validate form input
 			$this->form_validation->set_rules('assign_to', 'Assign To', '');
 			$this->form_validation->set_rules('reason', 'Reason', 'required');
-			$this->form_validation->set_rules('first_name', 'First Name', 'required');
+			$this->form_validation->set_rules('first_name', 'First Name', 'required|callback_alpha_dash_space');
+			$this->form_validation->set_rules('last_name', 'Last Name', 'callback_alpha_dash_space');
+        	$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
+        	$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
+			$this->form_validation->set_rules('relations', 'Relations', 'required');
+
+			$this->form_validation->set_rules('insured_firstname', 'Insured First Name', 'required');
+			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
+
+			$this->form_validation->set_rules('insured_address', 'Address', 'required');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
+
 			if($this->input->get("ref") == 'manage')
-				$this->form_validation->set_rules('reserve_amount', 'Create Reservers', 'number');
+				$this->form_validation->set_rules('reserve_amount', 'Create Reservers', 'numeric|required');
 
 			if ($this->form_validation->run() == TRUE)
 			{
@@ -414,7 +457,10 @@ class Emergency_assistance extends CI_Controller {
 				$this->session->set_flashdata('success', "Case successfully updated");
 
 				// redirect them to the login page
-				redirect('emergency_assistance', 'refresh');
+				if($this->input->get('ref') == 'manage')
+					redirect('emergency_assistance/case_management', 'refresh');
+				else
+					redirect('emergency_assistance', 'refresh');
 			}
 			else
 			{	
@@ -435,9 +481,12 @@ class Emergency_assistance extends CI_Controller {
 
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
 				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Follow Up EAC--");
-				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--");
+				$additional_conditions = " and users.active = '1'";
+				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--", $additional_conditions);
+
 				$this->data['reasons'] = $this->common_model->getreasons($field_name = "reason", $selected = $this->common_model->field_val($field_name, $case_details));
-				$this->data['relations'] = $this->common_model->getrelations($field_name = "relations", $selected = $this->common_model->field_val($field_name, $case_details));
+				$this->data['relations'] = $this->common_model->getrelations($field_name = "relations", $selected = $this->common_model->field_val($field_name, $case_details));		
+				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE);
 
 				// get intake forms
 				$joins = [];
@@ -494,7 +543,7 @@ class Emergency_assistance extends CI_Controller {
 			        // select emc users
 					foreach ($this->data['employee_shift'] as $key => $value) 
 					{
-						$additional_conditions = " and schedule.schedule = '$value'";
+						$additional_conditions = " and schedule.schedule = '$value' and users.active = '1' ";
 			        	$this->data['employees_'.$key] = $this->common_model->shift_users($field_name = "assign_to_follow", $selected = $this->input->get($field_name), $group = "eacmanager", $empty = "--Select Employee--", $additional_conditions);
 					}
 				}
@@ -550,29 +599,29 @@ class Emergency_assistance extends CI_Controller {
 			// prepare conditions
 			$conditions = [];
 			if($this->input->get("case_no")) 
-				$conditions['case.case_no'] = $this->input->get("case_no");
+				$conditions['case.case_no'] = trim($this->input->get("case_no"));
 			if($this->input->get("policy_no")) 
-				$conditions['case.policy_no'] = $this->input->get("policy_no");
+				$conditions['case.policy_no'] = trim($this->input->get("policy_no"));
 			if($this->input->get("created_from")) 
-				$conditions['case.created >= '] = $this->input->get("created_from");
+				$conditions['case.created >= '] = trim($this->input->get("created_from"));
 			if($this->input->get("created_to")) 
-				$conditions['case.created <= '] = $this->input->get("created_to");
+				$conditions['case.created <= '] = trim($this->input->get("created_to"));
 			if($this->input->get("insured_firstname")) 
-				$conditions['case.insured_firstname like'] = "%".$this->input->get("insured_firstname")."%";
+				$conditions['case.insured_firstname like'] = "%".trim($this->input->get("insured_firstname"))."%";
 			if($this->input->get("insured_lastname")) 
-				$conditions['case.insured_lastname like'] = "%".$this->input->get("insured_lastname")."%";
+				$conditions['case.insured_lastname like'] = "%".trim($this->input->get("insured_lastname"))."%";
 			if($this->input->get("assign_to")) 
-				$conditions['case.assign_to'] = $this->input->get("assign_to");
+				$conditions['case.assign_to'] = trim($this->input->get("assign_to"));
 			if($this->input->get("priority")) 
-				$conditions['case.priority'] = $this->input->get("priority");
+				$conditions['case.priority'] = trim($this->input->get("priority"));
 			if($this->input->get("status")) 
-				$conditions['case.status'] = $this->input->get("status");
+				$conditions['case.status'] = trim($this->input->get("status"));
 			if($this->input->get("assigned_status") ==  'assigned') 
 				$conditions['case.assign_to != '] = '0';
 			if($this->input->get("assigned_status") ==  'unassigned') 
 				$conditions['case.assign_to'] = '0';
 			if($this->input->get("case_manager")) 
-				$conditions['case.case_manager'] = $this->input->get("case_manager");
+				$conditions['case.case_manager'] = trim($this->input->get("case_manager"));
 
 			$fields = "case.insured_address, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, case.insured_lastname, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id, case.status, case.policy_info";
 			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array(), $having = "", $limit, $offset);
@@ -616,12 +665,12 @@ class Emergency_assistance extends CI_Controller {
             // select emc users
 			foreach ($this->data['employee_shift'] as $key => $value) 
 			{
-				$additional_conditions = " and schedule.schedule = '$value'";
+				$additional_conditions = " and schedule.schedule = '$value' and users.active = '1' ";
             	$this->data['employees_'.$key] = $this->common_model->shift_users($field_name = "assign_to", $selected = $this->input->get($field_name), $group = "eacmanager", $empty = "--Select Employee--", $additional_conditions);
 			}
 
 			// get all case managers list			
-			$additional_conditions = "";
+			$additional_conditions = " and users.active = '1'";
         	$this->data['casemanagers'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--", $additional_conditions);
 
 			// get all documents for sending email/print.
@@ -658,7 +707,11 @@ class Emergency_assistance extends CI_Controller {
 		else
 		{
 			//validate form input
-			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
+        	$this->form_validation->set_rules('institution_phone', 'School Phone', 'trim|numeric|min_length[9]|max_length[15]');
+        	$this->form_validation->set_rules('phone1', 'Phone1', 'trim|numeric|min_length[9]|max_length[15]');
+        	$this->form_validation->set_rules('phone2', 'Phone2', 'trim|numeric|min_length[9]|max_length[15]');
+        	$this->form_validation->set_rules('contact_phone', 'Contact Phone', 'trim|numeric|min_length[9]|max_length[15]');
+			$this->form_validation->set_rules('policy_no', 'Policy No', 'required|alpha_numeric');
 
 			if ($this->form_validation->run() == TRUE)
 			{
@@ -735,12 +788,12 @@ class Emergency_assistance extends CI_Controller {
 		{
 
 			//validate form input
-			$this->form_validation->set_rules('name', "Name", 'required');
+			$this->form_validation->set_rules('name', "Name", 'required|callback_alpha_dash_space');
 			$this->form_validation->set_rules('address', 'Address', 'required');
 			$this->form_validation->set_rules('postcode', 'Postcode', 'required');
-			$this->form_validation->set_rules('discount', 'Discount', 'required');
+			$this->form_validation->set_rules('discount', 'Discount', 'required|numeric');
 			$this->form_validation->set_rules('contact_person', 'Contact Person', 'required');
-			$this->form_validation->set_rules('phone_no', 'Phone No', 'required');
+        	$this->form_validation->set_rules('phone_no', 'Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
 			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('ppo_codes', 'PPO Codes', 'required');
 			$this->form_validation->set_rules('services', 'Services', 'required');
@@ -1632,6 +1685,23 @@ class Emergency_assistance extends CI_Controller {
 
 	}
 
+	//mark inactive case for ajax request
+	public function update_case_status($status = 'D') 
+	{
+		$cases = $this->input->post("cases");	
+
+		// mark deactivate process
+		$this->common_model->update("case", array("status"=>$status), array("id"=>$cases));
+		
+		if($status == 'A')
+			$this->session->set_flashdata('success', "Case active successfully.");
+		else
+			$this->session->set_flashdata('success', "Case inactive successfully.");
+
+		echo TRUE;
+
+	}
+
 	//send email template for ajax request
 	public function send_print_email() 
 	{
@@ -1761,6 +1831,9 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['params'] = $this->input->get();
 				$this->data['params']['key'] = API_KEY;
 
+				foreach ($this->data['params'] as $k => $v) {
+					$this->data['params'][$k] = trim($v);
+				}
 				// search policy code here
 				$url =  API_URL."search";
 				$curl = curl_init();
