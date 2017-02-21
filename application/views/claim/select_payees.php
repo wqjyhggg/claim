@@ -48,10 +48,10 @@ if(!empty($payees)): $i = 0;
                echo form_input("payees[payment][]", $value["payment"], array("class"=>"form-control", 'placeholder'=>'Payment'));
             ?>
          </div>
-         <div class="col-sm-3">
+         <!-- <div class="col-sm-3">
             <label class='col-sm-12'>&nbsp;</label>
             <i class="col-sm-3 fa fa-trash row-link remove-payee"></i>
-         </div>
+         </div> -->
       </div> 
 <?php   
    endforeach;

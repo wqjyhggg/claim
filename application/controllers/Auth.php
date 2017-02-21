@@ -84,8 +84,9 @@ class Auth extends CI_Controller {
 			$limit = $this->limit; 
 			$offset = $this->uri->segment(3);
 
-			// get result
+			// get resultresults
 			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table, $fields, $conditions, $joins, $order_by, $group_by=array(), $having = "", $limit, $offset);
+			 
 
 			$config['base_url'] = site_url('auth/mytasks');
 			$config['per_page'] = $limit;
@@ -300,6 +301,8 @@ class Auth extends CI_Controller {
 				$conditions['users.first_name'] = trim($this->input->get("first_name"));
 			if($this->input->get("email")) 
 				$conditions['users.email like '] = "%".$this->input->get("email")."%";
+			if($this->input->get("status") <> '') 
+				$conditions['users.active'] = $this->input->get("status");
 
 			$joins[] = array(
 				'table' => 'users_groups',
@@ -394,6 +397,11 @@ class Auth extends CI_Controller {
         $this->form_validation->set_rules('password_confirm', $this->lang->line('create_user_validation_password_confirm_label'), 'required');
         $this->form_validation->set_rules('groups[]', 'Member of groups', 'required');
 
+		$groupData = $this->input->post('groups');
+		if(!empty($groupData) and in_array(2, $groupData)){
+        	$this->form_validation->set_rules('shift', 'Shift', 'required');			
+		}
+
         if ($this->form_validation->run() == true)
         {
             $email    = strtolower($this->input->post('email'));
@@ -405,7 +413,7 @@ class Auth extends CI_Controller {
                 'last_name'  => $this->input->post('last_name'),
                 'company'    => $this->input->post('company'),
                 'phone'      => $this->input->post('phone'),
-                'shift'  => $this->input->post('shift'),
+                'shift'  	=> $this->input->post('shift'),
             );
         }
         if ($this->form_validation->run() == true && $id = $this->ion_auth->register($identity, $password, $email, $additional_data))
@@ -515,12 +523,27 @@ class Auth extends CI_Controller {
 		$user = $this->ion_auth->user($id)->row();
 		$groups=$this->ion_auth->groups()->result_array();
 		$currentGroups = $this->ion_auth->get_users_groups($id)->result();
+		if(empty($user))
+				{
+					// send error message
+					$this->session->set_flashdata('error', "Something went wrong, please try after some time.");
+
+					// redirect them to the list page
+					redirect('auth/users', 'refresh');
+				}
+		
 
 		// validate form input
+        $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 		$this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'required|callback_alpha_dash_space');
 		$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required|callback_alpha_dash_space');
 		$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required|numeric|min_length[9]|max_length[15]');
         $this->form_validation->set_rules('groups[]', 'Member of groups', 'required');
+        
+		$groupData = $this->input->post('groups');
+		if(!empty($groupData) and in_array(2, $groupData)){
+        	$this->form_validation->set_rules('shift', 'Shift', 'required');			
+		}
 	
 		if ($this->input->post())
 		{
@@ -803,6 +826,22 @@ class Auth extends CI_Controller {
 		$results = array('suggestions'=>$results);
 		echo json_encode($results);
 	}
+
+	public function help(){
+
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+        	$this->template->write('title', SITE_TITLE.' - Help', TRUE);
+	        $this->template->write_view('content', 'auth/help');
+	        $this->template->render();        
+		}
+	}
+
 
 	// log the user out
 	public function logout()

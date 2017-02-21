@@ -461,7 +461,7 @@
                               <th>Claim Date</th>
                               <th>Claim Amount</th>
                               <th>Assign To</th>
-                              <th>Status</th>                           
+                              <th>Action</th>                           
                            </tr>
                         </thead>
                         <tbody>
@@ -478,7 +478,7 @@
                               <td><?php echo $value['claim_date']; ?></td>
                               <td><?php echo $value['amount_claimed'] ?></td>
                               <td><?php echo $value['claim_examiner']; ?></td>
-                              <td><?php echo anchor("claim/claim_detail/".$value['id'], "Detail"); ?></td>
+                              <td><?php echo anchor("claim/claim_detail/".$value['id'], "View"); ?></td>
                            </tr>
                         <?php endforeach; ?>
                         </tbody>

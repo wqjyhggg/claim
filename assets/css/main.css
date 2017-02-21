@@ -363,12 +363,15 @@ input[type=checkbox]{
 }
 .select-doc.col-sm-2 {
     border: 1px solid #ccc;
+    color: #3d96da;
     cursor: pointer;
     font-weight: bold;
-    min-height: 51px;
+    height: 58px;
     margin: 7px;
+    min-height: 51px;
     padding: 6px;
-    color: #3d96da;
+    vertical-align: middle;
+    width: 220px;
 }
 
 .select-doc.col-sm-2.active, .select-doc.col-sm-2:hover {
@@ -411,4 +414,7 @@ input[type=checkbox]
   -webkit-transform: scale(1.2); /* Safari and Chrome */
   -o-transform: scale(1.2); /* Opera */
   padding: 10px;
+}
+.doc_title > h1 {
+    font-size: 23px;
 }

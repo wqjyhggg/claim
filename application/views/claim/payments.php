@@ -72,52 +72,54 @@
                   $i = 0;
                   if(!empty($claims)):?>
                         <table class="table table-hover table-bordered">
-                           <thead>
-                              <tr>
-                                 <th>No.</th>
-                                 <th>Claim No.</th>
-                                 <th>Claim Item No.</th>
-                                 <th>Invoice No.</th>
-                                 <th>Service Date</th>
-                                 <th>Coverage</th>
-                                 <th>Diagnosis</th>
-                                 <th>Amt Claimed</th>
-                                 <th>Amt Payable</th>
-                                 <th>Amt Deductable</th>
-                                 <th>Amt Insured</th>
-                                 <th>Pay To</th>
-                           </thead>
-                           <tbody>
-                              <?php foreach($claims as $val): ?>
-                                 <tr class="row-link select_payees" alt="<?php echo $val['claim_id'] ?>" discount="<?php echo $val['discount'] ?>">
-                                    <td><?php echo ++$i; ?>.</td>
-                                    <td><?php echo $val['claim_no'] ?></td>
-                                    <td><?php echo $val['claim_item_no'] ?></td>
-                                    <td><?php echo $val['invoice'] ?></td>
-                                    <td><?php echo $val['date_of_service'] ?></td>
-                                    <td><?php echo $val['coverage_code'] ?></td>
-                                    <td><?php echo $val['diagnosis'] ?></td>
-                                    <td><?php echo $val['amount_claimed'] ?></td>
-                                    <td><?php echo $val['amt_payable'] ?></td>
-                                    <td><?php echo $val['amt_deductable'] ?></td>
-                                    <td><?php echo $val['amt_insured'] ?></td>
-                                    <td><?php echo $val['provider_name']?$val['provider_name']:$val['payee_name'] ?></td>
+                              <thead>
+                                 <tr>
+                                    <th>Claim No</th>
+                                    <th>Case No</th>
+                                    <th>Policy No</th>
+                                    <th>Insured Name</th>
+                                    <th>Total Claimed</th>
+                                    <th>Total Paid</th>
+                                    <th>Total Received</th>
                                  </tr>
-                           <?php  endforeach; ?>
-                           </tbody>
-                        </table>
+                              </thead>
+                              <tbody>
+                                 <?php foreach ($claims as $key => $value): ?>
+                                 <tr class="select_claim row-link" data='<?php echo json_encode($value) ?>' alt="<?php echo $value['claim_id']; ?>" case_no="<?php echo $value['case_no']; ?>">
+                                    <td><?php echo $value['claim_no']; ?></td>
+                                    <td><?php echo $value['case_no']; ?></td>
+                                    <td><?php echo $value['policy_no']; ?></td>
+                                    <td><?php echo $value['insured_first_name'].' '.$value['insured_last_name']; ?></td>
+                                    <td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
+                                    <td><?php echo $value['amount_client_paid']?$value['amount_client_paid']:0; ?></td>
+                                    <td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
+                                 </tr>
+                              <?php endforeach; ?>
+                              </tbody>
+                           </table>
                   <?php endif; ?>
                </div>
-               <div class="payee_section" style="display:none">
-                  <h2>PAYEE INFORMATION <div class="pull-right discount_section">&nbsp;</div></h2>
-                  <?php echo form_open("claim/confirm_payment", array('class'=>'form-horizontal', 'method'=>'post', 'id'=>'confirm_payment')); echo form_hidden('claim_id') ?>
+
+
+               <div class="table-responsive">
+                  <h4>Claim Items</h4>
                   <div class="row">
+                     <div class="table-responsive claim_payment_items">
+                        <center><?php echo heading("No record available", 4); ?></center>                     
+                     </div>
+                  </div>
+               </div>
+
+               <div class="payee_section" style="display:none">
+                  <h2>PAYEE INFORMATION </h2>
+                  <?php echo form_open("claim/confirm_payment", array('class'=>'form-horizontal', 'method'=>'post', 'id'=>'confirm_payment')); echo form_hidden('claim_id') ?>
+                  <!-- <div class="row">
                      <div class="col-sm-12">
                         <div class="col-sm-3">
                            <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button>
                         </div>
                      </div>
-                  </div>
+                  </div> -->
                   <div class="row">
                      <div class="col-sm-12 payees_items">
                         <div class="payee-data">                                                     
@@ -249,15 +251,11 @@ $(document).on("click", "button[name=search_claim]", function(){
 .on('click', ".select_payees", function(){
    var claim_id = $(this).attr('alt');
    var discount = $(this).attr('discount');
+   var pay_to = $(this).attr('pay_to');
+   var amt_payable = $(this).attr('amt_payable');
 
    // enable payee section
    $(".payee_section").slideDown();
-
-   if(discount != '0' && discount != ''){
-      $('.discount_section').html('<i class="fa fa-ticket"></i> '+discount+'% discount');
-   } else {
-      $('.discount_section').html('');
-   }
 
    // settings for activate listing
    $(".select_payees").removeClass('active-green');
@@ -269,6 +267,7 @@ $(document).on("click", "button[name=search_claim]", function(){
       method: "post",
       data:{
          claim_id:claim_id, 
+         pay_to:pay_to
       },
       dataType:"json",
       beforeSend: function(){
@@ -284,6 +283,10 @@ $(document).on("click", "button[name=search_claim]", function(){
 
          // remove loader function
          $(".main_container").removeClass("csspinner load1");
+
+         // place amount to payment field
+         $("input[name='payees[payment][]']").val(amt_payable);
+
 
          // enable disable confirm payment and close claim operation
          if(result.status == 'paid'){
@@ -381,6 +384,41 @@ $(document).on("click", "button[name=search_claim]", function(){
       element.find(".cheque_section").hide();
       element.find(".wire_transfer_section").show();
    }
+})
+
+ // when clicked on claim item history section
+.on('click', ".select_claim", function(){
+   var claim_id = $(this).attr('alt');
+   var case_no = $(this).attr('case_no');
+
+   // settings for activate listing
+   $(".select_claim").removeClass('active-green');
+   $(this).addClass('active-green');
+
+   // get claimed items here
+   $.ajax({
+      url: "<?php echo base_url("claim/claim_payment_items") ?>",
+      method: "post",
+      data:{
+         claim_id:claim_id,
+         case_no:case_no,
+      },
+      dataType:"json",
+      beforeSend: function(){
+         $(".main_container").addClass("csspinner load1");
+      },
+      success: function(result) {
+
+         // place data table to releted section
+         $(".claim_payment_items").html(result.claim_payment_items)
+         $(".main_container").removeClass("csspinner load1");
+         $(".case_info").html(result.case_info)
+         $(".policy_info").html(result.policy_info)
+
+      }
+   })
+
+   $(".payee_section").hide();
 })
 
 </script>

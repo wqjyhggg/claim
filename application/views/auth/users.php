@@ -114,7 +114,7 @@
 
 <script>
   <?php 
-  if($this->input->get("status") or $this->input->get("last_name") or $this->input->get("first_name") or $this->input->get("email")) 
+  if($this->input->get("status") <> '' or $this->input->get("last_name") or $this->input->get("first_name") or $this->input->get("email")) 
   {
     ?>
      $(".more_items").show(); 
