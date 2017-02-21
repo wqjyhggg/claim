@@ -33,6 +33,8 @@
                         <?php 
                            echo form_label('Select Product:', 'product', array("class"=>'col-sm-12'));       
                            echo $products;
+                           echo form_error('product');
+
                         ?>
                      </div>
                   </div>
@@ -41,6 +43,7 @@
                         <?php 
                            echo form_label('Agent Name:', 'agent', array("class"=>'col-sm-12'));                            
                            echo form_input("agent", $this->input->post("agent"), array("class"=>"form-control", 'placeholder'=>'Agent Name'));
+                           echo form_error('agent');
                         ?>
                      </div>
                   </div>
@@ -58,6 +61,7 @@
                                  ?>
                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                               </div>
+                              <?php echo form_error('apply_date'); ?>
                            </div>
                            <div class="form-group col-sm-3">
                               <?php echo form_label('Arrival Date:', 'arrival_date', array("class"=>'col-sm-12'));   ?>
@@ -67,6 +71,7 @@
                                  ?>
                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                               </div>
+                              <?php echo form_error('arrival_date'); ?>
                            </div>
                            <div class="form-group col-sm-3">
                               <?php echo form_label('Effective Date:', 'effective_date', array("class"=>'col-sm-12'));   ?>
@@ -76,6 +81,7 @@
                                  ?>
                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                               </div>
+                              <?php echo form_error('effective_date'); ?>
                            </div>
                            <div class="form-group col-sm-3">
                               <?php echo form_label('Expiry Date:', 'expiry_date', array("class"=>'col-sm-12'));   ?>
@@ -85,6 +91,7 @@
                                  ?>
                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                               </div>
+                              <?php echo form_error('expiry_date'); ?>
                            </div>
                         </div>
                         <div class="row">
@@ -194,12 +201,14 @@
                               <?php 
                                  echo form_label('First Name:', 'firstname', array("class"=>'col-sm-12'));                           
                                  echo form_input("firstname", $this->input->post("firstname"), array("class"=>"form-control", 'placeholder'=>'First Name'));
+                                 echo form_error('firstname');
                               ?>
                            </div>
                            <div class="col-sm-3">
                               <?php 
                                  echo form_label('Last Name:', 'lastname', array("class"=>'col-sm-12'));                           
                                  echo form_input("lastname", $this->input->post("lastname"), array("class"=>"form-control", 'placeholder'=>'Last Name'));
+                                 echo form_error('lastname');
                               ?>
                            </div>
                            <div class="col-sm-3">
@@ -210,6 +219,7 @@
                                  ?>
                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                               </div>
+                              <?php echo form_error('birthday'); ?>
                            </div>
                            <div class="col-sm-3">
                               <?php 
@@ -220,6 +230,7 @@
                                     'F'=>'Female'
                                     );
                                  echo form_dropdown("gender", $gender, $this->input->get("gender"), array("class"=>'form-control'));
+                                 echo form_error('gender');
                               ?>
                            </div>
                         </div>
@@ -236,24 +247,28 @@
                               <?php 
                                  echo form_label('Street No:', 'street_number', array("class"=>'col-sm-12'));                           
                                  echo form_input("street_number", $this->input->post("street_number"), array("class"=>"form-control", 'placeholder'=>'Street No'));
+                                 echo form_error('street_number');
                               ?>
                            </div>
                            <div class="form-group col-sm-3">
                               <?php 
                                  echo form_label('Street Name:', 'street_name', array("class"=>'col-sm-12'));                           
                                  echo form_input("street_name", $this->input->post("street_name"), array("class"=>"form-control", 'placeholder'=>'Street Name'));
+                                 echo form_error('street_name');
                               ?>
                            </div>
                            <div class="form-group col-sm-3">
                               <?php 
                                  echo form_label('Suite No.:', 'suite_number', array("class"=>'col-sm-12'));
                                  echo form_input("suite_number", $this->input->post("suite_number"), array("class"=>"form-control", 'placeholder'=>'Suite No.'));
+                                 echo form_error('suite_number');
                               ?>
                            </div>
                            <div class="form-group col-sm-3">
                               <?php 
                                  echo form_label('City:', 'city', array("class"=>'col-sm-12'));                           
                                  echo form_input("city", $this->input->post("city"), array("class"=>"form-control", 'placeholder'=>'City'));
+                                 echo form_error('city');
                               ?>
                            </div>
                         </div>
@@ -274,6 +289,7 @@
                               <?php 
                                  echo form_label('Postcode:', 'postcode', array("class"=>'col-sm-12'));                           
                                  echo form_input("postcode", $this->input->post("postcode"), array("class"=>"form-control", 'placeholder'=>'Postcode'));
+                                 echo form_error('postcode');
                               ?>
                            </div>
                         </div>

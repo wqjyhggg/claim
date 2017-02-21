@@ -102,7 +102,14 @@
               </div>
 
               <div class="row">              
-                <div class="col-sm-6 form-group manager_panel" style="display:none">
+                <div class="col-sm-6 form-group manager_panel" 
+                <?php                   
+                $groupData = $this->input->post('groups');
+                if(empty($groupData) or !in_array(2, $groupData)){
+                ?>
+                  style="display:none"
+                <?php }?>
+                >
                   <?php echo form_label('Select Shift', 'shift', array("class"=>'col-sm-12'));?>
                   <div class="col-sm-12 input-group">
                     <?php

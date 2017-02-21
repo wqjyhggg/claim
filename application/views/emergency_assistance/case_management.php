@@ -106,7 +106,7 @@
                   <div class="form-group col-sm-6">
                      <?php
                      echo form_checkbox("priority", "HIGH", ($this->input->get("priority") == 'HIGH' ? TRUE : FALSE), array("id"=>'priority', 'class'=>'col-sm-1'));
-                     echo form_label('High', 'priority', array("class"=>'col-sm-10 pull-right', 'style'=>'margin-top: 3px;'));
+                     echo form_label('High', 'priority', array("class"=>'col-sm-10 pull-right', 'style'=>'margin-top: 3px; float: left; text-align: left; margin-right: 34px; width: 47px;'));
                      ?>
                   </div>
                </div>
@@ -417,6 +417,7 @@
 <script>
 var employee_id;
 $(document).ready(function() {
+   $("input[name=case]").prop("checked", false);
    $(".datepicker").datepicker({
         startDate: '-105y',
         endDate: '+2y',
@@ -627,7 +628,9 @@ $(document).ready(function() {
    }
    else
       return false;
-}).on("click", ".select-doc", function(){                                              // show email/print function
+})
+
+.on("click", ".select-doc", function(){                                              // show email/print function
 
    // hide all doc files here
    $(".doc-description").hide();
@@ -643,6 +646,10 @@ $(document).ready(function() {
    // get selected case details object
    var obj = $("input[name=case]:checked").parent("th").parent("tr.row-link");
 
+   var data = $("input[name=case]:checked").parent("th").parent("tr.row-link").attr('policy_info');
+
+   data = data?$.parseJSON(data):'';
+
    // replace string from casemanager name etc
    var str = $(".doc-"+id+"  .doc-desc").html();
    str = str.replace(/{insured_name}/gi, obj.attr("insured_name"))
@@ -652,6 +659,11 @@ $(document).ready(function() {
    .replace("{case_no}", obj.attr("case_no"))
    .replace("{policy_coverage_info}", "{policy_coverage_info}")
    .replace("{casemanager_name}", obj.attr("casemanager_name"));
+
+   if(data)
+      str = str.replace("{coverage_period}", data[0].effective_date+" to "+data[0].expiry_date);
+   else
+      str = str.replace("{coverage_period}", '');
 
    $(".doc-"+id+" .doc-desc").html(str);
 

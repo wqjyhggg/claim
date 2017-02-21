@@ -163,6 +163,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('first_name', 'First Name', 'required|callback_alpha_dash_space');
 			$this->form_validation->set_rules('last_name', 'Last Name', 'callback_alpha_dash_space');
         	$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
+        	$this->form_validation->set_rules('post_code', 'Post Code', 'required|trim|numeric|max_length[6]');
         	$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('relations', 'Relations', 'required');
@@ -324,7 +325,9 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name, $case_details));
-				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Follow Up EAC--");
+
+				$additional_conditions = " and users.active = '1'";
+				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'"), $empty = "--Follow Up EAC--", $additional_conditions);
 
 				$additional_conditions = " and users.active = '1'";
 				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--", $additional_conditions);
@@ -369,6 +372,7 @@ class Emergency_assistance extends CI_Controller {
 				'type' => 'LEFT'
 				);
 			$case_details = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, case.created_by as created_by_id", $conditions = array('case.id'=>$id), $joins);
+			
 
 			//validate form input
 			$this->form_validation->set_rules('assign_to', 'Assign To', '');
@@ -506,7 +510,7 @@ class Emergency_assistance extends CI_Controller {
 				{
 					// get all documents for sending email/print.
 					$fields = "id, name, description";
-					$access_types = $this->get_access_list();
+					$access_types = $this->get_access_list('case');
 					if($access_types)
 						$conditions = "type in (".implode(', ', $access_types).")";
 					else
@@ -675,7 +679,7 @@ class Emergency_assistance extends CI_Controller {
 
 			// get all documents for sending email/print.
 			$fields = "id, name, description";
-			$access_types = $this->get_access_list();
+			$access_types = $this->get_access_list('case');
 			if($access_types)
 				$conditions = "type in (".implode(', ', $access_types).")";
 			else
@@ -707,11 +711,32 @@ class Emergency_assistance extends CI_Controller {
 		else
 		{
 			//validate form input
-        	$this->form_validation->set_rules('institution_phone', 'School Phone', 'trim|numeric|min_length[9]|max_length[15]');
-        	$this->form_validation->set_rules('phone1', 'Phone1', 'trim|numeric|min_length[9]|max_length[15]');
+        	$this->form_validation->set_rules('institution_phone', 'School Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
+        	$this->form_validation->set_rules('phone1', 'Phone1', 'required|trim|numeric|min_length[9]|max_length[15]');
         	$this->form_validation->set_rules('phone2', 'Phone2', 'trim|numeric|min_length[9]|max_length[15]');
-        	$this->form_validation->set_rules('contact_phone', 'Contact Phone', 'trim|numeric|min_length[9]|max_length[15]');
+        	$this->form_validation->set_rules('contact_phone', 'Contact Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required|alpha_numeric');
+
+			$this->form_validation->set_rules('product', 'Select Product', 'required');
+			$this->form_validation->set_rules('agent', 'Agent No', 'required');
+			$this->form_validation->set_rules('apply_date', 'Apply Date', 'required');
+			$this->form_validation->set_rules('arrival_date', 'Arrival Date', 'required');
+			$this->form_validation->set_rules('effective_date', 'Effective Date', 'required');
+			$this->form_validation->set_rules('expiry_date', 'Expiry Date', 'required');
+			$this->form_validation->set_rules('institution_phone', 'School Phone', 'required');
+			$this->form_validation->set_rules('firstname', 'First Name', 'required');
+			$this->form_validation->set_rules('lastname', 'Last Name', 'required');
+			$this->form_validation->set_rules('birthday', 'Birth Date', 'required');
+			$this->form_validation->set_rules('gender', 'Gender', 'required');
+			$this->form_validation->set_rules('street_number', 'Street Number', 'required');
+
+			$this->form_validation->set_rules('street_number', 'Street Number', 'required');
+			$this->form_validation->set_rules('street_name', 'Street Name', 'required');
+			$this->form_validation->set_rules('suite_number', 'Suite Number', 'required');
+			$this->form_validation->set_rules('city', 'City', 'required');
+			$this->form_validation->set_rules('postcode', 'Postcode', 'required');
+			$this->form_validation->set_rules('city', 'City', 'required');
+			$this->form_validation->set_rules('phone1', 'Phone 1', 'required');
 
 			if ($this->form_validation->run() == TRUE)
 			{
@@ -1933,7 +1958,7 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// return list of role for current user
-	function get_access_list()
+	function get_access_list($type = '')
 	{
 		$id = $this->ion_auth->user()->row()->id;
 
@@ -1947,17 +1972,28 @@ class Emergency_assistance extends CI_Controller {
 		$return = [];
 		if(!empty($roles))
 			foreach ($roles as $key => $value) {
-				if($value['name'] == 'eacmanager')
-					$return[] = "'eac'";
+				if($type == 'case')
+				{
+					if($value['name'] == 'eacmanager')
+						$return[] = "'eac'";
 
-				else if($value['name'] == 'casemamager')
-					$return[] = "'case'";
+					else if($value['name'] == 'casemamager')
+						$return[] = "'case'";
 
-				else if($value['name'] == 'claimexaminer')
-					$return[] = "'claim'";
-
+					else if($value['name'] == 'admin')
+					{
+						$return[] = "'eac'";
+						$return[] = "'case'";
+					}
+				}
 				else
-					$return[] = "'".$value['name']."'";
+				{
+					if($value['name'] == 'claimexaminer')
+						$return[] = "'claim'";
+
+					else if($value['name'] == 'admin')
+						$return[] = "'claim'";
+				}				
 			}
 		return $return;
 

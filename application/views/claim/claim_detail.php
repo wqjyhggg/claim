@@ -11,7 +11,7 @@
          <div class="x_panel">
             <?php echo $message; ?>
             <div class="x_content">
-               <?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post')); ?>
+               <?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post', 'onsubmit'=>'return validate_form()', 'id'=>'main_form')); ?>
                <div class="case_info">
 
                   <h4 class="move_down"> Claimant Information <i class="fa fa-angle-down pull-right"></i></h4>
@@ -19,7 +19,7 @@
                      <div class="form-group col-sm-3">
                         <?php
                            echo form_label('Insured First Name:', 'insured_first_name', array("class"=>'col-sm-12'));
-                           echo form_input("insured_first_name", $this->common_model->field_val("insured_first_name", $claim_details), array("class"=>"form-control", 'placeholder'=>'Insured First Name'));
+                           echo form_input("insured_first_name", $this->common_model->field_val("insured_first_name", $claim_details), array("class"=>"form-control required", 'placeholder'=>'Insured First Name'));
                            echo form_error("insured_first_name");
                         ?>
                      </div>
@@ -53,7 +53,7 @@
                         <?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
                         <div class="input-group date">
                            <?php
-                           echo form_input("dob", $this->common_model->field_val("dob", $claim_details), array("class"=>"form-control datepicker", 'placeholder'=>'Date of Birth'));
+                           echo form_input("dob", $this->common_model->field_val("dob", $claim_details), array("class"=>"form-control datepicker required", 'placeholder'=>'Date of Birth'));
                            ?>
                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
@@ -62,7 +62,7 @@
                      <div class="form-group col-sm-3">
                         <?php
                            echo form_label('Policy#:', 'policy_no', array("class"=>'col-sm-12'));
-                           echo form_input("policy_no", $this->common_model->field_val("policy_no", $claim_details), array("class"=>"form-control", 'placeholder'=>'Policy#', 'disabled'=>'disabled'));
+                           echo form_input("policy_no", $this->common_model->field_val("policy_no", $claim_details), array("class"=>"form-control required", 'placeholder'=>'Policy#', 'disabled'=>'disabled'));
                            echo form_error("policy_no");
                            echo form_error("policy_no");
                         ?>
@@ -77,19 +77,19 @@
                      <div class="form-group col-sm-3">
                         <?php
                            echo form_label('School Name:', 'school_name', array("class"=>'col-sm-12'));
-                           echo form_input("school_name", $this->common_model->field_val("school_name", $claim_details), array("class"=>"form-control", 'placeholder'=>'School Name'));
+                           echo form_input("school_name", $this->common_model->field_val("school_name", $claim_details), array("class"=>"form-control required", 'placeholder'=>'School Name'));
                         echo form_error("school_name");
                         ?>
                      </div>
                      <div class="form-group col-sm-3">
                         <?php
                            echo form_label('Group ID:', 'group_id', array("class"=>'col-sm-12'));
-                           echo form_input("group_id", $this->common_model->field_val("group_id", $claim_details), array("class"=>"form-control", 'placeholder'=>'Group ID'));
+                           echo form_input("group_id", $this->common_model->field_val("group_id", $claim_details), array("class"=>"form-control required", 'placeholder'=>'Group ID'));
                            echo form_error("group_id");
                         ?>
                      </div>
 
-                     <div class="clearfix"></div>
+                   
                      <div class="form-group col-sm-3">
                         <?php echo form_label('Enroll Date:', 'apply_date', array("class"=>'col-sm-12'));   ?>
                         <div class="input-group date">
@@ -519,7 +519,7 @@
                                           'V08B - Cremation/Burial'=>'Cremation/Burial',
                                           'V12 - Air Flight Accident'=>'Air Flight Accident'
                                        );
-                                    echo form_dropdown("expenses_claimed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control required'));
+                                    echo form_dropdown("expenses_claimed[coverage_code][]", $coverage_code, $value["coverage_code"], array("class"=>'form-control required'));
                                  ?>
                               </div>
                               <div class="col-sm-3">
@@ -555,8 +555,11 @@
                               <div class="col-sm-3">
                                  <?php
                                     echo form_label('Payee:', 'payee', array("class"=>'col-sm-12'));
-                                    echo $payees_list;
-                                    echo form_hidden('expenses_claimed[payee_id][]', ($value['payee']?$value['payee']:'custom_'.$value['third_party_payee']));
+                                    $options = array(
+                                       ''=>'--Select Payee--'
+                                       );
+                                    echo form_dropdown('expenses_claimed[payee][]', $options, '', array('class'=>'form-control required'));
+                                    echo form_hidden('expenses_claimed[payee_id][]', $value['pay_to']);
                                  ?>
                               </div>
                               <div class="col-sm-3">
@@ -665,7 +668,7 @@
                                     <div class="col-sm-3 cheque_section wire_transfer_section">
                                        <?php
                                           echo form_label('Payee Name:', 'Payee Name', array("class"=>'col-sm-12'));
-                                          echo form_input("payees[payee_name][]", $value["payee_name"], array("class"=>"form-control", 'placeholder'=>'Payee Name'));
+                                          echo form_input("payees[payee_name][]", $value["payee_name"], array("class"=>"form-control required", 'placeholder'=>'Payee Name'));
                                        ?>
                                     </div>
                                     <div class="col-sm-3 wire_transfer_section" <?php echo ($value["payment_type"] <> 'direct deposit'?'style="display:none"':''); ?>>
@@ -677,7 +680,7 @@
                                     <div class="col-sm-3 cheque_section" <?php echo ($value["payment_type"] == 'direct deposit'?'style="display:none"':''); ?>>
                                        <?php
                                           echo form_label('Address:', 'Address', array("class"=>'col-sm-12'));
-                                          echo form_input("payees[address][]", $value["address"], array("class"=>"form-control", 'placeholder'=>'Address'));
+                                          echo form_input("payees[address][]", $value["address"], array("class"=>"form-control ".($value["payment_type"] == 'direct deposit'?'':'required'), 'placeholder'=>'Address'));
                                        ?>
                                     </div>
                                     <div class="col-sm-3">
@@ -1040,7 +1043,10 @@
          <div class="col-sm-3">
             <?php
                echo form_label('Payee:', 'payee', array("class"=>'col-sm-12'));
-               echo $payees_list;
+               $options = array(
+                  ''=>'--Select Payee--'
+                  );
+               echo form_dropdown('expenses_claimed[payee][]', $options, '', array('class'=>'form-control required'));
             ?>
          </div>
          <div class="col-sm-3">
@@ -1131,12 +1137,12 @@
       $str = "";
       if(!empty($payees))
          foreach ($payees as $key => $value) {
-            $str .= '<option value="custom_'.$value['id'].'">'.$value['payee_name'].'</option>';
+            $str .= '<option value="'.$value['payee_name'].'">'.$value['payee_name'].'</option>';
          }
 
       if($str){
          ?>
-         $("select[name='expenses_claimed[payee][]']").append('<?php echo $str; ?>');
+         $("select[name='expenses_claimed[payee][]']").html('<?php echo $str; ?>');
          <?php
       }
       ?>
@@ -1245,6 +1251,20 @@
             })
          }
       }
+
+      // settings to reload payees list on expenses items
+      var html = "<option value=''>--Select Payee--</option>";
+      $("input[name='payees[payee_name][]']").each(function(){
+         if($(this).val())
+            html += '<option value="'+$(this).val()+'">'+$(this).val()+'</option>';
+      })
+
+      $("select[name='expenses_claimed[payee][]']").html(html);
+
+      // select default payee
+      $("input[name='expenses_claimed[payee_id][]']").map(function(){
+         $(this).prev('select').val($(this).val());
+      })
 
       // remap payment_type names to avoide errors
       $count = 0;
@@ -1644,13 +1664,57 @@
    .on("click", "input[name^=payment_type]", function(){
       var element = $(this).parent("div").parent("div").parent("div");
       if($(this).val() == 'cheque'){
-         element.find(".wire_transfer_section").hide();
-         element.find(".cheque_section").show();
+         element.find(".wire_transfer_section").hide().find("input").removeClass('required error-true');
+         element.find(".cheque_section").show().find("input").addClass('required');
       } else {
-         element.find(".cheque_section").hide();
-         element.find(".wire_transfer_section").show();
+         element.find(".cheque_section").hide().find("input").removeClass('required error-true');
+         element.find(".wire_transfer_section").show().find("input").addClass('required');
       }
    })
+
+   // to list payee in expenses payee
+   .on("keyup", "input[name='payees[payee_name][]']", function(){
+      // build a list of all payees name here
+
+      var html = "<option value=''>--Select Payee--</option>";
+      $("input[name='payees[payee_name][]']").each(function(){
+         if($(this).val())
+            html += '<option value="'+$(this).val()+'">'+$(this).val()+'</option>';
+      })
+
+      $("select[name='expenses_claimed[payee][]']").html(html);
+
+      // select default payee
+      $("input[name='expenses_claimed[payee_id][]']").map(function(){
+         $(this).prev('select').val($(this).val());
+      })
+
+   })
+
+   // to check unique payee name
+   .on("change", "input[name='payees[payee_name][]']", function(){
+      // check all payees name here
+      var val = $(this).val();
+      if(val){
+         var counter = 0;
+         $("input[name='payees[payee_name][]']").each(function(){
+            if($(this).val() == val)
+               counter++;
+         })
+         if(counter > 1){
+            alert("payee name already exists, please try different name.");
+            $(this).val("");
+            return false;
+         }
+      }
+
+      // select default payee
+      $("input[name='expenses_claimed[payee_id][]']").map(function(){
+         $(this).prev('select').val($(this).val());
+      })
+
+   })
+
 
 // create input boxes where the requirement need
 var $outer = $(".outer-text");
@@ -1681,5 +1745,44 @@ $outer_select.each(function(){
    $(this).append($("#products").html());
 });
 
+
+// to validate expenses items
+function validate_form(){
+   // check length of expenses items if not deleted
+   var length = $(".expenses-list .row").length;
+   if(!length){
+      alert("Please create alteast one expenses claimed item.");
+      $(".add_new_expenses").focus();
+      return false;
+   }
+
+   // validate invoice required
+   var $validate = 1;
+   $("#main_form .required").map(function(){
+      if(!$(this).val()){
+         $validate = 0;
+         $(this).addClass('error-true');
+      }
+      else {
+         $(this).removeClass('error-true');
+      }
+   })
+   if(!$validate){
+      alert("Please fill all required fields.");
+
+      // show area once any error occured
+      $(".error-true").map(function(){
+         $(this).closest('.row').show();
+         $(this).closest('.row').prev('.move_down').children('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+
+
+         $(this).closest('.row').parent('.expenses-list').closest('.row').show();
+         $(this).closest('.row').parent('.expenses-list').closest('.row').prev('.move_down').children('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+      })
+
+      return false;
+   }
+   return true;
+}
 
 </script>

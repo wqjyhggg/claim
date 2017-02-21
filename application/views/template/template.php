@@ -38,7 +38,7 @@
          <div class="container" style="padding:0;">
             <div class="hlogo">
                <img class="img-responsive" src="<?php echo base_url(); ?>assets/img/logo.png" alt="JF Insurance">
-               <a href="" class="pull-right-custom"><i class="fa fa-question-circle"></i> Help</a>
+               <a href="<?php echo base_url(); ?>auth/help" class="pull-right-custom"><i class="fa fa-question-circle"></i> Help</a>
             </div>
          </div>
       </header>
@@ -124,6 +124,26 @@
             var url = ("<?php echo base_url('emergency_assistance/get_provinces/print/') ?>"+$(this).val());
             $("select[name=province]").load(encodeURI(url));
          })
+
+         $(document).on("keydown", "input[name='payees[account_cheque][]'], input[name='expenses_claimed[amount_billed][]'], input[name='expenses_claimed[amount_client_paid][]'], input[name=amount_claimed], input[name=amt_deductable], input[name=amt_insure], input[name=amt_received], input[name=amt_payable], input[name='payees[payment][]']", function (e) {
+           // Allow: backspace, delete, tab, escape, enter and .
+           if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                // Allow: Ctrl+A, Command+A
+               (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) || 
+                // Allow: home, end, left, right, down, up
+               (e.keyCode >= 35 && e.keyCode <= 40)) {
+                    // let it happen, don't do anything
+                    return;
+           }
+           // Ensure that it is a number and stop the keypress
+           if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+               e.preventDefault();
+           }
+       });
+
+      $(document).ready(function(){
+         $(".doc_title h1").css("font-size", '23px') ;
+      })
          
       </script>
       <!-- Bootstrap -->

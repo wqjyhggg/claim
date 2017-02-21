@@ -8,6 +8,20 @@ Password: password
 
 
 #####################
+Feb, 21 2016 update:-
+#####################
+
+ - And Create claim page, there is a problem - the payee's value is not correct  , which should come from the payee information below.  - DONE
+ - Change payee process and on claim items, create claim page/edit claim page - DONE
+ - Payment page - There is no Payment amount, please check and fix it. - DONE
+ - After Auto-Schedule, EAC0001 still has not assigned shift, please check and fix it. - DONE
+ - Payement page re-layout once there is multiple claim with their items. user need to choose claim firstly and then need to choose item - DONE
+
+Solve 40 bugs and resolved which are reopen
+https://docs.google.com/spreadsheets/d/1JCmMo8hY4xgyHdQysug1A4XT_35177fhahKTlIHmup0/edit#gid=0
+
+
+#####################
 Feb, 20 2016 update:-
 #####################
 

@@ -113,7 +113,10 @@
                         <div class="form-group col-sm-3">
                            <?php
                               echo form_label('Pay To:', 'pay_to', array("class"=>'col-sm-12'));
-                              echo $payees;
+                              $options = array(
+                                 ''=>'--Select Payee--'
+                                 );
+                              echo form_dropdown('pay_to', $options, '', array('class'=>'form-control required'));
                            ?>
                         </div>
                         <div class="form-group col-sm-3">
@@ -255,9 +258,9 @@
                <div class="case_info">
                   <?php echo $case_info; ?>
                </div>
-               <div class="row actions" style="margin-top:20px; display:none">
+               <div class="row actions" style="margin-top:20px;">
                   <div class="row">
-                     <div class="col-sm-2">
+                     <div class="col-sm-2 item_specific">
                         <input class="btn btn-primary" name="Save" value="Save" type="submit">
                      </div>
                      <div class="col-sm-2">
@@ -269,16 +272,16 @@
                   </div>
 
                   <div class="row" style="margin-top: 20px;">
-                     <div class="col-sm-2">
+                     <div class="col-sm-2 item_specific">
                         <label style="float: right; font-size: 25px;"> Decision </label>
                      </div>
-                     <div class="col-sm-3 my_decision">
+                     <div class="col-sm-3 my_decision" style="display:none">
                         &nbsp;
                      </div>
-                     <div class="col-sm-2 accept_decision">
+                     <div class="col-sm-2 accept_decision  item_specific">
                         <input class="btn btn-primary" name="Accept" value="Accept" type="button">
                      </div>
-                     <div class="col-sm-1 deny_decision">
+                     <div class="col-sm-1 deny_decision  item_specific">
                         <input class="btn btn-primary" name="Deny" value="Deny" type="button">
                      </div>
                      <div class="col-sm-2 deny_reasons" style="display:none">
@@ -485,165 +488,6 @@
 </div>
 <!-- end intake form model here -->
 
-<table style="display:none">
-   <tbody class="base-row">
-      <tr>
-         <td>
-            <?php
-               echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class"=>"form-control"));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("expenses_claimed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control"));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("expenses_claimed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control"));
-            ?>
-         </td>
-         <td>
-            <?php
-                  $coverage_code = array(
-                     ""=>'Coverage code',
-                     'V01 - Hospitalization'=>'Hospitalization',
-                     'V02A - Medical Services'=>'Medical Services',
-                     'V02A - Doctor Visit'=>'Doctor Visit',
-                     'V02A - Emergency Visit'=>'Emergency Visit',
-                     'V02A - Specialist Visit'=>'Specialist Visit',
-                     'V02A - Others'=>'Others',
-                     'V02B - Diagnoistic Services'=>'Diagnoistic Services',
-                     'V02B - X-Ray'=>'X-Ray',
-                     'V02B - Ultrasound'=>'Ultrasound',
-                     'V02B - Urine Test'=>'Urine Test',
-                     'V02B - Blood Test'=>'Blood Test',
-                     'V02B - CT Scans'=>' CT Scans',
-                     'V02B - MRI'=>'MRI',
-                     'V02B - Others'=>'Others',
-                     'V13 - Private Duty Nursing'=>'Private Duty Nursing',
-                     'V01A - Out-Patient Treatment'=>'Out-Patient Treatment',
-                     'V07 - Prescription Drugs'=>'Prescription Drugs',
-                     'V01B - Medical Appliances'=>'Medical Appliances',
-                     'V04A - Ambulance'=>'Ambulance',
-                     'V02A - Paramedical Services'=>'Paramedical Services',
-                     'V02D - Acupuncture'=>'Acupuncture',
-                     'V02E - Osteopath'=>'Osteopath',
-                     'V02F - Physiotherapy'=>'Physiotherapy',
-                     'V02G - Chiropractor'=>'Chiropractor',
-                     'V02H - Chiropodist'=>'Chiropodist',
-                     'V02J - Podiatrist'=>'Podiatrist',
-                     'V06 - Accidental Dental'=>'Accidental Dental',
-                     'V06B - Relief of Dental Pain'=>'Relief of Dental Pain',
-                     'V08A - Return of Remains'=>'Return of Remains',
-                     'V08B - Cremation/Burial'=>'Cremation/Burial',
-                     'V12 - Air Flight Accident'=>'Air Flight Accident'
-                  );
-               echo form_dropdown("expenses_claimed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control'));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("expenses_claimed[diagnosis][]", $this->input->post("diagnosis"), array("class"=>"form-control autocomplete_field"));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("expenses_claimed[service_description][]", $this->input->post("service_description"), array("class"=>"form-control"));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("expenses_claimed[date_of_service][]", $this->input->post("date_of_service"), array("class"=>"form-control"));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("expenses_claimed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control"));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("expenses_claimed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class"=>"form-control"));
-            ?>
-         </td>
-         <td>
-            <?php
-            $currency = array(
-                     "USD"=>'USD',
-                     "CAD"=>'CAD',
-                     "CNY"=>'CNY',
-                  );
-               echo form_dropdown("expenses_claimed[currency][]", $currency, $this->input->get("currency"), array("class"=>'form-control'));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("expenses_claimed[currency_rate][]", $this->input->post("currency_rate"), array("class"=>"form-control"));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("expenses_claimed[payee][]", $this->input->post("payee"), array("class"=>"form-control"));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("expenses_claimed[comment][]", $this->input->post("comment"), array("class"=>"form-control"));
-            ?>
-         </td>
-         <td>
-            <i class="fa fa-trash row-link remove_claim"></i>
-         </td>
-      </tr>
-   </tbody>
-</table>
-
-<table style="display:none">
-   <tbody class="payee-buffer">
-      <tr>
-         <td>
-            <?php
-               echo form_input("payees[bank][]", $this->input->post("bank"), array("class"=>"form-control", 'placeholder'=>'Bank Name'));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("payees[payee_name][]", $this->input->post("payee_name"), array("class"=>"form-control", 'placeholder'=>'Payee Name'));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("payees[account_cheque][]", $this->input->post("account_cheque"), array("class"=>"form-control", 'placeholder'=>'Account/Cheque#'));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("payees[payment][]", $this->input->post("payment"), array("class"=>"form-control", 'placeholder'=>'Payment'));
-            ?>
-         </td>
-         <td>
-            <?php
-            $payee_currency = array(
-                     "USD"=>'USD',
-                     "CAD"=>'CAD',
-                     "CNY"=>'CNY',
-                  );
-               echo form_dropdown("payees[payee_currency][]", $payee_currency, $this->input->get("payee_currency"), array("class"=>'form-control'));
-            ?>
-         </td>
-         <td>
-            <?php
-               echo form_input("payees[payee_currency_rate][]", $this->input->post("payee_currency_rate"), array("class"=>"form-control", 'placeholder'=>'Currency Rate'));
-            ?>
-         </td>
-         <td>
-            <i class="fa fa-trash row-link remove-payee"></i>
-         </td>
-      </tr>
-   </tbody>
-</table>
-
 <!-- word templates here -->
 <div style="display:none" class="word_templates">
 <?php if(!empty($word_templates)): ?>
@@ -661,6 +505,9 @@
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
    $(document).ready(function() {
+
+      // hide all item specific buttons
+      $(".item_specific").hide();
 
       $("tr[alt=<?php echo $id; ?>]").addClass('active-green');
       $(".datepicker").datepicker({
@@ -990,12 +837,12 @@
       $str = "";
       if(!empty($custom_payees))
          foreach ($custom_payees as $key => $value) {
-            $str .= '<option value="custom_'.$value['id'].'">'.$value['payee_name'].'</option>';
+            $str .= '<option value="'.$value['payee_name'].'">'.$value['payee_name'].'</option>';
          }
 
       if($str){
          ?>
-         $("select[name=payee]").append('<?php echo $str; ?>');
+         $("select[name=pay_to]").html('<?php echo $str; ?>');
          <?php
       }
       ?>
@@ -1010,13 +857,7 @@
       var decision = "";
       $.each(data, function( index, value ) {
          $(".edit-claim-item input[name="+index+"]").val(value);
-
-         if(index == 'third_party_payee' && value != '0')
-         {
-            $(".edit-claim-item select[name=payee]").val("custom_"+value);
-         } else {
-            $(".edit-claim-item select[name="+index+"]").val(value);
-         }
+         $(".edit-claim-item select[name="+index+"]").val(value);
          if(index == 'status')
             decision = value;
       });
@@ -1024,7 +865,7 @@
       // change label
       $(".claim-label").text("Edit Claim("+(data.claim_no?data.claim_no:'#####')+") No."+data.count);
 
-      $(".edit-claim-item").show();
+      $(".edit-claim-item, .item_specific").show();
 
       // enable diagnosis fuzzy search
       $(".autocomplete_field").autocomplete({
@@ -1156,7 +997,7 @@
 
    // once user clicked on Investigate Pending button
    .on("click", "input[name='Investigate Pending']", function(){
-      if(confirm('Are you sure you want to mark this claim item as pending?')){
+      if(confirm('Are you sure you want to mark this claim as pending?')){
 
          $.ajax({
             url: "<?php echo base_url("claim/status/pending") ?>",
