@@ -142,7 +142,25 @@
        });
 
       $(document).ready(function(){
-         $(".doc_title h1").css("font-size", '23px') ;
+         $(".doc_title h1").css("font-size", '23px');
+
+         setInterval(function(){ 
+
+            // check user logout script here
+             $.ajax({
+               url: "<?php echo base_url("auth/check_user"); ?>",
+               method:"get",
+               dataType: "json",
+               success: function(data){
+                  if(data){
+                     // open model popup here
+                     $("#model_logout").modal()
+
+                  }
+               }
+            })
+
+          }, 10000);         
       })
          
       </script>
@@ -178,5 +196,31 @@
       <script src="<?php echo base_url(); ?>assets/js/starrr.js"></script>
       <!-- Build Custom Theme Scripts -->
       <script src="<?php echo base_url(); ?>assets/js/custom.js"></script>
+
+      <!-- model window for logout message -->
+      <div id="model_logout" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title"> <i class="fa fa-warning"></i> Your account is inactivated</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                  <center>
+                     <h2>Your account is now deactivated </h2>
+                     please contact administrator to activate it again.<br/> <?php echo anchor('auth/login', 'click here') ?> to go home page.
+                  </center>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <center>
+                  <?php echo anchor('auth/login', 'OK', array('class'=>'btn btn-primary')) ?>
+               </center>
+            </div>
+          </div>
+
+        </div>
+      </div>
    </body>
 </html>

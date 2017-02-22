@@ -8,7 +8,7 @@
 class Auth extends CI_Controller {
 
 	// set private properties here
-	private $limit = 10; #no of records per page
+	private $limit = 17; #no of records per page
 
 	public function __construct()
 	{
@@ -20,6 +20,7 @@ class Auth extends CI_Controller {
 
 		// show the flash data error message if there is one
 		$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
+
 	}
 
 	// redirect if needed, otherwise display the products list
@@ -53,7 +54,7 @@ class Auth extends CI_Controller {
 
 			// get my tasks here
 			$table = "mytask";
-			$fields = "mytask.*, IF(mytask.type='CLAIM', concat_ws(' ', claim.insured_first_name, claim.insured_last_name), concat_ws(' ', case.insured_firstname, case.insured_lastname)) as insured_name, IF(type='CLAIM', '', LPAD(case.assign_to, 4, 0)) as followup_by, IF(mytask.type='CLAIM', claim.status, case.status) as task_status, IF(type='CLAIM', LPAD(claim.assign_to, 4, 0), LPAD(case.assign_to, 4, 0)) as assign_to";
+			$fields = "mytask.*, IF(mytask.type='CLAIM', concat_ws(' ', claim.insured_first_name, claim.insured_last_name), concat_ws(' ', case.insured_firstname, case.insured_lastname)) as insured_name, IF(type='CLAIM', '', LPAD(case.assign_to, 4, 0)) as followup_by, IF(mytask.type='CLAIM', claim.status, case.status) as task_status, IF(type='CLAIM', LPAD(claim.assign_to, 4, 0), LPAD(case.assign_to, 4, 0)) as assign_to, concat_ws(' ', users.first_name, users.last_name) as created_by";
 			$joins[] = array(
 				'table' => 'users',
 				'on' => 'users.id = mytask.created_by',
@@ -201,7 +202,7 @@ class Auth extends CI_Controller {
 					// redirect them to the list page
 					redirect('emergency_assistance', 'refresh');
 				}
-				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $task_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Follow Up EAC--");
+				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $task_details)), $group = array("'eacmanager'"), $empty = "--Follow Up EAC--");
 
 				// get claim examiners
 				$this->data['claim_examiner'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $task_details)), $group = array("'claimexaminer'"), $empty = "--Select Claim Examiner--", $additional_conditions = "");
@@ -855,6 +856,21 @@ class Auth extends CI_Controller {
 		$this->session->set_flashdata('success', $this->ion_auth->messages());
 		redirect('auth/login', 'refresh');
 	}
+
+	// check if login user is activated, if inactivate, then logout from here.
+	public function check_user()
+	{
+		$user = $this->common_model->select($record = 'first', $typecast = 'array', $table = "users", $fields = "`users`.active", $conditions = array('users.id'=>$this->ion_auth->user()->row()->id));
+		
+		if(!$user['active'])	
+		{
+			$logout = $this->ion_auth->logout();
+			echo TRUE;
+		}
+		echo FALSE;
+
+	}
+	 
 
 	public function _get_csrf_nonce()
 	{

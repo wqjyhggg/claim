@@ -268,24 +268,6 @@ class Emergency_assistance extends CI_Controller {
 					}
 				}
 
-				// settings for my task section for eac
-				if($array['assign_to'])
-				{
-					$task_data = array(
-						'user_id'=>$array['assign_to'],
-						'item_id'=>$record_id,
-						'task_no'=>$case_no,
-						'category'=>'Assistance',
-						'type'=>'CASE',
-						'priority'=>$array['priority'],
-						'created_by'=>$this->ion_auth->user()->row()->id,
-						'created'=>date('Y-m-d H:i:s'),
-						'user_type'=>'eac'
-						);
-					// insert values to database
-					$this->common_model->save("mytask", $task_data);
-				}
-
 				// settings for my task section for case manager
 				if($array['case_manager'])
 				{
@@ -299,6 +281,24 @@ class Emergency_assistance extends CI_Controller {
 						'created_by'=>$this->ion_auth->user()->row()->id,
 						'created'=>date('Y-m-d H:i:s'),
 						'user_type'=>'casemanager'
+						);
+					// insert values to database
+					$this->common_model->save("mytask", $task_data);
+				}
+
+				// settings for my task section for eac
+				if($array['assign_to'] and $array['assign_to'] <> $array['case_manager'])
+				{
+					$task_data = array(
+						'user_id'=>$array['assign_to'],
+						'item_id'=>$record_id,
+						'task_no'=>$case_no,
+						'category'=>'Assistance',
+						'type'=>'CASE',
+						'priority'=>$array['priority'],
+						'created_by'=>$this->ion_auth->user()->row()->id,
+						'created'=>date('Y-m-d H:i:s'),
+						'user_type'=>'eac'
 						);
 					// insert values to database
 					$this->common_model->save("mytask", $task_data);
@@ -434,7 +434,7 @@ class Emergency_assistance extends CI_Controller {
 				}
 
 				// update my task section if there is new eac assigned
-				if($case_details['assign_to'] <> $array['assign_to'] and !$case_details['assign_to'])
+				if($case_details['assign_to'] <> $array['assign_to'] and !$case_details['assign_to'] and ($array['assign_to'] <> $array['case_manager']))
 				{
 					$task_data = array(
 						'user_id'=>$array['assign_to'],
@@ -1251,7 +1251,7 @@ class Emergency_assistance extends CI_Controller {
 		$case_manager = $this->ion_auth->user()->row()->id;
 
 		// prepare conditions
-		$conditions[] = "users_groups.group_id = '2'";
+		$conditions[] = "users_groups.group_id = '2' and users.active = '1'";
 		if($this->input->post("last_name")) 
 			$conditions[] = "users.last_name like '%".$this->input->post("last_name")."%'";
 		if($this->input->post("first_name")) 
@@ -1382,6 +1382,9 @@ class Emergency_assistance extends CI_Controller {
 			$year = date("Y"); 
 			$month = date('m');
 		}
+		$year = intval($year); 
+		$month = str_pad(intval($month), 2, 0, STR_PAD_LEFT);
+		
 		// only accessible for case managers
 		if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager() and !$this->ion_auth->is_eacmanager())
 		{
@@ -1407,7 +1410,7 @@ class Emergency_assistance extends CI_Controller {
 
 			// get countries list
 			$this->data['countries'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->input->get("country2"), $key = "short_code", $value = "name");
-			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "emc", $this->data['emc'], $group = array("'eacmanager'"), $empty = "--Select Employee--", $additional_conditions = "", $user_code = "EAC");
+			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "emc", $this->data['emc'], $group = array("'eacmanager'"), $empty = "--Select Employee--", $additional_conditions = " and users.active = '1'", $user_code = "EAC");
 			
         	$this->template->write('title', SITE_TITLE.(!$this->ion_auth->is_casemamager()?' - My Work Schedule':' - Employee Schedule'), TRUE);
 	        $this->template->write_view('content', 'emergency_assistance/schedule', $this->data);
@@ -1650,7 +1653,6 @@ class Emergency_assistance extends CI_Controller {
 			// save record in intake form as notes
 			$this->common_model->update("case", array("assign_to"=>$employee_id), array("id"=>$value));
 
-
 			// check task, if already exists
 			$task_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "mytask", $fields = "mytask.id", $conditions = array('item_id'=>$value, 'type'=>'CASE', 'user_type'=>'eac'));
 
@@ -1665,22 +1667,25 @@ class Emergency_assistance extends CI_Controller {
 			else 
 			{
 				// get case details here
-				$case_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "case", $fields = "created_by, created, priority, case_no", $conditions = array('case.id'=>$value));
+				$case_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "case", $fields = "created_by, created, priority, case_no, case_manager", $conditions = array('case.id'=>$value));
 
-				// create new task here
-				$task_data = array(
-					'user_id'=>$employee_id,
-					'item_id'=>$value,
-					'task_no'=>$case_details['case_no'],
-					'category'=>'Assistance',
-					'type'=>'CASE',
-					'priority'=>$case_details['priority'],
-					'created_by'=>$case_details['created_by'],
-					'created'=>$case_details['created'],
-					'user_type'=>'eac'
-					);
-				// insert values to database
-				$this->common_model->save("mytask", $task_data);
+				if($case_details['case_manager'] <> $employee_id)
+				{
+					// create new task here
+					$task_data = array(
+						'user_id'=>$employee_id,
+						'item_id'=>$value,
+						'task_no'=>$case_details['case_no'],
+						'category'=>'Assistance',
+						'type'=>'CASE',
+						'priority'=>$case_details['priority'],
+						'created_by'=>$case_details['created_by'],
+						'created'=>$case_details['created'],
+						'user_type'=>'eac'
+						);
+					// insert values to database
+					$this->common_model->save("mytask", $task_data);
+				}
 			}
 		}
 

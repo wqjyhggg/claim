@@ -400,7 +400,7 @@ input[type=checkbox]{
 .intake-forms .col-sm-10 {
     border-left: 1px solid;
 }
-.required.error-true {
+.error-true {
     border: 1px solid red;
 }
 .error {

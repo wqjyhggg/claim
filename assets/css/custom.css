@@ -1044,3 +1044,7 @@ ul.notifications{float:right;display:block;margin-bottom:7px;padding:0;width:100
 	background-color:rgba(242, 243, 151, 0.44)
 }
 
+
+.error-true {
+    border: 1px solid red;
+}

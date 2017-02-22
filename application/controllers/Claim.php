@@ -162,8 +162,8 @@ class Claim extends CI_Controller {
 			}
 
 			// send case manager and eac managers list
-			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = $this->input->get($field_name), $group = array("'eacmanager'", "'casemamager'"), $empty = "--EAC Follow up--");
-			$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--");
+			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = $this->input->get($field_name), $group = array("'eacmanager'"), $empty = "--EAC Follow up--", $additional_conditions = " and active = '1'");
+			$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--", $additional_conditions = " and active = '1'");
 
 			// send countries and province list
 			$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->input->get($field_name), $key = "short_code", $value = "name");
@@ -172,7 +172,7 @@ class Claim extends CI_Controller {
 			$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->get($field_name));
 
 			// get claim examiners
-			$this->data['claim_examiner'] = $this->common_model->getrusers($field_name = "assign_user", "", $group = array("'claimexaminer'"), $empty = "--Select Claim Examiner--", $additional_conditions = "");
+			$this->data['claim_examiner'] = $this->common_model->getrusers($field_name = "assign_user", "", $group = array("'claimexaminer'"), $empty = "--Select Claim Examiner--", $additional_conditions = " and active = '1'");
 
 			// render view data
         	$this->template->write('title', SITE_TITLE.' - Claim', TRUE);
@@ -327,6 +327,7 @@ class Claim extends CI_Controller {
 						$i++;
 						$payee_data = array(
 							'claim_id'=>$record_id,
+							'cellular'=>$array['cellular'],
 							'invoice'=>$val,
 							'claim_no'=>$claim_no,
 							'claim_item_no'=>$claim_no.'_'.$i,
@@ -1181,6 +1182,7 @@ class Claim extends CI_Controller {
 		unset($data['arrival_date']);
 		unset($data['policy_info']);
 		unset($data['deny_reason']);
+		unset($data['total_amount_payble']);
 		// update values to database
 		$this->common_model->update("expenses_claimed", $data, array('id'=>$this->input->post('id')));
 		echo TRUE;
@@ -1293,14 +1295,13 @@ class Claim extends CI_Controller {
 		if($type == 'deny')
 		{
 			// deny cliam and close its details
-			$this->common_model->update("expenses_claimed", array('status'=>'denied'), array("id"=>$claim_item_id));
+			$this->common_model->update("claim", array('status'=>'denied'), array("id"=>$case_id));
 
 			// send success message
 			$this->session->set_flashdata('success', "Claim denied successfully.");
 		}
 		else
 		{
-
 			// send success message
 			$this->session->set_flashdata('success', "Email successfully sent.");
 		}
@@ -1316,7 +1317,7 @@ class Claim extends CI_Controller {
 		$this->email->subject("Received $doc");
 		$this->email->message($data_intake['notes']);
 		$this->email->attach("assets/uploads/intake_forms/$intake_form_id/$filename");
-		$this->email->send();
+		// $this->email->send();
 		echo TRUE;
 
 	}
@@ -1379,27 +1380,23 @@ class Claim extends CI_Controller {
 		$claim_item_id = $this->input->post("claim_item_id");
 		$claim_id = $this->input->post("claim_id");
 
-		if($type == 'record_exempt')
-			$type = "record exempt";
 		$data = array(
 			'status'=>$type
 			);	
-		if($type == "accepted")
-			$this->common_model->update("expenses_claimed", $data, array("id"=>$claim_item_id));
-		else
-			$this->common_model->update("claim", $data, array("id"=>$claim_id));
+
+		$this->common_model->update("claim", $data, array("id"=>$claim_id));
 
 		// send success message
 		if($type == "accepted")
-			$this->session->set_flashdata('success', "Claim item successfully accepted");
+			$this->session->set_flashdata('success', "Claim successfully accepted");
 
 		// send success message
 		if($type == "pending")
-			$this->session->set_flashdata('success', "Claim successfully mark as pending");
+			$this->session->set_flashdata('success', "Claim successfully marked as pending");
 
 		// send success message
 		if($type == "record_exempt")
-			$this->session->set_flashdata('success', "Claim successfully mark as record exempt");
+			$this->session->set_flashdata('success', "Claim successfully marked as record exempt");
 
 		echo TRUE;
 
@@ -1504,13 +1501,13 @@ class Claim extends CI_Controller {
 		$this->data['case_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name,  concat_ws(' ', u3.first_name, u3.last_name) as assign_to_name", $conditions = array('case.case_no'=>$case_no), $joins);
 
 		// get policy info from claim page
-		$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.policy_info", $conditions = array('claim.id'=>$claim_id));
-			
+		$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.policy_info, status", $conditions = array('claim.id'=>$claim_id));
 
 		$data = array(
 			'claim_items'=>$this->parser->parse("claim/claim_items", $this->data, TRUE),
 			'policy_info'=>$this->parser->parse("claim/policy_info", $this->data, TRUE),
-			'case_info'=>$this->parser->parse("claim/case_info", $this->data, TRUE)
+			'case_info'=>$this->parser->parse("claim/case_info", $this->data, TRUE),
+			'status'=>$this->data['claim_details']['status']
 			);
 		echo json_encode($data);
 

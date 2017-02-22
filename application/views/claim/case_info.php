@@ -205,7 +205,7 @@
       <div class="form-group col-sm-4">
          <?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
          <div class="form-group col-sm-6">
-            <?php echo $case_details['dob']; ?>
+            <?php echo ($case_details['dob'] <> '0000-00-00')?$case_details['dob']:'N/A'; ?>
          </div>
       </div>                                              
       </div> 

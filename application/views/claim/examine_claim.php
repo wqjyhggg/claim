@@ -9,6 +9,7 @@
    <div class="row">
       <div class="col-md-12 col-sm-12 col-xs-12">
          <div class="x_panel">
+            <?php echo $message; ?>
             <div class="x_title">
                <h2>CLAIM HISTORY<small></small></h2>
                <div class="clearfix"></div>
@@ -78,7 +79,8 @@
                            <tbody>
                               <?php
                               $i = 1;
-                              foreach ($expenses as $key => $value): $value['count'] = $i; ?>
+                              $amount_payble = 0;
+                              foreach ($expenses as $key => $value): $value['count'] = $i; $amount_payble += $value['amt_payable']; ?>
                                  <tr class="edit_claim row-link <?php if($value['status']=='record_exempt') echo 'claim_record_exempt'; ?>" alt="<?php echo $value['id'] ?>" attr='<?php echo json_encode($value); ?>'>
                                     <td><?php echo $i; ?></td>
                                     <td><?php echo $value['claim_no'] ?></td>
@@ -97,6 +99,7 @@
                            <?php $i++;endforeach; ?>
                            </tbody>
                         </table>
+                        <?php echo form_hidden('total_amount_payble', $amount_payble); ?>
                      </div>
                   </div>
                   <div class="edit-claim-item" style="display:none">
@@ -260,28 +263,28 @@
                </div>
                <div class="row actions" style="margin-top:20px;">
                   <div class="row">
-                     <div class="col-sm-2 item_specific">
+                     <div class="col-sm-2 item_specific" style="display:none">
                         <input class="btn btn-primary" name="Save" value="Save" type="submit">
                      </div>
                      <div class="col-sm-2">
                         <?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
                      </div>
-                     <div class="col-sm-2">
+                     <div class="col-sm-2 investigate_pending">
                         <input class="btn btn-primary" name="Investigate Pending" value="Investigate Pending" type="button">
                      </div>
                   </div>
 
                   <div class="row" style="margin-top: 20px;">
-                     <div class="col-sm-2 item_specific">
+                     <div class="col-sm-2">
                         <label style="float: right; font-size: 25px;"> Decision </label>
                      </div>
                      <div class="col-sm-3 my_decision" style="display:none">
                         &nbsp;
                      </div>
-                     <div class="col-sm-2 accept_decision  item_specific">
+                     <div class="col-sm-2 accept_decision">
                         <input class="btn btn-primary" name="Accept" value="Accept" type="button">
                      </div>
-                     <div class="col-sm-1 deny_decision  item_specific">
+                     <div class="col-sm-1 deny_decision">
                         <input class="btn btn-primary" name="Deny" value="Deny" type="button">
                      </div>
                      <div class="col-sm-2 deny_reasons" style="display:none">
@@ -298,7 +301,7 @@
                      <div class="col-sm-2">
                         <input class="btn btn-primary email_print" data-toggle="modal"  name="Email" value="Email/Print" type="button" data-target="#print_template">
                      </div>
-                     <div class="col-sm-2">
+                     <div class="col-sm-2 record_exempt">
                         <input class="btn btn-primary" name="Record Exempt" value="Record Exempt" type="button">
                      </div>
                   </div>
@@ -506,8 +509,19 @@
 <script>
    $(document).ready(function() {
 
-      // hide all item specific buttons
-      $(".item_specific").hide();
+      // enable buttons according to claim Decision
+      var decision = "<?php echo @$claim_details['status']; ?>"
+      if(decision == ''){
+         $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").show();
+         $(".my_decision").hide();
+      } else {
+         if(decision == 'accepted' || decision == 'denied' || decision == 'paid')
+            $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").hide();
+         else
+            $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").show();
+
+         $(".my_decision").show().html('<label style="float: left; font-size: 25px;">: '+decision+' </label>');
+      }
 
       $("tr[alt=<?php echo $id; ?>]").addClass('active-green');
       $(".datepicker").datepicker({
@@ -876,15 +890,6 @@
 
       // enable all buttons
       $(".actions").show();
-
-      // enable buttons according to claim Decision
-      if(decision == '' || decision == 'pending' || decision == null){
-         $(".accept_decision, .deny_decision").show();
-         $(".my_decision").hide();
-      } else {
-         $(".accept_decision, .deny_decision").hide();
-         $(".my_decision").show().html('<label style="float: left; font-size: 25px;">: '+decision+' </label>');
-      }
    })
 
    .on("submit", "#save_item", function(e){
@@ -936,33 +941,21 @@
       }
    })
 
+   // change value of total payable
+   .on("keyup", "input[name=amt_payable]", function(){
+      $("input[name=total_amount_payble]").val($(this).val()) ;
+   })
+
    // once user clicked on accept button
    .on("click", "input[name=Accept]", function(){
 
-
-      // validate required fields
-      var $validate = 1;
-      $(".edit-claim-item .required").map(function(){
-         if(!$(this).val()){
-            $validate = 0;
-            $(this).addClass('error-true');
-         }
-         else {
-            $(this).removeClass('error-true');
-         }
-      })
-
-      if(!$validate){
-         alert("Please fill all required fields.")
+      // check total payble amount
+      if($("input[name=total_amount_payble]").val() == '0' || !$("input[name=total_amount_payble]").val()){
+         alert("Please add payable amount to any claim item first to accept claim.")
          return false;
       }
 
-      else if(!parseFloat($("input[name=amt_payable]").val())){
-         $("input[name=amt_payable]").focus().addClass('error-true');
-         alert("Please enter amount payable.")
-         return false;
-      }
-      if(confirm('Are you sure you want to accept claim item?')){
+      if(confirm('Are you sure you want to accept claim?')){
 
          var href = $("#save_item").attr("action");
 
@@ -1020,7 +1013,7 @@
 
    // once user clicked on Investigate Pending button
    .on("click", "input[name='Record Exempt']", function(){
-      if(confirm('Are you sure you want to mark this claim item as record exempt?')){
+      if(confirm('Are you sure you want to mark this claim as record exempt?')){
 
          $.ajax({
             url: "<?php echo base_url("claim/status/record_exempt") ?>",
@@ -1043,24 +1036,6 @@
 
    // when clicked over deny button
    .on("click", "input[name=Deny]", function(){
-
-      // validate required fields
-      var $validate = 1;
-      $(".edit-claim-item .required").map(function(){
-         if(!$(this).val()){
-            $validate = 0;
-            $(this).addClass('error-true');
-         }
-         else {
-            $(this).removeClass('error-true');
-         }
-      })
-
-      if(!$validate){
-         alert("Please fill all required fields.")
-         return false;
-      }
-
       $(".deny_reasons").show();
    })
 
@@ -1091,6 +1066,10 @@
       $(".select_claim").removeClass('active-green');
       $(this).addClass('active-green');
 
+      // hide edit claim section
+      $(".edit-claim-item").hide();
+      $(".item_specific").hide();
+
       // get claimed items here
       $.ajax({
          url: "<?php echo base_url("claim/claim_items") ?>",
@@ -1110,6 +1089,20 @@
             $(".main_container").removeClass("csspinner load1");
             $(".case_info").html(result.case_info)
             $(".policy_info").html(result.policy_info)
+
+            // enable buttons according to claim Decision
+            var decision = result.status;
+            if(decision == ''){
+               $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").show();
+               $(".my_decision").hide();
+            } else {
+               if(decision == 'accepted' || decision == 'denied' || decision == 'paid')
+                  $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").hide();
+               else
+                  $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").show();
+
+               $(".my_decision").show().html('<label style="float: left; font-size: 25px;">: '+decision+' </label>');
+            }
 
          }
       })

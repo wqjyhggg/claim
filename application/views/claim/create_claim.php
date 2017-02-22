@@ -53,7 +53,7 @@
                      <?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">
                         <?php
-                        echo form_input("dob", $this->input->post("dob"), array("class"=>"form-control datepicker required", 'placeholder'=>'Date of Birth'));
+                        echo form_input("dob", $this->input->post("dob"), array("class"=>"form-control dob required", 'placeholder'=>'Date of Birth'));
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                      </div>
@@ -387,14 +387,14 @@
                         <div class="col-sm-6">
                            <?php
                               echo form_label('Date symptoms or injury first appeared:', 'date_symptoms', array("class"=>'col-sm-12'));
-                              echo form_input("date_symptoms", $this->input->post("date_symptoms"), array("class"=>"form-control datepicker", 'placeholder'=>'Date symptoms or injury first appeared'));
+                              echo form_input("date_symptoms", $this->input->post("date_symptoms"), array("class"=>"form-control dob", 'placeholder'=>'Date symptoms or injury first appeared'));
                            ?>
                         </div>
 
                         <div class="col-sm-6">
                            <?php
                               echo form_label('Date you first saw physician for this condition:', 'date_first_physician', array("class"=>'col-sm-12'));
-                              echo form_input("date_first_physician", $this->input->post("date_first_physician"), array("class"=>"form-control datepicker", 'placeholder'=>'Date you first saw physician for this condition'));
+                              echo form_input("date_first_physician", $this->input->post("date_first_physician"), array("class"=>"form-control dob", 'placeholder'=>'Date you first saw physician for this condition'));
                            ?>
                         </div>
                         <div class="col-sm-12" style="margin-top:20px">
@@ -420,7 +420,7 @@
                                  <?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_1', array("class"=>'col-sm-12'));   ?>
                                  <div class="input-group date">
                                     <?php
-                                    echo form_input("medication_date_1", $this->input->post("medication_date_1"), array("class"=>"form-control datepicker", 'placeholder'=>'Date (MM/DD/YYYY)'));
+                                    echo form_input("medication_date_1", $this->input->post("medication_date_1"), array("class"=>"form-control datepicker travel_insurance_coverage", 'placeholder'=>'Date (MM/DD/YYYY)'));
                                     ?>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                  </div>
@@ -429,16 +429,16 @@
                               <div class="col-sm-3">
                                  <?php
                                     echo form_label('Medication:', 'medication_1', array("class"=>'col-sm-12'));
-                                    echo form_input("medication_1", $this->input->post("medication_1"), array("class"=>"form-control", 'placeholder'=>'Medication'));
+                                    echo form_input("medication_1", $this->input->post("medication_1"), array("class"=>"form-control travel_insurance_coverage", 'placeholder'=>'Medication'));
                                  ?>
                               </div>
                            </div>
                            <div class="form-group col-sm-12">
                               <div class="col-sm-3">
-                                 <?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_2', array("class"=>'col-sm-12'));   ?>
+                                 <?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_2', array("class"=>'col-sm-12 travel_insurance_coverage'));   ?>
                                  <div class="input-group date">
                                     <?php
-                                    echo form_input("medication_date_2", $this->input->post("medication_date_2"), array("class"=>"form-control datepicker", 'placeholder'=>'Date (MM/DD/YYYY)'));
+                                    echo form_input("medication_date_2", $this->input->post("medication_date_2"), array("class"=>"form-control datepicker travel_insurance_coverage", 'placeholder'=>'Date (MM/DD/YYYY)'));
                                     ?>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                  </div>
@@ -447,7 +447,7 @@
                               <div class="col-sm-3">
                                  <?php
                                     echo form_label('Medication:', 'medication_2', array("class"=>'col-sm-12'));
-                                    echo form_input("medication_2", $this->input->post("medication_2"), array("class"=>"form-control", 'placeholder'=>'Medication'));
+                                    echo form_input("medication_2", $this->input->post("medication_2"), array("class"=>"form-control travel_insurance_coverage", 'placeholder'=>'Medication'));
                                  ?>
                               </div>
                            </div>
@@ -456,7 +456,7 @@
                                  <?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_3', array("class"=>'col-sm-12'));   ?>
                                  <div class="input-group date">
                                     <?php
-                                    echo form_input("medication_date_3", $this->input->post("medication_date_3"), array("class"=>"form-control datepicker", 'placeholder'=>'Date (MM/DD/YYYY)'));
+                                    echo form_input("medication_date_3", $this->input->post("medication_date_3"), array("class"=>"form-control datepicker travel_insurance_coverage", 'placeholder'=>'Date (MM/DD/YYYY)'));
                                     ?>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                  </div>
@@ -464,7 +464,7 @@
                               <div class="col-sm-3">
                                  <?php
                                     echo form_label('Medication:', 'medication_3', array("class"=>'col-sm-12'));
-                                    echo form_input("medication_3", $this->input->post("medication_3"), array("class"=>"form-control", 'placeholder'=>'Medication'));
+                                    echo form_input("medication_3", $this->input->post("medication_3"), array("class"=>"form-control travel_insurance_coverage", 'placeholder'=>'Medication'));
                                  ?>
                               </div>
                            </div>
@@ -748,13 +748,13 @@
          <div class="col-sm-3">
             <?php
                echo form_label('Name of Provider:', 'provider_name', array("class"=>'col-sm-12'));
-               echo form_input("expenses_claimed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control required"));
+               echo form_input("expenses_claimed[provider_name][]", $this->input->post("provider_name"), array("class"=>"form-control required alphanum"));
             ?>
          </div>
          <div class="col-sm-3">
             <?php
                echo form_label('Name of Referring Physician:', 'referencing_physician', array("class"=>'col-sm-12'));
-               echo form_input("expenses_claimed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control"));
+               echo form_input("expenses_claimed[referencing_physician][]", $this->input->post("referencing_physician"), array("class"=>"form-control alphanum"));
             ?>
          </div>
          <div class="col-sm-3">
@@ -873,14 +873,14 @@
          <div class="col-sm-3 wire_transfer_section" style="display:none">
             <?php
                echo form_label('Bank Name:', 'Bank Name', array("class"=>'col-sm-12'));
-               echo form_input("payees[bank][]", $this->input->post("bank"), array("class"=>"form-control", 'placeholder'=>'Bank Name'));
+               echo form_input("payees[bank][]", $this->input->post("bank"), array("class"=>"form-control alphanum", 'placeholder'=>'Bank Name'));
                echo form_error("bank");
             ?>
          </div>
          <div class="col-sm-3 cheque_section wire_transfer_section">
             <?php
                echo form_label('Payee Name:', 'Payee Name', array("class"=>'col-sm-12'));
-               echo form_input("payees[payee_name][]", $this->input->post("payee_name"), array("class"=>"form-control required", 'placeholder'=>'Payee Name'));
+               echo form_input("payees[payee_name][]", $this->input->post("payee_name"), array("class"=>"form-control required alphanum", 'placeholder'=>'Payee Name'));
                echo form_error("payee_name");
             ?>
          </div>
@@ -923,6 +923,15 @@
 <script>
    $(document).ready(function() {
 
+      // enable disable travel_insurance_coverage
+      $("input[name=travel_insurance_coverage]").click(function(){
+         if($(this).val() == 'Y'){
+            $(".travel_insurance_coverage").removeAttr('disabled');
+         } else{            
+            $(".travel_insurance_coverage").attr('disabled', 'disabled');
+         }
+      })
+
       // show area once any error occured
       $(".alert-error").map(function(){
          if($(this).text()){
@@ -930,11 +939,6 @@
             $(this).closest('.row').prev('.move_down').children('i').removeClass('fa-angle-down').addClass('fa-angle-up');
          }
       })
-
-      $(".datepicker").datepicker({
-           startDate: '-105y',
-           endDate: '+2y',
-       });
 
       // load atleast one claim item form for first use
       var html = $(".base-row").html();
@@ -944,10 +948,17 @@
         minLength: 2,
         dataType: "json",
       });
+      $(".dob").datepicker({
+        startDate: '-105y',
+        endDate: '0',
+      });
+
+
       $(".datepicker").datepicker({
-           startDate: '-105y',
-           endDate: '+2y',
-       });
+        startDate: '-105y',
+        endDate: '+2y',
+      });
+
    })
 
    .on("click",".more_filters", function(){
@@ -1338,11 +1349,41 @@
                $("input[name=guardian_phone]").val();
 
 
+               if($("input[name=same_policy]").is(":checked"))
+               {
+                  // fill all json values to address fields
+                  $("input[name=street_address]").val(data.plan_list[0].street_number+" "+data.plan_list[0].street_name);
+                  $("input[name=city]").val(data.plan_list[0].city);
+                  $("input[name=province]").val(data.plan_list[0].province2);
+                  $("input[name=telephone]").val(data.plan_list[0].phone1);
+                  $("input[name=email]").val(data.plan_list[0].contact_email);
+                  $("input[name=post_code]").val(data.plan_list[0].postcode);
+                  $("input[name=arrival_date_canada]").val(data.plan_list[0].arrival_date);
+               }
+
+
 
             }
             else{
                alert("Sorry, policy information does not exists, please check policy no and try again");
-               $(this).val("");
+               $("input[name=policy_no]").val("");
+
+               // reset all fields
+               $("input[name=insured_first_name]").val('');
+               $("input[name=insured_last_name]").val('');
+               $("input[value=male]").prop('checked', false);
+               $("input[value=female]").prop('checked', false);
+               $("input[name=personal_id]").val('');
+               $("input[name=dob]").val('');
+               $("input[name=school_name]").val('');
+               $("input[name=group_id]").val();
+               $("input[name=apply_date]").val('');
+               $("input[name=arrival_date]").val('');
+               $("input[name=guardian_name]").val('');
+               $("input[name=guardian_phone]").val('');
+
+               $("input[name=street_address],input[name=city],input[name=province],input[name=telephone],input[name=email],input[name=post_code],input[name=arrival_date_canada],input[name=cellular]").val("");
+
             }
             $(".nav-m22d").removeClass("csspinner load1");
          }
@@ -1354,7 +1395,7 @@
 
       // get local data
       var data = $.parseJSON(localStorage.getItem("policy_data"));
-      if($(this).is(":checked"))
+      if($(this).is(":checked") && $("input[name=policy_no]").val())
       {
          // fill all json values to address fields
          $("input[name=street_address]").val(data[0].street_number+" "+data[0].street_name);
@@ -1537,6 +1578,8 @@ function validate_form(){
 
    // validate invoice required
    var $validate = 1;
+   var $validate_num = 1;
+
    $("#main_form .required").map(function(){
       if(!$(this).val()){
          $validate = 0;
@@ -1546,9 +1589,41 @@ function validate_form(){
          $(this).removeClass('error-true');
       }
    })
+   $("#main_form .alphanum").map(function(){
+      if($.isNumeric($(this).val())){
+         $validate_num = 0;
+         $(this).addClass('error-true');
+      }
+      else {
+         if($(this).val())
+            $(this).removeClass('error-true');
+      }
+   })
+
+   var email = $("input[name=email]").val();   
+   var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+   if(email && !regex.test(email)){
+      $validate = 0;
+      $("input[name=email]").addClass('error-true');
+   } else{
+      $("input[name=email]").removeClass('error-true');
+   }
+
+
    if(!$validate){
       alert("Please fill all required fields.");
 
+      // show area once any error occured
+      $(".error-true").map(function(){
+         $(this).closest('.row').show();
+         $(this).closest('.row').prev('.move_down').children('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+      })
+
+      return false;
+   }
+
+   if(!$validate_num){
+      alert("Invalid name formate in 'Name of Provider', 'Name of Referring Physician', 'Payee Name' or 'Bank Name'");
 
       // show area once any error occured
       $(".error-true").map(function(){
