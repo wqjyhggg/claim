@@ -53,7 +53,7 @@
                         <?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
                         <div class="input-group date">
                            <?php
-                           echo form_input("dob", $this->common_model->field_val("dob", $claim_details), array("class"=>"form-control datepicker required", 'placeholder'=>'Date of Birth'));
+                           echo form_input("dob", $this->common_model->field_val("dob", $claim_details), array("class"=>"form-control dob required", 'placeholder'=>'Date of Birth'));
                            ?>
                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
@@ -298,11 +298,11 @@
                               </div>
                               <div class="col-sm-1">
                                  <?php
-                                 echo form_radio("travel_insurance_coverage", "Y", ($this->common_model->field_val("travel_insurance_coverage", $claim_details) == 'Y'?TRUE:FALSE), array('class'=>'setpremium')); ?>  Yes
+                                 echo form_radio("travel_insurance_coverage_guardians", "Y", ($this->common_model->field_val("travel_insurance_coverage_guardians", $claim_details) == 'Y'?TRUE:FALSE), array('class'=>'setpremium')); ?>  Yes
                               </div>
                               <div class="col-sm-1">
                                  <?php
-                                 echo form_radio("travel_insurance_coverage", "N", $this->common_model->field_val("travel_insurance_coverage", $claim_details) == 'N'?TRUE:FALSE, array('class'=>'setpremium')); ?>  No
+                                 echo form_radio("travel_insurance_coverage_guardians", "N", $this->common_model->field_val("travel_insurance_coverage_guardians", $claim_details) == 'N'?TRUE:FALSE, array('class'=>'setpremium')); ?>  No
                               </div>
 
                               <div class="col-sm-12">
@@ -363,14 +363,14 @@
                            <div class="col-sm-6">
                               <?php
                                  echo form_label('Date symptoms or injury first appeared:', 'date_symptoms', array("class"=>'col-sm-12'));
-                                 echo form_input("date_symptoms", $this->common_model->field_val("date_symptoms", $claim_details), array("class"=>"form-control datepicker", 'placeholder'=>'Date symptoms or injury first appeared'));
+                                 echo form_input("date_symptoms", $this->common_model->field_val("date_symptoms", $claim_details), array("class"=>"form-control dob", 'placeholder'=>'Date symptoms or injury first appeared'));
                               ?>
                            </div>
 
                            <div class="col-sm-6">
                               <?php
                                  echo form_label('Date you first saw physician for this condition:', 'date_first_physician', array("class"=>'col-sm-12'));
-                                 echo form_input("date_first_physician", $this->common_model->field_val("date_first_physician", $claim_details), array("class"=>"form-control datepicker", 'placeholder'=>'Date you first saw physician for this condition'));
+                                 echo form_input("date_first_physician", $this->common_model->field_val("date_first_physician", $claim_details), array("class"=>"form-control dob", 'placeholder'=>'Date you first saw physician for this condition'));
                               ?>
                            </div>
                            <div class="col-sm-12" style="margin-top:20px">
@@ -379,11 +379,11 @@
                               </div>
                               <div class="col-sm-1">
                                  <?php
-                                 echo form_radio("travel_insurance_coverage_guardians", "Y", $this->common_model->field_val("travel_insurance_coverage_guardians", $claim_details), array('class'=>'setpremium')); ?>  Yes
+                                 echo form_radio("travel_insurance_coverage", "Y", ($this->common_model->field_val("travel_insurance_coverage", $claim_details) =='Y')?TRUE:FALSE, array('class'=>'setpremium')); ?>  Yes
                               </div>
                               <div class="col-sm-1">
                                  <?php
-                                 echo form_radio("travel_insurance_coverage_guardians", "N", $this->common_model->field_val("travel_insurance_coverage_guardians", $claim_details), array('class'=>'setpremium')); ?>  No
+                                 echo form_radio("travel_insurance_coverage", "N", ($this->common_model->field_val("travel_insurance_coverage", $claim_details) == 'N'?TRUE:FALSE), array('class'=>'setpremium')); ?>  No
                               </div>
 
                               <div class="col-sm-12" style="margin-bottom:10px">
@@ -396,7 +396,7 @@
                                     <?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_1', array("class"=>'col-sm-12'));   ?>
                                     <div class="input-group date">
                                        <?php
-                                       echo form_input("medication_date_1", $this->common_model->field_val("medication_date_1", $claim_details), array("class"=>"form-control datepicker", 'placeholder'=>'Date (MM/DD/YYYY)'));
+                                       echo form_input("medication_date_1", $this->common_model->field_val("medication_date_1", $claim_details), array("class"=>"form-control datepicker travel_insurance_coverage", 'placeholder'=>'Date (MM/DD/YYYY)'));
                                        ?>
                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
@@ -405,7 +405,7 @@
                                  <div class="col-sm-3">
                                     <?php
                                        echo form_label('Medication:', 'medication_1', array("class"=>'col-sm-12'));
-                                       echo form_input("medication_1", $this->common_model->field_val("medication_1", $claim_details), array("class"=>"form-control", 'placeholder'=>'Medication'));
+                                       echo form_input("medication_1", $this->common_model->field_val("medication_1", $claim_details), array("class"=>"form-control travel_insurance_coverage", 'placeholder'=>'Medication'));
                                     ?>
                                  </div>
                               </div>
@@ -414,7 +414,7 @@
                                     <?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_2', array("class"=>'col-sm-12'));   ?>
                                     <div class="input-group date">
                                        <?php
-                                       echo form_input("medication_date_2", $this->common_model->field_val("medication_date_2", $claim_details), array("class"=>"form-control datepicker", 'placeholder'=>'Date (MM/DD/YYYY)'));
+                                       echo form_input("medication_date_2", $this->common_model->field_val("medication_date_2", $claim_details), array("class"=>"form-control datepicker travel_insurance_coverage", 'placeholder'=>'Date (MM/DD/YYYY)'));
                                        ?>
                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
@@ -423,7 +423,7 @@
                                  <div class="col-sm-3">
                                     <?php
                                        echo form_label('Medication:', 'medication_2', array("class"=>'col-sm-12'));
-                                       echo form_input("medication_2", $this->common_model->field_val("medication_2", $claim_details), array("class"=>"form-control", 'placeholder'=>'Medication'));
+                                       echo form_input("medication_2", $this->common_model->field_val("medication_2", $claim_details), array("class"=>"form-control travel_insurance_coverage", 'placeholder'=>'Medication'));
                                     ?>
                                  </div>
                               </div>
@@ -432,7 +432,7 @@
                                     <?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_3', array("class"=>'col-sm-12'));   ?>
                                     <div class="input-group date">
                                        <?php
-                                       echo form_input("medication_date_3", $this->common_model->field_val("medication_date_3", $claim_details), array("class"=>"form-control datepicker", 'placeholder'=>'Date (MM/DD/YYYY)'));
+                                       echo form_input("medication_date_3", $this->common_model->field_val("medication_date_3", $claim_details), array("class"=>"form-control datepicker travel_insurance_coverage", 'placeholder'=>'Date (MM/DD/YYYY)'));
                                        ?>
                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
@@ -440,7 +440,7 @@
                                  <div class="col-sm-3">
                                     <?php
                                        echo form_label('Medication:', 'medication_3', array("class"=>'col-sm-12'));
-                                       echo form_input("medication_3", $this->common_model->field_val("medication_3", $claim_details), array("class"=>"form-control", 'placeholder'=>'Medication'));
+                                       echo form_input("medication_3", $this->common_model->field_val("medication_3", $claim_details), array("class"=>"form-control travel_insurance_coverage", 'placeholder'=>'Medication'));
                                     ?>
                                  </div>
                               </div>
@@ -1128,6 +1128,17 @@
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
    $(document).ready(function() {
+      <?php if($claim_details['travel_insurance_coverage'] == 'N'): ?>
+         $(".travel_insurance_coverage").attr('disabled','disabled');
+      <?php endif; ?>
+      // enable disable travel_insurance_coverage
+      $("input[name=travel_insurance_coverage]").click(function(){
+         if($(this).val() == 'Y'){
+            $(".travel_insurance_coverage").removeAttr('disabled');
+         } else{            
+            $(".travel_insurance_coverage").attr('disabled','disabled');
+         }
+      })
 
       // get policy data
       <?php
@@ -1163,6 +1174,11 @@
       $(".datepicker").datepicker({
            startDate: '-105y',
            endDate: '+2y',
+       });
+
+      $(".dob").datepicker({
+           startDate: '-105y',
+           endDate: '0',
        });
    })
    .on("click",".more_filters", function(){
@@ -1767,6 +1783,16 @@ function validate_form(){
          $(this).removeClass('error-true');
       }
    })
+   
+   var email = $("input[name=email]").val();   
+   var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+   if(email && !regex.test(email)){
+      $validate = 0;
+      $("input[name=email]").addClass('error-true');
+   } else{
+      $("input[name=email]").removeClass('error-true');
+   }
+
    if(!$validate){
       alert("Please fill all required fields.");
 

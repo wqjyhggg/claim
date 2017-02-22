@@ -104,13 +104,15 @@
                      <label class="col-sm-12">&nbsp;</label>
                      <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary search_provider')) ?>
                   </div>
-                  <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Follow Up EAC:', 'assign_to', array("class"=>'col-sm-12'));
-                        echo $eacmanagers;
-                        echo form_error("assign_to");
-                     ?>
-                  </div>
+                  <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager()): ?>
+                     <div class="form-group col-sm-4">
+                        <?php 
+                           echo form_label('Follow Up EAC:', 'assign_to', array("class"=>'col-sm-12'));
+                           echo $eacmanagers;
+                           echo form_error("assign_to");
+                        ?>
+                     </div>
+                  <?php endif;?>
                   <div class="form-group col-sm-4">
                      <?php 
                         echo form_label('Reason:', 'reason', array("class"=>'col-sm-12'));
@@ -252,15 +254,20 @@
                </div> 
 
 
-               <h4>Assign Case Manager<small></small></h4>
-               <div class="row">               
-                  <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Case Manager:', 'case_manager', array("class"=>'col-sm-12'));
-                        echo $casemamager;
-                        echo form_error("case_manager");
-                     ?>
-                  </div> 
+               <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager()): ?>    
+                  <h4>Assign Case Manager<small></small></h4>
+               <?php endif;?>
+               <div class="row">     
+
+                  <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager()): ?>          
+                     <div class="form-group col-sm-4">
+                        <?php 
+                           echo form_label('Case Manager:', 'case_manager', array("class"=>'col-sm-12'));
+                           echo $casemamager;
+                           echo form_error("case_manager");
+                        ?>
+                     </div> 
+                  <?php endif;?>
                   <div class="form-group col-sm-4">
                      <?php 
                         echo form_label('Priority:', 'priority', array("class"=>'col-sm-12'));                  
@@ -297,7 +304,7 @@
                            echo anchor("emergency_assistance/case_management", "Cancel", array("class"=>'btn btn-info'));
                         else                        
                            echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info'));
-                        if($ref == 'manage'):
+                        if($ref == 'manage' and ($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager())):
                            ?>                        
                            <button type="button" class="btn btn-primary follow_up"  data-toggle="modal" data-target="#follow_reason">Follow Up <i class="fa fa-angle-double-right"></i></button>
                         <?php

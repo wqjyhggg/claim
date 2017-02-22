@@ -20,7 +20,8 @@
       <?php 
       $i = 1;
       if(!empty($expenses)):
-         foreach ($expenses as $key => $value): $value['count'] = $i; ?>
+         $amount_payble = 0;
+         foreach ($expenses as $key => $value): $value['count'] = $i; $amount_payble += $value['amt_payable']; ?>
             <tr class="edit_claim row-link  <?php if($value['status']=='record_exempt') echo 'claim_record_exempt'; ?>" alt="<?php echo $value['id']; ?>" attr='<?php echo json_encode($value); ?>'>
                <td><?php echo $i; ?></td>
                <td><?php echo $value['claim_no'] ?></td>
@@ -47,3 +48,4 @@
       ?>
    </tbody>
 </table>
+<?php echo form_hidden('total_amount_payble', $amount_payble); ?>

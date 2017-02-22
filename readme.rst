@@ -8,6 +8,19 @@ Password: password
 
 
 #####################
+Feb, 22 2016 update:-
+#####################
+
+- Examine claim page working and update - completed.
+- create claim and claim detail page workings - completed
+- Payment page working is in progress after resolving queries
+
+Solve 50 bugs from bug id #Bug_127 to #Bug_177.
+https://docs.google.com/spreadsheets/d/1JCmMo8hY4xgyHdQysug1A4XT_35177fhahKTlIHmup0/edit#gid=0
+
+
+
+#####################
 Feb, 21 2016 update:-
 #####################
 
