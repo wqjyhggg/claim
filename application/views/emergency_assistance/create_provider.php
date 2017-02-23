@@ -28,6 +28,7 @@
                         echo form_error("address");
                      ?>
                   </div>
+                  <div class="clearfix"></div>
                   <div class="form-group col-sm-6">
                      <?php 
                         echo form_label('Postcode:', 'postcode', array("class"=>'col-sm-12'));                               
@@ -42,6 +43,7 @@
                         echo form_error("discount");
                      ?>
                   </div>  
+                  <div class="clearfix"></div>
                   <div class="form-group col-sm-6">
                      <?php 
                         echo form_label('Contact Person:', 'contact_person', array("class"=>'col-sm-12'));                               
@@ -56,6 +58,7 @@
                         echo form_error("phone_no");
                      ?>
                   </div>  
+                  <div class="clearfix"></div>
                   <div class="form-group col-sm-6">
                      <?php 
                         echo form_label('Email:', 'email', array("class"=>'col-sm-12'));                               
@@ -70,6 +73,7 @@
                         echo form_error("ppo_codes");
                      ?>
                   </div>  
+                  <div class="clearfix"></div>
                   <div class="form-group col-sm-6">
                      <?php 
                         echo form_label('Services:', 'services', array("class"=>'col-sm-12'));                               
@@ -92,6 +96,7 @@
                         echo form_error("priority");
                      ?>
                   </div>        
+                  <div class="clearfix"></div>
                   <div class="col-sm-6">
                      <label class="col-sm-12">&nbsp;</label>
                      <button class="btn btn-primary">Save</button>

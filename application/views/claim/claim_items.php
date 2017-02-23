@@ -49,3 +49,42 @@
    </tbody>
 </table>
 <?php echo form_hidden('total_amount_payble', $amount_payble); ?>
+<!-- prepare expenses list used to fill in explanation of benifit doc -->
+<div style="display:none" id="claim-items">
+   <table style="margin-bottom: 14px;" width="100%" border="1">
+      <thead>
+         <tr>
+            <th>Service Description</th>
+            <th>Date of Service</th>
+            <th>Claim Amount</th>
+            <th>Payable Amount</th>
+            <th>Claim Notes</th>
+         </tr>
+      </thead>
+      <tbody>
+         <?php
+         if(!empty($expenses)):
+            $claim_total = $payable = 0;
+            foreach ($expenses as $key => $value):
+               $claim_total+=$value['amount_claimed'];  $payable += $value['amt_payable'];
+               ?>
+            <tr>
+               <td><?php echo $value['service_description'] ?></td><td><?php echo $value['date_of_service'] ?></td><td><?php echo $value['amount_claimed'] ?></td><td>$<?php echo $value['amt_payable'] ?></td><td><?php echo $value['comment'] ?></td>
+            </tr>
+            <?php
+            endforeach;
+         else: 
+            ?>
+            <tr>
+               <td colspan="20">No records available</td>
+            </tr>
+         <?php
+
+         endif;
+         ?>      
+      <tr>
+         <td></td><th>Totals:</th><td>$<?php  echo $claim_total; ?></td><td>$<?php  echo $payable; ?></td><td></td>
+      </tr>
+      </tbody>
+   </table>
+</div>

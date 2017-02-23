@@ -1,4 +1,5 @@
 <duv>
+<?php $edit = $claim_details['status'] <> 'paid' and $claim_details['status'] <> 'closed' and $claim_details['status'] <> 'accepted'; ?>
    <div class="page-title">
       <div class="title_left">
          <h3>Claim Examine</h3>
@@ -102,6 +103,46 @@
                         <?php echo form_hidden('total_amount_payble', $amount_payble); ?>
                      </div>
                   </div>
+                  <!-- prepare expenses list used to fill in explanation of benifit doc -->
+                  <div style="display:none" id="claim-items">
+                     <table style="margin-bottom: 14px;" width="100%" border="1">
+                        <thead>
+                           <tr>
+                              <th>Service Description</th>
+                              <th>Date of Service</th>
+                              <th>Claim Amount</th>
+                              <th>Payable Amount</th>
+                              <th>Claim Notes</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <?php
+                           if(!empty($expenses)):
+                              $claim_total = $payable = 0;
+                              foreach ($expenses as $key => $value):
+                                 $claim_total+=$value['amount_claimed'];  $payable += $value['amt_payable'];
+                                 ?>
+                              <tr>
+                                 <td><?php echo $value['service_description'] ?></td><td><?php echo $value['date_of_service'] ?></td><td><?php echo $value['amount_claimed'] ?></td><td>$<?php echo $value['amt_payable'] ?></td><td><?php echo $value['comment'] ?></td>
+                              </tr>
+                              <?php
+                              endforeach;
+                           else: 
+                              ?>
+                              <tr>
+                                 <td colspan="20">No records available</td>
+                              </tr>
+                           <?php
+
+                           endif;
+                           ?>      
+                        <tr>
+                           <td></td><th>Totals:</th><td>$<?php  echo $claim_total; ?></td><td>$<?php  echo $payable; ?></td><td></td>
+                        </tr>
+                        </tbody>
+                     </table>
+                  </div>
+
                   <div class="edit-claim-item" style="display:none">
                      <h4 class="claim-label">##########</h4>
                      <div class="row">
@@ -263,15 +304,19 @@
                </div>
                <div class="row actions" style="margin-top:20px;">
                   <div class="row">
-                     <div class="col-sm-2 item_specific" style="display:none">
-                        <input class="btn btn-primary" name="Save" value="Save" type="submit">
-                     </div>
+                     <?php if($edit): ?>                     
+                        <div class="col-sm-2 item_specific" style="display:none">
+                           <input class="btn btn-primary" name="Save" value="Save" type="submit">
+                        </div>
+                     <?php endif;?>
                      <div class="col-sm-2">
                         <?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
                      </div>
-                     <div class="col-sm-2 investigate_pending">
-                        <input class="btn btn-primary" name="Investigate Pending" value="Investigate Pending" type="button">
-                     </div>
+                     <?php if($edit): ?>   
+                        <div class="col-sm-2 investigate_pending">
+                           <input class="btn btn-primary" name="Investigate Pending" value="Investigate Pending" type="button">
+                        </div>
+                     <?php endif;?>
                   </div>
 
                   <div class="row" style="margin-top: 20px;">
@@ -281,29 +326,33 @@
                      <div class="col-sm-3 my_decision" style="display:none">
                         &nbsp;
                      </div>
-                     <div class="col-sm-2 accept_decision">
-                        <input class="btn btn-primary" name="Accept" value="Accept" type="button">
-                     </div>
-                     <div class="col-sm-1 deny_decision">
-                        <input class="btn btn-primary" name="Deny" value="Deny" type="button">
-                     </div>
-                     <div class="col-sm-2 deny_reasons" style="display:none">
-                        <?php
-                        $reason = array(
-                           ''=>'--Denial Reason--'
-                           );
-                        foreach($docs as $doc)
-                           $reason[$doc['id']] = $doc['name'];
 
-                        echo form_dropdown("deny_reason", $reason, '', array('class'=>'form-control'))
-                        ?>
-                     </div>
-                     <div class="col-sm-2">
-                        <input class="btn btn-primary email_print" data-toggle="modal"  name="Email" value="Email/Print" type="button" data-target="#print_template">
-                     </div>
-                     <div class="col-sm-2 record_exempt">
-                        <input class="btn btn-primary" name="Record Exempt" value="Record Exempt" type="button">
-                     </div>
+                     <?php if($edit): ?>  
+                        <div class="col-sm-2 accept_decision">
+                           <input class="btn btn-primary" name="Accept" value="Accept" type="button">
+                        </div>
+                        <div class="col-sm-1 deny_decision">
+                           <input class="btn btn-primary" name="Deny" value="Deny" type="button">
+                        </div>
+                        <div class="col-sm-2 deny_reasons" style="display:none">
+                           <?php
+                           $reason = array(
+                              ''=>'--Denial Reason--'
+                              );
+                           foreach($docs as $doc)
+                              $reason[$doc['id']] = $doc['name'];
+
+                           echo form_dropdown("deny_reason", $reason, '', array('class'=>'form-control'))
+                           ?>
+                        </div>
+                        <div class="col-sm-2">
+                           <input class="btn btn-primary email_print" data-toggle="modal"  name="Email" value="Email/Print" type="button" data-target="#print_template">
+                        </div>
+                        <div class="col-sm-2 record_exempt">
+                           <input class="btn btn-primary" name="Record Exempt" value="Record Exempt" type="button">
+                        </div>
+                     <?php endif;?>
+
                   </div>
                </div>
 
@@ -330,7 +379,7 @@
       <?php
          echo form_open_multipart("claim/send_print_email_claim", array("id"=>'send_print_email'));
        ?>
-      <div class="modal-body">
+      <div class="modal-body reload_docs">
           <div class="row">
             <div class="col-sm-6">
                <div>
@@ -411,7 +460,7 @@
                               '{current_date}'
                               );
                            $replace = array(
-                              img(array('src'=>'assets/img/otc.jpg','width'=>'90', 'height'=>'50')),
+                              img(array('src'=>'assets/img/otc.jpg','width'=>'130')),
                               img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')),
                               date("F d, Y")
                               );
@@ -436,6 +485,11 @@
   </div>
 </div>
 <!-- end here -->
+<div style="display:none">
+   <div id="products">
+      <?php echo $products; ?>
+   </div>
+</div>
 
 <!-- Create Intake Form Modal -->
 <div id="create_intake_form" class="modal fade" role="dialog">
@@ -557,6 +611,11 @@
       $(this).parent("td").parent("tr").remove();
    })
 
+   // fill autofill on key type
+   .on("keyup", ".company_name input", function(){
+      $(".company_name input").val($(this).val());
+   })
+
    // show email/print function
    .on("click", ".select-doc", function(){
 
@@ -600,7 +659,7 @@
       .replace("{policy_no}", claim_data.policy_no)
       .replace("{policy_no}", claim_data.policy_no);
       if(data)
-         str = str.replace("{coverage_period}", data.effective_date+" to "+data.expiry_date);
+         str = str.replace("{coverage_period}", data[0].effective_date+" to "+data[0].expiry_date);
       else
         str =  str.replace("{coverage_period}", '');
 
@@ -1082,7 +1141,7 @@
          beforeSend: function(){
             $(".main_container").addClass("csspinner load1");
          },
-         success: function(result) {
+         success: function(result) {         
 
             // place data table to releted section
             $(".claim_items").html(result.claim_items)
@@ -1103,9 +1162,53 @@
 
                $(".my_decision").show().html('<label style="float: left; font-size: 25px;">: '+decision+' </label>');
             }
+            $(".claim-items").html($("#claim-items").html())
+         }
+      });
+
+      // reload all  claim docs
+      $.ajax({
+         url: "<?php echo base_url("claim/reload_docs") ?>",
+         method: "post",
+         dataType:"json",
+         success: function(result) {
+            $(".reload_docs").html(result.reload_docs);
+
+            $(".preview-template, .email-intakeform, .print").attr('disabled','disabled')
+
+            // create input boxes where the requirement need
+            var $outer = $(".outer-text");
+            $outer.each(function(){
+               var text = $.trim($(this).text());
+
+               $(this).empty();
+               if(!$(this).hasClass("area"))
+                  $(this).append("<input class='outer-text' value='" + text + "'></input>");
+               else
+                  $(this).append("<textarea  style='width:100%' rows='6' value=''>"+ text +"</textarea>");
+            });
+
+            // create word template selection for deny reason
+            var $outer = $(".outer_custom_comment");
+            $outer.each(function(){
+               var text = $.trim($('.word_templates').html());
+
+               $(this).empty();
+               $(this).append(text);
+            });
+
+            var $outer_select = $(".select-product");
+            $outer_select.each(function(){
+               var text = $.trim($(this).text());
+
+               $(this).empty();
+               $(this).append($("#products").html());
+            });
+
+            $(".claim-items").html($("#claim-items").html())
 
          }
-      })
+      });
    })
 
 
@@ -1120,6 +1223,7 @@ $outer.each(function(){
    else
       $(this).append("<textarea  style='width:100%' rows='6' value=''>"+ text +"</textarea>");
 });
+$(".claim-items").html($("#claim-items").html())
 
 // create word template selection for deny reason
 var $outer = $(".outer_custom_comment");

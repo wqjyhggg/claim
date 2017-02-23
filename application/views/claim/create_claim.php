@@ -349,6 +349,7 @@
                               echo form_input("employee_street_address", $this->input->post("employee_street_address"), array("class"=>"form-control", 'placeholder'=>'Street Address'));
                            ?>
                         </div>
+                        <div class="clearfix"></div>
                         <div class="col-sm-3">
                            <?php
                               echo form_label('City/Town:', 'city_town', array("class"=>'col-sm-12'));
@@ -558,6 +559,13 @@
    </div>
 </duv>
 
+
+<div style="display:none">
+   <div id="products">
+      <?php echo $products; ?>
+   </div>
+</div>
+
 <style>
    .autocomplete-suggestions{
       width: 603px !important;
@@ -656,7 +664,7 @@
                               '{current_date}'
                               );
                            $replace = array(
-                              img(array('src'=>'assets/img/otc.jpg','width'=>'90', 'height'=>'50')),
+                              img(array('src'=>'assets/img/otc.jpg','width'=>'130')),
                               img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')),
                               date("F d, Y")
                               );

@@ -711,7 +711,7 @@ class Claim extends CI_Controller {
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));	
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
-				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name));
+				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE);
 				$this->data['payees'] = $this->common_model->get_payees($field_name = "payee", $selected = $this->input->post($field_name), $key='id', $val='name');
 
 				// get all documents for sending email/print.
@@ -813,7 +813,7 @@ class Claim extends CI_Controller {
 
 			//validate form input
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name', 'required');
-			$this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
+			// $this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			$this->form_validation->set_rules('case_no', 'Case No', 'is_unique[claim.case_no]');
 			$this->form_validation->set_rules('school_name', 'School Name', 'required');
@@ -1087,6 +1087,29 @@ class Claim extends CI_Controller {
 		        $this->template->render();  
 	        }      
 		}
+	}
+
+	// reload all docs email/print
+	public function reload_docs(){
+
+		// get all documents for sending email/print.
+		$fields = "id, name, description";
+		$access_types = $this->get_access_list();
+		if($access_types)
+			$conditions = "type in (".implode(', ', $access_types).")";
+		else
+			$conditions = "type in (0)";
+		$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
+
+		// get all word documents
+		$fields = "id, title, content";
+		$this->data['word_templates'] = $this->common_model->select($record = "list", $typecast = "array", $table = "word_comments", $fields);
+		$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
+		$data = array(
+			'reload_docs'=>$this->parser->parse("claim/reload_docs", $this->data, TRUE),
+			);
+		echo json_encode($data);
+
 	}
 
 
@@ -1434,7 +1457,6 @@ class Claim extends CI_Controller {
 
 			// prepare conditions
 			$conditions = [];
-			// $conditions['expenses_claimed.status'] = 'accepted';
 			if($this->input->get("claim")) 
 				$conditions['claim.id'] = $this->input->get("claim");
 			if($this->input->get("claim_no_claim")) 
@@ -1449,22 +1471,21 @@ class Claim extends CI_Controller {
 				$conditions['claim.insured_last_name like'] = "%".$this->input->get("lastname_claim")."%";
 
 			if($this->input->get("claim_date_from")) 
-				$conditions['claim.claim_date >= '] = $this->input->get("claim_date_from");
+				$conditions['claim.claim_date >'] = $this->input->get("claim_date_from");
 			if($this->input->get("claim_date_to")) 
-				$conditions['claim.claim_date <= '] = $this->input->get("claim_date_to");
+				$conditions['claim.claim_date <'] = $this->input->get("claim_date_to");
 
-			$fields = "expenses_claimed.claim_id, expenses_claimed.claim_no, expenses_claimed.case_no,expenses_claimed.claim_date,sum(expenses_claimed.amount_claimed) as amount_claimed, sum(expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency,expenses_claimed.pay_to, sum(expenses_claimed.amt_received) as amt_received, claim.insured_first_name, claim.insured_first_name, claim.insured_last_name, claim.street_address, claim.city, claim.province, claim.policy_no, claim.case_no, claim.clinic_name, claim.dob, claim.policy_no";
+			$parse_cond = [];
+			foreach ($conditions as $key => $value) {
+				if(strpos($key, 'like'))
+					$parse_cond[] = $key." '$value'";
+				else
+					$parse_cond[] = $key."='$value'";
+			}
+			$conditions = "(claim.status = 'accepted' OR claim.status = 'paid') and ".implode(" and ", $parse_cond);
+
+			$fields = "expenses_claimed.claim_id, expenses_claimed.claim_no, expenses_claimed.case_no,expenses_claimed.claim_date,sum(expenses_claimed.amount_claimed) as amount_claimed, sum(expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency,expenses_claimed.pay_to, sum(expenses_claimed.amt_received) as amt_received, claim.insured_first_name, claim.insured_first_name, claim.insured_last_name, claim.street_address, claim.city, claim.province, claim.policy_no, claim.case_no, claim.clinic_name, claim.dob, claim.policy_no, claim.status";
 			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "claim", $fields, $conditions, $joins, $order_by, $group_by = array('expenses_claimed.claim_id'));
-
-			// $conditions['expenses_claimed.status'] = 'accepted';
-			// $joins = [];
-			// $joins[] = array(
-			// 	'table' => 'claim',
-			// 	'on' => 'claim.id = expenses_claimed.claim_id',
-			// 	'type' => 'LEFT'
-			// 	);
-			// $fields = "expenses_claimed.claim_id,expenses_claimed.claim_item_no,expenses_claimed.claim_no,expenses_claimed.invoice,expenses_claimed.date_of_service,expenses_claimed.coverage_code,expenses_claimed.diagnosis,expenses_claimed.amt_payable,expenses_claimed.amt_deductable,expenses_claimed.amt_insured, expenses_claimed.case_no, expenses_claimed.claim_date, (expenses_claimed.amount_claimed) as amount_claimed, (expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency, expenses_claimed.pay_to";
-			// $this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields, $conditions, $joins);
 
         	$this->template->write('title', SITE_TITLE.' - Payments', TRUE);
 	        $this->template->write_view('content', 'claim/payments', $this->data);
@@ -1520,7 +1541,7 @@ class Claim extends CI_Controller {
 		$case_no = $this->input->post('case_no');
 
 		// get all claims which status accepted
-		// $conditions['expenses_claimed.status'] = 'accepted';
+		$conditions['expenses_claimed.amt_payable > '] = 0;
 		$conditions['expenses_claimed.claim_id'] = $claim_id;
 		$joins = [];
 		$joins[] = array(
@@ -1528,7 +1549,7 @@ class Claim extends CI_Controller {
 			'on' => 'claim.id = expenses_claimed.claim_id',
 			'type' => 'INNER'
 			);
-		$fields = "expenses_claimed.claim_id,expenses_claimed.claim_item_no,expenses_claimed.claim_no,expenses_claimed.invoice,expenses_claimed.date_of_service,expenses_claimed.coverage_code,expenses_claimed.diagnosis,expenses_claimed.amt_payable,expenses_claimed.amt_deductable,expenses_claimed.amt_insured, expenses_claimed.case_no, expenses_claimed.claim_date, (expenses_claimed.amount_claimed) as amount_claimed, (expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency, expenses_claimed.pay_to";
+		$fields = "expenses_claimed.id,expenses_claimed.status,expenses_claimed.claim_id,expenses_claimed.claim_item_no,expenses_claimed.claim_no,expenses_claimed.invoice,expenses_claimed.date_of_service,expenses_claimed.coverage_code,expenses_claimed.diagnosis,expenses_claimed.amt_payable,expenses_claimed.amt_deductable,expenses_claimed.amt_insured, expenses_claimed.case_no, expenses_claimed.claim_date, (expenses_claimed.amount_claimed) as amount_claimed, (expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency, expenses_claimed.pay_to";
 		$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields, $conditions, $joins);
 	
 
@@ -1566,7 +1587,7 @@ class Claim extends CI_Controller {
 
 
 	// for ajax request
-	public function confirm_payment($type = ''){
+	public function confirm_payment($type = '', $items = ""){
 
 		// generate data array
 		$claim_id = $this->input->post('claim_id');
@@ -1600,8 +1621,38 @@ class Claim extends CI_Controller {
 			}
 		}
 
-		// update claim status to complete
-		$this->common_model->update("claim", array("is_complete"=>'Y', 'status'=>$type?$type:'paid'), array("id"=>$claim_id));
+		// updates claim items status here
+		$cond = "id in($items)";
+		$this->common_model->update("expenses_claimed", array('status'=>$type), $cond);
+
+		// check all payable items of claim is confirmed 
+		$check = $this->common_model->select($record = "first", $typecast = "array", $table = "expenses_claimed", $fields = "count(expenses_claimed.id) as counter", $conditions = array('expenses_claimed.claim_id'=>$claim_id, 'expenses_claimed.amt_payable > '=>0, 'status'=>null));
+		if(!$check['counter'])
+		{
+			// update claim status to complete
+			$this->common_model->update("claim", array('status'=>$type?$type:'paid'), array("id"=>$claim_id));
+		}
+
+	}
+
+	// for ajax request
+	public function close_claim(){
+
+		// generate data array
+		$claim_id = $this->input->post('claim_id');
+
+		// updates claim items status here
+		$cond = "id = '$claim_id'";
+		$this->common_model->update("claim", array('status'=>'closed'), $cond);
+
+		// get claim details
+		$claim_details = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "case_no", $conditions = array('claim.id'=>$claim_id));
+
+		// close case if there is
+		$this->common_model->update("case", array('status'=>'C'), array('case_no'=>$claim_details['case_no']));
+
+		$this->session->set_flashdata('success', "Claim successfully closed");
+
 		echo TRUE;
 
 	}

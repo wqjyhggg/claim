@@ -1,4 +1,9 @@
-<duv >
+<duv
+   // fill autofill on key type
+   .on("keyup", ".company_name input", function(){
+      $(".company_name input").val($(this).val());
+      })>
+<?php $edit = $claim_details['status'] <> 'paid' and $claim_details['status'] <> 'closed' and $claim_details['status'] <> 'accepted'; ?>
    <div class="page-title">
       <div class="title_left">
          <h3>Claim Details</h3>
@@ -452,7 +457,10 @@
 
 
                   <h2 class="move_down">Expenses Claimed
-                      <button class="btn btn-primary add_new_expenses" type="button">Add new expenses item </button>  <i class="fa fa-angle-down pull-right"></i>
+                     <?php if($edit): ?>
+                         <button class="btn btn-primary add_new_expenses" type="button">Add new expenses item </button> 
+                     <?php endif; ?>
+                     <i class="fa fa-angle-down pull-right"></i>
                   </h2>
                   <div class="row" style="display:none">
                      <div class="col-sm-12">
@@ -568,9 +576,11 @@
                                     echo form_input("expenses_claimed[comment][]", $value['comment'], array("class"=>"form-control"));
                                  ?>
                               </div>
-                              <div class="col-sm-3">
-                                 <i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i>
-                              </div>
+                              <?php if($edit): ?>
+                                 <div class="col-sm-3">
+                                    <i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i>
+                                 </div>
+                              <?php endif; ?>
                            </div>
                            <?php
                               endforeach;
@@ -635,7 +645,11 @@
                   <input type="hidden" name="no_of_form" value="0"/> <!-- used to knnow how many forms added in this page -->
                   <!-- end intake forms list  -->
                   <?php endif; ?>
-                  <h2 class="move_down">Payee Information  <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button> <i class="fa fa-angle-down pull-right"></i></h2>
+                  <h2 class="move_down">Payee Information  
+                     <?php if($edit): ?>
+                        <button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button>
+                     <?php endif; ?>
+                     <i class="fa fa-angle-down pull-right"></i></h2>
                   <div class="row"  style="display:none">
                      <div class="col-sm-12">
                         <div class="payee-data">
@@ -683,10 +697,12 @@
                                           echo form_input("payees[address][]", $value["address"], array("class"=>"form-control ".($value["payment_type"] == 'direct deposit'?'':'required'), 'placeholder'=>'Address'));
                                        ?>
                                     </div>
-                                    <div class="col-sm-3">
-                                       <label class='col-sm-12'>&nbsp;</label>
-                                       <i class="col-sm-3 fa fa-trash row-link remove-payee"></i>
-                                    </div>
+                                    <?php if($edit): ?>
+                                       <div class="col-sm-3">
+                                          <label class='col-sm-12'>&nbsp;</label>
+                                          <i class="col-sm-3 fa fa-trash row-link remove-payee"></i>
+                                       </div>
+                                    <?php endif;?>
                                  </div>
                            <?php
                               endforeach;
@@ -697,7 +713,11 @@
                   </div>
 
                   <br/>
-                  <h2  class="move_down">Attached List <small></small> <button class="btn btn-primary multiupload_files"  type="button">Upload Attached</button>  <i class="fa fa-angle-down pull-right"></i> </h2>
+                  <h2  class="move_down">Attached List <small></small> 
+                  <?php if($edit): ?>
+                     <button class="btn btn-primary multiupload_files"  type="button">Upload Attached</button>
+                  <?php endif; ?>
+                  <i class="fa fa-angle-down pull-right"></i> </h2>
                   <div class="row" style="display:none">
                      <div class="col-sm-12">
                         <div class="col-sm-12 uploaded_files">
@@ -746,6 +766,7 @@
 
                <div class="row" style="margin-top:20px">
                   <div class="row">
+                  <?php if($edit): ?>
                      <div class="col-sm-2">
                         <input class="btn btn-primary" name="Save" value="Save" type="submit">
                      </div>
@@ -758,6 +779,11 @@
                      <div class="col-sm-2">
                         <input class="btn btn-primary email_print" data-toggle="modal"  name="Email" value="Email/Print" type="button" data-target="#print_template">
                      </div>
+                     <?php else: ?>
+                        <div class="col-sm-2">
+                           <?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
+                        </div>
+                     <?php endif; ?>
                   </div>
 
                </div>
@@ -788,7 +814,7 @@
       <?php
          echo form_open_multipart("claim/send_print_email_claim", array("id"=>'send_print_email'));
        ?>
-      <div class="modal-body">
+      <div class="modal-body ">
           <div class="row">
             <div class="col-sm-6">
                <div>
@@ -869,7 +895,7 @@
                               '{current_date}'
                               );
                            $replace = array(
-                              img(array('src'=>'assets/img/otc.jpg','width'=>'90', 'height'=>'50')),
+                              img(array('src'=>'assets/img/otc.jpg','width'=>'130')),
                               img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')),
                               date("F d, Y")
                               );
@@ -894,6 +920,11 @@
   </div>
 </div>
 <!-- end here -->
+<div style="display:none">
+   <div id="products">
+      <?php echo $products; ?>
+   </div>
+</div>
 
 <!-- Create Intake Form Modal -->
 <div id="create_intake_form" class="modal fade" role="dialog">
@@ -1111,6 +1142,46 @@
    </div>
 </div>
 
+<!-- prepare expenses list used to fill in explanation of benifit doc -->
+<div style="display:none" id="claim-items">
+   <table style="margin-bottom: 14px;" width="100%" border="1">
+      <thead>
+         <tr>
+            <th>Service Description</th>
+            <th>Date of Service</th>
+            <th>Claim Amount</th>
+            <th>Payable Amount</th>
+            <th>Claim Notes</th>
+         </tr>
+      </thead>
+      <tbody>
+   <?php
+   if(!empty($expenses_claimed)):
+      $claim_total = $payable = 0;
+      foreach ($expenses_claimed as $key => $value):
+         $claim_total+=$value['amount_claimed'];  $payable += $value['amt_payable'];
+         ?>
+      <tr>
+         <td><?php echo $value['service_description'] ?></td><td><?php echo $value['date_of_service'] ?></td><td><?php echo $value['amount_claimed'] ?></td><td>$<?php echo $value['amt_payable'] ?></td><td><?php echo $value['comment'] ?></td>
+      </tr>
+      <?php
+      endforeach;
+   else: 
+      ?>
+      <tr>
+         <td colspan="20">No records available</td>
+      </tr>
+   <?php
+
+   endif;
+   ?>      
+      <tr>
+         <td></td><th>Totals:</th><td>$<?php  echo $claim_total; ?></td><td>$<?php  echo $payable; ?></td><td></td>
+      </tr>
+      </tbody>
+   </table>
+</div>
+
 <!-- word templates here -->
 <div style="display:none" class="word_templates">
 <?php if(!empty($word_templates)): ?>
@@ -1166,6 +1237,10 @@
          }
       })
 
+      // fill autofill on key type
+      .on("keyup", ".company_name input", function(){
+         $(".company_name input").val($(this).val());
+      })
       // select default payee
       $("input[name='expenses_claimed[payee_id][]']").map(function(){
          $(this).prev('select').val($(this).val());
@@ -1761,6 +1836,7 @@ $outer_select.each(function(){
    $(this).append($("#products").html());
 });
 
+$(".claim-items").html($("#claim-items").html())
 
 // to validate expenses items
 function validate_form(){

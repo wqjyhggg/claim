@@ -699,6 +699,30 @@ class Emergency_assistance extends CI_Controller {
 		}
 	}
 
+	
+	// reload all docs email/print
+	public function reload_docs(){
+		
+		// get all documents for sending email/print.
+		$fields = "id, name, description";
+		$access_types = $this->get_access_list('case');
+		if($access_types)
+			$conditions = "type in (".implode(', ', $access_types).")";
+		else
+			$conditions = "type in (0)";
+		$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
+
+		// get all word documents
+		$fields = "id, title, content";
+		$this->data['word_templates'] = $this->common_model->select($record = "list", $typecast = "array", $table = "word_comments", $fields);
+		$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
+		$data = array(
+			'reload_docs'=>$this->parser->parse("claim/reload_docs", $this->data, TRUE),
+			);
+		echo json_encode($data);
+
+	}
+
 
 	// redirect if needed, otherwise display the create policy page
 	public function create_policy($id = 0)
