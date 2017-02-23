@@ -655,7 +655,7 @@
                               '{current_date}'
                               );
                            $replace = array(
-                              img(array('src'=>'assets/img/otc.jpg','width'=>'90', 'height'=>'50')),
+                              img(array('src'=>'assets/img/otc.jpg','width'=>'130')),
                               date("F d, Y")
                               );
                          echo str_replace($find, $replace, $doc['description']);

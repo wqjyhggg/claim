@@ -190,7 +190,7 @@
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Third Party Recovery:', 'third_party_recovery', array("class"=>'col-sm-12'));  
-                     echo form_checkbox("third_party_recovery", "Y", ($this->common_model->field_val("third_party_recovery", $case_details) == 'Y'?TRUE:FALSE), array());
+                     echo form_checkbox("third_party_recovery", "Y", ($this->common_model->field_val("third_party_recovery", $case_details) == 'Y'?TRUE:FALSE), array('style'=>'margin-left: 12px;'));
                      echo form_error("third_party_recovery");
                      ?>
                   </div>   
@@ -488,7 +488,7 @@
                               '{current_date}'
                               );
                            $replace = array(
-                              img(array('src'=>'assets/img/otc.jpg','width'=>'90', 'height'=>'50')),
+                              img(array('src'=>'assets/img/otc.jpg','width'=>'130')),
                               img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')),
                               date("F d, Y")
                               );

@@ -1,4 +1,4 @@
-<duv >
+<duv>
    <div class="page-title">
       <div class="title_left">
          <h3>Payments</h3>
@@ -9,6 +9,7 @@
    <div class="row">
       <div class="col-md-12 col-sm-12 col-xs-12">
          <div class="x_panel">
+            <?php echo $message; ?>
             <div class="x_title">
             <button type="button" class="btn btn-primary" name="search_claim"><i class="fa fa-search"></i> Search Payable Claims</button>
             </div>
@@ -85,7 +86,7 @@
                               </thead>
                               <tbody>
                                  <?php foreach ($claims as $key => $value): ?>
-                                 <tr class="select_claim row-link" data='<?php echo json_encode($value) ?>' alt="<?php echo $value['claim_id']; ?>" case_no="<?php echo $value['case_no']; ?>">
+                                 <tr class="select_claim row-link" data='<?php echo json_encode($value) ?>' alt="<?php echo $value['claim_id']; ?>" case_no="<?php echo $value['case_no']; ?>" status="<?php echo $value['status']; ?>">
                                     <td><?php echo $value['claim_no']; ?></td>
                                     <td><?php echo $value['case_no']; ?></td>
                                     <td><?php echo $value['policy_no']; ?></td>
@@ -111,7 +112,6 @@
                </div>
 
                <div class="payee_section" style="display:none">
-                  <h2>PAYEE INFORMATION </h2>
                   <?php echo form_open("claim/confirm_payment", array('class'=>'form-horizontal', 'method'=>'post', 'id'=>'confirm_payment')); echo form_hidden('claim_id') ?>
                   <!-- <div class="row">
                      <div class="col-sm-12">
@@ -128,13 +128,13 @@
                   </div>
                   <div class="row" style="margin-top:20px">
                      <div class="col-sm-2 confirm_button">
-                        <input class="btn btn-primary" name="Confirm_Payment" value="Confirm Payment" type="submit">   
+                        <input class="btn btn-primary" name="Confirm_Payment" value="Confirm Payment" type="submit" disabled="disabled">  
                      </div>
                      <div class="col-sm-1">
                         <?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
                      </div>
                      <div class="col-sm-2 close_button"> 
-                        <input class="btn btn-primary" name="Close_Claim" value="Close Claim" type="button">  
+                        <input class="btn btn-primary" name="Close_Claim" value="Close Claim" type="button" disabled="disabled">  
                      </div>
                   </div>
                   <?php echo form_close(); ?>
@@ -252,7 +252,12 @@ $(document).on("click", "button[name=search_claim]", function(){
    var claim_id = $(this).attr('alt');
    var discount = $(this).attr('discount');
    var pay_to = $(this).attr('pay_to');
-   var amt_payable = $(this).attr('amt_payable');
+   var status = $(this).attr('status');
+   var amt_payable = 0;
+
+   $("tr[pay_to='"+pay_to+"']").each(function(){
+      amt_payable += parseFloat($(this).attr('amt_payable'));
+   })   
 
    // enable payee section
    $(".payee_section").slideDown();
@@ -260,6 +265,16 @@ $(document).on("click", "button[name=search_claim]", function(){
    // settings for activate listing
    $(".select_payees").removeClass('active-green');
    $(this).addClass('active-green');
+   $("tr[pay_to='"+pay_to+"']").addClass('active-green');
+
+   if(status == 'paid'){
+      $("input[name=Confirm_Payment]").attr('disabled', 'disabled');
+   }
+   else if(status == 'closed'){
+      $("input[name=Confirm_Payment]").removeAttr('disabled');
+   } else{
+      $("input[name=Confirm_Payment]").removeAttr('disabled');      
+   }
 
    // get claimed items here
    $.ajax({
@@ -286,26 +301,19 @@ $(document).on("click", "button[name=search_claim]", function(){
 
          // place amount to payment field
          $("input[name='payees[payment][]']").val(amt_payable);
+         $("input[name='payees[old_amount][]']").val(amt_payable);
 
 
          // enable disable confirm payment and close claim operation
          if(result.status == 'paid'){
-            $(".confirm_button").hide();
-            $(".close_button").show();
+            $("input[name=Confirm_Payment]").attr('disabled', 'disabled');
+            $("input[name=Close_Claim]").removeAttr('disabled');
+         }
+         else if(result.status == 'closed'){            
+            $("input[name=Confirm_Payment], input[name=Close_Claim]").attr('disabled', 'disabled');
+         }
 
-            $(".add_payee").hide();
-            $(".remove-payee").remove();
-         }
-         else if(result.status == 'closed'){
-            $(".confirm_button").hide();
-            $(".close_button").hide();
-
-            $(".add_payee").hide();
-            $(".remove-payee").remove();
-         }
-         else{
-            $(".add_payee").show();
-         }
+         $(".payees_items").show();
          
       }
    })
@@ -321,9 +329,16 @@ $(document).on("click", "button[name=search_claim]", function(){
       return false;
    }
 
+   // get all items for these same payees
+   var items = [];
+   $(".select_payees.active-green").each(function(){
+      items.push($(this).attr('item_id'));
+   })
+   var items = items.join(",");
+
    // confirm payment code goes here.
    $.ajax({
-      url: $(this).attr("action"),
+      url: $(this).attr("action")+"/paid/"+items,
       method: "post",
       data:$(this).serialize(),
       dataType:"json",
@@ -340,7 +355,7 @@ $(document).on("click", "button[name=search_claim]", function(){
 .on("click", "input[name=Close_Claim]", function(e){
    e.preventDefault();
 
-   var claim_id = $(".select_payees.active-green").attr('alt');
+   var claim_id = $(".select_claim.active-green").attr('alt');
 
    if(!confirm('Are you sure you want to close this claim?')){
       return false;
@@ -348,9 +363,11 @@ $(document).on("click", "button[name=search_claim]", function(){
 
    // confirm payment code goes here.
    $.ajax({
-      url: $("#confirm_payment").attr("action")+"/closed",
+      url: "<?php echo base_url('claim/close_claim'); ?>",
       method: "post",
-      data:$("#confirm_payment").serialize(),
+      data:{
+         claim_id:claim_id
+      },
       dataType:"json",
       beforeSend: function(){
          $(".main_container").addClass("csspinner load1");
@@ -390,6 +407,17 @@ $(document).on("click", "button[name=search_claim]", function(){
 .on('click', ".select_claim", function(){
    var claim_id = $(this).attr('alt');
    var case_no = $(this).attr('case_no');
+   var status = $(this).attr('status');
+
+   $(".payees_items").hide();
+   if(status == 'paid') {
+      $(".payee_section").show();
+      $("input[name=Close_Claim]").removeAttr('disabled');
+   }
+   else {            
+      $("input[name=Confirm_Payment], input[name=Close_Claim]").attr('disabled', 'disabled');
+      $(".payee_section").hide();
+   }
 
    // settings for activate listing
    $(".select_claim").removeClass('active-green');
@@ -418,7 +446,6 @@ $(document).on("click", "button[name=search_claim]", function(){
       }
    })
 
-   $(".payee_section").hide();
 })
 
 </script>

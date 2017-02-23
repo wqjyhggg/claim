@@ -180,7 +180,7 @@
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Third Party Recovery:', 'third_party_recovery', array("class"=>'col-sm-12'));  
-                     echo form_checkbox("third_party_recovery", "Y", $this->common_model->field_val("third_party_recovery", $case_details), array());
+                     echo form_checkbox("third_party_recovery", "Y", $this->common_model->field_val("third_party_recovery", $case_details), array('style'=>'margin-left: 12px;'));
                      echo form_error("third_party_recovery");
                      ?>
                   </div>  

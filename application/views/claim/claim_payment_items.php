@@ -20,7 +20,7 @@ if(!empty($claims)):?>
          </thead>
          <tbody>
             <?php foreach($claims as $val): ?>
-               <tr class="row-link select_payees" alt="<?php echo $val['claim_id'] ?>" pay_to="<?php echo $val['pay_to'] ?>" amt_payable="<?php echo $val['amt_payable'] ?>">
+               <tr class="row-link select_payees" alt="<?php echo $val['claim_id'] ?>" item_id="<?php echo $val['id'] ?>" pay_to="<?php echo $val['pay_to'] ?>" amt_payable="<?php echo $val['amt_payable'] ?>" status="<?php echo $val['status'] ?>">
                   <td><?php echo ++$i; ?>.</td>
                   <td><?php echo $val['claim_no'] ?></td>
                   <td><?php echo $val['claim_item_no'] ?></td>

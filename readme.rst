@@ -8,6 +8,16 @@ Password: password
 
 
 #####################
+Feb, 23 2016 update:-
+#####################
+
+- examine page working is done
+- payment page process is completed
+
+All the bugs are solved
+https://docs.google.com/spreadsheets/d/1JCmMo8hY4xgyHdQysug1A4XT_35177fhahKTlIHmup0/edit#gid=0
+
+#####################
 Feb, 22 2016 update:-
 #####################
 

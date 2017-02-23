@@ -302,7 +302,7 @@
       <?php
          echo form_open_multipart("emergency_assistance/send_print_email", array("id"=>'send_print_email'));
        ?>
-      <div class="modal-body">
+      <div class="modal-body reload_docs">
           <div class="row">
             <div class="col-sm-6">
                <div>
@@ -382,7 +382,7 @@
                               '{current_date}'
                               );
                            $replace = array(
-                              img(array('src'=>'assets/img/otc.jpg','width'=>'90', 'height'=>'50')),
+                              img(array('src'=>'assets/img/otc.jpg','width'=>'130')),
                               img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')),
                               date("F d, Y")
                               );
@@ -448,8 +448,52 @@ $(document).ready(function() {
    else
    {
       $(".show_button").attr("disabled", "disabled");
-      if(length == 1)
+      if(length == 1) {
           $(".view_edit, .email_print").removeAttr("disabled");
+
+           // reload all case docs again
+            $.ajax({
+               url: "<?php echo base_url("emergency_assistance/reload_docs") ?>",
+               method: "post",
+               dataType:"json",
+               success: function(result) {
+                  $(".reload_docs").html(result.reload_docs);
+
+                  $(".preview-template, .email-intakeform, .print").attr('disabled','disabled')
+
+                  // create input boxes where the requirement need
+                  var $outer = $(".outer-text");
+                  $outer.each(function(){
+                     var text = $.trim($(this).text());
+
+                     $(this).empty();
+                     if(!$(this).hasClass("area"))
+                        $(this).append("<input class='outer-text' value='" + text + "'></input>");
+                     else
+                        $(this).append("<textarea  style='width:100%' rows='6' value=''>"+ text +"</textarea>");
+                  });
+
+                  // create word template selection for deny reason
+                  var $outer = $(".outer_custom_comment");
+                  $outer.each(function(){
+                     var text = $.trim($('.word_templates').html());
+
+                     $(this).empty();
+                     $(this).append(text);
+                  });
+
+                  var $outer_select = $(".select-product");
+                  $outer_select.each(function(){
+                     var text = $.trim($(this).text());
+
+                     $(this).empty();
+                     $(this).append($("#products").html());
+                  });
+
+               }
+            });
+
+       }
       if(length > 0)
       {
           $(".mark_inactive").removeAttr("disabled");

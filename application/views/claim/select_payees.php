@@ -1,5 +1,8 @@
 <?php                              
 if(!empty($payees)): $i = 0;
+?>
+<h2>PAYEE INFORMATION </h2>
+<?php
    foreach ($payees as $key => $value): $i++; ?>
       <div class="row"  style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
          <div class="col-sm-12">
@@ -42,10 +45,17 @@ if(!empty($payees)): $i = 0;
                echo form_input("payees[address][]", $value["address"], array("class"=>"form-control", 'placeholder'=>'Address'));
             ?>
          </div>
+         <div class="col-sm-3 cheque_section" <?php echo ($value["payment_type"] == 'direct deposit'?'style="display:none"':''); ?>>
+            <?php 
+               echo form_label('Cheque:', 'Cheque', array("class"=>'col-sm-12'));
+               echo form_input("payees[cheque][]", $value["cheque"], array("class"=>"form-control", 'placeholder'=>'Cheque'));
+            ?>
+         </div>
          <div class="col-sm-3">
             <?php 
                echo form_label('Payment:', 'Payment', array("class"=>'col-sm-12'));
                echo form_input("payees[payment][]", $value["payment"], array("class"=>"form-control", 'placeholder'=>'Payment'));
+               echo form_hidden('payees[old_amount][]', 0);
             ?>
          </div>
          <!-- <div class="col-sm-3">
