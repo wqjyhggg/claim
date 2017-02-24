@@ -142,6 +142,18 @@
        });
 
       $(document).ready(function(){
+
+
+        <?php
+        if($this->input->post('country')):
+         ?>
+        var url = ("<?php echo base_url('emergency_assistance/get_provinces/print/'.$this->input->post('country')) ?>");
+        $("select[name=province]").load(encodeURI(url));
+        <?php endif; ?>
+
+        // hide error/success message
+        $('.alert-success').delay(8000).fadeOut('slow');
+
          $(".doc_title h1").css("font-size", '23px');
 
          setInterval(function(){ 

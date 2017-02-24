@@ -142,7 +142,10 @@ class Auth extends CI_Controller {
 			$task_details = $this->common_model->select($record = "first", $typecast = "array", $table = "mytask", $fields, $conditions = array('mytask.id'=>$id), $joins);
 
 			//validate form input
-			$this->form_validation->set_rules('assign_to', 'Assign To', 'required');
+			if($task_details['type'] == 'CASE' and ($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager()))
+				$this->form_validation->set_rules('assign_to', 'Assign To', 'required');
+			if($task_details['type'] == 'CLAIM')
+				$this->form_validation->set_rules('assign_to', 'Assign To', 'required');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
 			if ($this->form_validation->run() == TRUE)
@@ -162,10 +165,13 @@ class Auth extends CI_Controller {
 
 
 					// update assign to data in task db
-					$data_task = array(
-						'user_id'=>$this->input->post('assign_to')
-						);
-					$this->common_model->update("mytask", $data_task, array('item_id'=>$task_details['item_id'], 'type'=>'CASE', 'user_type'=>'eac'));
+					if($this->input->post('assign_to'))
+					{
+						$data_task = array(
+							'user_id'=>$this->input->post('assign_to')
+							);
+						$this->common_model->update("mytask", $data_task, array('item_id'=>$task_details['item_id'], 'type'=>'CASE', 'user_type'=>'eac'));
+					}
 				}
 				else
 				{

@@ -60,13 +60,13 @@
                   <div class="clearfix"></div>
                   <div class="form-group col-sm-6">
                      <?php
-                     if($task_details['type'] == 'CASE')
+                     if($task_details['type'] == 'CASE' and ($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager()))
                      {
                         echo form_label('Follow Up EAC:', 'assigned_to', array("class"=>'col-sm-12'));
                         echo $eacmanagers;
                         echo form_error("assign_to");
                      }
-                     else
+                     if($task_details['type'] == 'CLAIM')
                      {
                         echo form_label('Assign Claim Examiner:', 'assigned_to', array("class"=>'col-sm-12'));
                         echo $claim_examiner;

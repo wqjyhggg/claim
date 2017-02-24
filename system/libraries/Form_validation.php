@@ -1228,11 +1228,11 @@ class CI_Form_validation {
 	 * @return	bool
 	 */
 	public function valid_email($str)
-	{
-		if (function_exists('idn_to_ascii') && sscanf($str, '%[^@]@%s', $name, $domain) === 2)
-		{
-			$str = $name.'@'.idn_to_ascii($domain);
-		}
+	{	
+		// if (function_exists('idn_to_ascii') && sscanf($str, '%[^@]@%s', $name, $domain) === 2)
+		// {
+		// 	$str = $name.'@'.idn_to_ascii($domain);
+		// }
 
 		return (bool) filter_var($str, FILTER_VALIDATE_EMAIL);
 	}

@@ -865,9 +865,11 @@
    .on("submit", "#send_print_email", function(e){
       e.preventDefault();
       var doc_id = $(".select-doc.active").attr("doc");
-      var template = $(".doc-"+doc_id).children("div.doc-desc").html();
+
       if($(this).valid()) 
       {
+         $(".preview-template").trigger('click');
+         var template = $(".doc-"+doc_id).children("div.doc-desc").html();
          $.ajax({
             url: "<?php echo base_url("emergency_assistance/send_print_email") ?>",
             method: "post",

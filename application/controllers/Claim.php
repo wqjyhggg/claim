@@ -221,7 +221,7 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('physician_alt_telephone_canada', 'physician alt telephone canada ', 'numeric');
 			$this->form_validation->set_rules('physician_telephone_canada', 'physician telephone canada ', 'numeric');
 			$this->form_validation->set_rules('physician_alt_telephone', 'physician alt telephone ', 'numeric');
-			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+			$this->form_validation->set_rules('email', 'Email', 'valid_email');
 
 			// $this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
 			
@@ -452,7 +452,7 @@ class Claim extends CI_Controller {
 					redirect("claim/examine_claim/$record_id", 'refresh');
 				else
 					// redirect them to the claim page
-					redirect('claim', 'refresh');
+					redirect("claim/claim_detail/$record_id", 'refresh');
 
 			}
 			else
@@ -787,6 +787,7 @@ class Claim extends CI_Controller {
 		{
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
+
 		}
 		else
 		{
@@ -802,7 +803,14 @@ class Claim extends CI_Controller {
 				'type' => 'LEFT'
 				);
 			$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', u2.first_name, u2.last_name) as claimexaminer_name", $conditions = array('claim.id'=>$id), $joins);
-
+			if(empty($this->data['claim_details']))
+			{				
+				// send error message
+				$this->session->set_flashdata('error', "Something went wrong, please try after some time.");
+				
+				// redirect them to the claim
+				redirect('claim', 'refresh');
+			}
 
 
 			// get all expenses items
@@ -1482,7 +1490,11 @@ class Claim extends CI_Controller {
 				else
 					$parse_cond[] = $key."='$value'";
 			}
-			$conditions = "(claim.status = 'accepted' OR claim.status = 'paid') and ".implode(" and ", $parse_cond);
+			$parse_cond = implode(" and ", $parse_cond);
+			if($parse_cond )
+				$conditions = "(claim.status = 'accepted' OR claim.status = 'paid') and ".implode(" and ", $parse_cond);
+			else
+				$conditions = "(claim.status = 'accepted' OR claim.status = 'paid')";
 
 			$fields = "expenses_claimed.claim_id, expenses_claimed.claim_no, expenses_claimed.case_no,expenses_claimed.claim_date,sum(expenses_claimed.amount_claimed) as amount_claimed, sum(expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency,expenses_claimed.pay_to, sum(expenses_claimed.amt_received) as amt_received, claim.insured_first_name, claim.insured_first_name, claim.insured_last_name, claim.street_address, claim.city, claim.province, claim.policy_no, claim.case_no, claim.clinic_name, claim.dob, claim.policy_no, claim.status";
 			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "claim", $fields, $conditions, $joins, $order_by, $group_by = array('expenses_claimed.claim_id'));
