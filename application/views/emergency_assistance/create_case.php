@@ -427,8 +427,8 @@
                $("input[name=dob]").val((data.plan_list[0].birthday));  
             }
             else{
-               alert("Sorry, policy information does not exists, please check policy no and try again");
-               $(this).val("");
+               alert("Sorry, policy information does not exists, please check policy no and try again");               
+               $("input[name=policy_no]").val("");
             }
             $(".nav-m22d").removeClass("csspinner load1");
          }

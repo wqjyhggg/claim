@@ -163,10 +163,11 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('first_name', 'First Name', 'required|callback_alpha_dash_space');
 			$this->form_validation->set_rules('last_name', 'Last Name', 'callback_alpha_dash_space');
         	$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
-        	$this->form_validation->set_rules('post_code', 'Post Code', 'required|trim|numeric|max_length[6]');
+        	$this->form_validation->set_rules('post_code', 'Post Code', 'required|trim|max_length[9]|min_length[5]');
         	$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('relations', 'Relations', 'required');
+			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 
 			$this->form_validation->set_rules('insured_firstname', 'Insured First Name', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
@@ -377,12 +378,14 @@ class Emergency_assistance extends CI_Controller {
 			//validate form input
 			$this->form_validation->set_rules('assign_to', 'Assign To', '');
 			$this->form_validation->set_rules('reason', 'Reason', 'required');
+			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 			$this->form_validation->set_rules('first_name', 'First Name', 'required|callback_alpha_dash_space');
 			$this->form_validation->set_rules('last_name', 'Last Name', 'callback_alpha_dash_space');
         	$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
         	$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('relations', 'Relations', 'required');
+        	$this->form_validation->set_rules('post_code', 'Post Code', 'required|trim|max_length[9]|min_length[5]');			
 
 			$this->form_validation->set_rules('insured_firstname', 'Insured First Name', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');

@@ -14,7 +14,6 @@
             <div class="x_title">
                <h2>CLAIM HISTORY<small></small></h2>
                <div class="clearfix"></div>
-               <?php echo $message; ?>
             </div>
             <div class="x_content">
                <?php if(!empty($claim_history)): ?>

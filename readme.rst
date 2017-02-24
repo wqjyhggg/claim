@@ -8,6 +8,15 @@ Password: password
 
 
 #####################
+Feb, 24 2016 update:-
+#####################
+
+All the new bugs and reopened bugs are solved
+https://docs.google.com/spreadsheets/d/1JCmMo8hY4xgyHdQysug1A4XT_35177fhahKTlIHmup0/edit#gid=0
+
+
+
+#####################
 Feb, 23 2016 update:-
 #####################
 
