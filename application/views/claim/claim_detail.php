@@ -6,7 +6,7 @@
 <?php $edit = $claim_details['status'] <> 'paid' and $claim_details['status'] <> 'closed' and $claim_details['status'] <> 'accepted'; ?>
    <div class="page-title">
       <div class="title_left">
-         <h3>Claim Details</h3>
+         <h3>Claim Details - #<?php echo $claim_details['claim_no']; ?></h3>
       </div>
    </div>
    <div class="clearfix"></div>
@@ -129,13 +129,6 @@
 
                   <h4 class="move_down">Address in Canada <i class="fa fa-angle-down pull-right"></i></h4>
                   <div class="row"  style="display:none">
-                     <!-- <div class="col-sm-12">
-                        <div class="input-group col-sm-3" style="margin-bottom:10px">
-                           <?php
-                           echo form_checkbox("same_policy", "Y", $this->common_model->field_val("same_policy", $claim_details), array('class'=>'setpremium', 'style'=>'margin-left:10px')); ?>  Same with policy
-                        </div>
-                     </div> -->
-
                      <div class="form-group col-sm-3">
                         <?php
                            echo form_label('Street Address:', 'street_address', array("class"=>'col-sm-12'));
@@ -190,6 +183,42 @@
                         ?>
                      </div>
                   </div>
+
+
+               <h4 class="move_down">Contact Information <i class="fa fa-angle-down pull-right"></i></h4>
+               <div class="row" style="display:none">
+                  <div class="form-group col-sm-3">
+                     <?php
+                        echo form_label('First Name:', 'contact_first_name', array("class"=>'col-sm-12'));
+                        echo form_input("contact_first_name", $this->common_model->field_val("contact_first_name", $claim_details), array("class"=>"form-control", 'placeholder'=>'First Name'));
+                        echo form_error("contact_first_name");
+
+                     ?>
+                  </div>
+                  <div class="form-group col-sm-3">
+                     <?php
+                        echo form_label('Last Name:', 'contact_last_name', array("class"=>'col-sm-12'));
+                        echo form_input("contact_last_name", $this->common_model->field_val("contact_last_name", $claim_details), array("class"=>"form-control", 'placeholder'=>'Last Name'));
+                        echo form_error("contact_last_name");
+                     ?>
+                  </div>
+                  <div class="form-group col-sm-3">
+                     <?php
+                        echo form_label('Email:', 'contact_email', array("class"=>'col-sm-12'));
+                        echo form_input("contact_email", $this->common_model->field_val("contact_email", $claim_details), array("class"=>"form-control", 'placeholder'=>'Email'));
+                        echo form_error("contact_email");
+                     ?>
+                  </div>
+                  <div class="form-group col-sm-3">
+                     <?php
+                        echo form_label('Phone:', 'contact_phone', array("class"=>'col-sm-12'));
+                        echo form_input("contact_phone", $this->common_model->field_val("contact_phone", $claim_details), array("class"=>"form-control", 'placeholder'=>'Phone'));
+                        echo form_error("contact_phone");
+                     ?>
+                  </div>                  
+               </div>
+
+
                   <h4 class="move_down">Name and Address of Family Physician in Country of Origin <i class="fa fa-angle-down pull-right"></i></h4>
                   <div class="row" style="display:none">
                      <div class="col-sm-12">
@@ -298,6 +327,20 @@
                      <div class="col-sm-12">
                         <div class="row">
                            <div class="col-sm-12">
+
+                              <div class="col-sm-7">
+                                Do you have other insurance coverage including Canadian government health insurance?
+                              </div>
+                              <div class="col-sm-1">
+                                 <?php
+                                 echo form_radio("other_insurance_coverage", "Y", ($this->common_model->field_val("other_insurance_coverage", $claim_details) == 'Y'?TRUE:FALSE), array('class'=>'setpremium')); ?>  Yes
+                              </div>
+                              <div class="col-sm-1">
+                                 <?php
+                                 echo form_radio("other_insurance_coverage", "N", $this->common_model->field_val("other_insurance_coverage", $claim_details) == 'N'?TRUE:FALSE, array('class'=>'setpremium')); ?>  No
+                              </div>
+                              <div class="clearfix"></div>
+
                               <div class="col-sm-7">
                                  Do you, your spouse or your parents/guardians have any other medical or travel insurance coverage?
                               </div>
@@ -1666,9 +1709,10 @@
    .on("submit", "#send_print_email", function(e){
       e.preventDefault();
       var doc_id = $(".select-doc.active").attr("doc");
-      var template = $(".doc-"+doc_id).children("div.doc-desc").html();
       if($(this).valid())
       {
+         $(".preview-template").trigger('click');
+         var template = $(".doc-"+doc_id).children("div.doc-desc").html();
          $.ajax({
             url: "<?php echo base_url("claim/send_print_email_claim") ?>",
             method: "post",

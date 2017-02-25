@@ -1192,7 +1192,6 @@ class Emergency_assistance extends CI_Controller {
 	// Auto schedule process here for ajax request
 	public function auto_schedule($emc, $year, $month) 
 	{
-
 		if($emc) 
 		{
 			// get employee details
@@ -1209,7 +1208,7 @@ class Emergency_assistance extends CI_Controller {
 						'date'=>$year."-".$month."-".$i,
 						'created'=>date("Y-m-d H:i:s")
 						);
-					if(time() < strtotime($year."-".$month."-".$i))
+					if(strtotime(date('Y-m-d')) <= strtotime($year."-".$month."-".$i))
 					{
 						// delete schedule if already exists
 						$this->common_model->delete('schedule', array('employee_id'=>$emc, 'date'=>$year."-".$month."-".$i));
@@ -1219,16 +1218,21 @@ class Emergency_assistance extends CI_Controller {
 					}
 				}
 
-
 				echo TRUE;
 			}
 		} 
 		else
 		{
 			// get all eac's list
-			$fields = "shift, id";
-			$conditions = "";
-			$users = $this->common_model->select($record = "list", $typecast = "array", $table = "users", $fields, $conditions);
+			$joins = [];
+			$fields = "users.shift, users.id";
+			$joins[] = array(
+				'table' => 'users_groups',
+				'on' => 'users_groups.user_id = users.id',
+				'type' => 'LEFT'
+				);
+			$conditions = "users_groups.group_id = '2' and users.active = '1'";
+			$users = $this->common_model->select($record = "list", $typecast = "array", $table = "users", $fields, $conditions, $joins, array(), array("users_groups.user_id"));
 			if(!empty($users))
 			{
 				foreach ($users as $schedule_details) 
@@ -1244,7 +1248,7 @@ class Emergency_assistance extends CI_Controller {
 								'date'=>$year."-".$month."-".$i,
 								'created'=>date("Y-m-d H:i:s")
 								);
-							if(time() < strtotime($year."-".$month."-".$i))
+							if(strtotime(date('Y-m-d')) <= strtotime($year."-".$month."-".$i))
 							{
 								// delete schedule if already exists
 								$this->common_model->delete('schedule', array('employee_id'=>$schedule_details['id'], 'date'=>$year."-".$month."-".$i));
@@ -2007,14 +2011,14 @@ class Emergency_assistance extends CI_Controller {
 				if($type == 'case')
 				{
 					if($value['name'] == 'eacmanager')
-						$return[] = "'eac'";
+						$return[] = "'emc'";
 
 					else if($value['name'] == 'casemamager')
 						$return[] = "'case'";
 
 					else if($value['name'] == 'admin')
 					{
-						$return[] = "'eac'";
+						$return[] = "'emc'";
 						$return[] = "'case'";
 					}
 				}
