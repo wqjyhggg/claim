@@ -223,7 +223,10 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('physician_alt_telephone', 'physician alt telephone ', 'numeric');
 			$this->form_validation->set_rules('email', 'Email', 'valid_email');
 
-			// $this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
+			$this->form_validation->set_rules('contact_first_name', 'First Name', 'alpha');
+			$this->form_validation->set_rules('contact_last_name', 'Last Name', 'alpha');
+			$this->form_validation->set_rules('contact_email', 'Email', 'valid_email');
+			$this->form_validation->set_rules('contact_phone', 'physician alt telephone ', 'numeric');
 			
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
@@ -449,10 +452,10 @@ class Claim extends CI_Controller {
 
 				if($this->input->post('Examine') == 'Examine')
 					// redirect them to the examine claim page
-					redirect("claim/examine_claim/$record_id", 'refresh');
+					redirect("claim/examine_claim/$record_id");
 				else
 					// redirect them to the claim page
-					redirect("claim/claim_detail/$record_id", 'refresh');
+					redirect("claim/claim_detail/$record_id");
 
 			}
 			else
@@ -673,7 +676,7 @@ class Claim extends CI_Controller {
 				$this->session->set_flashdata('success', "Claim successfully updated");
 
 				// redirect them to the login page
-				redirect('claim', 'refresh');
+				redirect('claim');
 			}
 			else
 			{	
@@ -809,7 +812,7 @@ class Claim extends CI_Controller {
 				$this->session->set_flashdata('error', "Something went wrong, please try after some time.");
 				
 				// redirect them to the claim
-				redirect('claim', 'refresh');
+				redirect('claim');
 			}
 
 
@@ -826,6 +829,11 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('case_no', 'Case No', 'is_unique[claim.case_no]');
 			$this->form_validation->set_rules('school_name', 'School Name', 'required');
 			$this->form_validation->set_rules('group_id', 'Group ID', 'required');
+
+			$this->form_validation->set_rules('contact_first_name', 'First Name', 'alpha');
+			$this->form_validation->set_rules('contact_last_name', 'Last Name', 'alpha');
+			$this->form_validation->set_rules('contact_email', 'Email', 'valid_email');
+			$this->form_validation->set_rules('contact_phone', 'physician alt telephone ', 'numeric');
 
 			if ($this->form_validation->run() == TRUE)
 			{
@@ -1041,7 +1049,7 @@ class Claim extends CI_Controller {
 				$this->session->set_flashdata('success', "Claim successfully updated");
 
 				// redirect them to the login page
-				redirect('claim/claim_detail/'.$id, 'refresh');
+				redirect('claim/claim_detail/'.$id);
 			}
 			else
 			{	
@@ -1191,7 +1199,7 @@ class Claim extends CI_Controller {
 		$table = "diagnosis"; 
 		$group_by = array("users_groups.user_id");
 		$fields = "diagnosis.$field as `value`, diagnosis.id as `data`"; 
-		$conditions = "diagnosis.$field like '%$query%' ";
+		$conditions = "(diagnosis.$field like '%$query%'  OR diagnosis.code like '%$query%' )";
 		$results = $this->common_model->select($record = "list", $typecast = "object", $table, $fields, $conditions, $joins = array(), $order_by = array(), $group_by = array(), $having = "" , $limit = 8);
 
 		// return result in json format

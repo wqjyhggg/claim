@@ -301,7 +301,7 @@ label.error {
 
 div.today {
     background: #E9EFF7;
-    height: 100%;
+    /*height: 100%;*/
 } 
 .calendar ul {
     list-style: outside none none;

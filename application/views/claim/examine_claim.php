@@ -562,6 +562,7 @@
 <script>
    $(document).ready(function() {
 
+      var amt_payable = 0;
       // enable buttons according to claim Decision
       var decision = "<?php echo @$claim_details['status']; ?>"
       if(decision == ''){
@@ -932,6 +933,11 @@
          $(".edit-claim-item select[name="+index+"]").val(value);
          if(index == 'status')
             decision = value;
+
+         if(index == 'amt_payable'){
+            value = parseFloat(value);
+            amt_payable = value;
+         }
       });
 
       // change label
@@ -971,9 +977,10 @@
    .on("submit", "#send_print_email", function(e){
       e.preventDefault();
       var doc_id = $(".select-doc.active").attr("doc");
-      var template = $(".doc-"+doc_id).children("div.doc-desc").html();
       if($(this).valid())
       {
+         $(".preview-template").trigger('click');
+         var template = $(".doc-"+doc_id).children("div.doc-desc").html();
          $.ajax({
             url: "<?php echo base_url("claim/send_print_email_claim") ?>",
             method: "post",
@@ -1000,18 +1007,28 @@
    })
 
    // change value of total payable
-   .on("keyup", "input[name=amt_payable]", function(){
-      $("input[name=total_amount_payble]").val($(this).val()) ;
-   })
+   // .on("keyup", "input[name=amt_payable]", function(){
+   //    $("input[name=total_amount_payble]").val($(this).val()) ;
+   // })
 
    // once user clicked on accept button
    .on("click", "input[name=Accept]", function(){
 
       // check total payble amount
-      if($("input[name=total_amount_payble]").val() == '0' || !$("input[name=total_amount_payble]").val()){
+      if(($("input[name=total_amount_payble]").val() == '0' || !$("input[name=total_amount_payble]").val()) && ($("input[name=amt_payable]").val() == '0' || !$("input[name=amt_payable]").val())){
          alert("Please add payable amount to any claim item first to accept claim.")
          return false;
       }
+
+
+      var policy_data = $("input[name=policy_info]").val()?$.parseJSON($("input[name=policy_info]").val()):[{"sum_insured":0}];
+      var amount_insured = policy_data[0].sum_insured?policy_data[0].sum_insured:0;
+
+      if(amount_insured > 0)
+         if(amount_insured < (parseFloat($("input[name=total_amount_payble]").val()) - amt_payable + parseFloat($("input[name=amt_payable]").val()))){         
+            alert("Payable amount should be less then insured amount($"+amount_insured+").");
+            return false;
+         }
 
       if(confirm('Are you sure you want to accept claim?')){
 
