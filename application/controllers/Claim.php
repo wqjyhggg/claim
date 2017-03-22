@@ -121,44 +121,46 @@ class Claim extends CI_Controller {
 				$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
 				$this->data['cases'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
 			}
-			else if($this->input->get("filter") == 'policy')
-			{
-
+			else if($this->input->get("filter") == 'policy') {
 				// prepare post data array
 				$this->data['params'] = $this->input->get();
 				$this->data['params']['key'] = API_KEY;
-
+				
 				// trim all the input values
 				foreach ($this->data['params'] as $k => $v) {
 					$this->data['params'][$k] = trim($v);
 				}
-
+				
 				// search policy code here
 				$url =  API_URL."search";
 				$curl = curl_init();
-
-				// Post Data 
+				
+				// Post Data
 				curl_setopt($curl, CURLOPT_POST, 1);
 				curl_setopt($curl, CURLOPT_POSTFIELDS, $this->data['params']);
-
+				
 				// Optional Authentication:
-				if(API_USER and API_PASSWORD)
-				{
+				if (API_USER and API_PASSWORD) {
 					curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 					curl_setopt($curl, CURLOPT_USERPWD, API_USER.":".API_PASSWORD);
 				}
-
+				
 				curl_setopt($curl, CURLOPT_URL, $url);
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
+				curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false );
+				curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2 );
+				curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+				
 				$result = curl_exec($curl);
+				curl_close($curl);
 				$result = json_decode($result, TRUE);
 
 				// pass policies data to view
+				$this->data['policies_error']  = @$result['errormsg'];
+				$this->data['policies_success']  = @$result['success'];
 				$this->data['policies']  = @$result['plan_list'];
 				$this->data['status']  = @$result['status_list'];
 
-				curl_close($curl);
 			}
 
 			// send case manager and eac managers list
@@ -169,7 +171,7 @@ class Claim extends CI_Controller {
 			$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->input->get($field_name), $key = "short_code", $value = "name");
 			$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->get($field_name), $key = "short_code", $value = "name");
 			$this->data['policy_status'] = $this->common_model->get_policy_status($field_name = "status_id", $selected = $this->input->get($field_name));
-			$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->get($field_name));
+			$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->get($field_name), TRUE, FALSE);
 
 			// get claim examiners
 			$this->data['claim_examiner'] = $this->common_model->getrusers($field_name = "assign_user", "", $group = array("'claimexaminer'"), $empty = "--Select Claim Examiner--", $additional_conditions = " and active = '1'");
@@ -320,6 +322,9 @@ class Claim extends CI_Controller {
 				// update case no(7 length) to table
 				$claim_no = str_pad($record_id, 7, 0, STR_PAD_LEFT);
 				$this->common_model->update("claim", array("claim_no"=>$claim_no), array("id"=>$record_id));
+				if (!empty($data['case_no'])) {
+					$this->common_model->update("case", array("claim_no"=>$claim_no), array("case_no"=>$data['case_no']));
+				}
 
 				// insert expenses_claimed data
 				if(!empty($array['expenses_claimed']))

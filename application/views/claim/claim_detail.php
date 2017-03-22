@@ -365,8 +365,8 @@
                            </div>
                            <div class="col-sm-3">
                               <?php
-                                 echo form_label('Employee Name:', 'employee_name', array("class"=>'col-sm-12'));
-                                 echo form_input("employee_name", $this->common_model->field_val("employee_name", $claim_details), array("class"=>"form-control", 'placeholder'=>'Employee Name'));
+                                 echo form_label('Employer Name:', 'employee_name', array("class"=>'col-sm-12'));
+                                 echo form_input("employee_name", $this->common_model->field_val("employee_name", $claim_details), array("class"=>"form-control", 'placeholder'=>'Employer Name'));
                               ?>
                            </div>
                            <div class="col-sm-3">

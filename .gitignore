@@ -32,3 +32,6 @@ assets/uploads/*
 *.stTheme.cache
 *.sublime-workspace
 *.sublime-project
+/.buildpath
+/.project
+/.settings/
