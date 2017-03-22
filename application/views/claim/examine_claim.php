@@ -287,6 +287,18 @@
                               echo form_input("comment", $this->input->post("comment"), array("class"=>"form-control", 'placeholder'=>'Comment'));
                            ?>
                         </div>
+                        <div class="form-group col-sm-3">
+                           <?php
+                              echo form_label('Recovery Name:', 'recovery_name', array("class"=>'col-sm-12'));
+                              echo form_input("recovery_name", $this->input->post("recovery_name"), array("class"=>"form-control", 'placeholder'=>'Recovery Name'));
+                           ?>
+                        </div>
+                        <div class="form-group col-sm-3">
+                           <?php
+                              echo form_label('Recovery Amt:', 'recovery_amt', array("class"=>'col-sm-12'));
+                              echo form_input("recovery_amt", $this->input->post("recovery_amt"), array("class"=>"form-control", 'placeholder'=>'Recovery Amount'));
+                           ?>
+                        </div>
                      </div>
                   </div>
 

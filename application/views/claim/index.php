@@ -82,11 +82,11 @@
                   echo form_input("plan_id", $this->input->get("plan_id"), array("class"=>"form-control", 'placeholder'=>'ID'));
                   ?>
                </div>
-               <div class="form-group col-sm-3">
+               <!-- div class="form-group col-sm-3">
                   <?php               
                   echo form_input("case_no", $this->input->get("case_no"), array("class"=>"form-control", 'placeholder'=>'Case Number'));
                   ?>
-               </div>
+               </div -->
             </div>
 
             <div class="row more_items" style="display:none"> 
@@ -225,6 +225,9 @@
                </div>               
                <?php else:?>
                   <center><?php echo heading("No record available", 4); ?></center>
+                  <?php if (!empty($policies_error)) : ?>
+                  <center><?php echo heading($policies_error, 4); ?></center>
+                  <?php endif; ?>
                <?php endif;?>
             </div>
             <?php endif; ?>

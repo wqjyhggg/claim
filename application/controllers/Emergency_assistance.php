@@ -104,7 +104,10 @@ class Emergency_assistance extends CI_Controller {
 
 				curl_setopt($curl, CURLOPT_URL, $url);
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
+				curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false );
+				curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2 );
+				curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+				
 				$result = curl_exec($curl);
 				$result = json_decode($result, TRUE);
 
@@ -1912,7 +1915,10 @@ class Emergency_assistance extends CI_Controller {
 
 				curl_setopt($curl, CURLOPT_URL, $url);
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
+				curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false );
+				curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2 );
+				curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+				
 				$result = curl_exec($curl);
 				$result = json_decode($result, TRUE);
 
@@ -1944,11 +1950,10 @@ class Emergency_assistance extends CI_Controller {
 	// get policy information from jfinsurance database
 	function get_policy_info()
 	{
-
 		// prepare post data array
 		$this->data['params'] = $this->input->get();
 		$this->data['params']['key'] = API_KEY;
-
+		
 		// search policy code here
 		$url =  API_URL."search";
 		$curl = curl_init();
@@ -1966,15 +1971,20 @@ class Emergency_assistance extends CI_Controller {
 
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false );
+		curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2 );
+		curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
 
 		$result = curl_exec($curl);
-
-		curl_close($curl);
-
-		// pass policies data to view
-		echo $result;
+		if ($result) {
+			curl_close($curl);
+			echo $result;
+		} else {
+			echo curl_error($curl);
+			curl_close($curl);
+			echo json_encode(array("error" => "Access Server Error"));
+		}
 		die;
-
 	}
 
 	// get provinces list from country name

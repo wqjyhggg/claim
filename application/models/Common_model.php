@@ -322,27 +322,29 @@ class Common_model extends CI_Model
 
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
+        curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false );
+        curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2 );
+        curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+        
         $result = curl_exec($curl);
         $result = json_decode($result, TRUE);
-
+        
         // get all data here
         $products  = [''=>'--Select Product--'];
         // echo curl_error($curl);
 
         curl_close($curl);
 
-        if(!empty(@$result['plan']))
-        {   
-            foreach ($result['plan'] as $key => $value) 
-            {
-                if($short)
-                    $products[$value['product_short']] = $value['up_insuer'];
-                else                    
-                    $products[$value['up_insuer']] = $value['up_insuer'];
-            }
-        }
-        return form_dropdown($field_name, $products, $selected, array("class"=>$classes?'form-control':""));
+		if (!empty($result['success']) && ($result['success'] == 'OK')) {
+			foreach ($result['plan'] as $key => $value) {
+				if ($short) {
+					$products[$key] = $key;
+				} else {
+					$products[$key] = $value['full_name'];
+				}
+			}
+		}
+		return form_dropdown($field_name, $products, $selected, array("class"=>$classes?'form-control':""));
     }
     
     /**
@@ -376,7 +378,10 @@ class Common_model extends CI_Model
 
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
+        curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false );
+        curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2 );
+        curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+        
         $result = curl_exec($curl);
 
         curl_close($curl);
