@@ -201,13 +201,15 @@ class Api extends CI_Controller {
 			$data['arrival_date'] = $this->input->post('arrival_date');
 			$data['guardian_name'] = $this->input->post('guardian_name');
 			$data['guardian_phone'] = $this->input->post('guardian_phone');
-			$data['same_policy'] = $this->input->post('same_policy');
 			$data['street_address'] = $this->input->post('street_address');
 			$data['city'] = $this->input->post('city');
 			$data['province'] = $this->input->post('province');
 			$data['telephone'] = $this->input->post('telephone');
 			$data['email'] = $this->input->post('email');
 			$data['post_code'] = $this->input->post('post_code');
+			if (empty($data['post_code'])) {
+				$error['post_code'] = 'Required';
+			}
 			$data['arrival_date_canada'] = $this->input->post('arrival_date_canada');
 			$data['cellular'] = $this->input->post('cellular');
 			$data['contact_first_name'] = $this->input->post('contact_first_name');
@@ -217,6 +219,9 @@ class Api extends CI_Controller {
 			$data['physician_name'] = $this->input->post('physician_name');
 			$data['clinic_name'] = $this->input->post('clinic_name');
 			$data['physician_street_address'] = $this->input->post('physician_street_address');
+			if (empty($data['post_code'])) {
+				$error['physician_street_address'] = 'Required';
+			}
 			$data['physician_city'] = $this->input->post('physician_city');
 			$data['country'] = $this->input->post('country');
 			$data['physician_post_code'] = $this->input->post('physician_post_code');
