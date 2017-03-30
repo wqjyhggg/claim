@@ -33,11 +33,11 @@ class Mytask_model extends CI_Model {
 			unset($data['id']);
 			
 			$this->db->where('id', $id);
-			$this->db->update('mytake', $data);
+			$this->db->update('mytask', $data);
 			return $id;
 		} else {
 			// insert
-			$this->db->insert('mytake', $data);
+			$this->db->insert('mytask', $data);
 			return $this->db->insert_id();
 		}
 	}
