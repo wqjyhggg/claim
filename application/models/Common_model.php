@@ -1,10 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/**
- * Common Model
- *
- * @category    model
- * @author      bhawani shankar
- */
+
 class Common_model extends CI_Model
 {
     public function __construct()
