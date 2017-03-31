@@ -297,46 +297,16 @@ class Common_model extends CI_Model
      * @param       $classes boolean TRUE/FALSE to show classes - Purpose to remove classes in edit doc file 
      * @param       $short boolean TRUE/FALSE to show full value or short value of array key 
     */
-    public function get_products($field_name, $selected, $classes = TRUE, $short = TRUE)
-    {
+	public function get_products($field_name, $selected, $classes = TRUE, $short = TRUE) {
+		$this->load->model('api_model');
+		$plans = $this->api_model->get_products();
 
-        // get products from jf api
-        $url =  API_URL."products";
-        $curl = curl_init();
-
-        // Post TYPE REQUEST 
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, array('key'=>API_KEY));
-
-        // Optional Authentication:
-        if(API_USER and API_PASSWORD)
-        {
-            curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            curl_setopt($curl, CURLOPT_USERPWD, API_USER.":".API_PASSWORD);
-        }
-
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false );
-        curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2 );
-        curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-        
-        $result = curl_exec($curl);
-        $result = json_decode($result, TRUE);
-        
-        // get all data here
-        $products  = [''=>'--Select Product--'];
-        // echo curl_error($curl);
-
-        curl_close($curl);
-
-		if (!empty($result['success']) && ($result['success'] == 'OK')) {
-			foreach ($result['plan'] as $key => $value) {
-				if ($short) {
-					$products[$key] = $key;
-				} else {
-					$products[$key] = $value['full_name'];
-				}
+		$products  = [''=>'--Select Product--'];
+		foreach ($plans as $key => $value) {
+			if ($short) {
+				$products[$key] = $key;
+			} else {
+				$products[$key] = $value['full_name'];
 			}
 		}
 		return form_dropdown($field_name, $products, $selected, array("class"=>$classes?'form-control':""));

@@ -2,12 +2,19 @@
 if (! defined ( 'BASEPATH' ))	exit ( 'No direct script access allowed' );
 
 /**
+ * This model hold 2 parts major functions 
+ * first parts get information from policy system
+ * second parts is the interface for API authorize
  * 
  * @author jackw
  *
  */
 
 class Api_model extends CI_Model {
+	public $status_list;
+	public $success;
+	public $errormsg;
+	
 	/**
 	 * Return a list of policy status
 	 *
@@ -16,6 +23,10 @@ class Api_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function get_policy($data) {
+		foreach ($data as $k => $v) {
+			$data[$k] = trim($v);
+		}
+		
 		// prepare post data
 		$data ['key'] = API_KEY;
 		$post_data = http_build_query ( $data );
@@ -44,10 +55,49 @@ class Api_model extends CI_Model {
 		
 		curl_close ( $curl );
 		$rt = json_decode ( $result, TRUE );
+		$this->status_list = isset($rt['status_list']) ? $rt['status_list'] : array();
+		$this->success = isset($rt['success']) ? $rt['success'] : 'Failed to Connect';
+		$this->errormsg = isset($rt['errormsg']) ? $rt['errormsg'] : '';
 		if (isset ( $rt ['success'] ) && isset ( $rt ['plan_list'] )) {
+			$this->status_list = $rt ['status_list'];
 			return $rt ['plan_list'];
 		}
 		return array ();
+	}
+	
+	/**
+	 * Return a list of products which policy system have
+	 * 
+	 * @return array 	production list
+	 */
+	public function get_products() {
+		// get products from jf api
+		$url =  API_URL."products";
+		$curl = curl_init();
+
+		// Post TYPE REQUEST
+		curl_setopt($curl, CURLOPT_POST, 1);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, array('key'=>API_KEY));
+		
+		// Optional Authentication:
+		if(API_USER and API_PASSWORD) {
+			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($curl, CURLOPT_USERPWD, API_USER.":".API_PASSWORD);
+		}
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false );
+		curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2 );
+		curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+		
+		$result = curl_exec($curl);
+		$result = json_decode($result, TRUE);
+        curl_close($curl);
+
+		if (!empty($result['success']) && ($result['success'] == 'OK')) {
+			return $result['plan'];
+		}
+		return array();
 	}
 	
 	/**

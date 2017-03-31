@@ -120,47 +120,14 @@ class Claim extends CI_Controller {
 
 				$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
 				$this->data['cases'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
-			}
-			else if($this->input->get("filter") == 'policy') {
-				// prepare post data array
-				$this->data['params'] = $this->input->get();
-				$this->data['params']['key'] = API_KEY;
+			} else if ($this->input->get("filter") == 'policy') {
+				$this->load->model('api_model');
 				
-				// trim all the input values
-				foreach ($this->data['params'] as $k => $v) {
-					$this->data['params'][$k] = trim($v);
-				}
-				
-				// search policy code here
-				$url =  API_URL."search";
-				$curl = curl_init();
-				
-				// Post Data
-				curl_setopt($curl, CURLOPT_POST, 1);
-				curl_setopt($curl, CURLOPT_POSTFIELDS, $this->data['params']);
-				
-				// Optional Authentication:
-				if (API_USER and API_PASSWORD) {
-					curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-					curl_setopt($curl, CURLOPT_USERPWD, API_USER.":".API_PASSWORD);
-				}
-				
-				curl_setopt($curl, CURLOPT_URL, $url);
-				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false );
-				curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2 );
-				curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-				
-				$result = curl_exec($curl);
-				curl_close($curl);
-				$result = json_decode($result, TRUE);
-
+				$this->data['policies']  = $this->api_model->get_policy($this->input->get());
 				// pass policies data to view
-				$this->data['policies_error']  = @$result['errormsg'];
-				$this->data['policies_success']  = @$result['success'];
-				$this->data['policies']  = @$result['plan_list'];
-				$this->data['status']  = @$result['status_list'];
-
+				$this->data['policies_error']  = $this->api_model->errormsg;
+				$this->data['policies_success']  = $this->api_model->success;
+				$this->data['status']  = $this->api_model->status_list;
 			}
 
 			// send case manager and eac managers list
@@ -462,10 +429,7 @@ class Claim extends CI_Controller {
 					// redirect them to the claim page
 					redirect("claim/claim_detail/$record_id");
 
-			}
-			else
-			{	
-				
+			} else {
 				// load dropdowns- countries, province, products data
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
