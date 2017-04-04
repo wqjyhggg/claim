@@ -330,6 +330,47 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name, $case_details));
 
+				// Load model if needs
+				$this->load->model('currency_model');
+				$this->load->model('country_model');
+				$this->load->model('province_model');
+				
+				$vdata = array();
+				$vdata['name'] = 'inpatient_currency';
+				$vdata['options'] = $this->currency_model->get_list();
+				$vdata['selected'] = 'CAD';
+				$this->data['inpatient_currency'] = $this->load->view('template/selection', $vdata, TRUE);
+				
+				$vdata = array();
+				$vdata['name'] = 'doctor_country';
+				$vdata['options'] = $this->country_model->get_list(1);
+				$vdata['selected'] = 'CA';
+				$vdata['loadurl'] = base_url('utility/province/doctor_province/');
+				$vdata['depended'] = 'doctor_province';
+				$this->data['doctor_country'] = $this->load->view('template/selection', $vdata, TRUE);
+				
+				$vdata = array();
+				$vdata['name'] = 'doctor_province';
+				$vdata['options'] = $this->province_model->get_list_by_country_short('CA');
+				$vdata['selected'] = 'ON';
+				$vdata['loadurl'] = '';
+				$this->data['doctor_province'] = $this->load->view('template/selection', $vdata, TRUE);
+
+				$vdata = array();
+				$vdata['name'] = 'outpatient_country';
+				$vdata['options'] = $this->country_model->get_list(1);
+				$vdata['selected'] = 'CA';
+				$vdata['loadurl'] = base_url('utility/province/outpatient_province/');
+				$vdata['depended'] = 'outpatient_province';
+				$this->data['outpatient_country'] = $this->load->view('template/selection', $vdata, TRUE);
+				
+				$vdata = array();
+				$vdata['name'] = 'outpatient_province';
+				$vdata['options'] = $this->province_model->get_list_by_country_short('CA');
+				$vdata['selected'] = 'ON';
+				$vdata['loadurl'] = '';
+				$this->data['outpatient_province'] = $this->load->view('template/selection', $vdata, TRUE);
+
 				$additional_conditions = " and users.active = '1'";
 				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'"), $empty = "--Follow Up EAC--", $additional_conditions);
 
@@ -488,6 +529,49 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['province'] = $this->get_provinces($type = 'return', $case_details['country'], $case_details['province']);
+
+				// Load model if needs
+				$this->load->model('currency_model');
+				$this->load->model('country_model');
+				$this->load->model('province_model');
+				
+				$vdata = array();
+				$vdata['name'] = 'inpatient_currency';
+				$vdata['options'] = $this->currency_model->get_list();
+				$vdata['selected'] = $case_details['inpatient_currency'];
+				$this->data['inpatient_currency'] = $this->load->view('template/selection', $vdata, TRUE);
+				
+				if (empty($case_details['doctor_country'])) $case_details['doctor_country'] = 'CA';
+				$vdata = array();
+				$vdata['name'] = 'doctor_country';
+				$vdata['options'] = $this->country_model->get_list(1);
+				$vdata['selected'] = $case_details['doctor_country'];
+				$vdata['loadurl'] = base_url('utility/province/doctor_province/');
+				$vdata['depended'] = 'doctor_province';
+				$this->data['doctor_country'] = $this->load->view('template/selection', $vdata, TRUE);
+				
+				$vdata = array();
+				$vdata['name'] = 'doctor_province';
+				$vdata['options'] = $this->province_model->get_list_by_country_short($case_details['doctor_country']);
+				$vdata['selected'] = $case_details['doctor_province'];
+				$vdata['loadurl'] = '';
+				$this->data['doctor_province'] = $this->load->view('template/selection', $vdata, TRUE);
+
+				if (empty($case_details['outpatient_country'])) $case_details['outpatient_country'] = 'CA';
+				$vdata = array();
+				$vdata['name'] = 'outpatient_country';
+				$vdata['options'] = $this->country_model->get_list(1);
+				$vdata['selected'] = $case_details['outpatient_country'];
+				$vdata['loadurl'] = base_url('utility/province/outpatient_province/');
+				$vdata['depended'] = 'outpatient_province';
+				$this->data['outpatient_country'] = $this->load->view('template/selection', $vdata, TRUE);
+				
+				$vdata = array();
+				$vdata['name'] = 'outpatient_province';
+				$vdata['options'] = $this->province_model->get_list_by_country_short($case_details['doctor_country']);
+				$vdata['selected'] = $case_details['outpatient_province'];
+				$vdata['loadurl'] = '';
+				$this->data['outpatient_province'] = $this->load->view('template/selection', $vdata, TRUE);
 
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
 				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array("'eacmanager'", "'casemamager'"), $empty = "--Follow Up EAC--");

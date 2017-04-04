@@ -152,6 +152,21 @@
                   </div>
                   <div class="form-group col-sm-4">
                      <?php 
+                        echo form_label('Place of Call:', 'place_of_call', array("class"=>'col-sm-12'));
+                     	echo form_input("place_of_call", $this->common_model->field_val("place_of_call", $case_details), array("class"=>"form-control", 'placeholder'=>'Place of Call'));
+                        echo form_error("place_of_call");
+                     ?>
+                  </div>
+                  <div class="form-group col-sm-4">
+                     <?php echo form_label('Incident Date:', 'incident_date', array("class"=>'col-sm-12')); ?>
+                     <div class="input-group date">
+                     <?php echo form_input("incident_date", $this->common_model->field_val("incident_date", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Incident Date')); ?>
+                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                     </div>
+                     <?php echo form_error("incident_date"); ?>
+                  </div>
+                  <div class="form-group col-sm-4">
+                     <?php 
                         echo form_label('Country:', 'country2', array("class"=>'col-sm-12'));
                         echo $country2;
                         echo form_error("country2");
@@ -162,6 +177,203 @@
 
 
                <h4 class="hospital_info">Doctor Info/Hospital Info</h4>
+				<div class="row inpationdocinfo">
+					<label class="form-group col-sm-12">Inpatient Info</label>
+					<div class="form-group col-sm-4">
+						<?php echo form_label('Addmission Date:', 'addmission_date', array("class"=>'col-sm-12'));   ?>
+						<div class="input-group date">
+                        	<?php                
+                        		echo form_input("addmission_date", $this->common_model->field_val("addmission_date", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Addmission Date'));
+                        	?>
+                        	<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                        <?php echo form_error("addmission_date"); ?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php echo form_label('Discharge Date:', 'discharge_date', array("class"=>'col-sm-12'));   ?>
+						<div class="input-group date">
+                        	<?php                
+                        		echo form_input("discharge_date", $this->common_model->field_val("discharge_date", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Discharge Date'));
+                        	?>
+                        	<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                        <?php echo form_error("discharge_date"); ?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Room Number:', 'room_number', array("class"=>'col-sm-12'));
+							echo form_input("room_number", $this->common_model->field_val("room_number", $case_details), array("class"=>"form-control", 'placeholder'=>'Room Number'));
+							echo form_error("room_number");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Account Number:', 'account_number', array("class"=>'col-sm-12'));
+							echo form_input("account_number", $this->common_model->field_val("account_number", $case_details), array("class"=>"form-control", 'placeholder'=>'Account Number'));
+							echo form_error("account_number");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Hospital Charge:', 'hospital_charge', array("class"=>'col-sm-12'));
+							echo form_input("hospital_charge", $this->common_model->field_val("hospital_charge", $case_details), array("class"=>"form-control", 'placeholder'=>'Hospital Charge'));
+							echo form_error("hospital_charge");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Currency:', 'inpatient_currency', array("class"=>'col-sm-12'));
+							echo $inpatient_currency;
+							echo form_error("inpatient_currency");
+						?>
+					</div> 
+				</div> 
+				<div class="row">
+					<label class="form-group col-sm-12 doctor_info">Home Doctor Info</label>
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('First Name:', 'doctor_first_name', array("class"=>'col-sm-12'));
+							echo form_input("doctor_first_name", $this->common_model->field_val("doctor_first_name", $case_details), array("class"=>"form-control", 'placeholder'=>'First Name'));
+							echo form_error("doctor_first_name");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Last Name:', 'doctor_last_name', array("class"=>'col-sm-12'));
+							echo form_input("doctor_last_name", $this->common_model->field_val("doctor_last_name", $case_details), array("class"=>"form-control", 'placeholder'=>'Last Name'));
+							echo form_error("doctor_last_name");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Country:', 'doctor_country', array("class"=>'col-sm-12'));
+							echo $doctor_country;
+							echo form_error("doctor_country");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Province:', 'doctor_province', array("class"=>'col-sm-12'));
+							echo $doctor_province;
+							echo form_error("doctor_province");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Address:', 'doctor_address', array("class"=>'col-sm-12'));
+							echo form_input("doctor_address", $this->common_model->field_val("doctor_address", $case_details), array("class"=>"form-control", 'placeholder'=>'Address'));
+							echo form_error("doctor_address");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('City:', 'doctor_city', array("class"=>'col-sm-12'));
+							echo form_input("doctor_city", $this->common_model->field_val("doctor_city", $case_details), array("class"=>"form-control", 'placeholder'=>'City'));
+							echo form_error("doctor_city");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Post Code:', 'doctor_post_code', array("class"=>'col-sm-12'));
+							echo form_input("doctor_post_code", $this->common_model->field_val("doctor_post_code", $case_details), array("class"=>"form-control", 'placeholder'=>'Post Code'));
+							echo form_error("doctor_post_code");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Phone Number:', 'doctor_phone', array("class"=>'col-sm-12'));
+							echo form_input("doctor_phone", $this->common_model->field_val("doctor_phone", $case_details), array("class"=>"form-control", 'placeholder'=>'Phone Number'));
+							echo form_error("doctor_phone");
+						?>
+					</div> 
+				</div> 
+				<div class="row outpationdocinfo">
+					<label class="form-group col-sm-12">Outpatient Info / Hospital Info</label>
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Provider:', 'outpatient_provider', array("class"=>'col-sm-12'));
+							echo form_input("outpatient_provider", $this->common_model->field_val("outpatient_provider", $case_details), array("class"=>"form-control", 'placeholder'=>'Provider'));
+							echo form_error("outpatient_provider");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Federal tax ID#:', 'outpatient_federal_tax', array("class"=>'col-sm-12'));
+							echo form_input("outpatient_federal_tax", $this->common_model->field_val("outpatient_federal_tax", $case_details), array("class"=>"form-control", 'placeholder'=>'Federal tax ID Number'));
+							echo form_error("outpatient_federal_tax");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Facility:', 'outpatient_facility', array("class"=>'col-sm-12'));
+							echo form_input("outpatient_facility", $this->common_model->field_val("outpatient_facility", $case_details), array("class"=>"form-control", 'placeholder'=>'Facility'));
+							echo form_error("outpatient_facility");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Physician:', 'outpatient_physician', array("class"=>'col-sm-12'));
+							echo form_input("outpatient_physician", $this->common_model->field_val("outpatient_physician", $case_details), array("class"=>"form-control", 'placeholder'=>'Physician'));
+							echo form_error("outpatient_physician");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Address 1:', 'outpatient_address1', array("class"=>'col-sm-12'));
+							echo form_input("outpatient_address1", $this->common_model->field_val("outpatient_address1", $case_details), array("class"=>"form-control", 'placeholder'=>'Address 1'));
+							echo form_error("outpatient_address1");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Address 2:', 'outpatient_address2', array("class"=>'col-sm-12'));
+							echo form_input("outpatient_address2", $this->common_model->field_val("outpatient_address2", $case_details), array("class"=>"form-control", 'placeholder'=>'Address 2'));
+							echo form_error("outpatient_address2");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('City:', 'outpatient_city', array("class"=>'col-sm-12'));
+							echo form_input("outpatient_city", $this->common_model->field_val("outpatient_city", $case_details), array("class"=>"form-control", 'placeholder'=>'City'));
+							echo form_error("outpatient_city");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Province:', 'outpatient_province', array("class"=>'col-sm-12'));
+							echo $outpatient_province;
+							echo form_error("outpatient_province");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Country:', 'outpatient_country', array("class"=>'col-sm-12'));
+							echo $outpatient_country;
+							echo form_error("outpatient_country");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Post Code:', 'outpatient_post_code', array("class"=>'col-sm-12'));
+							echo form_input("outpatient_post_code", $this->common_model->field_val("outpatient_post_code", $case_details), array("class"=>"form-control", 'placeholder'=>'Post Code'));
+							echo form_error("outpatient_post_code");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('Phone:', 'outpatient_phone', array("class"=>'col-sm-12'));
+							echo form_input("outpatient_phone", $this->common_model->field_val("outpatient_phone", $case_details), array("class"=>"form-control", 'placeholder'=>'Phone Number'));
+							echo form_error("outpatient_phone");
+						?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php
+							echo form_label('FAX:', 'outpatient_fax', array("class"=>'col-sm-12'));
+							echo form_input("outpatient_fax", $this->common_model->field_val("outpatient_fax", $case_details), array("class"=>"form-control", 'placeholder'=>'Fax Number'));
+							echo form_error("outpatient_fax");
+						?>
+					</div> 
+				</div> 
                <div class="row">
                   <div class="form-group col-sm-4">
                      <?php               
@@ -353,20 +565,34 @@
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
-   $(document).ready(function() {
+function page_info_adjust() {
+	if ($("select[name=reason]").val() == 'Outpatient') {
+		$(".hospital_info").text("Doctor Info");
+		$(".doctor_info").text("Home Doctor Info");
+		$(".outpationdocinfo").show();
+		$(".inpationdocinfo").hide();
+	} else if ($("select[name=reason]").val() == 'Inpatient') {
+		$(".outpationdocinfo").hide();
+		$(".inpationdocinfo").show();
+		$(".hospital_info").text("Hospital Info");
+		$(".doctor_info").text("Attending Physician");
+	} else {
+		$(".outpationdocinfo").hide();
+		$(".inpationdocinfo").show();
+		$(".hospital_info").text("Doctor Info/Hospital Info");
+		$(".doctor_info").text("Attending Physician");
+	}
+}
+
+$(document).ready(function() {
       $(".datepicker").datepicker({
            startDate: '-117y',
            endDate: '+0y',
        });
 
-      $("select[name=reason]").change(function(){
-         if($(this).val() == 'Outpatient')
-            $(".hospital_info").text("Doctor Info");
-         else if($(this).val() == 'Inpatient')
-            $(".hospital_info").text("Hospital Info");
-         else
-            $(".hospital_info").text("Doctor Info/Hospital Info");
-      })
+      $("select[name=reason]").change(page_info_adjust);
+
+      page_info_adjust();
    })
 
    // once user click over save intake form, we are just hold every value untill case is not submitted

@@ -23,15 +23,13 @@
       <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom.css">
       <!-- jQuery -->
       <script src="<?php echo base_url(); ?>assets/js/jquery_003.js"></script><!-- style sheets specific to the page -->
-        {_styles}
-        <!-- js files specific to the page -->
-        {_scripts}
       <script src="<?php echo base_url(); ?>assets/js/bootstrap.js"></script>
       <script src="<?php echo base_url(); ?>assets/js/bootstrap-datetimepicker.js"></script>
       <!-- style sheets specific to the page -->
         {_styles}
       <!-- js files specific to the page -->
         {_scripts}
+      <script src="<?php echo base_url(); ?>assets/js/auroratd.js"></script>
    </head>
    <body class="nav-md">
       <header>

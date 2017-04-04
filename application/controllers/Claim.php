@@ -3,7 +3,6 @@
 /**
  * Description of user
  *
- * @author Bhawani
  */
 class Claim extends CI_Controller {
 
