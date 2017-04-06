@@ -978,95 +978,74 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// redirect if needed, otherwise display the create provider page
-	public function provider_batch_upload()
-	{
-
-		if (!$this->ion_auth->logged_in())
-		{
+	public function provider_batch_upload() {
+		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		}
-		else
-		{
-
+		} else {
+			$this->load->model('provider_model');
+			
 			//validate form input
 			$this->form_validation->set_rules('csv_file', "CSV File", 'required');
-			if ($this->form_validation->run() == TRUE)
-			{
-
-        		$this->load->library('csvimport');
-
-				$config['upload_path'] = './assets/temp/';
-		        $config['allowed_types'] = 'csv';
-		        $config['max_size'] = '5000';
-		 
-		        $this->load->library('upload', $config);
-		 
-		        // If upload failed, display error
-		        if (!$this->upload->do_upload('csv')) {
-
-		            $error = $this->upload->display_errors();
+			if ($this->form_validation->run() == TRUE) {
+				$this->load->library('csvimport');
+				$config['upload_path'] = UPLOADPATH;
+				$config['allowed_types'] = 'csv';
+				$config['max_size'] = '5000';
+				
+				$this->load->library('upload', $config);
+				
+				// If upload failed, display error
+				if (!$this->upload->do_upload('csv')) {
+					$error = $this->upload->display_errors();
 					$this->session->set_flashdata('error', $error);
 					redirect('emergency_assistance/provider_batch_upload', 'refresh');
+				} else {
+					$file_data = $this->upload->data();
+					$file_path = UPLOADPATH.$file_data['file_name'];
+					
+					if ($this->csvimport->get_array($file_path)) {
+						$csv_array = $this->csvimport->get_array($file_path);
 
-		        } else {
-		            $file_data = $this->upload->data();
-		            $file_path =  './assets/temp/'.$file_data['file_name'];
-		 
-		            if ($this->csvimport->get_array($file_path)) {
-		                $csv_array = $this->csvimport->get_array($file_path);
-
-		                foreach ($csv_array as $row) {
-
-	                   		// get lat lng from address
-							$cordinates = $this->lat_lng_finder($row["Address"].", ".$row["Postcode"]);
+						foreach ($csv_array as $row) {
+							$cordinates = $this->common_model->lat_lng_finder($row["Address"].", ".$row["Postcode"]);
 
 							// prepare data array
 							$data = array(
-								'name' => $row["Name"],
-								'address' => $row["Address"],
-								'postcode' => $row["Postcode"],
-								'discount' => $row["Discount"],
-								'contact_person' => $row["Contact Person"],
-								'phone_no' => $row["Phone No"],
-								'email' => $row["Email"],
-								'ppo_codes' => $row["PPO Codes"],
-								'services' => $row["Services"],
-								'priority' => $row["Priority"],
-								'lat'=>$cordinates['lat'],
-								'lng'=>$cordinates['lng'],
-								);
+									'name' => $row["Name"],
+									'address' => $row["Address"],
+									'postcode' => $row["Postcode"],
+									'discount' => $row["Discount"],
+									'contact_person' => $row["Contact Person"],
+									'phone_no' => $row["Phone No"],
+									'email' => $row["Email"],
+									'ppo_codes' => $row["PPO Codes"],
+									'services' => $row["Services"],
+									'priority' => $row["Priority"],
+									'lat'=>$cordinates['lat'],
+									'lng'=>$cordinates['lng'],
+							);
 							// insert values to database
-							$this->common_model->save("provider", $data);
-
-		                }
-
+							$this->provider_model->save($data);
+						}
+						
 						// send success message
 						$this->session->set_flashdata('success', "Providers successfully added");
-
-						// redirect them to the login page
 						redirect('emergency_assistance/provider_batch_upload', 'refresh');
-		            } 
-		            else  
-		            {
+					} else {
 						// send success message
 						$this->session->set_flashdata('error', "Something went wrong, please try after some time.");
-
+						
 						// redirect them to the login page
 						redirect('emergency_assistance/provider_batch_upload', 'refresh');
-		            
-		            }
-		 
-		        } 
-
-			}
-			else
-			{				
+					}
+				}
+			} else {
 				// load view data
 				$this->template->write('title', SITE_TITLE.' - Provider Batch Upload', TRUE);
-		        $this->template->write_view('content', 'emergency_assistance/provider_batch_upload', $this->data);
-		        $this->template->render(); 	
-			}        	       
+				$this->template->write_view('content', 'emergency_assistance/provider_batch_upload', $this->data);
+				$this->template->render();
+			}
 		}
 	}
 
@@ -1127,15 +1106,13 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// lat lng generator
-	public function lat_lng_finder($address = "")
-	{
-
+	public function lat_lng_finder($address = "") {
 		// Get lat and long by address         
         $prepAddr = str_replace(' ','+',$address);
         $geocode=file_get_contents('https://maps.google.com/maps/api/geocode/json?address='.$prepAddr.'&sensor=false');
         $output= json_decode($geocode);
-        $latitude = @$output->results[0]->geometry->location->lat?$output->results[0]->geometry->location->lat:0;
-        $longitude = @$output->results[0]->geometry->location->lng?$output->results[0]->geometry->location->lng:0;
+        $latitude = isset($output->results[0]->geometry->location->lat) ? (float)$output->results[0]->geometry->location->lat : 43.653226;
+        $longitude = isset($output->results[0]->geometry->location->lng) ? (float)$output->results[0]->geometry->location->lng : -79.3831843;
         return array('lat'=>$latitude, 'lng'=>$longitude);
 	}
 

@@ -305,7 +305,8 @@ switch (ENVIRONMENT)
 	}
 
 	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
-
+	define('UPLOADPATH', FCPATH.'upload'.DIRECTORY_SEPARATOR);
+	
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE
