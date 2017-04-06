@@ -80,42 +80,20 @@ class Emergency_assistance extends CI_Controller {
 
 				// prepare post data array
 				$this->data['params'] = $this->input->get();
-				$this->data['params']['key'] = API_KEY;
-
-				// trim all the input values
-				foreach ($this->data['params'] as $k => $v) {
-					$this->data['params'][$k] = trim($v);
-				}
-
-				// search policy code here
-				$url =  API_URL."search";
-				$curl = curl_init();
-
-				// Post Data 
-				curl_setopt($curl, CURLOPT_POST, 1);
-				curl_setopt($curl, CURLOPT_POSTFIELDS, $this->data['params']);
-
-				// Optional Authentication:
-				if(API_USER and API_PASSWORD)
-				{
-					curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-					curl_setopt($curl, CURLOPT_USERPWD, API_USER.":".API_PASSWORD);
-				}
-
-				curl_setopt($curl, CURLOPT_URL, $url);
-				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false );
-				curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2 );
-				curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
 				
-				$result = curl_exec($curl);
-				$result = json_decode($result, TRUE);
-
-				// pass policies data to view
-				$this->data['policies']  = @$result['plan_list'];
-				$this->data['status']  = @$result['status_list'];
-
-				curl_close($curl);
+				$this->load->model('api_model');
+				$this->load->model('claim_model');
+				
+				$this->data['policies'] = $this->api_model->get_policy($this->data['params']);
+				$this->data['status'] = $this->api_model->status_list;
+				
+				foreach($this->data['policies'] as $k => $pl) {
+					if ($this->claim_model->search(array('policy_no' => $pl['policy']))) {
+						$this->data['policies'][$k]['has_claim'] = 1;
+					} else {
+						$this->data['policies'][$k]['has_claim'] = 0;
+					}
+				}
 			}
 
 			// send case manager and eac managers list
