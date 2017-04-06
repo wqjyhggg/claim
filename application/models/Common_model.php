@@ -7,6 +7,16 @@ class Common_model extends CI_Model
         parent::__construct();
     }
 
+	public function lat_lng_finder($address = "") {
+		// Get lat and long by address
+		$prepAddr = str_replace(' ','+',$address);
+		$geocode=file_get_contents('https://maps.google.com/maps/api/geocode/json?address='.$prepAddr.'&sensor=false');
+		$output= json_decode($geocode);
+		$latitude = isset($output->results[0]->geometry->location->lat) ? (float)$output->results[0]->geometry->location->lat : 43.653226;
+		$longitude = isset($output->results[0]->geometry->location->lng) ? (float)$output->results[0]->geometry->location->lng : -79.3831843;
+		return array('lat'=>$latitude, 'lng'=>$longitude);
+	}
+    
     /**
      * Select all records accoding to selected params
      *
