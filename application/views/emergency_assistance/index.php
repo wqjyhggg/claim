@@ -211,7 +211,7 @@
                               <tr class="view-policies" data='<?php echo json_encode($value); ?>'>
                                  <td><?php echo $value['firstname']; ?></td>
                                  <td><?php echo $value['lastname']; ?></td>
-                                 <td><?php echo date("d/d/Y", strtotime($value['birthday'])); ?></td>
+                                 <td><?php echo $value['birthday']; ?></td>
                                  <td><?php echo $value['gender']; ?></td>
                                  <td class="policies"><?php echo anchor("emergency_assistance/?result=policy&filter=policy&lastname=".$value['lastname']."&firstname=".$value['firstname'], "View Policies"); ?></td>
                               </tr>
@@ -239,9 +239,9 @@
                               <td><?php echo $value['policy']; ?></td>
                               <td><?php echo $value['plan_id']; ?></td>
                               <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
-                              <td><?php echo date("d/d/Y", strtotime($value['birthday'])); ?></td>
+                              <td><?php echo $value['birthday']; ?></td>
                               <td><?php echo $policy_status['array'][$value['status_id']]; ?></td>
-                              <td><?php echo date("d/d/Y", strtotime($value['effective_date'])); ?></td>
+                              <td><?php echo $value['effective_date']; ?></td>
                               <td>Which data goes here</td>
                               <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
                               <td><?php echo anchor("emergency_assistance/view_policy", "Open"); ?></td>
