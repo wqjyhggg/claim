@@ -77,8 +77,10 @@
 
                   <div class="col-sm-6">
                      <label class="col-sm-12">&nbsp;</label>
+                     <?php if (($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager())) { ?>
                      <button class="btn btn-primary">Save</button>
-                     <?php echo anchor("auth/mytasks", "Cancel", array("class"=>'btn btn-info')) ?>
+                     <?php } ?>
+                     <?php echo anchor("auth/mytasks", "Back", array("class"=>'btn btn-info')) ?>
                   </div>
                </div>
 
