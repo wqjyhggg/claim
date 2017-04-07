@@ -577,8 +577,6 @@
       var amt_payable = 0;
       // enable buttons according to claim Decision
       var decision = "<?php echo @$claim_details['status']; ?>"
-		var descisionstr = 'Accept';
-		if ('<?php echo @$claim_details['is_accepted']; ?>' != 'Y') descisionstr = 'Deny'; 
       if(decision == ''){
          $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").show();
          $(".my_decision").hide();
@@ -588,7 +586,7 @@
          else
             $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").show();
 
-         $(".my_decision").show().html('<label style="float: left; font-size: 25px;">: '+descisionstr+' </label>');
+         $(".my_decision").show().html('<label style="float: left; font-size: 25px;">: '+decision+' </label>');
       }
 
       $("tr[alt=<?php echo $id; ?>]").addClass('active-green');
