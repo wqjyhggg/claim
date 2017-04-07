@@ -234,7 +234,7 @@
                         </thead>
                         <tbody>
                            <?php foreach ($policies as $key => $value): ?>
-                           <tr class="view-policy" data='<?php echo json_encode($value); ?>'>
+                           <tr class="view-policy" <?php if (!empty($value['has_claim'])) { ?>style='background-color:#efc7c7' <?php } ?> data='<?php echo json_encode($value); ?>'>
                               <td><?php echo form_checkbox('select_policy', $value['policy']); ?></td>
                               <td><?php echo $value['policy']; ?></td>
                               <td><?php echo $value['plan_id']; ?></td>

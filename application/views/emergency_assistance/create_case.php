@@ -654,7 +654,7 @@ $(document).ready(function() {
             }
             else{
                alert("Sorry, policy information does not exists, please check policy no and try again");               
-               $("input[name=policy_no]").val("");
+               $("input[name=policy_no]").val('Unknown - ' + $("input[name=policy_no]").val());
             }
             $(".nav-m22d").removeClass("csspinner load1");
          }
@@ -749,7 +749,7 @@ $(document).ready(function() {
             }
             else{
                alert("Sorry, policy information does not exists, please check policy no and try again");
-               $(this).val("");
+               $(this).val('Unknown - ' + $(this).val());
             }
             $(".nav-m22d").removeClass("csspinner load1");
          }
