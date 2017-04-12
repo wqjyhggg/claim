@@ -18,6 +18,17 @@ class Case_model extends CI_Model {
 	}
 	
 	/**
+	 * Return a record by id
+	 *
+	 * @param int $id
+	 * @return array result array, maybe null
+	 */
+	public function get_by_id($id) {
+		$this->db->where('id', $id);
+		return $this->db->get('case')->row_array();
+	}
+
+	/**
 	 * Return a list of policy status
 	 *
 	 * @param array $data
@@ -37,20 +48,22 @@ class Case_model extends CI_Model {
 	 */
 	public function save($data) {
 		if (isset($data['id'])) {
-			// Update
 			$id = $data['id'];
-			unset($data['id']);
-			
-			$this->db->where('id', $id);
-			$this->db->update('case', $data);
-			return $id;
-		} else {
-			// insert
-			$this->load->model('master_model');
-			$data['id'] = $this->master_model->get_id('case');
-			
-			$this->db->insert('case', $data);
-			return $this->db->insert_id();
+			if ($this->get_by_id($id)) {
+				// Update
+				unset($data['id']);
+				
+				$this->db->where('id', $id);
+				$this->db->update('case', $data);
+				return $id;
+			}
 		}
+
+		// insert
+		$this->load->model('master_model');
+		$data['id'] = $this->master_model->get_id('case');
+		
+		$this->db->insert('case', $data);
+		return $this->db->insert_id();
 	}
 }

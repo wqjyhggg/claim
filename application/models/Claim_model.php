@@ -72,21 +72,23 @@ class Claim_model extends CI_Model {
 	 */
 	public function save($data) {
 		if (isset($data['id'])) {
-			// Update
 			$id = $data['id'];
-			unset($data['id']);
-			
-			$this->db->where('id', $id);
-			$this->db->update('claim', $data);
-			return $id;
-		} else {
-			// insert
-			$this->load->model('master_model');
-			$data['id'] = $this->master_model->get_id('claim');
-			
-			$this->db->insert('claim', $data);
-			return $this->db->insert_id();
+			if ($this->get_claim_by_id($id)) {
+				// Update
+				unset($data['id']);
+				
+				$this->db->where('id', $id);
+				$this->db->update('claim', $data);
+				return $id;
+			}
 		}
+		
+		// insert
+		$this->load->model('master_model');
+		$data['id'] = $this->master_model->get_id('claim');
+		
+		$this->db->insert('claim', $data);
+		return $this->db->insert_id();
 	}
 
 
