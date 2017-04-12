@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => DB_HOST,
-	'username' => DB_USER,
-	'password' => DB_PASSWORD,
-	'database' => DB_NAME,
+	'hostname' => 'localhost',
+	'username' => 'claim',
+	'password' => 'claim1209',
+	'database' => 'jf_claim_management',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
@@ -92,6 +92,5 @@ $db['default'] = array(
 	'compress' => FALSE,
 	'stricton' => FALSE,
 	'failover' => array(),
-	'save_queries' => TRUE,
-	// '_protect_identifiers'=>FALSE
+	'save_queries' => TRUE
 );
