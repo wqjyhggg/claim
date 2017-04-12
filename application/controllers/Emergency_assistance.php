@@ -72,7 +72,7 @@ class Emergency_assistance extends CI_Controller {
 				if($this->input->get("case_manager")) 
 					$conditions['case.case_manager'] = $this->input->get("case_manager");
 
-				$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
+				$fields = "last_update, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
 				$this->data['cases'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
 			}
 			else if($this->input->get("filter") == 'policy')
@@ -173,16 +173,20 @@ class Emergency_assistance extends CI_Controller {
 				}
 				$data['created'] = date('Y-m-d H:i:s');
 				$data['created_by'] = $this->ion_auth->user()->row()->id;
+				
+				$this->load->model('master_model');
+				$data['id'] = $this->master_model->get_id('case'); // Get new id
 
 				// insert values to database
 				$record_id = $this->common_model->save("case", $data);
-
+				$record_id = $data['id'];
+				
 				// update case no(7 length) to table
 				$case_no = str_pad($record_id, 7, 0, STR_PAD_LEFT); 
 				$this->common_model->update("case", array("case_no"=>$case_no), array("id"=>$record_id));
 
 				// load upload class
-				$config['upload_path'] = './assets/uploads/intake_forms/';
+				$config['upload_path'] = UPLOADFULLPATH . 'intake_forms/';
 				$config['allowed_types'] = '*';
 				$config['overwrite'] = FALSE;
 				// $config['max_size']     = '*';
@@ -237,15 +241,15 @@ class Emergency_assistance extends CI_Controller {
 						$intake_form_id = $this->common_model->save("intake_form", $data_intake);
 
 						// create directory to identify intake files
-						@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+						@mkdir(UPLOADFULLPATH . 'intake_forms/'.$intake_form_id, 0777);
 
 						// move all files to that directory
 
 						if(!empty($file_names))
 							foreach ($file_names as $fname)
 							{
-								copy("./assets/uploads/intake_forms/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
-								unlink("./assets/uploads/intake_forms/$fname");
+								copy(UPLOADFULLPATH . "intake_forms/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
+								unlink(UPLOADFULLPATH . "intake_forms/$fname");
 							}
 					}
 				}
@@ -695,7 +699,7 @@ class Emergency_assistance extends CI_Controller {
 			if($this->input->get("case_manager")) 
 				$conditions['case.case_manager'] = trim($this->input->get("case_manager"));
 
-			$fields = "case.insured_address, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, case.insured_lastname, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id, case.status, case.policy_info";
+			$fields = "case.insured_address, case.last_update, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, case.insured_lastname, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id, case.status, case.policy_info";
 			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array(), $having = "", $limit, $offset);
 			$this->data['cases'] = $results['records'];
 
@@ -1113,7 +1117,7 @@ class Emergency_assistance extends CI_Controller {
 				$array = $this->input->post();
 
 				// load upload class
-				$config['upload_path'] = './assets/uploads/intake_forms/';
+				$config['upload_path'] = UPLOADFULLPATH . 'intake_forms/';
 				$config['allowed_types'] = '*';
 				$config['overwrite'] = FALSE;
 				$this->load->library('upload', $config);
@@ -1161,14 +1165,14 @@ class Emergency_assistance extends CI_Controller {
 				$intake_form_id = $this->common_model->save("intake_form", $data_intake);
 
 				// create directory to identify intake files
-				@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+				@mkdir(UPLOADFULLPATH . 'intake_forms/'.$intake_form_id, 0777);
 
 				// move all files to that directory
 				if(!empty($file_names))
 					foreach ($file_names as $fname)
 					{
-						copy("./assets/uploads/intake_forms/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
-						unlink("./assets/uploads/intake_forms/$fname");
+						copy(UPLOADFULLPATH . "intake_forms/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
+						unlink(UPLOADFULLPATH . "intake_forms/$fname");
 					}
 
 				// send success message
@@ -1191,7 +1195,7 @@ class Emergency_assistance extends CI_Controller {
 	public function download($file, $id) 
 	{
 		$this->load->helper("download");
-		force_download('./assets/uploads/intake_forms/' . $id . '/' . urldecode($file), NULL);
+		force_download(UPLOADFULLPATH . 'intake_forms/' . $id . '/' . urldecode($file), NULL);
 	}
 
 	// from here download sample file for provider batch upload 
@@ -1209,7 +1213,7 @@ class Emergency_assistance extends CI_Controller {
 		header('Content-type: application/pdf');
 
 		// The PDF source is in original.pdf
-		readfile('./assets/uploads/intake_forms/' . $id . '/' . urldecode($file));
+		readfile(UPLOADFULLPATH . 'intake_forms/' . $id . '/' . urldecode($file));
 	}	
 
 	// delete intake form here for ajax request
@@ -1220,8 +1224,8 @@ class Emergency_assistance extends CI_Controller {
 		$this->load->helper('file');
 
 		// delete all files of itake form
-		delete_files("./assets/uploads/intake_forms/$form_id/", FALSE);
-		rmdir("./assets/uploads/intake_forms/$form_id");
+		delete_files(UPLOADFULLPATH . "intake_forms/$form_id/", FALSE);
+		rmdir(UPLOADFULLPATH . "intake_forms/$form_id");
 
 		// delete intake form
 		$this->common_model->delete('intake_form', array('id' => $form_id));
@@ -1825,7 +1829,7 @@ class Emergency_assistance extends CI_Controller {
 	    $dompdf->render();
 	    $output = $dompdf->output();
 	    $filename = trim($doc).rand(999,999999).'.pdf';
-	    $filepath =  "./assets/temp/".$filename;
+	    $filepath =  UPLOADFULLPATH . "temp/".$filename;
 	    file_put_contents($filepath, $output);
 
 		// generate data array
@@ -1848,11 +1852,11 @@ class Emergency_assistance extends CI_Controller {
 		$intake_form_id = $this->common_model->save("intake_form", $data_intake);
 
 		// create directory to identify intake files
-		@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+		@mkdir(UPLOADFULLPATH . 'intake_forms/'.$intake_form_id, 0777);
 
 		// move all files to that directory
-		copy("./assets/temp/$filename", "./assets/uploads/intake_forms/$intake_form_id/$filename");
-		unlink("./assets/temp/$filename");
+		copy(UPLOADFULLPATH . "temp/$filename", UPLOADFULLPATH . "intake_forms/$intake_form_id/$filename");
+		unlink(UPLOADFULLPATH . "temp/$filename");
 
 		// send success message
 		$this->session->set_flashdata('success', "Email successfully sent.");
@@ -1866,7 +1870,7 @@ class Emergency_assistance extends CI_Controller {
 
 		$this->email->subject("Received $doc");
 		$this->email->message($data_intake['notes']);
-		$this->email->attach("assets/uploads/intake_forms/$intake_form_id/$filename");
+		$this->email->attach(UPLOADFULLPATH . "intake_forms/$intake_form_id/$filename");
 		$this->email->send();
 		echo TRUE;
 

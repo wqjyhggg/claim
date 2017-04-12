@@ -46,6 +46,9 @@ class Case_model extends CI_Model {
 			return $id;
 		} else {
 			// insert
+			$this->load->model('master_model');
+			$data['id'] = $this->master_model->get_id('case');
+			
 			$this->db->insert('case', $data);
 			return $this->db->insert_id();
 		}

@@ -60,7 +60,11 @@ class Api_model extends CI_Model {
 		$this->errormsg = isset($rt['errormsg']) ? $rt['errormsg'] : '';
 		if (isset ( $rt ['success'] ) && isset ( $rt ['plan_list'] )) {
 			$this->status_list = $rt ['status_list'];
-			return $rt ['plan_list'];
+			$rArr = $rt ['plan_list'];
+			foreach ($rArr as $k => $v) {
+				$rArr[$k]['status'] = $this->status_list[$v['status_id']]['name'];
+			}
+			return $rArr;
 		}
 		return array ();
 	}

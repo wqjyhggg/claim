@@ -17,8 +17,9 @@ user_guide_src/cilexer/dist/*
 user_guide_src/cilexer/pycilexer.egg-info/*
 /vendor/
 
-assets/temp/*
 assets/uploads/*
+!assets/uploads/.htaccess
+!assets/uploads/index.html
 
 
 # IDE Files

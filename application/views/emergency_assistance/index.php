@@ -343,6 +343,7 @@
                            <th>Case Manager</th>
                            <th>Priority</th>
                            <th>Action</th>                           
+                           <th>Last Update</th>                           
                         </tr>
                      </thead>
                      <tbody>
@@ -359,6 +360,7 @@
                            <td><?php echo $value['case_manager_name']; ?></td>
                            <td><?php echo $value['priority']; ?></td>
                            <td><?php echo anchor("emergency_assistance/create_case/".$value['id'], "Clone"); ?></td>
+                           <td><?php echo date('Y-m-d h:i a', strtotime($value['last_update'])); ?></td>
                         </tr>
                      <?php endforeach; ?>
                      </tbody>

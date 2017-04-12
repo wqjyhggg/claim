@@ -274,11 +274,11 @@ class Api extends CI_Controller {
 					$files = @$_FILES['files_multi'];
 					if (!empty($files)) {
 						// create directory to copy/shift files
-						@mkdir('./assets/uploads/claim_files/'.$id, 0777);
+						@mkdir(UPLOADFULLPATH . 'claim_files/'.$id, 0777);
 							
 						$file_names = [];
 						// load upload class
-						$config['upload_path'] = './assets/uploads/claim_files/'.$id;
+						$config['upload_path'] = UPLOADFULLPATH . '/claim_files/'.$id;
 						$config['allowed_types'] = '*';
 						$config['overwrite'] = FALSE;
 						$this->load->library('upload', $config);
@@ -356,7 +356,7 @@ class Api extends CI_Controller {
 					$no_of_form = $array['no_of_form'];
 	
 					// load upload class
-					$config['upload_path'] = './assets/uploads/intake_forms/';
+					$config['upload_path'] = UPLOADFULLPATH . 'intake_forms/';
 					$config['allowed_types'] = '*';
 					$config['overwrite'] = FALSE;
 					$this->load->library('upload', $config);
@@ -414,21 +414,21 @@ class Api extends CI_Controller {
 							$intake_form_id = $this->common_model->save("intake_form", $data_intake);
 	
 							// create directory to identify intake files
-							@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+							@mkdir(UPLOADFULLPATH . 'intake_forms/'.$intake_form_id, 0777);
 	
 							// if file is getting from email/print function
 							if(@$array['file_pdf_'.$i])
 							{
 								$fname = $array['file_pdf_'.$i];
-								copy("./assets/temp/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
-								unlink("./assets/temp/$fname");
+								copy(UPLOADFULLPATH . "temp/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
+								unlink(UPLOADFULLPATH . "$fname");
 							}
 							// move all files to that directory
 							if(!empty($file_names))
 								foreach ($file_names as $fname)
 								{
-									copy("./assets/uploads/intake_forms/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
-									unlink("./assets/uploads/intake_forms/$fname");
+									copy(UPLOADFULLPATH . "intake_forms/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
+									unlink(UPLOADFULLPATH . "intake_forms/$fname");
 								}
 						}
 					}

@@ -7,6 +7,13 @@ class Common_model extends CI_Model
         parent::__construct();
     }
 
+    
+    /**
+     * Get longitude / latitude From google base address.
+     * 
+     * @param string $address
+     * @return number[]
+     */
 	public function lat_lng_finder($address = "") {
 		// Get lat and long by address
 		$prepAddr = str_replace(' ','+',$address);
@@ -15,6 +22,13 @@ class Common_model extends CI_Model
 		$latitude = isset($output->results[0]->geometry->location->lat) ? (float)$output->results[0]->geometry->location->lat : 43.653226;
 		$longitude = isset($output->results[0]->geometry->location->lng) ? (float)$output->results[0]->geometry->location->lng : -79.3831843;
 		return array('lat'=>$latitude, 'lng'=>$longitude);
+	}
+	
+	private function get_enum_values($table, $field) {
+		$type = $this->db->query( "SHOW COLUMNS FROM {$table} WHERE Field = '{$field}'" )->row( 0 )->Type;
+		preg_match("/^enum\(\'(.*)\'\)$/", $type, $matches);
+		$enum = explode("','", $matches[1]);
+		return $enum;
 	}
     
     /**

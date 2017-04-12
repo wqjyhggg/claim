@@ -171,18 +171,18 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', 'alpha');
 			$this->form_validation->set_rules('city', 'city ', 'alpha');
 			$this->form_validation->set_rules('province', 'province ', 'alpha');
-			$this->form_validation->set_rules('full_name', 'full name ', 'alpha');
-			$this->form_validation->set_rules('employee_name', 'employee name ', 'alpha');
+			$this->form_validation->set_rules('full_name', 'full name ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('employee_name', 'employee name ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('city_town', 'city town ', 'alpha');
 			$this->form_validation->set_rules('employee_telephone', 'employee telephone ', 'numeric');
 			$this->form_validation->set_rules('amount_billed', 'amount billed ', 'numeric');
 			$this->form_validation->set_rules('account_cheque', 'account no ', 'numeric');
 			$this->form_validation->set_rules('amount_client_paid', 'amount client paid ', 'numeric');
-			$this->form_validation->set_rules('physician_name_canada', 'physician name canada ', 'alpha');
-			$this->form_validation->set_rules('physician_city', 'physician city ', 'alpha');
-			$this->form_validation->set_rules('payee_name', 'payee name ', 'alpha');
-			$this->form_validation->set_rules('bank', 'bank name ', 'alpha');
-			$this->form_validation->set_rules('physician_city_canada', 'physician city canada ', 'alpha');
+			$this->form_validation->set_rules('physician_name_canada', 'physician name canada ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('physician_city', 'physician city ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('payee_name', 'payee name ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('bank', 'bank name ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('physician_city_canada', 'physician city canada ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('guardian_phone', 'Guardian Phone ', 'numeric');
 			$this->form_validation->set_rules('telephone', 'Telephone ', 'numeric');
 			$this->form_validation->set_rules('physician_telephone', 'Physician Telephone ', 'numeric');
@@ -226,7 +226,7 @@ class Claim extends CI_Controller {
 				$file_names = [];
 
 				// load upload class
-				$config['upload_path'] = './assets/uploads/claim_files/';
+				$config['upload_path'] = UPLOADFULLPATH . 'claim_files/';
 				$config['allowed_types'] = '*';
 				$config['overwrite'] = FALSE;
 				$this->load->library('upload', $config);
@@ -253,18 +253,22 @@ class Claim extends CI_Controller {
 				}
 				$data['files'] = implode(",", $file_names);
 
+				$this->load->model('master_model');
+				$data['id'] = $this->master_model->get_id('claim'); // Get new id
+				
 				// insert values to database
 				$record_id = $this->common_model->save("claim", $data);
-
+				$record_id = $data['id'];
+				
 				// create directory to copy/shift files
-				@mkdir('./assets/uploads/claim_files/'.$record_id, 0777);
+				@mkdir(UPLOADFULLPATH . 'claim_files/'.$record_id, 0777);
 
 				// move all files to that directory
 				if(!empty($file_names))
 					foreach ($file_names as $fname)
 					{
-						copy("./assets/uploads/claim_files/$fname", "./assets/uploads/claim_files/$record_id/$fname");
-						unlink("./assets/uploads/claim_files/$fname");
+						copy(UPLOADFULLPATH . "claim_files/$fname", UPLOADFULLPATH . "claim_files/$record_id/$fname");
+						unlink(UPLOADFULLPATH . "claim_files/$fname");
 					}
 
 				// insert payee information
@@ -326,7 +330,7 @@ class Claim extends CI_Controller {
 				$no_of_form = $array['no_of_form'];
 
 				// load upload class
-				$config['upload_path'] = './assets/uploads/intake_forms/';
+				$config['upload_path'] = UPLOADFULLPATH . 'intake_forms/';
 				$config['allowed_types'] = '*';
 				$config['overwrite'] = FALSE;
 				$this->load->library('upload', $config);
@@ -384,21 +388,21 @@ class Claim extends CI_Controller {
 						$intake_form_id = $this->common_model->save("intake_form", $data_intake);
 
 						// create directory to identify intake files
-						@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+						@mkdir(UPLOADFULLPATH . 'intake_forms/'.$intake_form_id, 0777);
 
 						// if file is getting from email/print function
 						if(@$array['file_pdf_'.$i])
 						{
 							$fname = $array['file_pdf_'.$i];
-							copy("./assets/temp/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
-							unlink("./assets/temp/$fname");
+							copy(UPLOADFULLPATH . "temp/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
+							unlink(UPLOADFULLPATH . "temp/$fname");
 						}
 						// move all files to that directory
 						if(!empty($file_names))
 							foreach ($file_names as $fname)
 							{
-								copy("./assets/uploads/intake_forms/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
-								unlink("./assets/uploads/intake_forms/$fname");
+								copy(UPLOADFULLPATH . "intake_forms/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
+								unlink(UPLOADFULLPATH . "intake_forms/$fname");
 							}
 					}
 				}
@@ -460,20 +464,26 @@ class Claim extends CI_Controller {
 
 
 	// redirect if needed, otherwise display the edit case page
-	public function examine_claim($id = 0)
-	{
-		if (!$this->ion_auth->logged_in())
-		{
+	public function examine_claim($id = 0) {
+		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		}
-		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
-		{
+		} else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer()) {
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
-		}		
-		else
-		{
+		} else if (empty($id)) {
+			// redirect them to the home page because they must be an claim manager or claim examiner to view this
+			return show_error('Sorry, Unknown Claim Record.');
+		} else {
+			$this->load->model('claim_model');
+			$this->load->model('api_model');
+			$this->load->model('expenses_model');
+				
+			$claim = $this->claim_model->get_claim_by_id($id);
+			if (empty($claim)) {
+				return show_error('Sorry, Unknown Claim Record ID.');
+			}
+			
 			// get claim details
 			$joins[] = array(
 				'table' => 'users u1',
@@ -483,18 +493,15 @@ class Claim extends CI_Controller {
 			$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('claim.id'=>$id), $joins);
 			$this->data['id'] = $id;
 
-
 			//validate form input
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 
-			if ($this->form_validation->run() == TRUE)
-			{
+			if ($this->form_validation->run() == TRUE) {
 				// prepare post data array
 				$data = [];
 				$array = $this->input->post();
 
-				foreach ($array as $key => $value) 
-				{
+				foreach ($array as $key => $value) {
 					# code...
 					if($key <> "Examine" && $key <> "filter" && $key <> "same_policy"  && $key <> "Save" && $key <> "files_multi" && $key <> "payees" && $key <> "files" && $key <> "expenses_claimed" && !strpos($key, "otes_") && !strpos($key, "iles_") && $key <> "no_of_form" && !strpos($key, "ile_pdf"))
 						$data[$key] = $value;
@@ -507,18 +514,16 @@ class Claim extends CI_Controller {
 				$file_names = [];
 
 				// load upload class
-				$config['upload_path'] = './assets/uploads/claim_files/';
+				$config['upload_path'] = UPLOADFULLPATH;
 				$config['allowed_types'] = '*';
 				$config['overwrite'] = FALSE;
 				$this->load->library('upload', $config);
 
 				// initialize upload config
 				$this->upload->initialize($config);
-				if(!empty($files))
-				{	foreach ($files['name'] as $key => $value) 
-					{	
-						if($files['name'][$key])
-						{
+				if (!empty($files)) {
+					foreach ($files['name'] as $key => $value) {	
+						if($files['name'][$key]) {
 							$_FILES['userfile']['name'] = $files['name'][$key];
 			                $_FILES['userfile']['type'] = $files['type'][$key];
 			                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
@@ -543,21 +548,24 @@ class Claim extends CI_Controller {
 				$record_id = $id;
 
 				// move all files to that directory
-				if(!empty($file_names))
-					foreach ($file_names as $fname)
-					{
-						copy("./assets/uploads/claim_files/$fname", "./assets/uploads/claim_files/$record_id/$fname");
-						unlink("./assets/uploads/claim_files/$fname");
+				if (!empty($file_names)) {
+					$dstdir = UPLOADFULLPATH . $record_id . DIRECTORY_SEPARATOR;
+					if (!is_dir($dstdir)) {
+						if (!mkdir($dstdir)) {
+							return show_error('Can not create directory, ' . $dstdir . ', Please contact system admin. ');
+						}
 					}
+					foreach ($file_names as $fname) {
+						rename(UPLOADFULLPATH. $fname, $dstdir . $fname);
+					}
+				}
 
 				// insert payee information
-				if(!empty($array['payees']))
-				{	
-					// remove old payees
+				if (!empty($array['payees'])) {
+					// remove old payees 
 					$this->common_model->delete('payees', array('claim_id' => $record_id));
 
-					foreach($array['payees']['bank'] as $key => $val)	
-					{
+					foreach($array['payees']['bank'] as $key => $val) {
 						$payee_data = array(
 							'claim_id'=>$record_id,
 							'bank'=>$val,
@@ -576,28 +584,24 @@ class Claim extends CI_Controller {
 				$no_of_form = $array['no_of_form'];
 
 				// load upload class
-				$config['upload_path'] = './assets/uploads/intake_forms/';
+				$config['upload_path'] = UPLOADFULLPATH . 'intake_forms/';
 				$config['allowed_types'] = '*';
 				$config['overwrite'] = FALSE;
 				$this->load->library('upload', $config);
 
 				// initialize upload config
 				$this->upload->initialize($config);
-				if($no_of_form)
-				{
+				if($no_of_form) {
 					// add intake form batch
-					for($i = 1; $i <= $no_of_form; $i++)
-					{
+					for($i = 1; $i <= $no_of_form; $i++) {
 						// initialize file names array
 						$file_names = [];
 
 						// upload files to server
 						$files = $_FILES['files_'.$i];
-						if(!empty($files))
-						{	foreach ($files['name'] as $key => $value) 
-							{	
-								if($files['name'][$key])
-								{
+						if(!empty($files)) {
+							foreach ($files['name'] as $key => $value) {
+								if($files['name'][$key]) {
 									$_FILES['userfile']['name'] = $files['name'][$key];
 					                $_FILES['userfile']['type'] = $files['type'][$key];
 					                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
@@ -628,14 +632,14 @@ class Claim extends CI_Controller {
 						$intake_form_id = $this->common_model->save("intake_form", $data_intake);
 
 						// create directory to identify intake files
-						@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+						@mkdir(UPLOADFULLPATH . 'intake_forms/'.$intake_form_id, 0777);
 
 						// move all files to that directory
 						if(!empty($file_names))
 							foreach ($file_names as $fname)
 							{
-								copy("./assets/uploads/intake_forms/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
-								unlink("./assets/uploads/intake_forms/$fname");
+								copy(UPLOADFULLPATH . "intake_forms/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
+								unlink(UPLOADFULLPATH . "intake_forms/$fname");
 							}
 					}
 				}
@@ -645,14 +649,39 @@ class Claim extends CI_Controller {
 
 				// redirect them to the login page
 				redirect('claim');
-			}
-			else
-			{	
+			} else {
+				$this->data['claim'] = $claim;
+				$this->data['claim_files'] = array();
+				if (!empty($claim['files'])) {
+					$flist = explode(',',$claim['files']);
+					foreach ($flist as $fn) {
+						if (empty($fn)) continue;
+						$this->data['claim_files'][$fn] = base_url('upload/claim_files/'.$claim['id']."/".$fn); 
+					}
+				}
+				
+				$policy_info_arr = $this->api_model->get_policy(array('policy' => $claim['policy_no']));
+				if (empty($policy_info_arr)) {
+					return show_error('Unknown policy for this Claim' . $claim['policy_no'] . '.');
+				}
+				$this->data['policy'] = $policy_info_arr[0];
 				
 				// get expenses climed items list
+				$this->data['items'] = $this->expenses_model->search(array('claim_id' => $claim['id']));
+
+				// get claim items history
+				$this->data['claim_history'] = array();
+				$history = array();
+				$other_claims = $this->claim_model->search(array('policy_no' => $claim['policy_no']));
+				$this->data['other_items'] = array();
+				foreach ($other_claims as $other) {
+					if ($other['id'] == $claim['id']) continue;
+					$this->data['other_items'] = array_merge($this->data['other_items'], $this->expenses_model->search(array('claim_id' => $other['id'])));
+				}
+				
+				
 				$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields = "`expenses_claimed`.*", $conditions = ($id?array('expenses_claimed.claim_id'=>$id):array()));
 
-				// get claim history
 				$joins = array();
 				$joins[] = array(
 					'table' => 'provider',
@@ -667,15 +696,16 @@ class Claim extends CI_Controller {
 				$joins[] = array(
 					'table' => 'claim',
 					'on' => 'claim.id = expenses_claimed.claim_id',
-					'type' => 'LEFT'
+					'type' => 'INNER'
 					);
 				$joins[] = array(
 					'table' => 'users',
 					'on' => 'users.id = claim.assign_to',
 					'type' => 'LEFT'
 					);
-				$fields = "expenses_claimed.claim_id, expenses_claimed.claim_no, expenses_claimed.case_no,expenses_claimed.claim_date,sum(expenses_claimed.amount_claimed) as amount_claimed, sum(expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency,expenses_claimed.pay_to, sum(expenses_claimed.amt_received) as amt_received, provider.name as provider_name, payees.payee_name, claim.insured_first_name, claim.insured_first_name, claim.insured_last_name, claim.street_address, claim.city, claim.province, claim.policy_no, claim.case_no, claim.clinic_name, claim.dob, concat_ws(' ', users.first_name, users.last_name) as claimexaminer_name";
-				$this->data['claim_history'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields, $conditions = array(), $joins, $order_by = array(), $group_by = array('expenses_claimed.claim_id'));
+				$conditions = ''; //"claim.status IN ('Paid','Closed')"; 
+				$fields = "expenses_claimed.claim_id, expenses_claimed.claim_no, expenses_claimed.case_no,expenses_claimed.claim_date,sum(expenses_claimed.amount_claimed) as amount_claimed, sum(expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency,expenses_claimed.pay_to, sum(expenses_claimed.amt_received) as amt_received, provider.name as provider_name, payees.payee_name, claim.insured_first_name, claim.insured_last_name, claim.street_address, claim.city, claim.province, claim.policy_no, claim.case_no, claim.clinic_name, claim.dob, concat_ws(' ', users.first_name, users.last_name) as claimexaminer_name";
+				$this->data['claim_history'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields, $conditions, $joins, $order_by = array(), $group_by = array('expenses_claimed.claim_id'));
 				
 				// load dropdowns- countries, province, products data
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
@@ -726,8 +756,8 @@ class Claim extends CI_Controller {
 					'on' => 'u3.id = case.assign_to',
 					'type' => 'LEFT'
 					);
-				$this->data['case_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name,  concat_ws(' ', u3.first_name, u3.last_name) as assign_to_name", $conditions = array('case.case_no'=>$this->data['claim_details']['case_no']), $joins);
-
+				// $this->data['case_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name,  concat_ws(' ', u3.first_name, u3.last_name) as assign_to_name", $conditions = array('case.case_no'=>$this->data['claim_details']['case_no']), $joins);
+				$this->data['case_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name,  concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name,  concat_ws(' ', u3.first_name, u3.last_name) as assign_to_name", $conditions = array('case.case_no'=>$claim['case_no']), $joins);
 
 				$this->data['policy_info'] = $this->parser->parse("claim/policy_info", $this->data, TRUE);
 				$this->data['case_info'] = $this->parser->parse("claim/case_info", $this->data, TRUE);
@@ -762,6 +792,8 @@ class Claim extends CI_Controller {
 		}
 		else
 		{
+			$this->load->model('claim_model');
+			
 			// get claim details
 			$joins[] = array(
 				'table' => 'users u1',
@@ -823,7 +855,7 @@ class Claim extends CI_Controller {
 				$file_names = [];
 
 				// load upload class
-				$config['upload_path'] = './assets/uploads/claim_files/';
+				$config['upload_path'] = UPLOADFULLPATH . 'claim_files/';
 				$config['allowed_types'] = '*';
 				$config['overwrite'] = FALSE;
 				$this->load->library('upload', $config);
@@ -862,14 +894,14 @@ class Claim extends CI_Controller {
 				$record_id = $id;
 
 				// create folder if not exists
-				@mkdir('./assets/uploads/claim_files/'.$record_id, 0777);
+				@mkdir(UPLOADFULLPATH . 'claim_files/'.$record_id, 0777);
 
 				// move all files to that directory
 				if(!empty($file_names))
 					foreach ($file_names as $fname)
 					{
-						copy("./assets/uploads/claim_files/$fname", "./assets/uploads/claim_files/$record_id/$fname");
-						unlink("./assets/uploads/claim_files/$fname");
+						copy(UPLOADFULLPATH . "claim_files/$fname", UPLOADFULLPATH . "claim_files/$record_id/$fname");
+						unlink(UPLOADFULLPATH . "claim_files/$fname");
 					}
 
 				// insert payee information
@@ -949,7 +981,7 @@ class Claim extends CI_Controller {
 				$no_of_form = @$array['no_of_form'];
 
 				// load upload class
-				$config['upload_path'] = './assets/uploads/intake_forms/';
+				$config['upload_path'] = UPLOADFULLPATH . 'intake_forms/';
 				$config['allowed_types'] = '*';
 				$config['overwrite'] = FALSE;
 				$this->load->library('upload', $config);
@@ -1001,14 +1033,14 @@ class Claim extends CI_Controller {
 						$intake_form_id = $this->common_model->save("intake_form", $data_intake);
 
 						// create directory to identify intake files
-						@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+						@mkdir(UPLOADFULLPATH . 'intake_forms/'.$intake_form_id, 0777);
 
 						// move all files to that directory
 						if(!empty($file_names))
 							foreach ($file_names as $fname)
 							{
-								copy("./assets/uploads/intake_forms/$fname", "./assets/uploads/intake_forms/$intake_form_id/$fname");
-								unlink("./assets/uploads/intake_forms/$fname");
+								copy(UPLOADFULLPATH . "intake_forms/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
+								unlink(UPLOADFULLPATH . "intake_forms/$fname");
 							}
 					}
 				}
@@ -1038,6 +1070,8 @@ class Claim extends CI_Controller {
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE);
 				$this->data['payees_list'] = $this->common_model->get_payees($field_name = "expenses_claimed[payee][]", $selected = $this->input->post($field_name), $key='id', $val='name');
 
+				$this->data['status_list'] = $this->claim_model->get_claim_status_list(1);
+				
 				// get all documents for sending email/print.
 				$fields = "id, name, description";
 				$access_types = $this->get_access_list();
@@ -1116,7 +1150,7 @@ class Claim extends CI_Controller {
 	public function download($file, $id) 
 	{
 		$this->load->helper("download");
-		force_download('./assets/uploads/claim_files/' . $id . '/' . urldecode($file), NULL);
+		force_download(UPLOADFULLPATH . 'claim_files/' . $id . '/' . urldecode($file), NULL);
 	}
 
 	// Remove claim doc file here / Ajax request
@@ -1135,7 +1169,7 @@ class Claim extends CI_Controller {
 		$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.files", $conditions = array('claim.id'=>$id), $joins);
 
 		// remove claim document		
-		@unlink('./assets/uploads/claim_files/' . $id . '/' . urldecode($file));
+		@unlink(UPLOADFULLPATH . 'claim_files/' . $id . '/' . urldecode($file));
 
 		// remove doc from db
 		$files = array_diff(str_getcsv($this->data['claim_details']['files']), array($file));
@@ -1155,7 +1189,7 @@ class Claim extends CI_Controller {
 		header('Content-type: application/pdf');
 
 		// The PDF source is in original.pdf
-		readfile('./assets/uploads/claim_files/' . $id . '/' . urldecode($file));
+		readfile(UPLOADFULLPATH . 'claim_files/' . $id . '/' . urldecode($file));
 	}	
 
 	// for autocomplete search
@@ -1214,7 +1248,7 @@ class Claim extends CI_Controller {
 	    $dompdf->render();
 	    $output = $dompdf->output();
 	    $filename = trim($doc).rand(999,999999).'.pdf';
-	    $filepath =  "./assets/temp/".$filename;
+	    $filepath =  UPLOADFULLPATH . "temp/".$filename;
 	    file_put_contents($filepath, $output);
 
 		// generate data array
@@ -1241,9 +1275,9 @@ class Claim extends CI_Controller {
 
 		$this->email->subject("Received $doc");
 		$this->email->message($data_intake['notes']);
-		$this->email->attach("./assets/temp/$filename");
+		$this->email->attach(UPLOADFULLPATH . "temp/$filename");
 		$this->email->send();
-		echo json_encode(array("data_intake"=>implode(", ", $intake_notes), 'file'=>"./assets/temp/$filename", 'file_name'=>$filename));
+		echo json_encode(array("data_intake"=>implode(", ", $intake_notes), 'file'=>UPLOADFULLPATH . "temp/$filename", 'file_name'=>$filename));
 	}
 
 	//send email template from examine claim page
@@ -1268,7 +1302,7 @@ class Claim extends CI_Controller {
 	    $dompdf->render();
 	    $output = $dompdf->output();
 	    $filename = trim($doc).rand(999,999999).'.pdf';
-	    $filepath =  "./assets/temp/".$filename;
+	    $filepath =  UPLOADFULLPATH . "temp/".$filename;
 	    file_put_contents($filepath, $output);
 
 		// generate data array
@@ -1292,11 +1326,11 @@ class Claim extends CI_Controller {
 		$intake_form_id = $this->common_model->save("intake_form", $data_intake);
 
 		// create directory to identify intake files
-		@mkdir('./assets/uploads/intake_forms/'.$intake_form_id, 0777);
+		@mkdir(UPLOADFULLPATH . 'intake_forms/'.$intake_form_id, 0777);
 
 		// move all files to that directory
-		copy("./assets/temp/$filename", "./assets/uploads/intake_forms/$intake_form_id/$filename");
-		unlink("./assets/temp/$filename");
+		copy(UPLOADFULLPATH . "temp/$filename", UPLOADFULLPATH . "intake_forms/$intake_form_id/$filename");
+		unlink(UPLOADFULLPATH . "temp/$filename");
 
 		// check if claim is deny
 		if($type == 'deny')
@@ -1323,7 +1357,7 @@ class Claim extends CI_Controller {
 
 		$this->email->subject("Received $doc");
 		$this->email->message($data_intake['notes']);
-		$this->email->attach("assets/uploads/intake_forms/$intake_form_id/$filename");
+		$this->email->attach(UPLOADFULLPATH . "intake_forms/$intake_form_id/$filename");
 		// $this->email->send();
 		echo TRUE;
 
@@ -1382,28 +1416,43 @@ class Claim extends CI_Controller {
 	}
 
 	// change status of claim - for ajax request
-	public function status($type = "accepted") 
-	{
+	public function status($type = "Processing", $is_accepted='')  {
+		$this->load->model('claim_model');
+		$statusArr = $this->claim_model->get_claim_status_list();
+		
+		if (!array_key_exists($type, $statusArr)) die("Unknown Status: [" . $type . "]");
+		
 		$claim_item_id = $this->input->post("claim_item_id");
 		$claim_id = $this->input->post("claim_id");
+		$reason = $this->input->post("reason");
+		
+		$data = array("id"=>$claim_id, 'status'=>$type);	
 
-		$data = array(
-			'status'=>$type
-			);	
-
-		$this->common_model->update("claim", $data, array("id"=>$claim_id));
-
+		if (!empty($is_accepted)) {
+			$data['is_accepted'] = $is_accepted;
+		}
+		if (!empty($reason)) {
+			$data['reason'] = $reason;
+		}
+		
+		switch ($type) {
+			case 'Processing':
+			case 'Recovered':
+			case 'Appealed':
+			default:
+				$data['is_complete'] = 'N';
+				break;
+			case 'Pending':
+			case 'Processed':
+			case 'Paid':
+			case 'Closed':
+			case 'Exempted':
+				$data['is_complete'] = 'Y';
+				break;
+		}
+		$this->claim_model->save($data);
 		// send success message
-		if($type == "accepted")
-			$this->session->set_flashdata('success', "Claim successfully accepted");
-
-		// send success message
-		if($type == "pending")
-			$this->session->set_flashdata('success', "Claim successfully marked as pending");
-
-		// send success message
-		if($type == "record_exempt")
-			$this->session->set_flashdata('success', "Claim successfully marked as record exempt");
+		$this->session->set_flashdata('success', "Claim successfully changed status to ".$type);
 
 		echo TRUE;
 

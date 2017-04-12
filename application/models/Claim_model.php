@@ -11,12 +11,47 @@ class Claim_model extends CI_Model {
 	/**
 	 * Generate claim no if there is none
 	 * 
-	 * @param unknown $id
+	 * @param int $id
+	 * @return string
 	 */
 	public function generate_claim_no($id) {
 		return str_pad($id, 7, 0, STR_PAD_LEFT);
 	}
 	
+	/**
+	 * Get Claim status
+	 * 
+	 * @param int $need_empty	
+	 * @return array
+	 */
+	public function get_claim_status_list($need_empty=0) {
+		$arr = array(
+				0	=> '-- Status --',
+				'Processing' => 'Processing',
+				'Pending' => 'Pending',
+				'Processed' => 'Processed',
+				'Paid' => 'Paid',
+				'Closed' => 'Closed',
+				'Recovered' => 'Recovered',
+				'Appealed' => 'Appealed',
+				'Exempted' => 'Exempted',
+		);
+		
+		if (empty($need_empty)) unset($arr[0]);
+		return $arr;
+	}
+	
+	/**
+	 * Return a Claim Record
+	 *
+	 * @param int $id
+	 * @return array result array, maybe null
+	 */
+	public function get_claim_by_id($id) {
+		$this->db->where('id', $id);
+		return $this->db->get('claim')->row_array();
+	}
+
 	/**
 	 * Return a list of Claim
 	 *
@@ -46,6 +81,9 @@ class Claim_model extends CI_Model {
 			return $id;
 		} else {
 			// insert
+			$this->load->model('master_model');
+			$data['id'] = $this->master_model->get_id('claim');
+			
 			$this->db->insert('claim', $data);
 			return $this->db->insert_id();
 		}
