@@ -139,6 +139,7 @@
                            <th>Case Manager</th>
                            <th>Priority</th>
                            <th>Status</th>
+                           <th>Last Update</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -165,6 +166,7 @@
                            <td><?php echo $value['case_manager_name']; ?></td>
                            <td><?php echo $value['priority']; ?></td>
                            <td><?php echo @$options_status[$value['status']]; ?></td>
+                           <td><?php echo date('Y-m-d h:i a', strtotime($value['last_update'])); ?></td>
                         </tr>
                      <?php endforeach; ?>
                      </tbody>

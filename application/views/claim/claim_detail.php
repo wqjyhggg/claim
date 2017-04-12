@@ -790,18 +790,7 @@
                      <div class="col-sm-3">
                         <?php
                            echo form_label('Status:', 'status', array("class"=>'col-sm-12'));
-                           $status = array(
-                              ""=>'--Status--',
-                              'accepted'=>'Accepted',
-                              'processing'=>'Processing',
-                              'pending'=>'Pending',
-                              'denied'=>'Denied',
-                              'paid'=>'Paid',
-                              'recovered'=>'Recovered',
-                              'close'=>'Close',
-                              'appeal'=>'Appeal'
-                              );
-                           echo form_dropdown("status", $status, $this->common_model->field_val("status", $claim_details), array("class"=>'form-control'));
+                           echo form_dropdown("status", $status_list, $this->common_model->field_val("status", $claim_details), array("class"=>'form-control'));
                         ?>
                      </div>
                   </div>
