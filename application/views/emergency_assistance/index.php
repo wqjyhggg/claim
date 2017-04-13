@@ -219,15 +219,14 @@
                         </tbody>
                      <?php else:?>
                         <thead>
-                           <tr>                                   
-                              <td></td>
+                           <tr>
+                              <th>&nbsp;</th>
                               <th>Policy No</th>
                               <th>ID</th>
                               <th>Name</th>
                               <th>Date of Birth</th>
                               <th>Status</th>
                               <th>Effect Date</th>
-                              <th>User</th>
                               <th>Agent</th>
                               <th>Action</th>
                            </tr>
@@ -242,9 +241,8 @@
                               <td><?php echo $value['birthday']; ?></td>
                               <td><?php echo $policy_status['array'][$value['status_id']]; ?></td>
                               <td><?php echo $value['effective_date']; ?></td>
-                              <td>Which data goes here</td>
                               <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
-                              <td><?php echo anchor("emergency_assistance/view_policy", "Open"); ?></td>
+                              <td><?php echo anchor("emergency_assistance/view_policy/" . $value['policy'], "Open"); ?></td>
                            </tr>
                            <?php endforeach; ?>
                         </tbody>
@@ -395,8 +393,10 @@ $(document).ready(function() {
       // insert data to dom element to save temporary
       localStorage.setItem("policy_data", data);
 
+      var ddata = jQuery.parseJSON(data);
+
       // redirect it to view policy page
-      window.location = "<?php echo base_url("emergency_assistance/view_policy") ?>";
+      window.location = "<?php echo base_url("emergency_assistance/view_policy") ?>" + "/" + ddata.policy;
    })
    $(".view-policies").click(function(){
       var data = $(this).attr("data");

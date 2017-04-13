@@ -498,15 +498,20 @@ class Emergency_assistance extends CI_Controller {
 			else
 			{	
 				$this->data['case_details'] = $case_details;
-				if(empty($case_details))
-				{
+				if (empty($case_details)) {
 					// send error message
 					$this->session->set_flashdata('error', "Something went wrong, please try after some time.");
 
 					// redirect them to the list page
 					redirect('emergency_assistance', 'refresh');
 				}
-
+				$this->load->model('users_model');
+				
+				$this->data['assign_to_name'] = '-';
+				if ($users = $this->users_model->search(array('id' => $case_details['assign_to']))) {
+					$this->data['assign_to_name'] = $users[0]['first_name'] . " " . $users[0]['last_name'];
+				}
+				
 				// load dropdowns data
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name, $case_details));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name, $case_details));
@@ -875,24 +880,49 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// redirect if needed, otherwise display the view policy page
-	public function view_policy()
-	{
-
-		if (!$this->ion_auth->logged_in())
-		{
+	public function view_policy($policy='') {
+		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		}
-		else
-		{
+		} else {
+			$this->data['create_claim_url'] = base_url('claim/create_claim');
+			$this->data['create_case_url'] = base_url('emergency_assistance/create_case');
+			if (!empty($policy)) {
+				$this->load->model('api_model');
+				
+				$policies = $this->api_model->get_policy(array('policy' => $policy));
+				if ($policies) {
+					$this->data['policy'] = $policies[0];
+					$para = array();
+					$para['policy'] = $policies[0]['policy'];
+					$para['firstname'] = $policies[0]['firstname'];
+					$para['lastname'] = $policies[0]['lastname'];
+					$para['birthday'] = $policies[0]['birthday'];
+					$para['gender'] = $policies[0]['gender'];
+					$this->data['create_claim_url'] .= "?" . http_build_query($para);
+					$this->data['create_claim_url'] .= "?" . http_build_query($para);
+					if (!empty($this->data['policy']['family'])) {
+						foreach ($this->data['policy']['family'] as $key => $val) {
+							$para = array('policy' => $policies[0]['policy']);
+							$para['firstname'] = $val['firstname'];
+							$para['lastname'] = $val['lastname'];
+							$para['birthday'] = $val['birthday'];
+							$para['gender'] = $val['gender'];
+							$this->data['policy']['family'][$key]['create_claim_url'] = base_url('claim/create_claim') . "?" . http_build_query($para);
+							$this->data['policy']['family'][$key]['create_case_url'] = base_url('emergency_assistance/create_case') . "?" . http_build_query($para);
+						}
+					}
+				}
+			}
+			
 			// get countries list
 			$this->data['countries'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->input->get("country2"), $key = "short_code", $value = "name");
 
 			// get province list
 			$this->data['provinces'] = $this->common_model->getprovinces($field_name = "province2", $selected = $this->input->get("province2"), $key = "short_code", $value = "name");
-        	$this->template->write('title', SITE_TITLE.' - View Policy', TRUE);
-	        $this->template->write_view('content', 'emergency_assistance/view_policy', $this->data);
-	        $this->template->render();        
+			$this->template->write('title', SITE_TITLE.' - View Policy', TRUE);
+			$this->template->write_view('content', 'emergency_assistance/view_policy', $this->data);
+			$this->template->render();        
 		}
 	}
 

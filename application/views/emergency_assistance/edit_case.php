@@ -104,15 +104,17 @@
                      <label class="col-sm-12">&nbsp;</label>
                      <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary search_provider')) ?>
                   </div>
-                  <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager()): ?>
-                     <div class="form-group col-sm-4">
+                  <div class="form-group col-sm-4">
                         <?php 
                            echo form_label('Follow Up EAC:', 'assign_to', array("class"=>'col-sm-12'));
-                           echo $eacmanagers;
-                           echo form_error("assign_to");
+                           if ($this->ion_auth->is_admin() or $this->ion_auth->is_casemamager()) {
+                           	echo $eacmanagers;
+                           	echo form_error("assign_to");
+                           } else {
+                           	echo '<div class="form-group col-sm-12">' . $assign_to_name . "</div>";
+                           }
                         ?>
-                     </div>
-                  <?php endif;?>
+                  </div>
                   <div class="form-group col-sm-4">
                      <?php 
                         echo form_label('Reason:', 'reason', array("class"=>'col-sm-12'));
