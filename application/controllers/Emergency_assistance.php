@@ -149,11 +149,11 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('relations', 'Relations', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
+			$this->form_validation->set_rules('incident_date', 'Incident Date', 'required');
 
 			$this->form_validation->set_rules('insured_firstname', 'Insured First Name', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 
-			$this->form_validation->set_rules('insured_address', 'Address', 'required');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
 			if ($this->form_validation->run() == TRUE)
@@ -297,7 +297,9 @@ class Emergency_assistance extends CI_Controller {
 				redirect('emergency_assistance', 'refresh');
 			}
 			else
-			{	
+			{
+				$this->load->model('api_model');
+				
 				// verify case details
 				$joins[] = array(
 					'table' => 'users u1',
@@ -306,6 +308,27 @@ class Emergency_assistance extends CI_Controller {
 					);
 				$case_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('case.id'=>$id), $joins);
 				$this->data['case_details'] = $case_details;
+				
+				$this->data['policy'] = array();
+				if (empty($case_details)) {
+					$policy = $this->input->get('policy');
+					if (!empty($policy)) {
+						if ($policies = $this->api_model->get_policy(array('policy' => $policy))) {
+							$this->data['policy'] = $policies[0];
+							$this->data['case_details']['street_no'] = $this->data['policy']['street_number'];
+							$this->data['case_details']['street_name'] = $this->data['policy']['street_name'];
+							$this->data['case_details']['province'] = $this->data['policy']['province2'];
+							$case_details['country2'] = $this->data['case_details']['country2'] = $this->data['policy']['country2'];
+							$case_details['country'] = $this->data['case_details']['country'] = $this->data['policy']['country2'];
+							$case_details['province'] = $this->data['case_details']['province'] = $this->data['policy']['province2'];
+							$this->data['case_details']['post_code'] = $this->data['policy']['postcode'];
+						}
+					}
+				} else {
+					if ($policies = $this->api_model->get_policy(array('policy' => $case_details['policy_no']))) {
+						$this->data['policy'] = $policies[0];
+					}
+				}
 				
 				// load dropdowns data
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name, $case_details));
@@ -411,12 +434,12 @@ class Emergency_assistance extends CI_Controller {
         	$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('relations', 'Relations', 'required');
-        	$this->form_validation->set_rules('post_code', 'Post Code', 'required|trim|max_length[9]|min_length[5]');			
+        	$this->form_validation->set_rules('post_code', 'Post Code', 'required|trim|max_length[9]|min_length[5]');
+        	$this->form_validation->set_rules('incident_date', 'Incident Date', 'required');
 
 			$this->form_validation->set_rules('insured_firstname', 'Insured First Name', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 
-			$this->form_validation->set_rules('insured_address', 'Address', 'required');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
 			if($this->input->get("ref") == 'manage')
@@ -506,6 +529,28 @@ class Emergency_assistance extends CI_Controller {
 					redirect('emergency_assistance', 'refresh');
 				}
 				$this->load->model('users_model');
+
+				$this->load->model('api_model');
+				$this->data['policy'] = array();
+				if (empty($case_details)) {
+					$policy = $this->input->get('policy');
+					if (!empty($policy)) {
+						if ($policies = $this->api_model->get_policy(array('policy' => $policy))) {
+							$this->data['policy'] = $policies[0];
+							$this->data['case_details']['street_no'] = $this->data['policy']['street_number'];
+							$this->data['case_details']['street_name'] = $this->data['policy']['street_name'];
+							$this->data['case_details']['province'] = $this->data['policy']['province2'];
+							$case_details['country2'] = $this->data['case_details']['country2'] = $this->data['policy']['country2'];
+							$case_details['country'] = $this->data['case_details']['country'] = $this->data['policy']['country2'];
+							$case_details['province'] = $this->data['case_details']['province'] = $this->data['policy']['province2'];
+							$this->data['case_details']['post_code'] = $this->data['policy']['postcode'];
+						}
+					}
+				} else {
+					if ($policies = $this->api_model->get_policy(array('policy' => $case_details['policy_no']))) {
+						$this->data['policy'] = $policies[0];
+					}
+				}
 				
 				$this->data['assign_to_name'] = '-';
 				if ($users = $this->users_model->search(array('id' => $case_details['assign_to']))) {
@@ -576,7 +621,7 @@ class Emergency_assistance extends CI_Controller {
 					'on' => 'u1.id = intake_form.created_by',
 					'type' => 'LEFT'
 					);
-				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by, u1.id as user_id", $conditions = array('intake_form.case_id'=>$id), $joins);
+				$this->data['intake_forms'] = $this->common_model->select($record = "list", $typecast = "array", $table = "intake_form", $fields = "intake_form.id, intake_form.notes, intake_form.docs, intake_form.created, concat_ws(' ', u1.first_name, u1.last_name) as created_by, u1.id as user_id, u1.username as username", $conditions = array('intake_form.case_id'=>$id), $joins);
 
 				// pass case id to server
 				$this->data['case_id'] = $id;
@@ -900,7 +945,7 @@ class Emergency_assistance extends CI_Controller {
 					$para['birthday'] = $policies[0]['birthday'];
 					$para['gender'] = $policies[0]['gender'];
 					$this->data['create_claim_url'] .= "?" . http_build_query($para);
-					$this->data['create_claim_url'] .= "?" . http_build_query($para);
+					$this->data['create_case_url'] .= "?" . http_build_query($para);
 					if (!empty($this->data['policy']['family'])) {
 						foreach ($this->data['policy']['family'] as $key => $val) {
 							$para = array('policy' => $policies[0]['policy']);

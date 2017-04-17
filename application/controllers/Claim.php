@@ -433,6 +433,8 @@ class Claim extends CI_Controller {
 					redirect("claim/claim_detail/$record_id");
 
 			} else {
+				$this->load->model('api_model');
+				
 				// load dropdowns- countries, province, products data
 				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
 				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
@@ -440,6 +442,14 @@ class Claim extends CI_Controller {
 				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key= "short_code", $value = "name");
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE);
 				$this->data['payees'] = $this->common_model->get_payees($field_name = "expenses_claimed[payee][]", $selected = $this->input->post($field_name), $key='id', $val='name');
+				
+				$policy = $this->input->get('policy');
+				$this->data['policy'] = array();
+				if (!empty($policy)) {
+					if ($policies = $this->api_model->get_policy(array('policy' => $policy))) {
+						$this->data['policy'] = $policies[0];
+					}
+				}
 
 				// get all documents for sending email/print.
 				$fields = "id, name, description";

@@ -294,7 +294,7 @@ class Common_model extends CI_Model
      * @param       $key string - option value
      * @param       $key string - option label
     */
-    public function getprovinces($field_name, $selected, $key= "name", $value = "name", $conditions = "country_id = '1'")
+    public function getprovinces($field_name, $selected, $key= "short_code", $value = "name", $conditions = "country_id = '1'")
     {
         $record = $this->get_ref($table = "province", $key, $value, $dropdown=TRUE, $empty = "", $conditions);       
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));

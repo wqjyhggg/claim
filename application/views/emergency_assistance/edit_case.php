@@ -28,6 +28,68 @@
                <!-- search policy filter start -->   
                <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager() or $this->ion_auth->is_eacmanager()) echo form_open('emergency_assistance/edit_case/'.$case_details['id'].'?ref='.$this->input->get('ref'), array('class'=>'form-horizontal')); ?>
 
+				<h4 class="move_down"> Assistance Client Info <i class="fa fa-angle-down pull-right"></i></h4>
+				<div class="row" style="margin-bottom:15px;display:none">
+                  <div class="form-group col-sm-4">
+                     <?php               
+                     echo form_label('Policy Number:', 'policy_no', array("class"=>'col-sm-12'));  
+                     echo form_input("policy_no", $this->common_model->field_val("policy_no", $case_details), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
+                     echo form_error("policy_no");
+                     echo form_hidden('policy_info', $case_details['policy_info']);
+                     ?>
+                  </div> 
+                  <div class="form-group col-sm-4">
+                     <?php               
+                     echo form_label('Insured Name:', 'insured_name', array("class"=>'col-sm-12'));  
+                     ?>
+                     <div class="form-group col-sm-6">
+                        <?php
+                        echo form_input("insured_firstname", $this->common_model->field_val("insured_firstname", $case_details), array("class"=>"form-control col-sm-6", 'placeholder'=>'Insured First Name'));
+                        echo form_error("insured_firstname");
+                        ?>
+                     </div>
+                     <div class="form-group col-sm-6">
+                        <?php 
+                        echo form_input("insured_lastname", $this->common_model->field_val("insured_lastname", $case_details), array("class"=>"form-control col-sm-6", 'placeholder'=>'Insured Last Name'));
+                        echo form_error("insured_lastname");
+                        ?>
+                     </div>
+                  </div> 
+                  <div class="form-group col-sm-4">
+                     <?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
+                     <div class="input-group date">
+                        <?php                
+                        echo form_input("dob", $this->common_model->field_val("dob", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Day of Birth'));
+                        ?>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                     </div>
+                     <?php echo form_error("dob"); ?>
+                  </div>
+                  <div class="clearfix"></div>
+				<?php if (!empty($policy)) { ?>
+					<div class="form-group col-sm-4">
+						<?php echo form_label('Arrived Date:', 'Arrived') . $policy['arrival_date']; ?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php echo form_label('Effective Date:', 'Effective') . $policy['effective_date']; ?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php echo form_label('Expired Date:', 'Expired') . $policy['expiry_date']; ?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php echo form_label('Sum Insured:', 'Sum Insured') . '$' . number_format($policy['sum_insured'], 2); ?>
+					</div> 
+					<div class="form-group col-sm-4">
+						<?php echo form_label('Deductive:', 'Deductive') . '$' . number_format($policy['deductible_amount'], 2); ?>
+					</div>
+					<?php if (!empty($policy['stable_condition'])) { ?>
+					<div class="form-group col-sm-4">
+						<?php echo ($policy['stable_condition'] == 1) ? 'Including stable pre-existing condition coverage' : 'Excluding stable pre-existing condition coverage'; ?>
+					</div>
+					<?php } ?> 
+				<?php } ?>
+               </div> 
+
                <h4>Case Basic Info option<small></small></h4>
                 <div class="row">
                   <div class="form-group col-sm-4">
@@ -417,56 +479,6 @@
                   </div>                                           
                </div> 
 
-               <h4>Assistance Client Info<small></small></h4>
-               <div class="row">
-                  <div class="form-group col-sm-4">
-                     <?php               
-                     echo form_label('Policy Number:', 'policy_no', array("class"=>'col-sm-12'));  
-                     echo form_input("policy_no", $this->common_model->field_val("policy_no", $case_details), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
-                     echo form_error("policy_no");
-                     echo form_hidden('policy_info', $case_details['policy_info']);
-                     ?>
-                  </div> 
-                  <div class="form-group col-sm-4">
-                     <?php               
-                     echo form_label('Insured Name:', 'insured_name', array("class"=>'col-sm-12'));  
-                     ?>
-                     <div class="form-group col-sm-6">
-                        <?php
-                        echo form_input("insured_firstname", $this->common_model->field_val("insured_firstname", $case_details), array("class"=>"form-control col-sm-6", 'placeholder'=>'Insured First Name'));
-                        echo form_error("insured_firstname");
-                        ?>
-                     </div>
-                     <div class="form-group col-sm-6">
-                        <?php 
-                        echo form_input("insured_lastname", $this->common_model->field_val("insured_lastname", $case_details), array("class"=>"form-control col-sm-6", 'placeholder'=>'Insured Last Name'));
-                        echo form_error("insured_lastname");
-                        ?>
-                     </div>
-                  </div> 
-                  <div class="form-group col-sm-4">
-                     <?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
-                     <div class="input-group date">
-                        <?php                
-                        echo form_input("dob", $this->common_model->field_val("dob", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Day of Birth'));
-                        ?>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                     </div>
-                     <?php echo form_error("dob"); ?>
-                  </div> 
-                  <div class="clearfix"></div>
-
-                  <div class="form-group col-sm-4">
-                     <?php echo form_label('Insured Address:', 'insured_address', array("class"=>'col-sm-12'));   ?>
-                     <div class="form-group col-sm-12">
-                        <?php                
-                        echo form_textarea("insured_address", $this->common_model->field_val("insured_address", $case_details), array("class"=>"form-control", 'placeholder'=>'Insured Address', 'style'=>"height:90px"));
-                        echo form_error("insured_address");
-                        ?>
-                     </div>
-                  </div>                                                
-               </div> 
-
 
                <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager()): ?>    
                   <h4>Assign Case Manager<small></small></h4>
@@ -561,13 +573,10 @@
                          <div class="col-sm-12 intake-forms">
                               <div class="col-sm-2">
                                  <div class="col-sm-12">
-                                    <?php echo $i.". #".$value['user_id'] ?>
+                                    <?php echo $i." : " . $value['created'] ?>
                                  </div>
                                  <div class="col-sm-12">
-                                    <?php echo $value['created_by'] ?>
-                                 </div>
-                                 <div class="col-sm-12">
-                                    <?php echo $value['created']; ?>
+                                    <?php echo "By : " . $value['username'] ?>
                                  </div>
                               </div>
                               <div class="col-sm-10">
@@ -913,6 +922,11 @@ function page_info_adjust() {
 
       // place trigger clicked once file append in files class
       $('#file'+(count+1)).trigger("click");
+   })
+
+   .on("click", ".move_down", function(){
+      $(this).next("div.row").slideToggle();
+      $(this).children("i").toggleClass("fa-angle-up").toggleClass("fa-angle-down");
    })
 
    // delete intake form
