@@ -36,8 +36,8 @@
                </div>
                <div class="form-group col-sm-3">
                   <?php
-                  echo form_label('Policy Number:', 'policy', array("class"=>'col-sm-12'));                  
-                  echo form_input("policy", $this->input->get("policy"), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
+                  echo form_label('Policy Number:', 'policy_match', array("class"=>'col-sm-12'));                  
+                  echo form_input("policy_match", $this->input->get("policy_match"), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
                   ?>
                </div>               
                <div class="col-sm-5">
@@ -283,7 +283,7 @@
                </div>     
                <div class="form-group col-sm-3">
                   <?php          
-                  echo form_input("policy_no", $this->input->get("policy_no"), array("class"=>"form-control", 'placeholder'=>'Policy No'));
+                  echo form_input("policy_no", $this->input->get("policy_no"), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
                   ?>
                </div> 
                <div class="form-group col-sm-3">
