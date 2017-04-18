@@ -26,7 +26,7 @@ class Claim_model extends CI_Model {
 	 */
 	public function get_claim_status_list($need_empty=0) {
 		$arr = array(
-				0	=> '-- Status --',
+				0	=> '-- Claim Status --',
 				'Processing' => 'Processing',
 				'Pending' => 'Pending',
 				'Processed' => 'Processed',
@@ -50,6 +50,68 @@ class Claim_model extends CI_Model {
 	public function get_claim_by_id($id) {
 		$this->db->where('id', $id);
 		return $this->db->get('claim')->row_array();
+	}
+
+	/**
+	 * Return a list of policy status
+	 *
+	 * @param array $data	  	search parameter
+	 * @param array $policies	policy list
+	 * @return array result array, maybe null
+	 */
+	public function post_search($post, $policies) {
+		$where = '';
+		
+		if (!empty($post["claim_no"])) {
+			$where .= ' claim.claim_no=' . $this->db->escape($post["claim_no"]);
+		}
+		
+		if (!empty($post["status"])) {
+			if ($where) $where .= ' AND'; 
+			$where .= ' claim.status=' . $this->db->escape($post["status"]);
+		}
+		
+		if (!empty($policies)) {
+			$pArr = array();
+			foreach ($policies as $po) {
+				$pArr[] = $this->db->escape($po['policy']);
+			}
+			if ($where) $where .= ' AND'; 
+			$where .= " claim.policy_no IN (" . join(",", $pArr) . ")";
+		}
+		
+		if (!empty($post["firstname"])) {
+			if ($where) $where .= ' AND'; 
+			$where .= " claim.insured_first_name like ". $this->db->escape("%" . $post["firstname"] . "%");
+		}
+
+		if (!empty($post["lastname"])) {
+			if ($where) $where .= ' AND'; 
+			$where .= " claim.insured_last_name like ". $this->db->escape("%" . $post["lastname"] . "%");
+		}
+		
+		if (!empty($post["claim_date_from"])) {
+			if ($where) $where .= ' AND'; 
+			$where .= " claim.claim_date >= " . $this->db->escape($post["claim_date_from"]);
+		}
+			
+		if (!empty($post["claim_date_to"])) {
+			if ($where) $where .= ' AND'; 
+			$where .= " claim.claim_date <= " . $this->db->escape($post["claim_date_to"]);
+		}
+		
+		if (!$where) {
+			return array();
+		}
+		
+		$sql  = "SELECT concat_ws(' ', u1.first_name, u1.last_name) as claim_examiner, claim.id, claim.policy_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.claim_date, claim.status, sum(expenses_claimed.amount_claimed) as amount_claimed FROM claim";
+		$sql .= " LEFT JOIN users u1 ON u1.id = claim.assign_to";
+		$sql .= " LEFT JOIN expenses_claimed ON claim.id = expenses_claimed.claim_id";
+		$sql .= " WHERE ". $where;
+		$sql .= " GROUP BY claim.id";
+		$sql .= " ORDER BY claim.id DESC";
+	
+		return $this->db->query($sql)->result_array();
 	}
 
 	/**

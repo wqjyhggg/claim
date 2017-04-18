@@ -14,7 +14,20 @@ class Api_model extends CI_Model {
 	public $status_list;
 	public $success;
 	public $errormsg;
-	
+
+	private $qArr = array(
+			'plan_id',
+			'firstname',
+			'lastname',
+			'birthday',
+			'birthday2',
+			'policy',
+			'policy_match',
+			'apply_date', 'apply_date2',
+			'arrival_date', 'arrival_date2',
+			'effective_date', 'effective_date2',
+			'expiry_date', 'expiry_date2');
+
 	/**
 	 * Return a list of policy status
 	 *
@@ -22,10 +35,14 @@ class Api_model extends CI_Model {
 	 *        	search parameter
 	 * @return array result array, maybe null
 	 */
-	public function get_policy($data) {
-		foreach ($data as $k => $v) {
-			$data[$k] = trim($v);
+	public function get_policy($qdata) {
+		$data = array();
+		
+		foreach ($qdata as $k => $v) {
+			if (in_array($k, $this->qArr)) $data[$k] = trim($v);
 		}
+		
+		if (empty($data)) return $data;	// return empty array
 		
 		// prepare post data
 		$data ['key'] = API_KEY;
@@ -55,6 +72,7 @@ class Api_model extends CI_Model {
 		
 		curl_close ( $curl );
 		$rt = json_decode ( $result, TRUE );
+		// echo "<pre>"; print_r($data); print_r($rt); die("Resutl");
 		$this->status_list = isset($rt['status_list']) ? $rt['status_list'] : array();
 		$this->success = isset($rt['success']) ? $rt['success'] : 'Failed to Connect';
 		$this->errormsg = isset($rt['errormsg']) ? $rt['errormsg'] : '';
@@ -102,6 +120,20 @@ class Api_model extends CI_Model {
 			return $result['plan'];
 		}
 		return array();
+	}
+	
+	/**
+	 * Return a indexed list of products which policy system have
+	 * 
+	 * @return array 	production list
+	 */
+	public function get_indexed_products() {
+		$prods = $this->get_products();
+		$rt = array();
+		foreach ($prods as $k => $p) {
+			$rt[$k] = $p['full_name'];
+		}
+		return $rt;
 	}
 	
 	/**

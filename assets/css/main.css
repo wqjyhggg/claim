@@ -418,3 +418,13 @@ input[type=checkbox]
 .doc_title > h1 {
     font-size: 23px;
 }
+
+.trinputform {
+	display: none;
+	background: #daecf5;
+}
+
+.hidden_form {
+	displan: none;
+}
+

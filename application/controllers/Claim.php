@@ -18,127 +18,39 @@ class Claim extends CI_Controller {
 
 	
 	// redirect if needed, otherwise display the claim page
-	public function index()
-	{
-
-		if (!$this->ion_auth->logged_in())
-		{
+	public function index() {
+		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		}
-		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
-		{
+		} else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer()) {
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
-		}
-		else
-		{
-			// initialize variables
-			$this->data['cases'] = []; 
-			$this->data['policies'] = [];
-
-			// search claim filter
-			if($this->input->get("filter") == 'claim') 
-			{
-				// get all providers list
-				$order_by = array(
-					'field'=>'id',
-					'order'=>'desc'
-					);
-
-				$joins = [];
-				$joins[] = array(
-					'table' => 'users u1',
-					'on' => 'u1.id = claim.assign_to',
-					'type' => 'LEFT'
-					);
-				$joins[] = array(
-					'table' => 'expenses_claimed',
-					'on' => 'claim.id = expenses_claimed.claim_id',
-					'type' => 'LEFT'
-					);
-
-				// prepare conditions
-				$conditions = [];
-				// $conditions['expenses_claimed.status'] = 'accepted';
-				if($this->input->get("claim_no_claim")) 
-					$conditions['claim.claim_no'] = $this->input->get("claim_no_claim");
-				if($this->input->get("status")) 
-					$conditions['claim.status'] = $this->input->get("status");
-				if($this->input->get("policy_claim")) 
-					$conditions['claim.policy_no'] = $this->input->get("policy_claim");
-				if($this->input->get("created")) 
-					$conditions['claim.created like'] = "%".$this->input->get("created")."%";
-				if($this->input->get("firstname_claim")) 
-					$conditions['claim.insured_first_name like'] = "%".$this->input->get("firstname_claim")."%";
-				if($this->input->get("lastname_claim")) 
-					$conditions['claim.insured_last_name like'] = "%".$this->input->get("lastname_claim")."%";
-
-				if($this->input->get("claim_date_from")) 
-					$conditions['claim.claim_date >= '] = $this->input->get("claim_date_from");
-				if($this->input->get("claim_date_to")) 
-					$conditions['claim.claim_date <= '] = $this->input->get("claim_date_to");
-
-				$fields = "concat_ws(' ', u1.first_name, u1.last_name) as claim_examiner, claim.id, claim.policy_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.claim_date, claim.status, sum(expenses_claimed.amount_claimed) as amount_claimed";
-				$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "claim", $fields, $conditions, $joins, $order_by, $group_by = array('claim.id'));
-			}
-			else if($this->input->get("filter") == 'case') 
-			{
-				// get all providers list
-				$order_by = array(
-					'field'=>'id',
-					'order'=>'desc'
-					);
-
-				$joins[] = array(
-					'table' => 'users u1',
-					'on' => 'u1.id = case.assign_to',
-					'type' => 'LEFT'
-					);
-				$joins[] = array(
-					'table' => 'users u2',
-					'on' => 'u2.id = case.case_manager',
-					'type' => 'LEFT'
-					);
-
-				// prepare conditions
-				$conditions = [];
-				$conditions['case.status'] = 'A';
-				if($this->input->get("case_no")) 
-					$conditions['case.case_no'] = $this->input->get("case_no");
-				if($this->input->get("policy_no")) 
-					$conditions['case.policy_no'] = $this->input->get("policy_no");
-				if($this->input->get("client_user_name")) 
-					$conditions['concat_ws(" ", case.insured_firstname, case.insured_lastname) like'] = "%".$this->input->get("client_user_name")."%";
-				if($this->input->get("created")) 
-					$conditions['case.created like'] = "%".$this->input->get("created")."%";
-				if($this->input->get("assign_to")) 
-					$conditions['case.assign_to'] = $this->input->get("assign_to");
-				if($this->input->get("case_manager")) 
-					$conditions['case.case_manager'] = $this->input->get("case_manager");
-
-				$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
-				$this->data['cases'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
-			} else if ($this->input->get("filter") == 'policy') {
-				$this->load->model('api_model');
+		} else {
+			$this->load->model('api_model');
+			$this->load->model('case_model');
+			$this->load->model('claim_model');
+			$this->load->model('users_model');
 				
-				$this->data['policies']  = $this->api_model->get_policy($this->input->get());
-				// pass policies data to view
-				$this->data['policies_error']  = $this->api_model->errormsg;
-				$this->data['policies_success']  = $this->api_model->success;
-				$this->data['status']  = $this->api_model->status_list;
-			}
+			$this->data['policies'] = $this->api_model->get_policy($this->input->post());
 
+			// pass policies data to view
+			$this->data['policies_error']  = $this->api_model->errormsg;
+			$this->data['policies_success']  = $this->api_model->success;
+			$this->data['policy_status']  = $this->api_model->status_list;
+			//echo "<pre>"; print_r($this->input->post()); print_r($this->data['policy_status']); die("XX"); //XXXXXXXXXXXx
+					
+			$this->data['cases'] = $this->case_model->post_search($this->input->post(), $this->data['policies']);
+				
+			$this->data['claims'] = $this->claim_model->post_search($this->input->post(), $this->data['policies']);
+			$this->data['claim_status'] = $this->claim_model->get_claim_status_list(1);
+				
 			// send case manager and eac managers list
-			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = $this->input->get($field_name), $group = array("'eacmanager'"), $empty = "--EAC Follow up--", $additional_conditions = " and active = '1'");
-			$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--", $additional_conditions = " and active = '1'");
-
-			// send countries and province list
-			$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->input->get($field_name), $key = "short_code", $value = "name");
-			$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->input->get($field_name), $key = "short_code", $value = "name");
-			$this->data['policy_status'] = $this->common_model->get_policy_status($field_name = "status_id", $selected = $this->input->get($field_name));
-			$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->get($field_name), TRUE, FALSE);
-
+			$this->data['eacs'] = $this->users_model->get_user_by_type('eacmanager');
+			$this->data['casemamagers'] = $this->users_model->get_user_by_type('casemamager');
+			$this->data['examiners'] = $this->users_model->get_user_by_type('claimexaminer');
+			
+			$this->data['products'] = $this->api_model->get_indexed_products();
+				
 			// get claim examiners
 			$this->data['claim_examiner'] = $this->common_model->getrusers($field_name = "assign_user", "", $group = array("'claimexaminer'"), $empty = "--Select Claim Examiner--", $additional_conditions = " and active = '1'");
 
