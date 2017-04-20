@@ -77,14 +77,14 @@
                   <div class="form-group col-sm-3">
                      <?php
                         echo form_label('School Name:', 'school_name', array("class"=>'col-sm-12'));
-                        echo form_input("school_name", $this->input->post("school_name"), array("class"=>"form-control required", 'placeholder'=>'School Name'));
+                        echo form_input("school_name", $this->input->post("school_name"), array("class"=>"form-control", 'placeholder'=>'School Name'));
                         echo form_error("school_name");
                      ?>
                   </div>
                   <div class="form-group col-sm-3">
                      <?php
                         echo form_label('Group ID:', 'group_id', array("class"=>'col-sm-12'));
-                        echo form_input("group_id", $this->input->post("group_id"), array("class"=>"form-control required", 'placeholder'=>'Group ID'));
+                        echo form_input("group_id", $this->input->post("group_id"), array("class"=>"form-control", 'placeholder'=>'Group ID'));
                         echo form_error("group_id");
                      ?>
                   </div>

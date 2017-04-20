@@ -7,9 +7,11 @@
    <div class="page-title">
       <div class="title_left">
          <h3>Case Details</h3>
-         <?php
-         if(($this->ion_auth->is_admin() OR $this->ion_auth->is_claimsmanager() OR $this->ion_auth->is_claimexaminer()) and $this->input->get('type') == 'add_claim')
-            echo anchor('claim/create_claim?policy='.$case_details['policy_no'].'&case_no='.$case_details['case_no'], '<i class="fa fa-plus-circle"></i> Create Claim', array("class"=>'btn btn-primary')) ?>   
+		<?php
+			if (($this->ion_auth->is_admin() OR $this->ion_auth->is_claimsmanager() OR $this->ion_auth->is_claimexaminer()) and empty($case_details['claim_no'])) {
+				echo anchor('claim/create_claim?policy='.$case_details['policy_no'].'&case_no='.$case_details['case_no'], '<i class="fa fa-plus-circle"></i> Create Claim', array("class"=>'btn btn-primary'));
+			}
+		?>   
       </div>
    </div>
    <div class="clearfix"></div>

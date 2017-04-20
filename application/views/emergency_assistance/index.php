@@ -5,8 +5,6 @@
 
          <?php echo anchor("emergency_assistance/create_case", '<i class="fa fa-plus-circle"></i> New Case', array("class"=>'btn btn-primary create_case')) ?>
 
-         <?php echo anchor("emergency_assistance/create_policy", '<i class="fa fa-plus-circle"></i> New Policy', array("class"=>'btn btn-primary')) ?>
-
          <?php echo anchor("emergency_assistance/create_provider", '<i class="fa fa-plus-circle"></i> New Provider', array("class"=>'btn btn-primary')) ?>
          
       </div>
@@ -161,24 +159,6 @@
                      ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
-               </div>
-            </div>
-            <div class="row more_items" style="display:none">
-               <div class="form-group col-sm-3">
-                  <?php                 
-                     $policy = array(""=>'--Select Policy Status--');
-                     echo $policy_status['dropdown'];
-                  ?>
-               </div>
-               <div class="form-group col-sm-3">
-                  <?php               
-                     echo $province;
-                  ?>
-               </div>
-               <div class="form-group col-sm-3">
-                  <?php             
-                     echo $country;
-                  ?>
                </div>
             </div>
             <?php echo form_close(); ?>
@@ -434,15 +414,19 @@ $(document).ready(function() {
 // to make to check hidden filters to show
 <?php
 $display = 0;
-if(!empty($params))
-   foreach ($params as $key => $value)
-      if($key <> 'product_short' && $key <> 'policy' && $key <> 'filter' && $key <> 'key')
-         if($value)
-            $display = 1;
-if($display):
+if (!empty($params)) {
+	foreach ($params as $key => $value) {
+		if ($key <> 'product_short' && $key <> 'policy_match' && $key <> 'policy' && $key <> 'filter' && $key <> 'key') {
+			if(!empty($value)) {
+				$display = 1;
+			}
+		}
+	}
+}
+if($display) {
 ?>
    $(".more_items").show();
-<?php endif; ?>
+<?php } ?>
 $(document).on("click",".more_filters", function(){
    $(".more_items").toggle();
 })

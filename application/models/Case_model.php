@@ -29,6 +29,17 @@ class Case_model extends CI_Model {
 	}
 
 	/**
+	 * Return a record by case_no
+	 *
+	 * @param string $case_no
+	 * @return array result array, maybe null
+	 */
+	public function get_id_by_case_no($case_no) {
+		$this->db->where('case_no', $case_no);
+		return $this->db->get('case')->row_array();
+	}
+
+	/**
 	 * Return a list of policy status
 	 *
 	 * @param array $data	  	search parameter

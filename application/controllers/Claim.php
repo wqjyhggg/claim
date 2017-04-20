@@ -111,8 +111,6 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 			$this->form_validation->set_rules('case_no', 'Case No', 'numeric');
-			$this->form_validation->set_rules('school_name', 'School Name', 'required');
-			$this->form_validation->set_rules('group_id', 'Group ID', 'required');
 
 			if ($this->form_validation->run() == TRUE)
 			{
@@ -166,7 +164,18 @@ class Claim extends CI_Controller {
 				$data['files'] = implode(",", $file_names);
 
 				$this->load->model('master_model');
-				$data['id'] = $this->master_model->get_id('claim'); // Get new id
+				$this->load->model('case_model');
+				
+				$data['id'] = 0;
+				if (!empty($case_no = $this->input->post('case_no'))) {
+					$case = $this->case_model->get_id_by_case_no($case_no); // Get case
+					if ($case) {
+						$data['id'] = $case['id'];
+					}
+				}
+				if (empty($data['id'])) {
+					$data['id'] = $this->master_model->get_id('claim'); // Get new id
+				}
 				
 				// insert values to database
 				$record_id = $this->common_model->save("claim", $data);

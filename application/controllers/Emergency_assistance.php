@@ -138,6 +138,8 @@ class Emergency_assistance extends CI_Controller {
 		}
 		else
 		{
+			$this->load->model('case_model');
+			
 			//validate form input
 			$this->form_validation->set_rules('assign_to', 'Assign To', '');
 			$this->form_validation->set_rules('reason', 'Reason', 'required');
@@ -176,15 +178,13 @@ class Emergency_assistance extends CI_Controller {
 				
 				$this->load->model('master_model');
 				$data['id'] = $this->master_model->get_id('case'); // Get new id
+				$data['case_no'] = $case_no = $this->case_model->generate_case_no($data['id']);
 
 				// insert values to database
 				$record_id = $this->common_model->save("case", $data);
+				
 				$record_id = $data['id'];
 				
-				// update case no(7 length) to table
-				$case_no = str_pad($record_id, 7, 0, STR_PAD_LEFT); 
-				$this->common_model->update("case", array("case_no"=>$case_no), array("id"=>$record_id));
-
 				// load upload class
 				$config['upload_path'] = UPLOADFULLPATH . 'intake_forms/';
 				$config['allowed_types'] = '*';
@@ -299,15 +299,22 @@ class Emergency_assistance extends CI_Controller {
 			else
 			{
 				$this->load->model('api_model');
+				$this->load->model('currency_model');
+				$this->load->model('country_model');
+				$this->load->model('province_model');
 				
-				// verify case details
-				$joins[] = array(
-					'table' => 'users u1',
-					'on' => 'u1.id = case.created_by',
-					'type' => 'LEFT'
-					);
-				$case_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('case.id'=>$id), $joins);
-				$this->data['case_details'] = $case_details;
+				$this->data['case_details'] = array();
+				
+				if (!empty($id)) {
+					// verify case details
+					$joins[] = array(
+						'table' => 'users u1',
+						'on' => 'u1.id = case.created_by',
+						'type' => 'LEFT'
+						);
+					$case_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array('case.id'=>$id), $joins);
+					$this->data['case_details'] = $case_details;
+				}
 				
 				$this->data['policy'] = array();
 				if (empty($case_details)) {
@@ -317,12 +324,17 @@ class Emergency_assistance extends CI_Controller {
 							$this->data['policy'] = $policies[0];
 							$this->data['case_details']['street_no'] = $this->data['policy']['street_number'];
 							$this->data['case_details']['street_name'] = $this->data['policy']['street_name'];
+							$this->data['case_details']['city'] = $this->data['policy']['city'];
 							$this->data['case_details']['province'] = $this->data['policy']['province2'];
 							$case_details['country2'] = $this->data['case_details']['country2'] = $this->data['policy']['country2'];
 							$case_details['country'] = $this->data['case_details']['country'] = $this->data['policy']['country2'];
 							$case_details['province'] = $this->data['case_details']['province'] = $this->data['policy']['province2'];
 							$this->data['case_details']['post_code'] = $this->data['policy']['postcode'];
 						}
+					} else {
+						$case_details['country2'] = $this->data['case_details']['country2'] = 'CA';
+						$case_details['country'] = $this->data['case_details']['country2'] = 'CA';
+						$case_details['province'] = $this->data['case_details']['province'] = 'ON';
 					}
 				} else {
 					if ($policies = $this->api_model->get_policy(array('policy' => $case_details['policy_no']))) {
@@ -336,9 +348,6 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name, $case_details));
 
 				// Load model if needs
-				$this->load->model('currency_model');
-				$this->load->model('country_model');
-				$this->load->model('province_model');
 				
 				$vdata = array();
 				$vdata['name'] = 'inpatient_currency';
@@ -2111,14 +2120,14 @@ class Emergency_assistance extends CI_Controller {
 	{
 		// get country id from name
 		$country_name = urldecode($country_name);
-		$country_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "country", $fields = "`country`.id", $conditions = array('country.name'=>$country_name));
+		$country_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "country", $fields = "`country`.id", $conditions = array('country.short_code'=>$country_name));
 		$country_id = @$country_details['id'];
 		$conditions = "province.country_id = '$country_id'";
 
 		if($type == 'return')
-			return $this->common_model->getprovinces($field_name = "province", $selected, $key = "name", $value = "name", $conditions);
+			return $this->common_model->getprovinces($field_name = "province", $selected, $key = "short_code", $value = "name", $conditions);
 		else
-			echo $this->common_model->getprovinces($field_name = "province", $selected, $key = "name", $value = "name", $conditions);
+			echo $this->common_model->getprovinces($field_name = "province", $selected, $key = "short_code", $value = "name", $conditions);
 		
 	}
 

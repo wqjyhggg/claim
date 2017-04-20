@@ -149,9 +149,9 @@
                   </div>
                   <div class="form-group col-sm-2">
                      <?php               
-                     echo form_label('Post Code:', 'post_code', array("class"=>'col-sm-12'));  
-                     echo form_input("post_code", $this->common_model->field_val("post_code", $case_details), array("class"=>"form-control", 'placeholder'=>'Post Code'));
-                     echo form_error("post_code");
+	                     echo form_label('Post Code:', 'post_code', array("class"=>'col-sm-12'));  
+	                     echo form_input("post_code", $this->common_model->field_val("post_code", $case_details), array("class"=>"form-control", 'placeholder'=>'Post Code'));
+	                     echo form_error("post_code");
                      ?>
                   </div>       
                   <div class="col-sm-2">

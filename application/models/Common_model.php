@@ -280,7 +280,7 @@ class Common_model extends CI_Model
      * @param       $key string - option value
      * @param       $key string - option label
     */
-    public function getcountries($field_name, $selected = 1, $key = "name", $value = "name")
+    public function getcountries($field_name, $selected = 1, $key = "short_code", $value = "name")
     {
         $record = $this->get_ref($table = "country", $key, $value, $dropdown=TRUE, $empty = "");
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
@@ -422,7 +422,7 @@ class Common_model extends CI_Model
             $conditions .= $additional_conditions;
         }
 
-        $record = $this->get_ref($table = "users", $key= "id", $value = "first_name", $dropdown=TRUE, $empty, $conditions, $join, $group_by = array("users.id"), $user_code);
+        $record = $this->get_ref($table = "users", $key= "id", $value = "username", $dropdown=TRUE, $empty, $conditions, $join, $group_by = array("users.id"), $user_code);
         return form_dropdown($field_name, $record, $selected, array("class"=>'form-control'));
     }
 
