@@ -159,7 +159,7 @@
 									<td><?php echo $policy_status[$value['status_id']]['name']; ?></td>
 									<td><?php echo date("d/d/Y", strtotime($value['effective_date'])); ?></td>
 									<td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
-									<td><?php echo anchor("emergency_assistance/view_policy?type=add_claim", "Open", array('class'=>'view-policy')); ?></td>
+									<td><?php echo anchor("emergency_assistance/view_policy/" . $value['policy'], "Detail", array('class'=>'view-policy')); ?></td>
 								</tr>
 								<?php endforeach; ?>
 							</tbody>
@@ -333,12 +333,11 @@ $(document).ready(function() {
    $(".view-policy").click(function(e){
       e.preventDefault();
       var data = $(this).parent('td').parent('tr').attr("data");
-
       // insert data to dom element to save temporary
       localStorage.setItem("policy_data", data);
-
       // redirect it to view policy page
-      window.location = "<?php echo base_url("emergency_assistance/view_policy?type=add_claim") ?>";
+      var href = $(this).attr('href');
+      window.location = href;
    })
 })
 

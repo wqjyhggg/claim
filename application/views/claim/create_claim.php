@@ -880,6 +880,20 @@
          </div>
          <div class="col-sm-3">
             <?php
+               echo form_label('Amount Claimed:', 'amount_claimed', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[amount_claimed][]", $this->input->post("amount_claimed"), array("class"=>"form-control required"));
+               echo form_error("amount_claimed");
+            ?>
+         </div>
+         <div class="col-sm-3">
+            <?php
+               echo form_label('Amount Deductable:', 'amt_deductable', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[amt_deductable][]", $this->input->post("amt_deductable"), array("class"=>"form-control required"));
+               echo form_error("amt_deductable");
+            ?>
+         </div>
+         <div class="col-sm-3">
+            <?php
                echo form_label('Payee:', 'payee', array("class"=>'col-sm-12'));
                $options = array(
                   ''=>'--Select Payee--'

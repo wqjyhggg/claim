@@ -929,33 +929,34 @@ class Emergency_assistance extends CI_Controller {
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
+		} else if (empty($policy)) {
+			return show_error('Sorry, Unknown policy.');
 		} else {
 			$this->data['create_claim_url'] = base_url('claim/create_claim');
 			$this->data['create_case_url'] = base_url('emergency_assistance/create_case');
-			if (!empty($policy)) {
-				$this->load->model('api_model');
+
+			$this->load->model('api_model');
 				
-				$policies = $this->api_model->get_policy(array('policy' => $policy));
-				if ($policies) {
-					$this->data['policy'] = $policies[0];
-					$para = array();
-					$para['policy'] = $policies[0]['policy'];
-					$para['firstname'] = $policies[0]['firstname'];
-					$para['lastname'] = $policies[0]['lastname'];
-					$para['birthday'] = $policies[0]['birthday'];
-					$para['gender'] = $policies[0]['gender'];
-					$this->data['create_claim_url'] .= "?" . http_build_query($para);
-					$this->data['create_case_url'] .= "?" . http_build_query($para);
-					if (!empty($this->data['policy']['family'])) {
-						foreach ($this->data['policy']['family'] as $key => $val) {
-							$para = array('policy' => $policies[0]['policy']);
-							$para['firstname'] = $val['firstname'];
-							$para['lastname'] = $val['lastname'];
-							$para['birthday'] = $val['birthday'];
-							$para['gender'] = $val['gender'];
-							$this->data['policy']['family'][$key]['create_claim_url'] = base_url('claim/create_claim') . "?" . http_build_query($para);
-							$this->data['policy']['family'][$key]['create_case_url'] = base_url('emergency_assistance/create_case') . "?" . http_build_query($para);
-						}
+			$policies = $this->api_model->get_policy(array('policy' => $policy));
+			if ($policies) {
+				$this->data['policy'] = $policies[0];
+				$para = array();
+				$para['policy'] = $policies[0]['policy'];
+				$para['firstname'] = $policies[0]['firstname'];
+				$para['lastname'] = $policies[0]['lastname'];
+				$para['birthday'] = $policies[0]['birthday'];
+				$para['gender'] = $policies[0]['gender'];
+				$this->data['create_claim_url'] .= "?" . http_build_query($para);
+				$this->data['create_case_url'] .= "?" . http_build_query($para);
+				if (!empty($this->data['policy']['family'])) {
+					foreach ($this->data['policy']['family'] as $key => $val) {
+						$para = array('policy' => $policies[0]['policy']);
+						$para['firstname'] = $val['firstname'];
+						$para['lastname'] = $val['lastname'];
+						$para['birthday'] = $val['birthday'];
+						$para['gender'] = $val['gender'];
+						$this->data['policy']['family'][$key]['create_claim_url'] = base_url('claim/create_claim') . "?" . http_build_query($para);
+						$this->data['policy']['family'][$key]['create_case_url'] = base_url('emergency_assistance/create_case') . "?" . http_build_query($para);
 					}
 				}
 			}
