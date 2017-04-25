@@ -573,6 +573,8 @@
                                     echo form_dropdown("expenses_claimed[coverage_code][]", $coverage_code, $value["coverage_code"], array("class"=>'form-control required'));
                                  ?>
                               </div>
+                              <div class="clearfix"></div>
+                              
                               <div class="col-sm-3">
                                  <?php
                                     echo form_label('Diagnosis:', 'diagnosis', array("class"=>'col-sm-12'));
@@ -597,6 +599,8 @@
                                     echo form_input("expenses_claimed[amount_billed][]", $value['amount_billed'], array("class"=>"form-control required"));
                                  ?>
                               </div>
+                              <div class="clearfix"></div>
+                              
                               <div class="col-sm-3">
                                  <?php
                                     echo form_label('Amount Client Paid:', 'amount_client_paid', array("class"=>'col-sm-12'));
@@ -608,13 +612,6 @@
 					               echo form_label('Amount Claimed:', 'amount_claimed', array("class"=>'col-sm-12'));
 					               echo form_input("expenses_claimed[amount_claimed][]", $this->input->post("amount_claimed"), array("class"=>"form-control required"));
 					               echo form_error("amount_claimed");
-					            ?>
-					          </div>
-					          <div class="col-sm-3">
-					            <?php
-					               echo form_label('Amount Deductible:', 'amt_deductible', array("class"=>'col-sm-12'));
-					               echo form_input("expenses_claimed[amt_deductible][]", $this->input->post("amt_deductible"), array("class"=>"form-control required"));
-					               echo form_error("amt_deductible");
 					            ?>
 					          </div>
                               <div class="col-sm-3">
@@ -629,12 +626,20 @@
                               </div>
                               <div class="col-sm-3">
                                  <?php
+                                    echo form_label('currency:', 'currency', array("class"=>'col-sm-12'));
+                                    echo form_dropdown('expenses_claimed[currency][]', $currencies, $value['currency'], array('class'=>'form-control required'));
+                                 ?>
+                              </div>
+                              <div class="clearfix"></div>
+                              
+                              <div class="col-sm-3">
+                                 <?php
                                     echo form_label('Comment:', 'comment', array("class"=>'col-sm-12'));
                                     echo form_input("expenses_claimed[comment][]", $value['comment'], array("class"=>"form-control"));
                                  ?>
                               </div>
                               <?php if($edit): ?>
-                                 <div class="col-sm-3">
+                                 <div class="col-sm-3 pull-right">
                                     <i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i>
                                  </div>
                               <?php endif; ?>
@@ -1087,6 +1092,8 @@
                echo form_dropdown("expenses_claimed[coverage_code][]", $coverage_code, $this->input->get("coverage_code"), array("class"=>'form-control required'));
             ?>
          </div>
+         <div class="clearfix"></div>
+         
          <div class="col-sm-3">
             <?php
                echo form_label('Diagnosis:', 'diagnosis', array("class"=>'col-sm-12'));
@@ -1111,6 +1118,8 @@
                echo form_input("expenses_claimed[amount_billed][]", $this->input->post("amount_billed"), array("class"=>"form-control required"));
             ?>
          </div>
+         <div class="clearfix"></div>
+         
          <div class="col-sm-3">
             <?php
                echo form_label('Amount Client Paid:', 'amount_client_paid', array("class"=>'col-sm-12'));
@@ -1125,12 +1134,6 @@
          </div>
          <div class="col-sm-3">
             <?php
-               echo form_label('Amount Deductible:', 'amt_deductible', array("class"=>'col-sm-12'));
-               echo form_input("expenses_claimed[amt_deductible][]", $this->input->post("amt_deductible"), array("class"=>"form-control required"));
-            ?>
-         </div>
-         <div class="col-sm-3">
-            <?php
                echo form_label('Payee:', 'payee', array("class"=>'col-sm-12'));
                $options = array(
                   ''=>'--Select Payee--'
@@ -1139,12 +1142,21 @@
             ?>
          </div>
          <div class="col-sm-3">
+         	<?php
+               echo form_label('currency:', 'currency', array("class"=>'col-sm-12'));
+               echo form_dropdown('expenses_claimed[currency][]', $currencies, '', array('class'=>'form-control required'));
+            ?>
+         </div>
+         <div class="clearfix"></div>
+
+         <div class="col-sm-3">
             <?php
                echo form_label('Comment:', 'comment', array("class"=>'col-sm-12'));
                echo form_input("expenses_claimed[comment][]", $this->input->post("comment"), array("class"=>"form-control"));
             ?>
          </div>
-         <div class="col-sm-3">
+         
+         <div class="col-sm-3 pull-right">
             <i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i>
          </div>
       </div>

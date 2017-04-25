@@ -708,22 +708,14 @@ class Claim extends CI_Controller {
 
 
 	// redirect if needed, otherwise display the edit case page
-	public function claim_detail($id)
-	{
-		if (!$this->ion_auth->logged_in())
-		{
-			// redirect them to the login page
+	public function claim_detail($id) {
+		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login', 'refresh');
-		}
-		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer())
-		{
-			// redirect them to the home page because they must be an claim manager or claim examiner to view this
+		} else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_claimsmanager() and !$this->ion_auth->is_claimexaminer()) {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
-
-		}
-		else
-		{
+		} else {
 			$this->load->model('claim_model');
+			$this->load->model('expenses_model');
 			
 			// get claim details
 			$joins[] = array(
@@ -883,6 +875,7 @@ class Claim extends CI_Controller {
 							'amount_billed'=>$array['expenses_claimed']['amount_billed'][$key],
 							'amount_client_paid'=>$array['expenses_claimed']['amount_client_paid'][$key],
 							'pay_to'=>$array['expenses_claimed']['payee'][$key],
+							'currency'=>$array['expenses_claimed']['currency'][$key],
 							'comment'=>$array['expenses_claimed']['comment'][$key],
 							'created'=>date('Y-m-d H:i:s')
 							);
@@ -975,7 +968,7 @@ class Claim extends CI_Controller {
 							}
 					}
 				}
-
+				
 				// send success message
 				$this->session->set_flashdata('success', "Claim successfully updated");
 
@@ -1029,7 +1022,8 @@ class Claim extends CI_Controller {
 				// get all word documents
 				$fields = "id, title, content";
 				$this->data['word_templates'] = $this->common_model->select($record = "list", $typecast = "array", $table = "word_comments", $fields);
-
+				$this->data['currencies'] = $this->expenses_model->get_currencies(1);
+				
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Claim Details', TRUE);
 		        $this->template->write_view('content', 'claim/claim_detail', $this->data);

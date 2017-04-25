@@ -45,7 +45,24 @@ class Expenses_model extends CI_Model {
 				'V01A' => 'V01A - Out-PatientTreatment',
 		);
 	}
+	
 	/**
+	 * 
+	 */
+	public function get_currencies($withempty=FALSE) {
+		$rt =  array(
+				0 => '-- Select Currency --',
+				'CAD' => 'CAD',
+				'USD' => 'USD',
+				'CNY' => 'CNY',
+		);
+		if (!$withempty) {
+			unset($rt[0]);
+		}
+		return $rt;
+	}
+	
+/**
 	 * Return a Expenses Record
 	 *
 	 * @param int $id

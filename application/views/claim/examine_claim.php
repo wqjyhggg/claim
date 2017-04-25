@@ -26,6 +26,7 @@
 						<div class="form-group col-sm-3">
 							<label>Expiry Date : </label><?php echo $policy['expiry_date']; ?>
 						</div>
+						<div class="clearfix"></div>
 	
 						<div class="form-group col-sm-3">
 							<label>Beneficiary : </label><?php echo $policy['beneficiary']; ?>
@@ -33,9 +34,9 @@
 						<div class="form-group col-sm-3">
 							<label>Sum Insured : </label>$<?php echo number_format($policy['sum_insured'], 2); ?>
 						</div>
-						<div class="form-group col-sm-3">
+						<!-- div class="form-group col-sm-3">
 							<label>Deductible Amount : </label>$<?php echo number_format($policy['deductible_amount'], 2); ?>
-						</div>
+						</div -->
 						<div class="form-group col-sm-3">
 							<?php if ($policy['stable_condition'] == 1) { ?>
 							<label>&nbsp;</label>Include stable pre-existing condition coverage
@@ -45,6 +46,7 @@
 							<label>&nbsp;</label>&nbsp;
 							<?php } ?>
 						</div>
+						<div class="clearfix"></div>
 	
 						<div class="form-group col-sm-3">
 							<label>First Name : </label><?php echo $policy['firstname']; ?>
@@ -58,6 +60,7 @@
 						<div class="form-group col-sm-3">
 							<label>Birthday : </label><?php echo $policy['birthday']; ?>
 						</div>
+						<div class="clearfix"></div>
 	
 						<?php if (!empty($policy['family'])) { ?>
 						<?php 	foreach($policy['family'] as $member ) { ?>
@@ -73,6 +76,7 @@
 						<div class="form-group col-sm-3">
 							<label>Birthday : </label><?php echo $member['birthday']; ?>
 						</div>
+						<div class="clearfix"></div>
 						<?php 	} ?>
 						<?php } ?>
 					</div>
@@ -149,7 +153,6 @@
 										<th>Diagnosis</th>
 										<th>Amt Claimed</th>
 										<th>Amt Payable</th>
-										<th>Amt Deductible</th>
 										<th>Amt Insured</th>
 										<th>Amt Received</th>
 										<th>Comment</th>
@@ -172,13 +175,12 @@
 										<td><?php echo $value['diagnosis']; ?></td>
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
-										<td><?php echo $value['amt_deductible']?$value['amt_deductible']:0; ?></td>
 										<td><?php echo $value['amt_insured']?$value['amt_insured']:0; ?></td>
 										<td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
 										<td><?php echo $value['comment'] ?></td>
 									</tr>
 									<tr class='claim_items_form trinputform' id='item_form_<?php echo $value['id']; ?>'>
-										<td colspan="13">
+										<td colspan="12">
 											<div class="row policy_info">
 											<?php 
 												echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal claim_items_submit', 'method'=>'post'));
@@ -201,6 +203,8 @@
 													<label class="col-sm-12">New Payable : </label>
 													<div class='col-sm-12'><input type='number' step='0.01' name='amt_payable' value="<?php echo $value['amt_payable']; ?>"></div>
 												</div>
+												<div class="clearfix"></div>
+												
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Pay To : </label>
 													<div class='col-sm-12'><?php echo $value['pay_to']; ?>&nbsp;</div>
@@ -214,9 +218,10 @@
 													<div class='col-sm-12'><?php echo $value['reason']; ?>&nbsp;</div>
 												</div>
 												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Currency : </label>
-													<div class='col-sm-12'><?php echo $value['currency']; ?>&nbsp;</div>
+													<div class='col-sm-12'>&nbsp;</div>
 												</div>
+												<div class="clearfix"></div>
+												
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Recovery Name : </label>
 													<div class='col-sm-12'><?php echo $value['recovery_name']; ?>&nbsp;</div>
