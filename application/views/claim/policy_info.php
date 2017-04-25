@@ -43,7 +43,7 @@
 </div>
 <div class="form-group col-sm-4">
    <?php 
-      echo form_label('Deductable Amount: $ '.@$policy_info['deductible_amount'], 'Deductable Amount', array("class"=>'col-sm-12'));
+      echo form_label('Deductible Amount: $ '.@$policy_info['deductible_amount'], 'Deductible Amount', array("class"=>'col-sm-12'));
    ?>
 </div>
 <div class="form-group col-sm-4">

@@ -34,7 +34,7 @@
 							<label>Sum Insured : </label>$<?php echo number_format($policy['sum_insured'], 2); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Deductable Amount : </label>$<?php echo number_format($policy['deductible_amount'], 2); ?>
+							<label>Deductible Amount : </label>$<?php echo number_format($policy['deductible_amount'], 2); ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php if ($policy['stable_condition'] == 1) { ?>
@@ -149,7 +149,7 @@
 										<th>Diagnosis</th>
 										<th>Amt Claimed</th>
 										<th>Amt Payable</th>
-										<th>Amt Deductable</th>
+										<th>Amt Deductible</th>
 										<th>Amt Insured</th>
 										<th>Amt Received</th>
 										<th>Comment</th>
@@ -172,7 +172,7 @@
 										<td><?php echo $value['diagnosis']; ?></td>
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
-										<td><?php echo $value['amt_deductable']?$value['amt_deductable']:0; ?></td>
+										<td><?php echo $value['amt_deductible']?$value['amt_deductible']:0; ?></td>
 										<td><?php echo $value['amt_insured']?$value['amt_insured']:0; ?></td>
 										<td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
 										<td><?php echo $value['comment'] ?></td>
@@ -297,7 +297,7 @@
 										<th>Diagnosis</th>
 										<th>Amt Claimed</th>
 										<th>Amt Payable</th>
-										<th>Amt Deductable</th>
+										<th>Amt Deductible</th>
 										<th>Amt Insured</th>
 										<th>Amt Received</th>
 										<th>Comment</th>
@@ -319,7 +319,7 @@
 										<td><?php echo $value['diagnosis']; ?></td>
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
-										<td><?php echo $value['amt_deductable']?$value['amt_deductable']:0; ?></td>
+										<td><?php echo $value['amt_deductible']?$value['amt_deductible']:0; ?></td>
 										<td><?php echo $value['amt_insured']?$value['amt_insured']:0; ?></td>
 										<td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
 										<td><?php echo $value['comment']; ?></td>

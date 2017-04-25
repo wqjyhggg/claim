@@ -612,9 +612,9 @@
 					          </div>
 					          <div class="col-sm-3">
 					            <?php
-					               echo form_label('Amount Deductable:', 'amt_deductable', array("class"=>'col-sm-12'));
-					               echo form_input("expenses_claimed[amt_deductable][]", $this->input->post("amt_deductable"), array("class"=>"form-control required"));
-					               echo form_error("amt_deductable");
+					               echo form_label('Amount Deductible:', 'amt_deductible', array("class"=>'col-sm-12'));
+					               echo form_input("expenses_claimed[amt_deductible][]", $this->input->post("amt_deductible"), array("class"=>"form-control required"));
+					               echo form_error("amt_deductible");
 					            ?>
 					          </div>
                               <div class="col-sm-3">
@@ -1125,8 +1125,8 @@
          </div>
          <div class="col-sm-3">
             <?php
-               echo form_label('Amount Deductable:', 'amt_deductable', array("class"=>'col-sm-12'));
-               echo form_input("expenses_claimed[amt_deductable][]", $this->input->post("amt_deductable"), array("class"=>"form-control required"));
+               echo form_label('Amount Deductible:', 'amt_deductible', array("class"=>'col-sm-12'));
+               echo form_input("expenses_claimed[amt_deductible][]", $this->input->post("amt_deductible"), array("class"=>"form-control required"));
             ?>
          </div>
          <div class="col-sm-3">

@@ -1517,7 +1517,7 @@ class Claim extends CI_Controller {
 			'on' => 'claim.id = expenses_claimed.claim_id',
 			'type' => 'INNER'
 			);
-		$fields = "expenses_claimed.id,expenses_claimed.status,expenses_claimed.claim_id,expenses_claimed.claim_item_no,expenses_claimed.claim_no,expenses_claimed.invoice,expenses_claimed.date_of_service,expenses_claimed.coverage_code,expenses_claimed.diagnosis,expenses_claimed.amt_payable,expenses_claimed.amt_deductable,expenses_claimed.amt_insured, expenses_claimed.case_no, expenses_claimed.claim_date, (expenses_claimed.amount_claimed) as amount_claimed, (expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency, expenses_claimed.pay_to";
+		$fields = "expenses_claimed.id,expenses_claimed.status,expenses_claimed.claim_id,expenses_claimed.claim_item_no,expenses_claimed.claim_no,expenses_claimed.invoice,expenses_claimed.date_of_service,expenses_claimed.coverage_code,expenses_claimed.diagnosis,expenses_claimed.amt_payable,expenses_claimed.amt_deductible,expenses_claimed.amt_insured, expenses_claimed.case_no, expenses_claimed.claim_date, (expenses_claimed.amount_claimed) as amount_claimed, (expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency, expenses_claimed.pay_to";
 		$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields, $conditions, $joins);
 	
 

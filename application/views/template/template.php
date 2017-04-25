@@ -123,7 +123,7 @@
             $("select[name=province]").load(encodeURI(url));
          })
 
-         $(document).on("keydown", "input[name='payees[account_cheque][]'], input[name='expenses_claimed[amount_billed][]'], input[name='expenses_claimed[amount_client_paid][]'], input[name=amount_claimed], input[name=amt_deductable], input[name=amt_insure], input[name=amt_received], input[name=amt_payable], input[name='payees[payment][]']", function (e) {
+         $(document).on("keydown", "input[name='payees[account_cheque][]'], input[name='expenses_claimed[amount_billed][]'], input[name='expenses_claimed[amount_client_paid][]'], input[name=amount_claimed], input[name=amt_deductible], input[name=amt_insure], input[name=amt_received], input[name=amt_payable], input[name='payees[payment][]']", function (e) {
            // Allow: backspace, delete, tab, escape, enter and .
            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
                 // Allow: Ctrl+A, Command+A

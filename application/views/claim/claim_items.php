@@ -10,7 +10,7 @@
          <th>Diagnosis</th>
          <th>Amt Claimed</th>
          <th>Amt Payable</th>
-         <th>Amt Deductable</th>  
+         <th>Amt Deductible</th>  
          <th>Amt Insured</th>  
          <th>Amt Received</th> 
          <th>Comment</th>                       
@@ -32,7 +32,7 @@
                <td><?php echo $value['diagnosis'] ?></td>
                <td><?php echo $value['amount_claimed'] ?></td>
                <td><?php echo $value['amt_payable'] ?></td>
-               <td><?php echo $value['amt_deductable'] ?></td>
+               <td><?php echo $value['amt_deductible'] ?></td>
                <td><?php echo $value['amt_insured'] ?></td>
                <td><?php echo $value['amt_received'] ?></td>
                <td><?php echo $value['comment'] ?></td>
