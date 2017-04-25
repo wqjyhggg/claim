@@ -1117,54 +1117,49 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// redirect if needed, otherwise display the search provider page
-	public function search_provider()
-	{
-
-		if (!$this->ion_auth->logged_in())
-		{
-			// redirect them to the login page
+	public function search_provider() {
+		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login', 'refresh');
-		}
-		else
-		{	
+		} else {
 			// get all url params
-			$params = $this->input->get();
-			$address = trim(implode(" ", array_values($params)));
+			$lat = $this->input->get('lat');
+			$lng = $this->input->get('lng');
+			$address = $this->input->get('address');
+			if (empty($lat) && empty($lng)) {
+				// No latitude and longitude, try to get from address
+				if (empty($address)) {
+					// No address input, try to combine other address together
+					$address  = $this->input->get('street_no') . " "; 
+					$address .= $this->input->get('street_name') . " "; 
+					$address .= $this->input->get('city') . " "; 
+					$address = trim($address);
+					if (!empty($address)) {
+						$address .= " ";
+						$address .= $this->input->get('province') . " "; 
+						$address .= $this->input->get('country') . " ";
+					}
+					$address .= $this->input->get('post_code') . " ";
+					$address = trim($address);
+				}
+				if (empty($address)) {
+					$lat = 43.653226;
+					$lng = -79.3831843;
+				} else {
+					$cordinates = $this->lat_lng_finder($address);
+					$lat = $cordinates['lat'];
+					$lng = $cordinates['lng'];
+				}
+			}
 
-			$fields = "*";
-			$having = "";
-
-			// if address is not empty
-			if($address)
-			{
-				// get cordinates
-				$cordinates = $this->lat_lng_finder($address);
-
-				$fields = "*, (
-					    3959 * acos (
-					      cos ( radians(".$cordinates['lat'].") )
-					      * cos( radians( lat ) )
-					      * cos( radians( lng ) - radians(".$cordinates['lng'].") )
-					      + sin ( radians(".$cordinates['lat'].") )
-					      * sin( radians( lat ) )
-					    )
-					  ) AS distance";
-			  	$having = "distance < " . NEAREST_PROVIDERS_RANGE;
-		  	}
-			$order_by = array(
-				'field' => 'discount',
-				'order' => 'desc'
-				);
-			// get all providers list
-			$records = $this->common_model->select($record = "list", $typecast = "array", $table = "provider", $fields, $conditions = "", $joins = array(), $order_by, $group_by = array(), $having);
-			$this->data['records'] = $records;
-
-			// get countries list
-			$this->data['countries'] = $this->common_model->getcountries($field_name = "country", $selected = $this->input->get("country"));
-
-			// get province list
-			$this->data['provinces'] = $this->get_provinces($type = 'return', $country_name = $this->input->get("country"), $selected = $this->input->get("province"));
-
+			$this->data['lat'] = $lat;
+			$this->data['lng'] = $lng;
+			$this->data['address'] = $address;
+			$this->data['records'] = array();
+			if (!empty($lat) || !empty($lng)) {
+				$this->load->model('provider_model');
+				$this->data['records'] = $this->provider_model->get_list($lat, $lng);
+			}
+					
 			// load view data
         	$this->template->write('title', SITE_TITLE.' - Search Provider', TRUE);
 	        $this->template->write_view('content', 'emergency_assistance/search_provider', $this->data);
@@ -1806,6 +1801,7 @@ class Emergency_assistance extends CI_Controller {
 				'case_id' => $value,
 				'created_by' => $this->ion_auth->user()->row()->id,
 				'notes' => $notes,
+				'followup' => 1,
 				'created' => date("Y-m-d H:i:s")
 				);
 

@@ -305,7 +305,8 @@ switch (ENVIRONMENT)
 	}
 
 	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
-	define('UPLOADPATH', FCPATH.'upload'.DIRECTORY_SEPARATOR);
+	define('UPLOADPATH', 'assets/uploads'.DIRECTORY_SEPARATOR);
+	define('UPLOADFULLPATH', FCPATH.UPLOADPATH);
 	
 /*
  * --------------------------------------------------------------------

@@ -29,4 +29,13 @@ class Provider_model extends CI_Model {
 			return $this->db->insert_id();
 		}
 	}
+	
+	public function get_list($lat, $lng) {
+		$sql  = "SELECT *, (3959 * acos(cos(radians(" . (float)$lat . " )) * 
+										cos(radians(lat)) * 
+										cos(radians(lng) - radians(" . (float)$lng . ")) + 
+										sin(radians(" . (float)$lat . " )) * sin(radians(lat)))) AS distance";
+		$sql .= " FROM `provider` HAVING `distance` < " . NEAREST_PROVIDERS_RANGE . "  ORDER BY `distance` DESC LIMIT 10";
+		return $this->db->query($sql)->result_array();
+	}
 }
