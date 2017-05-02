@@ -113,15 +113,22 @@ class Expenses_model extends CI_Model {
 			// Update
 			$id = $data['id'];
 			unset($data['id']);
-			
-			$this->db->where('id', $id);
-			$this->db->update('expenses_claimed', $data);
-			return $id;
+			$cur = $this->get_by_id($id);
+			if ($cur) {
+				$this->db->where('id', $id);
+				$this->db->update('expenses_claimed', $data);
+				$this->active_model->log_update('expenses_claimed', $id, $rc, $data, $this->db->last_query());
+				return $id;
+			}
+			return 0;
 		} else {
 			// insert
 			$data['created_by'] = $this->ion_authget_user_id();
 			$this->db->insert('expenses_claimed', $data);
-			return $this->db->insert_id();
+			$sql = $this->db->last_query();
+			$id = $this->db->insert_id();
+			$this->active_model->log_new('expenses_claimed', $id, $data, $sql);
+			return $id;
 		}
 	}
 

@@ -126,7 +126,10 @@ class Common_model extends CI_Model
     public function save($table, $data)
     {
         $this->db->insert($table, $data);
-        return $this->db->insert_id();
+		$sql = $this->db->last_query();
+		$id = $this->db->insert_id();
+		$this->active_model->log_new($table, $id, $data, $sql);
+        return $id;
     }
 
 
@@ -140,7 +143,17 @@ class Common_model extends CI_Model
     public function update($table,$data,$conditions)
     {
         $this->db->where($conditions);
+        $rt = $this->db->get($table);
+        $olddata = array();
+        if ($rt->num_rows() == 1) {
+        	$olddata = $rt->row_array();
+        }
+        
+        $this->db->where($conditions);
         $q = $this->db->update($table, $data);
+        $query = $this->db->last_query();
+        $id = isset($conditions['id']) ? $conditions['id'] : (isset($data['id']) ? $data['id'] : 0);
+        $this->active_model->log_update($table, $id, $olddata, $data, $query);
         return $q;
     }
 
@@ -154,6 +167,7 @@ class Common_model extends CI_Model
     {
     	$this->db->where($conditions);
     	$this->db->delete($table);
+    	$this->active_model->log_delete($table, $conditions, $this->db->last_query());
     }
 
     /**

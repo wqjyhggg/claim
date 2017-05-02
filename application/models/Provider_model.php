@@ -8,6 +8,11 @@ if (! defined ( 'BASEPATH' ))	exit ( 'No direct script access allowed' );
  */
 	
 class Provider_model extends CI_Model {
+	public function get_by_id($id) {
+		$this->db->where('id', $id);
+		$this->db->get('provider')->row_array();
+	}
+	
 	/**
 	 * Save or Update a case
 	 *
@@ -20,13 +25,19 @@ class Provider_model extends CI_Model {
 			$id = $data['id'];
 			unset($data['id']);
 			
-			$this->db->where('id', $id);
-			$this->db->update('provider', $data);
-			return $id;
+			if ($rc = $this->get_by_id($id)) {
+				$this->db->where('id', $id);
+				$this->db->update('provider', $data);
+				$this->active_model->log_update('provider', $id, $rc, $data, $this->db->last_query());
+				return $id;
+			}
 		} else {
 			// insert
 			$this->db->insert('provider', $data);
-			return $this->db->insert_id();
+			$sql = $this->db->last_query();
+			$id = $this->db->insert_id();
+			$this->active_model->log_new('provider', $id, $data, $sql);
+			return $id;
 		}
 	}
 	

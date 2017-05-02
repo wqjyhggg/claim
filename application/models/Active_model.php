@@ -30,6 +30,19 @@ class Active_model extends CI_Model {
 	 *        	search parameter
 	 * @return array result array, maybe null
 	 */
+	public function log_delete($type, $data, $query) {
+		$this->init_log($type, $data, $query);
+		$this->data['log'] = "Delete : " . join(", ", $data);
+		$this->db->insert('active', $this->data);
+	}
+	
+	/**
+	 * Log create record
+	 *
+	 * @param array $data
+	 *        	search parameter
+	 * @return array result array, maybe null
+	 */
 	public function log_new($type, $id, $data, $query) {
 		$this->init_log($type, $data, $query);
 		$this->data['log'] = "Set (" . $id . "): " . join(", ", $data);
@@ -45,8 +58,8 @@ class Active_model extends CI_Model {
 		$this->init_log($type, $data, $query);
 		$log = '';
 		foreach ($data as $key => $val) {
-			if ($olddata[$key] != $val) {
-				$log .= $val . "[" . $olddata[$key] . "]";
+			if ((empty($olddata[$key]) && !empty($val)) || ($olddata[$key] != $val)) {
+				$log .= $val . "[" . (empty($olddata[$key]) ? 'NULL' : $olddata[$key]) . "]";
 			}
 		}
 		if ($log) {

@@ -9,8 +9,7 @@ class Emergency_assistance extends CI_Controller {
 
 	private $limit = 10;
 
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
 
 		// show the flash data error message if there is one
@@ -18,28 +17,20 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// redirect if needed, otherwise display the emergency assistance page
-	public function index()
-	{
-
-		if (!$this->ion_auth->logged_in())
-		{
+	public function index() {
+		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		}
-		elseif (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager() and !$this->ion_auth->is_eacmanager())
-		{
+		} elseif (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager() and !$this->ion_auth->is_eacmanager()) {
 			// redirect them to the home page because they must be an administrator to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
-		}
-		else
-		{
+		} else {
 			// initialize variables
 			$this->data['cases'] = []; 
 			$this->data['policies'] = [];
 
 			// search case filter
-			if($this->input->get("filter") == 'case') 
-			{
+			if ($this->input->get("filter") == 'case') {
 				// get all providers list
 				$order_by = array(
 					'field'=>'id',
@@ -74,10 +65,7 @@ class Emergency_assistance extends CI_Controller {
 
 				$fields = "last_update, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
 				$this->data['cases'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
-			}
-			else if($this->input->get("filter") == 'policy')
-			{
-
+			} else if ($this->input->get("filter") == 'policy') {
 				// prepare post data array
 				$this->data['params'] = $this->input->get();
 				
@@ -115,29 +103,21 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// custom name validation
-	function alpha_dash_space($fullname)
-	{
-		if (! preg_match('/^[a-zA-Z\s]+$/', $fullname)) 
-		{
+	function alpha_dash_space($fullname) {
+		if (! preg_match('/^[a-zA-Z\s]+$/', $fullname)) {
 			$this->form_validation->set_message('alpha_dash_space', 'The %s field may only contain alpha characters & White spaces');
 			return FALSE;
-		} 
-		else 
-		{
+		} else {
 			return TRUE;
 		}
 	}
 
 	// redirect if needed, otherwise display the create case page
-	public function create_case($id = 0)
-	{
-		if (!$this->ion_auth->logged_in())
-		{
+	public function create_case($id = 0) {
+		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		}
-		else
-		{
+		} else {
 			$this->load->model('case_model');
 			
 			//validate form input
@@ -158,13 +138,11 @@ class Emergency_assistance extends CI_Controller {
 
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
-			if ($this->form_validation->run() == TRUE)
-			{
+			if ($this->form_validation->run() == TRUE) {
 				// prepare post data array
 				$data = [];
 				$array = $this->input->post();
-				foreach ($array as $key => $value) 
-				{
+				foreach ($array as $key => $value) {
 					# code...
 					if(!strpos($key, "otes_") && $key <> "no_of_form")
 						$data[$key] = $value;
@@ -197,21 +175,17 @@ class Emergency_assistance extends CI_Controller {
 
 				// insert intake forms if exists
 				$no_of_form = $array['no_of_form'];
-				if($no_of_form)
-				{
+				if($no_of_form) {
 					// add intake form batch
-					for($i = 1; $i <= $no_of_form; $i++)
-					{
+					for($i = 1; $i <= $no_of_form; $i++) {
 						// initialize file names array
 						$file_names = [];
 
 						// upload files to server
 						$files = @$_FILES['files_'.$i];
-						if(!empty($files))
-						{	foreach ($files['name'] as $key => $value) 
-							{	
-								if($files['name'][$key])
-								{
+						if (!empty($files)) {
+							foreach ($files['name'] as $key => $value) {
+								if($files['name'][$key]) {
 									$_FILES['userfile']['name'] = $files['name'][$key];
 					                $_FILES['userfile']['type'] = $files['type'][$key];
 					                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
@@ -245,18 +219,17 @@ class Emergency_assistance extends CI_Controller {
 
 						// move all files to that directory
 
-						if(!empty($file_names))
-							foreach ($file_names as $fname)
-							{
+						if (!empty($file_names)) {
+							foreach ($file_names as $fname) {
 								copy(UPLOADFULLPATH . "intake_forms/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
 								unlink(UPLOADFULLPATH . "intake_forms/$fname");
 							}
+						}
 					}
 				}
 
 				// settings for my task section for case manager
-				if($array['case_manager'])
-				{
+				if ($array['case_manager']) {
 					$task_data = array(
 						'user_id'=>$array['case_manager'],
 						'item_id'=>$record_id,
@@ -273,8 +246,7 @@ class Emergency_assistance extends CI_Controller {
 				}
 
 				// settings for my task section for eac
-				if($array['assign_to'] and $array['assign_to'] <> $array['case_manager'])
-				{
+				if($array['assign_to'] and $array['assign_to'] <> $array['case_manager']) {
 					$task_data = array(
 						'user_id'=>$array['assign_to'],
 						'item_id'=>$record_id,
@@ -289,15 +261,12 @@ class Emergency_assistance extends CI_Controller {
 					// insert values to database
 					$this->common_model->save("mytask", $task_data);
 				}
-
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully created");
 
 				// redirect them to the login page
 				redirect('emergency_assistance', 'refresh');
-			}
-			else
-			{
+			} else {
 				$this->load->model('api_model');
 				$this->load->model('currency_model');
 				$this->load->model('country_model');
@@ -404,21 +373,14 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// redirect if needed, otherwise display the edit case page
-	public function edit_case($id = 0)
-	{
-
-		if (!$this->ion_auth->logged_in())
-		{
+	public function edit_case($id = 0) {
+		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		}
-		else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager() and !$this->ion_auth->is_eacmanager() and !$this->ion_auth->is_claimexaminer() and !$this->ion_auth->is_claimsmanager())
-		{
+		} else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager() and !$this->ion_auth->is_eacmanager() and !$this->ion_auth->is_claimexaminer() and !$this->ion_auth->is_claimsmanager()) {
 			// redirect them to the home page because they must be an case manager or admin to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
-		}
-		else
-		{
+		} else {
 			// get case details
 			$joins[] = array(
 				'table' => 'users u1',
@@ -451,30 +413,29 @@ class Emergency_assistance extends CI_Controller {
 
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
-			if($this->input->get("ref") == 'manage')
+			if ($this->input->get("ref") == 'manage') {
 				$this->form_validation->set_rules('reserve_amount', 'Create Reservers', 'numeric|required');
+			}
 
-			if ($this->form_validation->run() == TRUE)
-			{
+			if ($this->form_validation->run() == TRUE) {
 				// prepare post data array
 				$data = [];
 				$array = $this->input->post();
-				foreach ($array as $key => $value) 
-				{
+				foreach ($array as $key => $value) {
 					# code...
 					$data[$key] = $value;
 
 					// for check third party recovery
-					if($key == 'third_party_recovery')
+					if($key == 'third_party_recovery') {
 						$data[$key] = $value ? $value : "N";
+					}
 				}
 
 				// insert values to database
 				$this->common_model->update("case", $data, array('id'=>$id));
 
 				// update my task section if there casemanager updated
-				if($case_details['case_manager'] <> $array['case_manager'])
-				{
+				if ($case_details['case_manager'] <> $array['case_manager']) {
 					// update casemanager id
 					$data_task = array(
 						'priority'=>$array['priority'],
@@ -484,8 +445,7 @@ class Emergency_assistance extends CI_Controller {
 				}	
 
 				// update my task section if there follow up updated
-				if($case_details['assign_to'] <> $array['assign_to'] and $case_details['assign_to'])
-				{
+				if($case_details['assign_to'] <> $array['assign_to'] and $case_details['assign_to']) {
 					// update followup id
 					$data_task = array(
 						'priority'=>$array['priority'],
@@ -495,8 +455,7 @@ class Emergency_assistance extends CI_Controller {
 				}
 
 				// update my task section if there is new eac assigned
-				if($case_details['assign_to'] <> $array['assign_to'] and !$case_details['assign_to'] and ($array['assign_to'] <> $array['case_manager']))
-				{
+				if($case_details['assign_to'] <> $array['assign_to'] and !$case_details['assign_to'] and ($array['assign_to'] <> $array['case_manager'])) {
 					$task_data = array(
 						'user_id'=>$array['assign_to'],
 						'item_id'=>$id,
@@ -506,7 +465,7 @@ class Emergency_assistance extends CI_Controller {
 						'priority'=>$array['priority'],
 						'created_by'=>$case_details['created_by_id'],
 						'created'=>$case_details['created'],
-						 'user_type'=>'eac'
+						'user_type'=>'eac'
 						);
 					// insert values to database
 					$this->common_model->save("mytask", $task_data);
@@ -520,15 +479,14 @@ class Emergency_assistance extends CI_Controller {
 
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully updated");
-
+				
 				// redirect them to the login page
-				if($this->input->get('ref') == 'manage')
+				if($this->input->get('ref') == 'manage') {
 					redirect('emergency_assistance/case_management', 'refresh');
-				else
+				} else {
 					redirect('emergency_assistance', 'refresh');
-			}
-			else
-			{	
+				}
+			} else {
 				$this->data['case_details'] = $case_details;
 				if (empty($case_details)) {
 					// send error message
@@ -637,20 +595,17 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['ref'] = $this->input->get("ref");
 
 				// pass template data if page referred from case management page
-				if($this->data['ref'] <> 'manage')
-				{
+				if($this->data['ref'] <> 'manage') {
 					// get all documents for sending email/print.
 					$fields = "id, name, description";
 					$access_types = $this->get_access_list('case');
-					if($access_types)
+					if($access_types) {
 						$conditions = "type in (".implode(', ', $access_types).")";
-					else
+					} else {
 						$conditions = "type in (0)";
+					}
 					$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
-				}
-				else
-				{
-
+				} else {
 					// get login user id
 					$case_manager = $this->ion_auth->user()->row()->id;
 
@@ -662,22 +617,18 @@ class Emergency_assistance extends CI_Controller {
 						); 
 
 					// rearrange shifts according to system current time 
-					if(time() >= $shifts['8am-2pm'][0] && time() < $shifts['8am-2pm'][1])
-					{
+					if (time() >= $shifts['8am-2pm'][0] && time() < $shifts['8am-2pm'][1]) {
 						$this->data['employee_shift'] = ['8am-2pm', '2pm-8pm', '8pm-8am'];
 					}
-					if(time() >= $shifts['2pm-8pm'][0] && time() < $shifts['2pm-8pm'][1])
-					{
+					if (time() >= $shifts['2pm-8pm'][0] && time() < $shifts['2pm-8pm'][1]) {
 						$this->data['employee_shift'] = ['2pm-8pm', '8pm-8am', '8am-2pm'];
 					}
-					if((time() >= $shifts['8pm-8am'][0] and time() <= $shifts['8pm-8am'][1]) OR (time() < $shifts['8pm-8am'][2]))
-					{
+					if ((time() >= $shifts['8pm-8am'][0] and time() <= $shifts['8pm-8am'][1]) OR (time() < $shifts['8pm-8am'][2])) {
 						$this->data['employee_shift'] = ['8pm-8am', '8am-2pm', '2pm-8pm'];
 					}
 
 			        // select emc users
-					foreach ($this->data['employee_shift'] as $key => $value) 
-					{
+					foreach ($this->data['employee_shift'] as $key => $value) {
 						$additional_conditions = " and schedule.schedule = '$value' and users.active = '1' ";
 			        	$this->data['employees_'.$key] = $this->common_model->shift_users($field_name = "assign_to_follow", $selected = $this->input->get($field_name), $group = "eacmanager", $empty = "--Select Employee--", $additional_conditions);
 					}

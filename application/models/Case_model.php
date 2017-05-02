@@ -111,12 +111,13 @@ class Case_model extends CI_Model {
 	public function save($data) {
 		if (isset($data['id'])) {
 			$id = $data['id'];
-			if ($this->get_by_id($id)) {
+			if ($cur = $this->get_by_id($id)) {
 				// Update
 				unset($data['id']);
 				
 				$this->db->where('id', $id);
 				$this->db->update('case', $data);
+				$this->active_model->log_update('case', $id, $cur, $data, $this->db->last_query());
 				return $id;
 			}
 		}
@@ -126,6 +127,9 @@ class Case_model extends CI_Model {
 		$data['id'] = $this->master_model->get_id('case');
 		
 		$this->db->insert('case', $data);
-		return $this->db->insert_id();
+		$sql = $this->db->last_query();
+		$id = $this->db->insert_id();
+		$this->active_model->log_new('case', $id, $data, $sql);
+		return $id;
 	}
 }

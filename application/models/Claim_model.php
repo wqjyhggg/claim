@@ -135,12 +135,13 @@ class Claim_model extends CI_Model {
 	public function save($data) {
 		if (isset($data['id'])) {
 			$id = $data['id'];
-			if ($this->get_claim_by_id($id)) {
+			if ($cur = $this->get_claim_by_id($id)) {
 				// Update
 				unset($data['id']);
 				
 				$this->db->where('id', $id);
 				$this->db->update('claim', $data);
+				$this->active_model->log_update('claim', $id, $cur, $data, $this->db->last_query());
 				return $id;
 			}
 		}
@@ -150,7 +151,10 @@ class Claim_model extends CI_Model {
 		$data['id'] = $this->master_model->get_id('claim');
 		
 		$this->db->insert('claim', $data);
-		return $this->db->insert_id();
+		$sql = $this->db->last_query();
+		$id = $this->db->insert_id();
+		$this->active_model->log_new('claim', $id, $data, $sql);
+		return $id;
 	}
 
 
@@ -173,7 +177,10 @@ class Claim_model extends CI_Model {
 		return $this->db->get('expenses_claimed')->row_array();
 	}
 
-
+	public function get_payee_by_id($id) {
+		$this->db->where('id', $id);
+		$this->db->get('payees')->row_array();
+	}
 
 	/**
 	 * Save or Update a payees
@@ -185,15 +192,22 @@ class Claim_model extends CI_Model {
 		if (isset($data['id'])) {
 			// Update
 			$id = $data['id'];
+			$cur = $this->get_payee_by_id($id);
 			unset($data['id']);
-			
-			$this->db->where('id', $id);
-			$this->db->update('payees', $data);
-			return $id;
+			if ($cur) {
+				$this->db->where('id', $id);
+				$this->db->update('payees', $data);
+				$this->active_model->log_update('payees', $id, $cur, $data, $this->db->last_query());
+				return $id;
+			}
+			return 0;
 		} else {
 			// insert
 			$this->db->insert('payees', $data);
-			return $this->db->insert_id();
+			$sql = $this->db->last_query();
+			$id = $this->db->insert_id();
+			$this->active_model->log_new('payees', $id, $data, $sql);
+			return $id;
 		}
 	}
 }
