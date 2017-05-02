@@ -31,14 +31,21 @@ class Mytask_model extends CI_Model {
 			// Update
 			$id = $data['id'];
 			unset($data['id']);
-			
-			$this->db->where('id', $id);
-			$this->db->update('mytask', $data);
-			return $id;
+			$rc = $this->db->get('mytask', array('id' => $id))->row_array();
+			if ($rc) {
+				$this->db->where('id', $id);
+				$this->db->update('mytask', $data);
+				$this->active_model->log_update('mytask', $id, $rc, $data, $this->db->last_query());
+				return $id;
+			}
+			return 0; // unknown id
 		} else {
 			// insert
 			$this->db->insert('mytask', $data);
-			return $this->db->insert_id();
+			$sql = $this->db->last_query();
+			$id = $this->db->insert_id();
+			$this->active_model->log_new('mytask', $id, $data, $sql);
+			return $id;
 		}
 	}
 }

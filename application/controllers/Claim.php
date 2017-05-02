@@ -241,6 +241,7 @@ class Claim extends CI_Controller {
 							'amount_client_paid'=>$array['expenses_claimed']['amount_client_paid'][$key],
 							'pay_to'=>$array['expenses_claimed']['payee'][$key],
 							'comment'=>$array['expenses_claimed']['comment'][$key],
+							'created_by'=>$this->ion_authget_user_id(),
 							'created'=>date('Y-m-d H:i:s')
 							);
 						$this->common_model->save("expenses_claimed", $payee_data);
@@ -696,6 +697,9 @@ class Claim extends CI_Controller {
 				// get all word documents
 				$fields = "id, title, content";
 				$this->data['word_templates'] = $this->common_model->select($record = "list", $typecast = "array", $table = "word_comments", $fields);
+				
+				// get status
+				$this->data['examine_status'] = $this->expenses_model->get_status();
 
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Examine Claim', TRUE);
@@ -874,9 +878,11 @@ class Claim extends CI_Controller {
 							'date_of_service'=>$array['expenses_claimed']['date_of_service'][$key],
 							'amount_billed'=>$array['expenses_claimed']['amount_billed'][$key],
 							'amount_client_paid'=>$array['expenses_claimed']['amount_client_paid'][$key],
+							'amount_claimed'=>$array['expenses_claimed']['amount_claimed'][$key],
 							'pay_to'=>$array['expenses_claimed']['payee'][$key],
 							'currency'=>$array['expenses_claimed']['currency'][$key],
 							'comment'=>$array['expenses_claimed']['comment'][$key],
+							'created_by'=>$this->ion_auth->get_user_id(),
 							'created'=>date('Y-m-d H:i:s')
 							);
 
@@ -890,6 +896,7 @@ class Claim extends CI_Controller {
 						if($item_id = @$array['expenses_claimed']['id'][$key])
 						{
 							unset($item_data['created']);
+							unset($item_data['created_by']);
 							// unset($item_data['claim_item_no']);
 							$this->common_model->update("expenses_claimed", $item_data, array('id'=>$item_id));	
 						} 
@@ -899,7 +906,7 @@ class Claim extends CI_Controller {
 						}
 					}
 				}
-
+				
 				// insert intake notes
 				// insert intake forms if exists
 				$no_of_form = @$array['no_of_form'];
@@ -1441,10 +1448,11 @@ class Claim extends CI_Controller {
 					$parse_cond[] = $key."='$value'";
 			}
 			$parse_cond = implode(" and ", $parse_cond);
-			if($parse_cond )
-				$conditions = "(claim.status = 'accepted' OR claim.status = 'paid') and ".implode(" and ", $parse_cond);
-			else
-				$conditions = "(claim.status = 'accepted' OR claim.status = 'paid')";
+			
+			$conditions = "claim.status = 'Processed'";
+			if ($parse_cond ) {
+				$conditions .= " and ".implode(" and ", $parse_cond);
+			}
 
 			$fields = "expenses_claimed.claim_id, expenses_claimed.claim_no, expenses_claimed.case_no,expenses_claimed.claim_date,sum(expenses_claimed.amount_claimed) as amount_claimed, sum(expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency,expenses_claimed.pay_to, sum(expenses_claimed.amt_received) as amt_received, claim.insured_first_name, claim.insured_first_name, claim.insured_last_name, claim.street_address, claim.city, claim.province, claim.policy_no, claim.case_no, claim.clinic_name, claim.dob, claim.policy_no, claim.status";
 			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "claim", $fields, $conditions, $joins, $order_by, $group_by = array('expenses_claimed.claim_id'));

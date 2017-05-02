@@ -153,7 +153,6 @@
 										<th>Diagnosis</th>
 										<th>Amt Claimed</th>
 										<th>Amt Payable</th>
-										<th>Amt Insured</th>
 										<th>Amt Received</th>
 										<th>Comment</th>
 									</tr>
@@ -175,12 +174,11 @@
 										<td><?php echo $value['diagnosis']; ?></td>
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
-										<td><?php echo $value['amt_insured']?$value['amt_insured']:0; ?></td>
 										<td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
 										<td><?php echo $value['comment'] ?></td>
 									</tr>
 									<tr class='claim_items_form trinputform' id='item_form_<?php echo $value['id']; ?>'>
-										<td colspan="12">
+										<td colspan="11">
 											<div class="row policy_info">
 											<?php 
 												echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal claim_items_submit', 'method'=>'post'));
@@ -200,8 +198,26 @@
 													<div class='col-sm-12'><?php echo $value['date_of_service']; ?>&nbsp;</div>
 												</div>
 												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Created: </label>
+													<div class='col-sm-12'><?php echo $value['created']; ?> by (ID : <?php echo $value['created_by']; ?>)</div>
+												</div>
+												<div class="clearfix"></div>
+
+												<div class="form-group col-sm-3">
 													<label class="col-sm-12">New Payable : </label>
 													<div class='col-sm-12'><input type='number' step='0.01' name='amt_payable' value="<?php echo $value['amt_payable']; ?>"></div>
+												</div>
+												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Received : </label>
+													<div class='col-sm-12'><input type='number' step='0.01' name='amt_received' value="<?php echo $value['amt_received']; ?>"></div>
+												</div>
+												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Exempt : </label>
+													<div class='col-sm-12'><input type='number' step='0.01' name='amt_payable' value="<?php echo $value['amt_exempt']; ?>"></div>
+												</div>
+												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Status : </label>
+													<div class='col-sm-12'><?php echo form_dropdown ( "status", $examine_status, $value['status'], array () ); ?></div>
 												</div>
 												<div class="clearfix"></div>
 												
@@ -214,11 +230,8 @@
 													<div class='col-sm-12'><?php echo $value['cellular']; ?>&nbsp;</div>
 												</div>
 												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Reason : </label>
-													<div class='col-sm-12'><?php echo $value['reason']; ?>&nbsp;</div>
-												</div>
-												<div class="form-group col-sm-3">
-													<div class='col-sm-12'>&nbsp;</div>
+													<label class="col-sm-12">Last Update : </label>
+													<div class='col-sm-12'><?php echo $value['last_update']; ?> by (ID : <?php echo $value['updated_by']; ?>)</div>
 												</div>
 												<div class="clearfix"></div>
 												
@@ -228,10 +241,11 @@
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Recovery Amount : </label>
-													<div class='col-sm-12'><?php echo $value['recovery_amt']; ?>&nbsp;</div>
+													<div class='col-sm-12'><input type='number' step='0.01' name='recovery_amt' value="<?php echo $value['recovery_amt']; ?>"></div>
 												</div>
 												<div class="form-group col-sm-3">
-													<div class='col-sm-12'>&nbsp;</div>
+													<label class="col-sm-12">Reason : </label>
+													<div class='col-sm-12'><?php echo $value['reason']; ?>&nbsp;</div>
 												</div>
 												<div class="form-group col-sm-3">
 													<div class='col-sm-12'><?php echo form_submit("Save", "Save", 'class="btn btn-primary"'); ?></div>

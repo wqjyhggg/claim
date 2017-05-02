@@ -62,7 +62,24 @@ class Expenses_model extends CI_Model {
 		return $rt;
 	}
 	
-/**
+	/**
+	 * 
+	 */
+	public function get_status($withempty=TRUE) {
+		$rt =  array(
+				0 => '-- Select Status --',
+				'Examined' => 'Examined',
+				'Approved' => 'Approved',
+				'Declined' => 'Declined',
+				'Paid' => 'Paid',
+		);
+		if (!$withempty) {
+			unset($rt[0]);
+		}
+		return $rt;
+	}
+
+	/**
 	 * Return a Expenses Record
 	 *
 	 * @param int $id
@@ -102,6 +119,7 @@ class Expenses_model extends CI_Model {
 			return $id;
 		} else {
 			// insert
+			$data['created_by'] = $this->ion_authget_user_id();
 			$this->db->insert('expenses_claimed', $data);
 			return $this->db->insert_id();
 		}

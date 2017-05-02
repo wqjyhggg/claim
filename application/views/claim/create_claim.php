@@ -586,9 +586,9 @@
                   <div class="col-sm-2">
                      <input class="btn btn-primary" name="Examine" value="Examine" type="submit">
                   </div>
-                  <div class="col-sm-2">
+                  <!-- div class="col-sm-2">
                      <input class="btn btn-primary email_print" data-toggle="modal"  name="Email" value="Email/Print" type="button" data-target="#print_template">
-                  </div>
+                  </div -->
                </div>
 
                <?php echo form_close(); ?>
