@@ -251,7 +251,7 @@ table.no-margin .progress{margin-bottom:0}
 .row{margin-right:-10px;margin-left:-10px}
 .grid_slider .col-md-6{padding:0 40px}
 h1,.h1,h2,.h2,h3,.h3{margin-top:10px;margin-bottom:10px}
-a{color:#1f3f20;text-decoration:none}
+#menu_toggle{color:#1f3f20;text-decoration:none}
 a,a:visited,a:focus,a:active,:visited,:focus,:active,.btn:focus,
 .btn:active:focus,.btn.active:focus,.btn.focus,.btn:active.focus,
 .btn.active.focus{outline:0}
