@@ -67,4 +67,18 @@ class Active_model extends CI_Model {
 			$this->db->insert('active', $this->data);
 		}
 	}
+
+	
+	/**
+	 * Log change record
+	 * 
+	 * @return array 	production list
+	 */
+	public function log_update_more($type, $log, $data, $query) {
+		$this->init_log($type, $data, $query);
+		if ($log) {
+			$this->data['log'] = "Change (" . $id . "): " . $log;
+			$this->db->insert('active', $this->data);
+		}
+	}
 }

@@ -381,6 +381,10 @@ class Emergency_assistance extends CI_Controller {
 			// redirect them to the home page because they must be an case manager or admin to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
+			$this->load->model('intakeform_model');
+			$this->load->model('mytask_model');
+			$this->load->model('case_model');
+				
 			// get case details
 			$joins[] = array(
 				'table' => 'users u1',
@@ -431,52 +435,49 @@ class Emergency_assistance extends CI_Controller {
 					}
 				}
 
+				$data['id'] = $id;
 				// insert values to database
-				$this->common_model->update("case", $data, array('id'=>$id));
+				$this->case_model->save($data);
 
 				// update my task section if there casemanager updated
-				if ($case_details['case_manager'] <> $array['case_manager']) {
+				if ($case_details['case_manager'] <> $array['case_manager'] and $case_details['case_manager']) {
 					// update casemanager id
 					$data_task = array(
 						'priority'=>$array['priority'],
 						'user_id'=>$array['case_manager']
 						);
-					$this->common_model->update("mytask", $data_task, array('item_id'=>$id, 'type'=>'CASE', 'user_id'=>$case_details['case_manager'], 'user_type'=>'casemanager'));
+					$this->mytask_model->update($data_task, array('item_id'=>$id, 'type'=>'CASE', 'user_id'=>$case_details['case_manager'], 'user_type'=>'casemanager'));
+					$this->intakeform_model->save($id, "Switch case manager form " . $case_details['case_manager'] . " to ".$array['case_manager']);
 				}	
 
 				// update my task section if there follow up updated
-				if($case_details['assign_to'] <> $array['assign_to'] and $case_details['assign_to']) {
+				if ($case_details['assign_to'] <> $array['assign_to'] and $case_details['assign_to']) {
 					// update followup id
 					$data_task = array(
 						'priority'=>$array['priority'],
 						'user_id'=>$array['assign_to']
 						);
-					$this->common_model->update("mytask", $data_task, array('item_id'=>$id, 'type'=>'CASE', 'user_id'=>$case_details['assign_to'], 'user_type'=>'eac'));
+					$this->mytask_model->update($data_task, array('item_id'=>$id, 'type'=>'CASE', 'user_id'=>$case_details['assign_to'], 'user_type'=>'eac'));
+					$this->intakeform_model->save($id, "Switch assign to form " . $case_details['assign_to'] . " to ".$array['assign_to']);
 				}
 
 				// update my task section if there is new eac assigned
-				if($case_details['assign_to'] <> $array['assign_to'] and !$case_details['assign_to'] and ($array['assign_to'] <> $array['case_manager'])) {
+				if ($case_details['assign_to'] <> $array['assign_to'] and !$case_details['assign_to'] and ($array['assign_to'] <> $array['case_manager'])) {
 					$task_data = array(
 						'user_id'=>$array['assign_to'],
 						'item_id'=>$id,
 						'task_no'=>$case_details['case_no'],
-						'category'=>'Assistance',
-						'type'=>'CASE',
+						'category'=> Mytask_model::CATEGORY_ASSISTANCE,
+						'type'=> Mytask_model::TASK_TYPE_CASE,
 						'priority'=>$array['priority'],
 						'created_by'=>$case_details['created_by_id'],
 						'created'=>$case_details['created'],
-						'user_type'=>'eac'
+						'user_type'=> Mytask_model::USER_TYPE_EAC
 						);
 					// insert values to database
-					$this->common_model->save("mytask", $task_data);
-				}			
-
-				// update priority to my task
-				$data_task = array(
-					'priority'=>$array['priority']
-					);
-				$this->common_model->update("mytask", $data_task, array('item_id'=>$id, 'type'=>'CASE'));
-
+					$this->mytask_model->save($task_data);
+				} 
+				
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully updated");
 				
@@ -499,6 +500,7 @@ class Emergency_assistance extends CI_Controller {
 
 				$this->load->model('api_model');
 				$this->data['policy'] = array();
+				
 				if (empty($case_details)) {
 					$policy = $this->input->get('policy');
 					if (!empty($policy)) {
@@ -593,13 +595,15 @@ class Emergency_assistance extends CI_Controller {
 				// pass case id to server
 				$this->data['case_id'] = $id;
 				$this->data['ref'] = $this->input->get("ref");
+				
+				$this->data['priorities'] = $this->mytask_model->get_priorities();
 
 				// pass template data if page referred from case management page
 				if($this->data['ref'] <> 'manage') {
 					// get all documents for sending email/print.
 					$fields = "id, name, description";
 					$access_types = $this->get_access_list('case');
-					if($access_types) {
+					if ($access_types) {
 						$conditions = "type in (".implode(', ', $access_types).")";
 					} else {
 						$conditions = "type in (0)";
@@ -1130,20 +1134,14 @@ class Emergency_assistance extends CI_Controller {
 	}
 
 	// redirect if needed, otherwise display the create intake page
-	public function create_intakeform()
-	{
-
-		if (!$this->ion_auth->logged_in())
-		{
+	public function create_intakeform() {
+		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		}
-		else
-		{
+		} else {
 			$this->form_validation->set_rules('intake_notes', 'Intake Notes', 'required');
-
-			if ($this->form_validation->run() == TRUE)
-			{
+			
+			if ($this->form_validation->run() == TRUE) {
 				// get app post params
 				$array = $this->input->post();
 
@@ -1161,11 +1159,9 @@ class Emergency_assistance extends CI_Controller {
 
 				// upload files to server
 				$files = @$_FILES['files'];
-				if(!empty($files))
-				{	foreach ($files['name'] as $key => $value) 
-					{	
-						if($files['name'][$key])
-						{
+				if(!empty($files)) {
+					foreach ($files['name'] as $key => $value) {	
+						if($files['name'][$key]) {
 							$_FILES['userfile']['name'] = $files['name'][$key];
 			                $_FILES['userfile']['type'] = $files['type'][$key];
 			                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
@@ -1183,37 +1179,26 @@ class Emergency_assistance extends CI_Controller {
 					}
 				}
 				
-				// generate data array
-				$data_intake = array(
-					'case_id' => $array['case_id'],
-					'created_by' => $this->ion_auth->user()->row()->id,
-					'notes' => $array['intake_notes'],
-					'created' => date("Y-m-d H:i:s"),
-					'docs' => implode(",", $file_names)
-					);
-
-				// save values to database
-				$intake_form_id = $this->common_model->save("intake_form", $data_intake);
-
+				$this->load->model('Intakeform_model');
+				$intake_form_id = $this->intakeform_model->save($array['case_id'], $array['intake_notes'], implode(",", $file_names));
+				
 				// create directory to identify intake files
 				@mkdir(UPLOADFULLPATH . 'intake_forms/'.$intake_form_id, 0777);
 
 				// move all files to that directory
-				if(!empty($file_names))
-					foreach ($file_names as $fname)
-					{
+				if (!empty($file_names)) {
+					foreach ($file_names as $fname) {
 						copy(UPLOADFULLPATH . "intake_forms/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
 						unlink(UPLOADFULLPATH . "intake_forms/$fname");
 					}
+				}
 
 				// send success message
 				$this->session->set_flashdata('success', "Intake form successfully added");
 
 				// redirect them to the login page
 				redirect('emergency_assistance/edit_case/' . $array['case_id'], 'refresh');
-			}
-			else 
-			{
+			} else {
 				// load view data
 	        	$this->template->write('title', SITE_TITLE.' - Create IntakeForm', TRUE);
 		        $this->template->write_view('content', 'emergency_assistance/create_intakeform');

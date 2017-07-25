@@ -96,8 +96,20 @@ class Auth extends CI_Controller {
 	public function finish_task($id = 0) {
 		if ($this->ion_auth->logged_in ()) {
 			$this->load->model('mytask_model');
-			$this->mytask_model->save(array('id' => $id, 'status' => 1));
-			$res['status'] = 'OK';
+			
+			$task = $this->mytask_model->get_by_id($id);
+			if ($task) {
+				$this->mytask_model->save(array('id' => $id, 'status' => 1));
+				if ($task['type'] == Mytask_model::TASK_TYPE_CASE) {
+					$this->load->model('case_model');
+					$case = $this->case_model->get_by_id($task['item_id']);
+					$user_id = $this->ion_auth->get_user_id();
+					if ($case && ($user_id == $case['assign_to'])) {
+						$this->case_model->save(array('id' => $task['item_id'], 'assign_to' => ''));
+					}
+				}
+				$res['status'] = 'OK';
+			}
 		}
 		redirect('auth/mytasks', 'refresh');
 	}
@@ -247,7 +259,6 @@ class Auth extends CI_Controller {
 		// validate form input
 		$this->form_validation->set_rules ( 'identity', str_replace ( ':', '', $this->lang->line ( 'login_identity_label' ) ), 'required' );
 		$this->form_validation->set_rules ( 'password', str_replace ( ':', '', $this->lang->line ( 'login_password_label' ) ), 'required' );
-		
 		if ($this->form_validation->run () == true) {
 			// check to see if the user is logging in
 			// check for "remember me"

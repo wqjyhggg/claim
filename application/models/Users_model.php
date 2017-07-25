@@ -44,6 +44,9 @@ class Users_model extends CI_Model {
 	 * @return int				inserted array ID
 	 */
 	public function save($data) {
+		if (isset($data['password'])) {
+			$data['password'] = $this->ion_auth_model->hash_password($data['password']);
+		}
 		if (isset($data['id'])) {
 			// Update
 			$id = $data['id'];
@@ -117,7 +120,8 @@ class Users_model extends CI_Model {
 		$this->db->where('user_id', $user_id);
 		$this->db->delete('user_product');
 		foreach ($products as $product_short) {
-			$this->db->insert('user_product', array('user_id' => $user_id, 'product_short' => $product_short));
+			$data = array('user_id' => $user_id, 'product_short' => $product_short);
+			$this->db->insert('user_product', $data);
 			$sql = $this->db->last_query();
 			$id = $this->db->insert_id();
 			$this->active_model->log_new('user_product', $id, $data, $sql);
@@ -128,7 +132,8 @@ class Users_model extends CI_Model {
 		$this->db->where('user_id', $user_id);
 		$this->db->delete('users_groups');
 		foreach ($groups as $group_id) {
-			$this->db->insert('users_groups', array('user_id' => $user_id, 'group_id' => $group_id));
+			$data = array('user_id' => $user_id, 'group_id' => $group_id);
+			$this->db->insert('users_groups', $data);
 			$sql = $this->db->last_query();
 			$id = $this->db->insert_id();
 			$this->active_model->log_new('users_groups', $id, $data, $sql);
