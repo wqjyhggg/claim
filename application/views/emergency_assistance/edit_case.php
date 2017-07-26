@@ -28,10 +28,10 @@
             <div class="x_content"> 
 
                <!-- search policy filter start -->   
-               <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager() or $this->ion_auth->is_eacmanager()) echo form_open('emergency_assistance/edit_case/'.$case_details['id'].'?ref='.$this->input->get('ref'), array('class'=>'form-horizontal')); ?>
+               <?php if(1 or $this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager() or $this->ion_auth->is_eacmanager()) echo form_open('emergency_assistance/edit_case/'.$case_details['id'].'?ref='.$this->input->get('ref'), array('class'=>'form-horizontal')); ?>
 
 				<h4 class="move_down"> Assistance Client Info <i class="fa fa-angle-down pull-right"></i></h4>
-				<div class="row" style="margin-bottom:15px;display:none">
+				<div class="row" style="margin-bottom:15px;">
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Policy Number:', 'policy_no', array("class"=>'col-sm-12'));  
@@ -522,7 +522,7 @@
                      </div>
                   <?php endif;?>
 
-                  <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager() or $this->ion_auth->is_eacmanager()): ?>
+                  <?php if(1 or $this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager() or $this->ion_auth->is_eacmanager()): ?>
                      <div class="col-sm-12">
                         <label class="col-sm-12">&nbsp;</label>
                         <button class="btn btn-primary">Save</button>

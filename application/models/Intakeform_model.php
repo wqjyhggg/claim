@@ -17,7 +17,7 @@ class Intakeform_model extends CI_Model {
 	 */
 	public function search($data) {
 		$this->db->where($data);
-		return $this->db->get('mytake')->result_array();
+		return $this->db->get('intake_form')->result_array();
 	}
 
 	/**
@@ -27,7 +27,7 @@ class Intakeform_model extends CI_Model {
 	 * @return int				inserted array ID
 	 */
 	public function save($case_id, $notes, $docs) {
-		$data_intake = array(
+		$data = array(
 				'case_id' => $case_id,
 				'created_by' => $this->ion_auth->get_user_id(),
 				'notes' => $notes,
@@ -36,7 +36,7 @@ class Intakeform_model extends CI_Model {
 		);
 		
 		// insert
-		$this->db->insert('mytask', $data);
+		$this->db->insert('intake_form', $data);
 		$sql = $this->db->last_query();
 		$id = $this->db->insert_id();
 		$this->active_model->log_new('mytask', $id, $data, $sql);

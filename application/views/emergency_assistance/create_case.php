@@ -20,7 +20,7 @@
               <?php echo form_open_multipart("", array('class'=>'form-horizontal')); ?>
 
 				<h4 class="move_down"> Assistance Client Info <i class="fa fa-angle-down pull-right"></i></h4>
-				<div class="row" style="margin-bottom:15px;display:none">
+				<div class="row" style="margin-bottom:15px">
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Policy Number:', 'policy_no', array("class"=>'col-sm-12'));  
@@ -158,6 +158,7 @@
                      <label class="col-sm-12">&nbsp;</label>
                      <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary search_provider', 'target'=>'_blank')) ?>
                   </div>
+                  <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager()): ?>
                   <div class="form-group col-sm-4">
                      <?php 
                         echo form_label('Follow Up EAC:', 'assign_to', array("class"=>'col-sm-12'));
@@ -165,6 +166,9 @@
                         echo form_error("assign_to");
                      ?>
                   </div>
+                  <?php else : ?>
+                  <input type='hidden' name='assign_to' value=''>
+                  <?php endif ; ?>
                   <div class="form-group col-sm-4">
                      <?php 
                         echo form_label('Reason:', 'reason', array("class"=>'col-sm-12'));

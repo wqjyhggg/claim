@@ -1,3 +1,4 @@
+<?php $this->load->model('mytask_model'); ?>
 <div>
 	<div class="page-title">
 		<div class="title_left"><h3>My Tasks</h3></div>
@@ -58,7 +59,7 @@
 									<td><?php echo $value['created_by']; ?></td>
 									<td><?php echo date('Y-m-d h:i a', strtotime($value['created'])); ?></td>
 									<?php if ($this->ion_auth->is_admin ()) { ?>
-									<td><?php echo intval($value['assign_to'])?($value['type'] == 'CLAIM'?'CLE'.$value['assign_to']:'EAC'.$value['assign_to']):''; ?></td>
+									<td><?php echo $value['assign_name']; ?></td>
 									<?php } ?>
 									<td><?php echo ($value['status'] ? ' - ' : anchor('auth/finish_task/'.$value['id'], '<i class="fa fa-close"></i>', array('title'=>'Finish Task'))); ?></td>
 								</tr>

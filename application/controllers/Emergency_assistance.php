@@ -153,6 +153,7 @@ class Emergency_assistance extends CI_Controller {
 				}
 				$data['created'] = date('Y-m-d H:i:s');
 				$data['created_by'] = $this->ion_auth->user()->row()->id;
+				if (empty($data['assign_to'])) $data['assign_to'] = $data['case_manager'];
 				
 				$this->load->model('master_model');
 				$data['id'] = $this->master_model->get_id('case'); // Get new id
@@ -377,9 +378,11 @@ class Emergency_assistance extends CI_Controller {
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
+			/*
 		} else if (!$this->ion_auth->is_admin() and !$this->ion_auth->is_casemamager() and !$this->ion_auth->is_eacmanager() and !$this->ion_auth->is_claimexaminer() and !$this->ion_auth->is_claimsmanager()) {
 			// redirect them to the home page because they must be an case manager or admin to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
+			*/
 		} else {
 			$this->load->model('intakeform_model');
 			$this->load->model('mytask_model');
@@ -609,7 +612,8 @@ class Emergency_assistance extends CI_Controller {
 						$conditions = "type in (0)";
 					}
 					$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
-				} else {
+				}
+				if (1) {
 					// get login user id
 					$case_manager = $this->ion_auth->user()->row()->id;
 
@@ -1179,7 +1183,7 @@ class Emergency_assistance extends CI_Controller {
 					}
 				}
 				
-				$this->load->model('Intakeform_model');
+				$this->load->model('intakeform_model');
 				$intake_form_id = $this->intakeform_model->save($array['case_id'], $array['intake_notes'], implode(",", $file_names));
 				
 				// create directory to identify intake files
