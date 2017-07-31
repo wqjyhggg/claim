@@ -35,11 +35,16 @@ class Auth extends CI_Controller {
 		} else {
 			// get my tasks here
 			$table = "mytask";
-			$finished = $this->session->userdata('finished');
-			$fields = "mytask.*, IF(mytask.type='CLAIM', claim.last_update, case.last_update) as last_update, IF(mytask.type='CLAIM', concat_ws(' ', claim.insured_first_name, claim.insured_last_name), concat_ws(' ', case.insured_firstname, case.insured_lastname)) as insured_name, IF(type='CLAIM', '', LPAD(case.assign_to, 4, 0)) as followup_by, IF(mytask.type='CLAIM', claim.status, case.status) as task_status, IF(type='CLAIM', LPAD(claim.assign_to, 4, 0), LPAD(case.assign_to, 4, 0)) as assign_to, concat_ws(' ', users.first_name, users.last_name) as created_by";
+			$finished = (int)$this->session->userdata('finished');
+			$fields = "mytask.*, IF(mytask.type='CLAIM', claim.last_update, case.last_update) as last_update, IF(mytask.type='CLAIM', concat_ws(' ', claim.insured_first_name, claim.insured_last_name), concat_ws(' ', case.insured_firstname, case.insured_lastname)) as insured_name, IF(type='CLAIM', '', LPAD(case.assign_to, 4, 0)) as followup_by, IF(mytask.type='CLAIM', claim.status, case.status) as task_status, u2.username as assign_name, concat_ws(' ', users.first_name, users.last_name) as created_by";
 			$joins [] = array (
 					'table' => 'users',
 					'on' => 'users.id = mytask.created_by',
+					'type' => 'LEFT' 
+			);
+			$joins [] = array (
+					'table' => 'users u2',
+					'on' => 'u2.id = mytask.user_id',
 					'type' => 'LEFT' 
 			);
 			$joins [] = array (
