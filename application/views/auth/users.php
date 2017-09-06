@@ -15,7 +15,12 @@
 					<?php echo form_open("auth/Users", array('class'=>'form-horizontal', 'method'=>'get')); ?>
 					<div class="row">
 						<div class="form-group col-sm-3">
-							<?php echo form_dropdown("groups", $groups, $this->input->get("groups"), array("class"=>'form-control'))?>
+							<select name="groups" class="form-control">
+								<option value="" > -- User group -- </option>
+								<?php foreach ($groups as $group) : ?>
+								<option value="<?php echo $group; ?>" <?php if ($this->input->get("groups") == $group) { echo "selected"; } ?>><?php echo $group; ?></option>
+								<?php endforeach; ?>
+							</select>
 						</div>
 						<div class="col-sm-6">
 							<?php echo form_submit("Search", "Search", array("class"=>'btn btn-primary', "type"=>'submit'))?>
@@ -24,8 +29,11 @@
 					</div>
 					<div class="row more_items" style="display: none">
 						<div class="form-group col-sm-3">
-							<?php $status = array ('' => 'Status', '1' => 'Active', '0' => 'Inactive'); ?>
-							<?php echo form_dropdown ( "status", $status, $this->input->get ( "status" ), array ("class" => 'form-control') ); ?>
+							<select name="status" class="form-control">
+								<option value="-1"  <?php if ($this->input->get("status") == -1) { echo "selected"; } ?>> --status-- </option>
+								<option value="0"  <?php if ($this->input->get("status") == 0) { echo "selected"; } ?>> Inactive </option>
+								<option value="1"  <?php if ($this->input->get("status") == 1) { echo "selected"; } ?>> Active </option>
+							</select>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_input ( "last_name", $this->input->get ( "last_name" ), array ("class" => "form-control autocomplete_field", 'placeholder' => 'Last Name') ); ?>
@@ -75,11 +83,7 @@
 									<td><?php echo htmlspecialchars($user['first_name'],ENT_QUOTES,'UTF-8');?></td>
 									<td><?php echo htmlspecialchars($user['last_name'],ENT_QUOTES,'UTF-8');?></td>
 									<td><?php echo htmlspecialchars($user['email'],ENT_QUOTES,'UTF-8');?></td>
-									<td>
-										<?php foreach ($user['groups'] as $group): ?>
-											<?php echo htmlspecialchars($group->description, ENT_QUOTES,'UTF-8'); ?><br />
-										<?php endforeach; ?>
-									</td>
+									<td><?php if (json_decode($user['groups'])) { echo join("<br />",json_decode($user['groups'])); } ?></td>
 									<td><?php echo ($user['active']) ? anchor("auth/deactivate/".$user['id'], lang('index_active_link')) : anchor("auth/activate/". $user['id'], lang('index_inactive_link'));?></td>
 									<td><?php echo anchor("auth/edit_user/".$user['id'], 'Edit'); ?></td>
 								</tr>

@@ -38,7 +38,7 @@ class Bcrypt {
      */
   public function verify($input, $existingHash) {
     $hash = crypt($input, $existingHash);
-    return $hash === $existingHash;
+    return hash_equals($hash, crypt($input, $hash));
   }
 
   private function getSalt() {
