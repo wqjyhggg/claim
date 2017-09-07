@@ -15,6 +15,10 @@ class Users_model extends CI_Model {
 	const GROUP_ACCOUNTANT='Accountant';
 	const GROUP_INSURER='Upper Insurer';
 	
+	const SHIFT_8AM='8am-2pm';
+	const SHIFT_2PM='2pm-8pm';
+	const SHIFT_8PM='8pm-8am';
+	
 	public function get_groups() {
 		return array(
 				self::GROUP_ADMIN,
@@ -34,9 +38,9 @@ class Users_model extends CI_Model {
 	public function get_shift_options($flag=FALSE) {
 		$rt = array(
 				0 => '-- Select Shift--',
-				'8am-2pm' => '8am-2pm',
-				'2pm-8pm' => '2pm-8pm',
-				'8pm-8am' => '8pm-8am');
+				self::SHIFT_8AM => self::SHIFT_8AM,
+				self::SHIFT_2PM => self::SHIFT_2PM,
+				self::SHIFT_8PM => self::SHIFT_8PM);
 		if (!$flag) {
 			unset($rt[0]);
 		}				

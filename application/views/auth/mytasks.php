@@ -21,28 +21,23 @@
 						<table class="table table-hover table-bordered">
 							<thead>
 								<tr>
-									<th>Task No</th>
+									<th>Task ID</th>
 									<th><?php echo $this->pagination->sort("priority", "Priority") ?></th>
-									<th>Category</th>
-									<th>Outcome</th>
+									<th>Case/Claim No.</th>
+									<th>Status</th>
 									<th>Insured Name</th>
 									<th>Created By</th>
 									<th>Created DateTime</th>
-									<?php if ($this->ion_auth->is_admin ()) { ?>
+									<th>Due DateTime</th>
+									<?php if ($this->ion_auth->in_group(Users_model::GROUP_ADMIN)) { ?>
 									<th>Assign to</th>
 									<?php } ?>
-									<th>Finish</th>
 							</thead>
 							<tbody>
 								<?php
 								$i = 0;
 								$claims = array();
 								$cases = array();
-								$status = array(
-										'C' => 'Closed',
-										'D' => 'Deactive',
-										'A' => 'Active' 
-								);
 								foreach ( $records as $key => $value ) :
 									$i ++;
 									if ($value ['type'] == 'CLAIM')
@@ -51,17 +46,17 @@
 										$cases [] = $i;
 								?>
 								<tr <?php if($value['priority'] == 'HIGH') echo 'style="background-color:rgba(155, 243, 151, 0.44)"'; ?>>
-									<td><?php echo anchor(($value['type']=='CLAIM'?'claim/claim_detail/'.$value['item_id']:'emergency_assistance/edit_case/'.$value['item_id']), $value['task_no'], array('title'=>'Item Details')) ?></td>
+									<td><?php echo anchor('auth/edit_task/'.$value['id'], $value['id'], array('title'=>'Edit Task')); ?></td>
 									<td><?php echo $value['priority']; ?></td>
-									<td><?php echo $value['category']; ?></td>
-									<td><?php echo @$status[$value['task_status']] ? @$status[$value['task_status']] : @ucfirst($value['task_status']); ?></td>
+									<td><?php echo anchor(($value['type']=='CLAIM'?'claim/claim_detail/'.$value['item_id']:'emergency_assistance/edit_case/'.$value['item_id']), $value['task_no'], array('title'=>'Item Details')) ?></td>
+									<td><?php echo $value['status']; ?></td>
 									<td><?php echo $value['insured_name']; ?></td>
 									<td><?php echo $value['created_by']; ?></td>
 									<td><?php echo date('Y-m-d h:i a', strtotime($value['created'])); ?></td>
-									<?php if ($this->ion_auth->is_admin ()) { ?>
+									<td><?php echo $value['due_date'] . " " . $value['due_time']; ?></td>
+									<?php if ($this->ion_auth->in_group(Users_model::GROUP_ADMIN)) { ?>
 									<td><?php echo $value['assign_name']; ?></td>
 									<?php } ?>
-									<td><?php echo ($value['status'] ? ' - ' : anchor('auth/finish_task/'.$value['id'], '<i class="fa fa-close"></i>', array('title'=>'Finish Task'))); ?></td>
 								</tr>
 								<?php endforeach; ?>
 							</tbody>
@@ -93,7 +88,7 @@ $(document).ready(function() {
 			datatype: 'json',
 			data: {finished : ck},
 			success: function(result) {
-				location.reload(true);
+				location.href='<?php echo base_url() ?>/auth/mytasks';
 			}
 		});
 	});

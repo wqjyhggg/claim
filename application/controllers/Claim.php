@@ -411,7 +411,7 @@ class Claim extends CI_Controller {
 			$this->load->model('api_model');
 			$this->load->model('expenses_model');
 				
-			$claim = $this->claim_model->get_claim_by_id($id);
+			$claim = $this->claim_model->get_by_id($id);
 			if (empty($claim)) {
 				return show_error('Sorry, Unknown Claim Record ID.');
 			}

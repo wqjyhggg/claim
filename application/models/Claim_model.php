@@ -47,7 +47,7 @@ class Claim_model extends CI_Model {
 	 * @param int $id
 	 * @return array result array, maybe null
 	 */
-	public function get_claim_by_id($id) {
+	public function get_by_id($id) {
 		$this->db->where('id', $id);
 		return $this->db->get('claim')->row_array();
 	}
@@ -135,7 +135,7 @@ class Claim_model extends CI_Model {
 	public function save($data) {
 		if (isset($data['id'])) {
 			$id = $data['id'];
-			if ($cur = $this->get_claim_by_id($id)) {
+			if ($cur = $this->get_by_id($id)) {
 				// Update
 				unset($data['id']);
 				

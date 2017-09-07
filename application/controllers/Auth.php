@@ -18,7 +18,7 @@ class Auth extends CI_Controller {
 		$this->lang->load('auth');
 		
 		// show the flash data error message if there is one
-		$this->data ['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
+		$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
 	}
 	
 	// redirect if needed, otherwise display the products list
@@ -33,91 +33,66 @@ class Auth extends CI_Controller {
 			redirect('auth/login', 'refresh');
 		} else {
 			// get my tasks here
-			$table = "mytask";
-			$finished = (int)$this->session->userdata('finished');
-			$fields = "mytask.*, IF(mytask.type='CLAIM', claim.last_update, case.last_update) as last_update, IF(mytask.type='CLAIM', concat_ws(' ', claim.insured_first_name, claim.insured_last_name), concat_ws(' ', case.insured_firstname, case.insured_lastname)) as insured_name, IF(type='CLAIM', '', LPAD(case.assign_to, 4, 0)) as followup_by, IF(mytask.type='CLAIM', claim.status, case.status) as task_status, u2.username as assign_name, concat_ws(' ', users.first_name, users.last_name) as created_by";
-			$joins [] = array(
-					'table' => 'users',
-					'on' => 'users.id = mytask.created_by',
-					'type' => 'LEFT' 
-			);
-			$joins [] = array(
-					'table' => 'users u2',
-					'on' => 'u2.id = mytask.user_id',
-					'type' => 'LEFT' 
-			);
-			$joins [] = array(
-					'table' => 'case',
-					'on' => 'case.id = mytask.item_id',
-					'type' => 'LEFT' 
-			);
-			$joins [] = array(
-					'table' => 'claim',
-					'on' => 'claim.id = mytask.item_id',
-					'type' => 'LEFT' 
-			);
-			$order_by = array(
-					'field' => 'id',
-					'order' => 'desc' 
-			);
-			$conditions = array();
-			if (!$this->ion_auth->in_group(Users_model::GROUP_ADMIN)) {
-				$conditions ["mytask.user_id"] = $this->ion_auth->user()->row()->id;
-			}
-			$conditions ["mytask.status"] = $finished;
-			
+			$this->load->model('mytask_model');
+			$this->load->model('claim_model');
+			$this->load->model('case_model');
+
 			// if sorting enabled
-			if ($this->input->get("field"))
-				$order_by = array(
-						'field' => $this->input->get("field"),
-						'order' => $this->input->get("order") 
-				);
+			$para = array(
+					'finished' => (int)$this->session->userdata('finished'),
+					'field' => $this->input->get("field"),
+					'order' => $this->input->get("order")
+			);
+
 			$limit = $this->limit;
 			$offset = $this->uri->segment(3);
 			
-			$this->data ['finished'] = $finished;
-			$this->data ['finish_url'] = base_url('auth/setfinish');
+			$this->data['finished'] = (int)$this->session->userdata('finished');
+			$this->data['finish_url'] = base_url('auth/setfinish');
 			
-			// get resultresults
-			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table, $fields, $conditions, $joins, $order_by, $group_by = array(), $having = "", $limit, $offset);
-			$config ['base_url'] = site_url('auth/mytasks');
-			$config ['per_page'] = $limit;
-			$config ['first_url'] = $config ['base_url'] . '?' . http_build_query($this->input->get());
-			if (count($this->input->get()) > 0)
-				$config ['suffix'] = '?' . http_build_query($this->input->get(), '', "&");
-			$config ['total_rows'] = $results ['rows'];
+			$this->data['records'] = $this->mytask_model->get_mytask($para, $limit, $offset);
+			$config['total_rows'] = $this->mytask_model->last_rows();
+			
+			foreach ($this->data['records'] as $key => $rc) {
+				if ($rc['type'] == 'CASE') {
+					$case = $this->case_model->get_by_id($rc['item_id']);
+					$this->data['records'][$key]['insured_name'] = $case['first_name'] . " " . $case['last_name'];
+				} else {
+					$claim = $this->claim_model->get_by_id($rc['item_id']);
+					$this->data['records'][$key]['insured_name'] = $claim['insured_first_name'] . " " . $claim['insured_last_name'];
+				}
+				$ctuser = $this->users_model->get_by_id($rc['created_by']);
+				$this->data['records'][$key]['created_email'] = $ctuser['email'];
+				$user = $this->users_model->get_by_id($rc['user_id']);
+				$this->data['records'][$key]['assign_name'] = $user['email'];
+			}
+			
+			$config['base_url'] = site_url('auth/mytasks');
+			$config['per_page'] = $limit;
+			$config['first_url'] = $config ['base_url'] . '?' . http_build_query($this->input->get());
+			if (count($this->input->get()) > 0)	$config ['suffix'] = '?' . http_build_query($this->input->get(), '', "&");
 			$this->pagination->initialize($config); // initiaze pagination config
-			$this->data ['records'] = $results ['records'];
 			$this->data ['pagination'] = $this->pagination->create_links(); // create pagination links
-			                                                                 // pagination end here
 			
 			$this->template->write('title', SITE_TITLE . ' - My Tasks', TRUE);
 			$this->template->write_view('content', 'auth/mytasks', $this->data);
 			$this->template->render();
 		}
 	}
+	
 	public function finish_task($id = 0) {
 		if ($this->ion_auth->logged_in()) {
 			$this->load->model('mytask_model');
 			
 			$task = $this->mytask_model->get_by_id($id);
 			if ($task) {
-				$this->mytask_model->save(array(
-						'id' => $id,
-						'status' => 1 
-				));
-				if ($task ['type'] == Mytask_model::TASK_TYPE_CASE) {
-					$this->load->model('case_model');
-					$case = $this->case_model->get_by_id($task ['item_id']);
-					$user_id = $this->ion_auth->get_user_id();
-					if ($case && ($user_id == $case ['assign_to'])) {
-						$this->case_model->save(array(
-								'id' => $task ['item_id'],
-								'assign_to' => '' 
-						));
-					}
+				$data = array('id' => $id, 'status' => Mytask_model::STATUS_COMPLETED, 'completion_date' => date("Y-m-d"));
+			
+				if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
+					$data['finished'] = 1; 
 				}
-				$res ['status'] = 'OK';
+				$this->mytask_model->save($data);
+				$this->active_model->log_update('mytask', $id, $task, $data, $this->db->last_query());
 			}
 		}
 		redirect('auth/mytasks', 'refresh');
@@ -147,114 +122,76 @@ class Auth extends CI_Controller {
 			$this->load->model('case_model');
 			$this->load->model('claim_model');
 			
-			// get case details
-			$joins = array();
-			$fields = "mytask.*, IF(type='CLAIM', concat_ws(' ', claim.insured_first_name, claim.insured_last_name), concat_ws(' ', case.insured_firstname, case.insured_lastname)) as insured_name, IF(type='CLAIM', LPAD(claim.assign_to, 4, 0), LPAD(case.assign_to, 4, 0)) as assign_to";
-			$joins [] = array(
-					'table' => 'users',
-					'on' => 'users.id = mytask.created_by',
-					'type' => 'LEFT' 
-			);
-			$joins [] = array(
-					'table' => 'case',
-					'on' => 'case.id = mytask.item_id',
-					'type' => 'LEFT' 
-			);
-			$joins [] = array(
-					'table' => 'claim',
-					'on' => 'claim.id = mytask.item_id',
-					'type' => 'LEFT' 
-			);
-			$order_by = array(
-					'field' => 'id',
-					'order' => 'desc' 
-			);
-			$task_details = $this->common_model->select($record = "first", $typecast = "array", $table = "mytask", $fields, $conditions = array(
-					'mytask.id' => $id 
-			), $joins);
+			$task_details = $this->mytask_model->get_by_id($id);
+			if (empty($task_details)) {
+				redirect('auth/mytasks', 'refresh');
+			}
 			
 			// validate form input
+			/*
 			if ($task_details ['type'] == 'CASE' and ($this->ion_auth->in_group(Users_model::GROUP_ADMIN) or $this->ion_auth->is_casemamager()))
 				$this->form_validation->set_rules('assign_to', 'Assign To', 'required');
 			if ($task_details ['type'] == 'CLAIM')
 				$this->form_validation->set_rules('assign_to', 'Assign To', 'required');
+			*/
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
-			
-			if (0 && ($this->form_validation->run() == TRUE)) {
+			$this->form_validation->set_rules('priority', 'Priority', 'required');
+			$this->form_validation->set_rules('status', 'Status', 'required');
+				
+			if ($this->form_validation->run() == TRUE) {
 				// update case/claim details
 				$data = array(
-						'assign_to' => $this->input->post('assign_to'),
+						'id' => $id,
+						'status' => $this->input->post('status'),
 						'priority' => $this->input->post('priority') 
 				);
 				
-				// prepare post data array
-				if ($task_details ['type'] == 'CASE') {
-					// update values to database
-					$this->common_model->update("case", $data, array(
-							'id' => $task_details ['item_id'] 
-					));
-					
-					// update assign to data in task db
-					if ($this->input->post('assign_to')) {
-						$data_task = array(
-								'user_id' => $this->input->post('assign_to') 
-						);
-						
-						$this->common_model->update("mytask", $data_task, array(
-								'item_id' => $task_details ['item_id'],
-								'type' => 'CASE',
-								'user_type' => 'eac' 
-						));
-					}
-				} else {
-					// update values to database
-					$this->common_model->update("claim", $data, array(
-							'id' => $task_details ['item_id'] 
-					));
-					
-					// update assign to data in task db for claim type
-					$data_task = array(
-							'user_id' => $this->input->post('assign_to') 
-					);
-					$this->common_model->update("mytask", $data_task, array(
-							'item_id' => $task_details ['item_id'],
-							'type' => 'CLAIM',
-							'user_type' => 'claimexaminer' 
-					));
+				$user_id = (int)$this->input->post('user_id');
+				if ($user_id > 0) {
+					$data['user_id'] = $user_id;
 				}
-				$this->active_model->log_update('mytask', $id, $task_details, $data_task, $this->db->last_query());
-				
-				// update data in task database
-				$data_task = array(
-						'priority' => $this->input->post('priority') 
-				);
-				$this->common_model->update("mytask", $data_task, array(
-						'id' => $id 
-				));
-				$this->active_model->log_update('mytask', $id, $task_details, $data_task, $this->db->last_query());
+				$this->mytask_model->save($data);
+				$this->active_model->log_update('mytask', $id, $task_details, $data, $this->db->last_query());
 				
 				// send success message
 				$this->session->set_flashdata('success', "Task details successfully updated");
-				
+
 				// redirect them to the login page
 				redirect('auth/mytasks', 'refresh');
 			} else {
-				$this->data ['task_details'] = $task_details;
 				if (empty($task_details)) {
 					// send error message
 					$this->session->set_flashdata('error', "Something went wrong, please try after some time.");
 					
 					// redirect them to the list page
-					redirect('emergency_assistance', 'refresh');
+					redirect('auth/mytask', 'refresh');
 				}
-				$this->data ['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $task_details)), $group = array(
-						"'eacmanager'" 
-				), $empty = "--Follow Up EAC--");
+				if ($task_details['type'] == 'CASE') {
+					$case = $this->case_model->get_by_id($task_details['item_id']);
+					$task_details['insured_name'] = $case['first_name'] . " " . $case['last_name'];
+				} else {
+					$claim = $this->claim_model->get_by_id($task_details['item_id']);
+					$task_details['insured_name'] = $claim['insured_first_name'] . " " . $claim['insured_last_name'];
+				}
 				
-				// get claim examiners
-				$this->data ['claim_examiner'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $task_details)), $group = array(
-						"'claimexaminer'" 
-				), $empty = "--Select Claim Examiner--", $additional_conditions = "");
+				$ctuser = $this->users_model->get_by_id($task_details['created_by']);
+				$task_details['created_email'] = $ctuser['email'];
+				$user = $this->users_model->get_by_id($task_details['user_id']);
+				$task_details['assigned_email'] = $user['email'];
+				
+				$this->data ['task_details'] = $task_details;
+
+				$this->data ['priorities'] = $this->mytask_model->get_all_priority();
+				$this->data ['statuses'] = $this->mytask_model->get_all_status();
+				
+				$para = array('groups' => Users_model::GROUP_EAC /*, 'shift' => Users_model::SHIFT_2PM */);
+				$this->data['eacs'] = $this->users_model->search($para);
+
+				$para = array('groups' => Users_model::GROUP_EXAMINER);
+				$this->data['examiners'] = $this->users_model->search($para);
+				
+				$para = array('groups' => Users_model::GROUP_MANAGER);
+				$this->data['managers'] = $this->users_model->search($para);
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Edit Task', TRUE);
