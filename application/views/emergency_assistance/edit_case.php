@@ -35,7 +35,7 @@
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Policy Number:', 'policy_no', array("class"=>'col-sm-12'));  
-                     echo form_input("policy_no", $this->common_model->field_val("policy_no", $case_details), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
+                     echo form_input("policy_no", $case_details["policy_no"], array("class"=>"form-control", 'placeholder'=>'Policy Number'));
                      echo form_error("policy_no");
                      echo form_hidden('policy_info', $case_details['policy_info']);
                      ?>
@@ -46,13 +46,13 @@
                      ?>
                      <div class="form-group col-sm-6">
                         <?php
-                        echo form_input("insured_firstname", $this->common_model->field_val("insured_firstname", $case_details), array("class"=>"form-control col-sm-6", 'placeholder'=>'Insured First Name'));
+                        echo form_input("insured_firstname", $case_details["insured_firstname"], array("class"=>"form-control col-sm-6", 'placeholder'=>'Insured First Name'));
                         echo form_error("insured_firstname");
                         ?>
                      </div>
                      <div class="form-group col-sm-6">
                         <?php 
-                        echo form_input("insured_lastname", $this->common_model->field_val("insured_lastname", $case_details), array("class"=>"form-control col-sm-6", 'placeholder'=>'Insured Last Name'));
+                        echo form_input("insured_lastname", $case_details["insured_lastname"], array("class"=>"form-control col-sm-6", 'placeholder'=>'Insured Last Name'));
                         echo form_error("insured_lastname");
                         ?>
                      </div>
@@ -61,7 +61,7 @@
                      <?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
                      <div class="input-group date">
                         <?php                
-                        echo form_input("dob", $this->common_model->field_val("dob", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Day of Birth'));
+                        echo form_input("dob", $case_details["dob"], array("class"=>"form-control datepicker", 'placeholder'=>'Day of Birth'));
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                      </div>
@@ -124,43 +124,47 @@
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Street No.:', 'street_no', array("class"=>'col-sm-12'));  
-                     echo form_input("street_no", $this->common_model->field_val("street_no", $case_details), array("class"=>"form-control", 'placeholder'=>'Street No.'));
+                     echo form_input("street_no", $case_details['street_no'], array("class"=>"form-control", 'placeholder'=>'Street No.'));
                      echo form_error("street_no");
                      ?>
                   </div> 
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Street Name.:', 'street_name', array("class"=>'col-sm-12'));  
-                     echo form_input("street_name", $this->common_model->field_val("street_name", $case_details), array("class"=>"form-control", 'placeholder'=>'Street Name.'));
+                     echo form_input("street_name", $case_details["street_name"], array("class"=>"form-control", 'placeholder'=>'Street Name.'));
                      echo form_error("street_name");
                      ?>
                   </div> 
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('City:', 'city', array("class"=>'col-sm-12'));  
-                     echo form_input("city", $this->common_model->field_val("city", $case_details), array("class"=>"form-control", 'placeholder'=>'City'));
+                     echo form_input("city", $case_details["city"], array("class"=>"form-control", 'placeholder'=>'City'));
                      echo form_error("city");
                      ?>
                   </div> 
 
                   <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Province:', 'province', array("class"=>'col-sm-12'));
-                        echo $province;
-                        echo form_error("province");
-                     ?>
+                     <?php echo form_label('Province:', 'province', array("class"=>'col-sm-12')); ?>
+					<select name="province" class="form-control">
+						<option value=""> -- Select Province -- </option>
+						<?php foreach ($province as $key => $val):?>
+						<option value="<?php echo $key; ?>" <?php if ($key == $case_details['province']) { echo "selected"; } ?>><?php echo $val; ?></option>
+						<?php endforeach; ?>
+					</select>
                   </div>
                   <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Country:', 'country', array("class"=>'col-sm-12'));
-                        echo $country;
-                        echo form_error("country");
-                     ?>
+                     <?php echo form_label('Country:', 'country', array("class"=>'col-sm-12')); ?>
+					<select name="country" class="form-control">
+						<option value=""> -- Select Country -- </option>
+						<?php foreach ($country as $key => $val):?>
+						<option value="<?php echo $key; ?>" <?php if ($key == $case_details['country']) { echo "selected"; } ?>><?php echo $val; ?></option>
+						<?php endforeach; ?>
+					</select>
                   </div>
                   <div class="form-group col-sm-2">
                      <?php               
                      echo form_label('Post Code:', 'post_code', array("class"=>'col-sm-12'));  
-                     echo form_input("post_code", $this->common_model->field_val("post_code", $case_details), array("class"=>"form-control", 'placeholder'=>'Post Code'));
+                     echo form_input("post_code", $case_details["post_code"], array("class"=>"form-control", 'placeholder'=>'Post Code'));
                      echo form_error("post_code");
                      ?>
                   </div>       
@@ -169,22 +173,26 @@
                      <?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary search_provider')) ?>
                   </div>
                   <div class="form-group col-sm-4">
-                        <?php 
-                           echo form_label('Follow Up EAC:', 'assign_to', array("class"=>'col-sm-12'));
-                           if ($this->ion_auth->is_admin() or $this->ion_auth->is_casemamager()) {
-                           	echo $eacmanagers;
-                           	echo form_error("assign_to");
-                           } else {
-                           	echo '<div class="form-group col-sm-12">' . $assign_to_name . "</div>";
-                           }
-                        ?>
+					<?php echo form_label('Follow Up EAC:', 'assign_to', array("class"=>'col-sm-12')); ?>
+					<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>
+					<select name="assign_to" class="form-control">
+						<option value=""> -- Select EAC -- </option>
+						<?php foreach ($eacs as $rc):?>
+						<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['assign_to']) { echo "selected"; } ?>><?php echo $rc['email'] . ' ' . $rc['shift']; ?></option>
+						<?php endforeach; ?>
+					</select>
+					<?php } else { ?>
+						<div class="form-group col-sm-12"><?php echo $assign_to_name; ?></div>
+					<?php } ?>
                   </div>
                   <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Reason:', 'reason', array("class"=>'col-sm-12'));
-                        echo $reasons;
-                        echo form_error("reason");
-                     ?>
+                     <?php echo form_label('Reason:', 'reason', array("class"=>'col-sm-12')); ?>
+					<select name="reason" class="form-control">
+						<option value=""> -- Select Reasion -- </option>
+						<?php foreach ($reasons as $rc):?>
+						<option value="<?php echo $rc; ?>" <?php if ($rc == $case_details['reason']) { echo "selected"; } ?>><?php echo $rc; ?></option>
+						<?php endforeach; ?>
+					</select>
                   </div>               
                </div>
 
@@ -193,21 +201,21 @@
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('First Name:', 'first_name', array("class"=>'col-sm-12'));  
-                     echo form_input("first_name", $this->common_model->field_val("first_name", $case_details), array("class"=>"form-control", 'placeholder'=>'First Name'));
+                     echo form_input("first_name", $case_details["first_name"], array("class"=>"form-control", 'placeholder'=>'First Name'));
                      echo form_error("first_name");
                      ?>
                   </div> 
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Last Name.:', 'last_name', array("class"=>'col-sm-12'));  
-                     echo form_input("last_name", $this->common_model->field_val("last_name", $case_details), array("class"=>"form-control", 'placeholder'=>'Last Name.'));
+                     echo form_input("last_name", $case_details["last_name"], array("class"=>"form-control", 'placeholder'=>'Last Name.'));
                      echo form_error("last_name");
                      ?>
                   </div> 
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Phone Number:', 'phone_number', array("class"=>'col-sm-12'));  
-                     echo form_input("phone_number", $this->common_model->field_val("phone_number", $case_details), array("class"=>"form-control", 'placeholder'=>'Phone Number'));
+                     echo form_input("phone_number", $case_details["phone_number"], array("class"=>"form-control", 'placeholder'=>'Phone Number'));
                      echo form_error("phone_number");
                      ?>
                   </div> 
@@ -215,38 +223,44 @@
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Email:', 'email', array("class"=>'col-sm-12'));  
-                     echo form_input("email", $this->common_model->field_val("email", $case_details), array("class"=>"form-control", 'placeholder'=>'Email'));
+                     echo form_input("email", $case_details["email"], array("class"=>"form-control", 'placeholder'=>'Email'));
                      echo form_error("email");
                      ?>
                   </div>
                   <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Relationship:', 'relations', array("class"=>'col-sm-12'));
-                        echo $relations;
-                        echo form_error("relations");
-                     ?>
+                     <?php echo form_label('Relationship:', 'relations', array("class"=>'col-sm-12')); ?>
+					<select name="relations" class="form-control">
+						<option value=""> -- Select Relationship -- </option>
+						<?php foreach ($relationships as $rc):?>
+						<option value="<?php echo $rc; ?>" <?php if ($rc == $case_details['relations']) { echo "selected"; } ?>><?php echo $rc; ?></option>
+						<?php endforeach; ?>
+					</select>
+					<?php echo form_error("relations"); ?>
                   </div>
                   <div class="form-group col-sm-4">
                      <?php 
                         echo form_label('Place of Call:', 'place_of_call', array("class"=>'col-sm-12'));
-                     	echo form_input("place_of_call", $this->common_model->field_val("place_of_call", $case_details), array("class"=>"form-control", 'placeholder'=>'Place of Call'));
+                     	echo form_input("place_of_call", $case_details["place_of_call"], array("class"=>"form-control", 'placeholder'=>'Place of Call'));
                         echo form_error("place_of_call");
                      ?>
                   </div>
                   <div class="form-group col-sm-4">
                      <?php echo form_label('Incident Date:', 'incident_date', array("class"=>'col-sm-12')); ?>
                      <div class="input-group date">
-                     <?php echo form_input("incident_date", $this->common_model->field_val("incident_date", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Incident Date')); ?>
+                     <?php echo form_input("incident_date", $case_details["incident_date"], array("class"=>"form-control datepicker", 'placeholder'=>'Incident Date')); ?>
                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                      </div>
                      <?php echo form_error("incident_date"); ?>
                   </div>
                   <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Country:', 'country2', array("class"=>'col-sm-12'));
-                        echo $country2;
-                        echo form_error("country2");
-                     ?>
+                     <?php echo form_label('Country:', 'country2', array("class"=>'col-sm-12')); ?>
+					<select name="country2" class="form-control">
+						<option value=""> -- Select Country -- </option>
+						<?php foreach ($country2 as $key => $val):?>
+						<option value="<?php echo $key; ?>" <?php if ($key == $case_details['country2']) { echo "selected"; } ?>><?php echo $val; ?></option>
+						<?php endforeach; ?>
+					</select>
+					<?php  echo form_error("country2"); ?>
                   </div>                              
                </div>
 
@@ -259,7 +273,7 @@
 						<?php echo form_label('Addmission Date:', 'addmission_date', array("class"=>'col-sm-12'));   ?>
 						<div class="input-group date">
                         	<?php                
-                        		echo form_input("addmission_date", $this->common_model->field_val("addmission_date", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Addmission Date'));
+                        		echo form_input("addmission_date", $case_details["addmission_date"], array("class"=>"form-control datepicker", 'placeholder'=>'Addmission Date'));
                         	?>
                         	<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
@@ -269,7 +283,7 @@
 						<?php echo form_label('Discharge Date:', 'discharge_date', array("class"=>'col-sm-12'));   ?>
 						<div class="input-group date">
                         	<?php                
-                        		echo form_input("discharge_date", $this->common_model->field_val("discharge_date", $case_details), array("class"=>"form-control datepicker", 'placeholder'=>'Discharge Date'));
+                        		echo form_input("discharge_date", $case_details["discharge_date"], array("class"=>"form-control datepicker", 'placeholder'=>'Discharge Date'));
                         	?>
                         	<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
@@ -278,21 +292,21 @@
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Room Number:', 'room_number', array("class"=>'col-sm-12'));
-							echo form_input("room_number", $this->common_model->field_val("room_number", $case_details), array("class"=>"form-control", 'placeholder'=>'Room Number'));
+							echo form_input("room_number", $case_details["room_number"], array("class"=>"form-control", 'placeholder'=>'Room Number'));
 							echo form_error("room_number");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Account Number:', 'account_number', array("class"=>'col-sm-12'));
-							echo form_input("account_number", $this->common_model->field_val("account_number", $case_details), array("class"=>"form-control", 'placeholder'=>'Account Number'));
+							echo form_input("account_number", $case_details["account_number"], array("class"=>"form-control", 'placeholder'=>'Account Number'));
 							echo form_error("account_number");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Hospital Charge:', 'hospital_charge', array("class"=>'col-sm-12'));
-							echo form_input("hospital_charge", $this->common_model->field_val("hospital_charge", $case_details), array("class"=>"form-control", 'placeholder'=>'Hospital Charge'));
+							echo form_input("hospital_charge", $case_details["hospital_charge"], array("class"=>"form-control", 'placeholder'=>'Hospital Charge'));
 							echo form_error("hospital_charge");
 						?>
 					</div> 
@@ -309,14 +323,14 @@
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('First Name:', 'doctor_first_name', array("class"=>'col-sm-12'));
-							echo form_input("doctor_first_name", $this->common_model->field_val("doctor_first_name", $case_details), array("class"=>"form-control", 'placeholder'=>'First Name'));
+							echo form_input("doctor_first_name", $case_details["doctor_first_name"], array("class"=>"form-control", 'placeholder'=>'First Name'));
 							echo form_error("doctor_first_name");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Last Name:', 'doctor_last_name', array("class"=>'col-sm-12'));
-							echo form_input("doctor_last_name", $this->common_model->field_val("doctor_last_name", $case_details), array("class"=>"form-control", 'placeholder'=>'Last Name'));
+							echo form_input("doctor_last_name", $case_details["doctor_last_name"], array("class"=>"form-control", 'placeholder'=>'Last Name'));
 							echo form_error("doctor_last_name");
 						?>
 					</div> 
@@ -337,28 +351,28 @@
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Address:', 'doctor_address', array("class"=>'col-sm-12'));
-							echo form_input("doctor_address", $this->common_model->field_val("doctor_address", $case_details), array("class"=>"form-control", 'placeholder'=>'Address'));
+							echo form_input("doctor_address", $case_details["doctor_address"], array("class"=>"form-control", 'placeholder'=>'Address'));
 							echo form_error("doctor_address");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('City:', 'doctor_city', array("class"=>'col-sm-12'));
-							echo form_input("doctor_city", $this->common_model->field_val("doctor_city", $case_details), array("class"=>"form-control", 'placeholder'=>'City'));
+							echo form_input("doctor_city", $case_details["doctor_city"], array("class"=>"form-control", 'placeholder'=>'City'));
 							echo form_error("doctor_city");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Post Code:', 'doctor_post_code', array("class"=>'col-sm-12'));
-							echo form_input("doctor_post_code", $this->common_model->field_val("doctor_post_code", $case_details), array("class"=>"form-control", 'placeholder'=>'Post Code'));
+							echo form_input("doctor_post_code", $case_details["doctor_post_code"], array("class"=>"form-control", 'placeholder'=>'Post Code'));
 							echo form_error("doctor_post_code");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Phone Number:', 'doctor_phone', array("class"=>'col-sm-12'));
-							echo form_input("doctor_phone", $this->common_model->field_val("doctor_phone", $case_details), array("class"=>"form-control", 'placeholder'=>'Phone Number'));
+							echo form_input("doctor_phone", $case_details["doctor_phone"], array("class"=>"form-control", 'placeholder'=>'Phone Number'));
 							echo form_error("doctor_phone");
 						?>
 					</div> 
@@ -368,49 +382,49 @@
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Provider:', 'outpatient_provider', array("class"=>'col-sm-12'));
-							echo form_input("outpatient_provider", $this->common_model->field_val("outpatient_provider", $case_details), array("class"=>"form-control", 'placeholder'=>'Provider'));
+							echo form_input("outpatient_provider", $case_details["outpatient_provider"], array("class"=>"form-control", 'placeholder'=>'Provider'));
 							echo form_error("outpatient_provider");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Federal tax ID#:', 'outpatient_federal_tax', array("class"=>'col-sm-12'));
-							echo form_input("outpatient_federal_tax", $this->common_model->field_val("outpatient_federal_tax", $case_details), array("class"=>"form-control", 'placeholder'=>'Federal tax ID Number'));
+							echo form_input("outpatient_federal_tax", $case_details["outpatient_federal_tax"], array("class"=>"form-control", 'placeholder'=>'Federal tax ID Number'));
 							echo form_error("outpatient_federal_tax");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Facility:', 'outpatient_facility', array("class"=>'col-sm-12'));
-							echo form_input("outpatient_facility", $this->common_model->field_val("outpatient_facility", $case_details), array("class"=>"form-control", 'placeholder'=>'Facility'));
+							echo form_input("outpatient_facility", $case_details["outpatient_facility"], array("class"=>"form-control", 'placeholder'=>'Facility'));
 							echo form_error("outpatient_facility");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Physician:', 'outpatient_physician', array("class"=>'col-sm-12'));
-							echo form_input("outpatient_physician", $this->common_model->field_val("outpatient_physician", $case_details), array("class"=>"form-control", 'placeholder'=>'Physician'));
+							echo form_input("outpatient_physician", $case_details["outpatient_physician"], array("class"=>"form-control", 'placeholder'=>'Physician'));
 							echo form_error("outpatient_physician");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Address 1:', 'outpatient_address1', array("class"=>'col-sm-12'));
-							echo form_input("outpatient_address1", $this->common_model->field_val("outpatient_address1", $case_details), array("class"=>"form-control", 'placeholder'=>'Address 1'));
+							echo form_input("outpatient_address1", $case_details["outpatient_address1"], array("class"=>"form-control", 'placeholder'=>'Address 1'));
 							echo form_error("outpatient_address1");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Address 2:', 'outpatient_address2', array("class"=>'col-sm-12'));
-							echo form_input("outpatient_address2", $this->common_model->field_val("outpatient_address2", $case_details), array("class"=>"form-control", 'placeholder'=>'Address 2'));
+							echo form_input("outpatient_address2", $case_details["outpatient_address2"], array("class"=>"form-control", 'placeholder'=>'Address 2'));
 							echo form_error("outpatient_address2");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('City:', 'outpatient_city', array("class"=>'col-sm-12'));
-							echo form_input("outpatient_city", $this->common_model->field_val("outpatient_city", $case_details), array("class"=>"form-control", 'placeholder'=>'City'));
+							echo form_input("outpatient_city", $case_details["outpatient_city"], array("class"=>"form-control", 'placeholder'=>'City'));
 							echo form_error("outpatient_city");
 						?>
 					</div> 
@@ -431,21 +445,21 @@
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Post Code:', 'outpatient_post_code', array("class"=>'col-sm-12'));
-							echo form_input("outpatient_post_code", $this->common_model->field_val("outpatient_post_code", $case_details), array("class"=>"form-control", 'placeholder'=>'Post Code'));
+							echo form_input("outpatient_post_code", $case_details["outpatient_post_code"], array("class"=>"form-control", 'placeholder'=>'Post Code'));
 							echo form_error("outpatient_post_code");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('Phone:', 'outpatient_phone', array("class"=>'col-sm-12'));
-							echo form_input("outpatient_phone", $this->common_model->field_val("outpatient_phone", $case_details), array("class"=>"form-control", 'placeholder'=>'Phone Number'));
+							echo form_input("outpatient_phone", $case_details["outpatient_phone"], array("class"=>"form-control", 'placeholder'=>'Phone Number'));
 							echo form_error("outpatient_phone");
 						?>
 					</div> 
 					<div class="form-group col-sm-4">
 						<?php
 							echo form_label('FAX:', 'outpatient_fax', array("class"=>'col-sm-12'));
-							echo form_input("outpatient_fax", $this->common_model->field_val("outpatient_fax", $case_details), array("class"=>"form-control", 'placeholder'=>'Fax Number'));
+							echo form_input("outpatient_fax", $case_details["outpatient_fax"], array("class"=>"form-control", 'placeholder'=>'Fax Number'));
 							echo form_error("outpatient_fax");
 						?>
 					</div> 
@@ -454,73 +468,79 @@
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Main Diagnosis:', 'diagnosis', array("class"=>'col-sm-12'));  
-                     echo form_input("diagnosis", $this->common_model->field_val("diagnosis", $case_details), array("class"=>"form-control", 'placeholder'=>'Main Diagnosis'));
+                     echo form_input("diagnosis", $case_details["diagnosis"], array("class"=>"form-control", 'placeholder'=>'Main Diagnosis'));
                      echo form_error("diagnosis");
                      ?>
                   </div> 
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Treatment:', 'treatment', array("class"=>'col-sm-12'));  
-                     echo form_input("treatment", $this->common_model->field_val("treatment", $case_details), array("class"=>"form-control", 'placeholder'=>'Treatment'));
+                     echo form_input("treatment", $case_details["treatment"], array("class"=>"form-control", 'placeholder'=>'Treatment'));
                      echo form_error("treatment");
                      ?>
                   </div> 
                   <div class="form-group col-sm-4">
                      <?php               
                      echo form_label('Third Party Recovery:', 'third_party_recovery', array("class"=>'col-sm-12'));  
-                     echo form_checkbox("third_party_recovery", "Y", ($this->common_model->field_val("third_party_recovery", $case_details) == 'Y'?TRUE:FALSE), array('style'=>'margin-left: 12px;'));
+                     echo form_checkbox("third_party_recovery", "Y", ($case_details["third_party_recovery"] == 'Y'?TRUE:FALSE), array('style'=>'margin-left: 12px;'));
                      echo form_error("third_party_recovery");
                      ?>
                   </div>   
                   <div class="form-group col-sm-12">
                      <?php               
                      echo form_label('Medical Notes:', 'medical_notes', array("class"=>'col-sm-12'));  
-                     echo form_textarea("medical_notes", $this->common_model->field_val("medical_notes", $case_details), array("class"=>"form-control", 'placeholder'=>'Medical Notes', 'style'=>'height:87px'));
+                     echo form_textarea("medical_notes", $case_details["medical_notes"], array("class"=>"form-control", 'placeholder'=>'Medical Notes', 'style'=>'height:87px'));
                      echo form_error("medical_notes");
                      ?>
                   </div>                                           
                </div> 
 
 
-               <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager()): ?>    
-                  <h4>Assign Case Manager<small></small></h4>
-               <?php endif;?>
+               <h4>Case Manager<small></small></h4>
                <div class="row">     
-
-                  <?php if($this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager()): ?>          
+                  <?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) { ?>          
                      <div class="form-group col-sm-4">
-                        <?php 
-                           echo form_label('Case Manager:', 'case_manager', array("class"=>'col-sm-12'));
-                           echo $casemamager;
-                           echo form_error("case_manager");
-                        ?>
+                        <?php echo form_label('Case Manager:', 'case_manager', array("class"=>'col-sm-12')); ?>
+						<select name="case_manager" class="form-control">
+							<option value=""> -- Select Priority -- </option>
+							<?php foreach ($managers as $rc) :?>
+							<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['case_manager']) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+							<?php endforeach; ?>
+						</select>
+                        <?php echo form_error("case_manager"); ?>
                      </div> 
-                  <?php endif;?>
+                  <?php } else { ?>
+                     <div class="form-group col-sm-4">
+                        <?php echo form_label('Case Manager:', 'case_manager', array("class"=>'col-sm-12')); ?>
+                        <input type='hidden' name='case_manager' value='<?php echo $case_details['case_manager']; ?>'>
+						<?php echo $case_details['case_manager_email']; ?>
+                     </div> 
+                  <?php } ?>
                   <div class="form-group col-sm-4">
-                     <?php 
-                        echo form_label('Priority:', 'priority', array("class"=>'col-sm-12'));                  
-                        $priority = array(
-                           ""=>'--Select Priority--',
-                           "HIGH"=>'High',
-                           "Normal"=>'Normal',
-                           );
-                        echo form_dropdown("priority", $priority, $this->common_model->field_val("priority", $case_details), array("class"=>'form-control'));
-                        echo form_error("priority");
-                     ?>
+                     <?php echo form_label('Priority:', 'priority', array("class"=>'col-sm-12')); ?>                  
+					<select name="priority" class="form-control">
+						<option value=""> -- Select Priority -- </option>
+						<?php foreach ($priorities as $val):?>
+						<option value="<?php echo $val; ?>" <?php if ($val == $case_details['priority']) { echo "selected"; } ?>><?php echo $val; ?></option>
+						<?php endforeach; ?>
+					</select>
+					<?php  echo form_error("priority"); ?>
                   </div>
 
-                  <?php if($ref == 'manage'): ?>
+                  <?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) { ?>
                      <div class="form-group col-sm-12">
                         <h4>Reservers C$ <small></small></h4>
                         <?php echo form_label('Create Reservers:', 'reserve_amount', array("class"=>'col-sm-12'));   ?>
                         <div class="form-group col-sm-4">
                            <?php                
-                           echo form_input("reserve_amount", $this->common_model->field_val("reserve_amount", $case_details), array("class"=>"form-control", 'placeholder'=>'Create Reservers'));
+                           echo form_input("reserve_amount", $case_details["reserve_amount"], array("class"=>"form-control", 'placeholder'=>'Create Reservers'));
                            echo form_error("reserve_amount");
                            ?>
                         </div>
                      </div>
-                  <?php endif;?>
+                  <?php } else { ?>
+                     <input type='hidden' name='reserve_amount' value='<?php echo $case_details['reserve_amount']; ?>'>
+                  <?php } ?>
 
                   <?php if(1 or $this->ion_auth->is_admin()  or $this->ion_auth->is_casemamager() or $this->ion_auth->is_eacmanager()): ?>
                      <div class="col-sm-12">
@@ -554,7 +574,7 @@
                            <!-- put here email button -->
                            <button insured_address="<?php echo nl2br($case_details['insured_address']) ?>"
                               insured_lastname="<?php echo $case_details['insured_lastname'] ?>"
-                              insured_name="<?php echo $case_details['insured_name'] ?>"
+                              insured_firstname="<?php echo $case_details['insured_firstname'] ?>"
                               policy_no="<?php echo $case_details['policy_no'] ?>"
                               case_no="<?php echo $case_details['case_no'] ?>"
                               casemanager_name="<?php echo $case_details['case_manager_name'] ?>" class="btn btn-primary email_print" type="button"  data-toggle="modal" data-target="#print_template">Email/Print</button>
@@ -679,11 +699,14 @@
                </div> 
 
                <div class="form-group col-sm-3">
-                  <?php 
-                     echo form_label('Province:', 'province_email', array("class"=>'col-sm-12'));
-                     echo $province2;
-                     echo form_error("province_email"); 
-                  ?>
+                  <?php echo form_label('Province:', 'province_email', array("class"=>'col-sm-12')); ?>
+					<select name="province_email" class="form-control">
+						<option value=""> -- Select Province -- </option>
+						<?php foreach ($province as $key => $val):?>
+						<option value="<?php echo $key; ?>"><?php echo $val; ?></option>
+						<?php endforeach; ?>
+					</select>
+                  <?php echo form_error("province_email"); ?>
                </div>
 
                <?php 
@@ -766,18 +789,12 @@
                      ?>
                   </div>
                   <div class="col-sm-12 follow-section">
-                     <?php foreach ($employee_shift as $key => $value): ?>
-                        <div class="col-sm-4">
-                           <fieldset>
-                              <legend><?php echo $value; ?></legend>
-                              <?php
-                                 $list = "employees_".$key; 
-                                 echo $$list;
-                               ?>
-                           </fieldset>
-                           <div class="clearfix"><br/></div>
-                        </div>
-                     <?php endforeach; ?>
+					<select name="assign_to_follow" class="form-control">
+						<option value=""> -- Select EAC -- </option>
+						<?php foreach ($eacs as $rc):?>
+						<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['assign_to']) { echo "selected"; } ?>><?php echo $rc['email'] . ' ' . $rc['shift']; ?></option>
+						<?php endforeach; ?>
+					</select>
                   </div>
                </div>
             </div>

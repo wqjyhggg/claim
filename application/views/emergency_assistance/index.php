@@ -27,12 +27,6 @@
            <?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>
              <div class="row">
                <div class="form-group col-sm-3">
-                  <?php 
-                     echo form_label('Our Product:', 'product_short', array("class"=>'col-sm-12'));                  
-                     echo $products;
-                  ?>
-               </div>
-               <div class="form-group col-sm-3">
                   <?php
                   echo form_label('Policy Number:', 'policy_match', array("class"=>'col-sm-12'));                  
                   echo form_input("policy_match", $this->input->get("policy_match"), array("class"=>"form-control", 'placeholder'=>'Policy Number'));
@@ -281,15 +275,13 @@
                </div>
 
                <div class="form-group col-sm-3">
-                  <?php                 
-                     echo $eacmanagers;
-                  ?>
+					<select name="manager_id" class="form-control">
+						<option value=""> -- Select Manage -- </option>
+						<?php foreach ($managers as $rc):?>
+						<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $manager_id) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+						<?php endforeach; ?>
+					</select>
                </div>
-               <div class="form-group col-sm-3">
-                  <?php                 
-                     echo $casemamager;
-                  ?>
-               </div>          
                <div class="col-sm-3">
                   <button class="btn btn-primary" name="filter" value="case">Search</button>
                </div>

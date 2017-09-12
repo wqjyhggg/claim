@@ -39,7 +39,13 @@ class Intakeform_model extends CI_Model {
 		$this->db->insert('intake_form', $data);
 		$sql = $this->db->last_query();
 		$id = $this->db->insert_id();
-		$this->active_model->log_new('mytask', $id, $data, $sql);
+		$this->active_model->log_new('intake_form', $id, $data, $sql);
 		return $id;
+	}
+	
+	public function get_list_by_case_id($id) {
+		$sql = "SELECT i.*, CONCAT_WS(' ', u.first_name, u.last_name) as username FROM intake_form i LEFT JOIN users u ON (i.created_by=u.id) WHERE i.id='" . (int)$id . "'";
+		
+		return $this->db->query($sql)->result_array();
 	}
 }
