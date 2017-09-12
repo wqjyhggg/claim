@@ -26,11 +26,12 @@ class Intakeform_model extends CI_Model {
 	 * @param array $para     	parameter
 	 * @return int				inserted array ID
 	 */
-	public function save($case_id, $notes, $docs) {
+	public function save($case_id, $notes, $docs, $phonefile='') {
 		$data = array(
 				'case_id' => $case_id,
 				'created_by' => $this->ion_auth->get_user_id(),
 				'notes' => $notes,
+				'phonefile' => $phonefile,
 				'created' => date("Y-m-d H:i:s"),
 				'docs' => $docs
 		);
@@ -44,7 +45,7 @@ class Intakeform_model extends CI_Model {
 	}
 	
 	public function get_list_by_case_id($id) {
-		$sql = "SELECT i.*, CONCAT_WS(' ', u.first_name, u.last_name) as username FROM intake_form i LEFT JOIN users u ON (i.created_by=u.id) WHERE i.id='" . (int)$id . "'";
+		$sql = "SELECT i.*, CONCAT_WS(' ', u.first_name, u.last_name) as username FROM intake_form i LEFT JOIN users u ON (i.created_by=u.id) WHERE i.case_id='" . (int)$id . "'";
 		
 		return $this->db->query($sql)->result_array();
 	}

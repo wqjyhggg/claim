@@ -1116,6 +1116,7 @@ class Emergency_assistance extends CI_Controller {
 			if ($this->form_validation->run() == TRUE) {
 				// get app post params
 				$array = $this->input->post();
+				$phonefile = $this->input->post('phonefile') ? $this->input->post('phonefile') : '';
 				
 				// load upload class
 				$config['upload_path'] = UPLOADFULLPATH . 'intake_forms/';
@@ -1152,7 +1153,7 @@ class Emergency_assistance extends CI_Controller {
 				}
 				
 				$this->load->model('intakeform_model');
-				$intake_form_id = $this->intakeform_model->save($array['case_id'], $array['intake_notes'], implode(",", $file_names));
+				$intake_form_id = $this->intakeform_model->save($array['case_id'], $array['intake_notes'], implode(",", $file_names), $phonefile);
 				
 				// create directory to identify intake files
 				@mkdir(UPLOADFULLPATH . 'intake_forms/' . $intake_form_id, 0777);

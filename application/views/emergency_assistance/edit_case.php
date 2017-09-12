@@ -607,7 +607,7 @@
                                     <br/>
                                     <?php 
                                     $files = $value['docs'] ? explode(",", $value['docs']) : array(); 
-                                    if(!empty($files)):
+                                    if (!empty($files)):
                                        foreach ($files as $file):
                                           ?>
                                            <div class="col-sm-9" style="">
@@ -618,10 +618,17 @@
                                            <?php
                                        endforeach;
                                     endif;
+                                    if (!empty($value['phonefile'])):
+                                          ?>
+                                           <div class="col-sm-9" style="">
+                                               <span class="file-label"><?php echo anchor($value['phonefile'], $value['phonefile'], array('target'=>'_blank')); ?></span>
+                                           </div>
+                                           <?php
+                                    endif;
                                     ?>
                                  </div>
 
-                                 <div class="col-sm-1&quot;"><i class="fa fa-remove row-link remove-form pull-right" alt="<?php echo $value['id']; ?>"></i></div>   
+                                 <!-- div class="col-sm-1&quot;"><i class="fa fa-remove row-link remove-form pull-right" alt="<?php echo $value['id']; ?>"></i></div -->   
                               </div>
                                                         
                          </div>  
