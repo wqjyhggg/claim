@@ -198,12 +198,11 @@ class Case_model extends CI_Model {
 				$this->active_model->log_update('case', $id, $cur, $data, $this->db->last_query());
 				return $id;
 			}
-			unset($data['id']);
+		} else {
+			// insert
+			$this->load->model('master_model');
+			$data['id'] = $this->master_model->get_id('case');
 		}
-
-		// insert
-		$this->load->model('master_model');
-		$data['id'] = $this->master_model->get_id('case');
 		
 		$this->db->insert('case', $data);
 		$sql = $this->db->last_query();

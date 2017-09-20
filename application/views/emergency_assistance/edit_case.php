@@ -160,6 +160,7 @@
 						<option value="<?php echo $key; ?>" <?php if ($key == $case_details['country']) { echo "selected"; } ?>><?php echo $val; ?></option>
 						<?php endforeach; ?>
 					</select>
+					<?php echo form_error("province"); ?>
                   </div>
                   <div class="form-group col-sm-2">
                      <?php               
@@ -228,7 +229,7 @@
                      ?>
                   </div>
                   <div class="form-group col-sm-4">
-                     <?php echo form_label('Relationship:', 'relations', array("class"=>'col-sm-12')); ?>
+                  	<?php echo form_label('Relationship:', 'relations', array("class"=>'col-sm-12')); ?>
 					<select name="relations" class="form-control">
 						<option value=""> -- Select Relationship -- </option>
 						<?php foreach ($relationships as $rc):?>

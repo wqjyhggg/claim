@@ -99,7 +99,15 @@ class Emergency_assistance extends CI_Controller {
 			redirect('auth/login', 'refresh');
 		} else {
 			$this->load->model('case_model');
-			
+			$this->load->model('api_model');
+			$this->load->model('intakeform_model');
+			$this->load->model('currency_model');
+			$this->load->model('country_model');
+			$this->load->model('province_model');
+			$this->load->model('reasons_model');
+			$this->load->model('relations_model');
+			$this->load->model('mytask_model');
+				
 			// validate form input
 			$this->form_validation->set_rules('assign_to', 'Assign To', '');
 			$this->form_validation->set_rules('reason', 'Reason', 'required');
@@ -124,24 +132,27 @@ class Emergency_assistance extends CI_Controller {
 				$array = $this->input->post();
 				foreach ( $array as $key => $value ) {
 					// code...
-					if (!strpos($key, "otes_") && $key != "no_of_form")
+					if (!strpos($key, "otes_") && $key != "no_of_form") {
 						$data[$key] = $value;
+					}
 						
-						// for check third party recovery
-					if ($key == 'third_party_recovery')
+					// for check third party recovery
+					if ($key == 'third_party_recovery') {
 						$data[$key] = $value ? $value : "N";
+					}
 				}
 				$data['created'] = date('Y-m-d H:i:s');
 				$data['created_by'] = $this->ion_auth->user()->row()->id;
-				if (empty($data['assign_to']))
+				if (empty($data['assign_to'])) {
 					$data['assign_to'] = $data['case_manager'];
+				}
 				
 				$this->load->model('master_model');
 				$data['id'] = $this->master_model->get_id('case'); // Get new id
 				$data['case_no'] = $case_no = $this->case_model->generate_case_no($data['id']);
 				
 				// insert values to database
-				$record_id = $this->common_model->save("case", $data);
+				$record_id = $this->case_model->save($data);
 				
 				$record_id = $data['id'];
 				
@@ -194,7 +205,7 @@ class Emergency_assistance extends CI_Controller {
 						);
 						
 						// save values to database
-						$intake_form_id = $this->common_model->save("intake_form", $data_intake);
+						$intake_form_id = $this->intakeform_model->save($record_id, $array['notes_' . $i], implode(",", $file_names));
 						
 						// create directory to identify intake files
 						@mkdir(UPLOADFULLPATH . 'intake_forms/' . $intake_form_id, 0777);
@@ -209,65 +220,99 @@ class Emergency_assistance extends CI_Controller {
 						}
 					}
 				}
-				
-				// settings for my task section for case manager
-				if ($array['case_manager']) {
-					$task_data = array(
-							'user_id' => $array['case_manager'],
-							'item_id' => $record_id,
-							'task_no' => $case_no,
-							'category' => 'Assistance',
-							'type' => 'CASE',
-							'priority' => $array['priority'],
-							'created_by' => $this->ion_auth->user()->row()->id,
-							'created' => date('Y-m-d H:i:s'),
-							'user_type' => 'casemanager' 
-					);
-					// insert values to database
-					$this->common_model->save("mytask", $task_data);
+				$new_case = $this->case_model->get_by_id($record_id);
+
+				if ($new_case['case_manager']) {
+					$new_task = array();
+					$new_task['user_id'] = $new_case['case_manager'];
+					$new_task['item_id'] = $new_case['id'];
+					$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
+					$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
+					$new_task['due_date'] = date("Y-m-d", time() + 86400);
+					$new_task['due_time'] = date("H:i:s", time() + 86400);
+					$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
+					$new_task['priority'] = $new_case['priority'];
+					$new_task['created_by'] = $this->ion_auth->get_user_id();
+					$new_task['created'] = date("Y-m-d H:i:s");
+					$new_task['user_type'] = Mytask_model::USER_TYPE_EAC;
+					$new_task['status'] = Mytask_model::STATUS_ASSIGNED;
+					$new_task['notes'] = "New Case Assign";
+								
+					$this->mytask_model->save($new_task);
 				}
 				
-				// settings for my task section for eac
-				if ($array['assign_to'] and $array['assign_to'] != $array['case_manager']) {
-					$task_data = array(
-							'user_id' => $array['assign_to'],
-							'item_id' => $record_id,
-							'task_no' => $case_no,
-							'category' => 'Assistance',
-							'type' => 'CASE',
-							'priority' => $array['priority'],
-							'created_by' => $this->ion_auth->user()->row()->id,
-							'created' => date('Y-m-d H:i:s'),
-							'user_type' => 'eac' 
-					);
-					// insert values to database
-					$this->common_model->save("mytask", $task_data);
+				if ($new_case['assign_to'] && ($new_case['assign_to'] != $new_case['case_manager'])) {
+					$new_task = array();
+					$new_task['user_id'] = $new_case['assign_to'];
+					$new_task['item_id'] = $new_case['id'];
+					$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
+					$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
+					$new_task['due_date'] = date("Y-m-d", time() + 86400);
+					$new_task['due_time'] = date("H:i:s", time() + 86400);
+					$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
+					$new_task['priority'] = $new_case['priority'];
+					$new_task['created_by'] = $this->ion_auth->get_user_id();
+					$new_task['created'] = date("Y-m-d H:i:s");
+					$new_task['user_type'] = Mytask_model::USER_TYPE_EAC;
+					$new_task['status'] = Mytask_model::STATUS_ASSIGNED;
+					$new_task['notes'] = "New Case Assign";
+								
+					$this->mytask_model->save($new_task);
 				}
+
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully created");
 				
 				// redirect them to the login page
 				redirect('emergency_assistance', 'refresh');
 			} else {
-				$this->load->model('api_model');
-				$this->load->model('currency_model');
-				$this->load->model('country_model');
-				$this->load->model('province_model');
-				
-				$this->data['case_details'] = array();
-				
-				if (!empty($id)) {
-					// verify case details
-					$joins[] = array(
-							'table' => 'users u1',
-							'on' => 'u1.id = case.created_by',
-							'type' => 'LEFT' 
-					);
-					$case_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by", $conditions = array(
-							'case.id' => $id 
-					), $joins);
-					$this->data['case_details'] = $case_details;
-				}
+				$case_details = array();
+				$case_details['policy_no'] = '';
+				$case_details['insured_firstname'] = '';
+				$case_details['insured_lastname'] = '';
+				$case_details['dob'] = '';
+				$case_details['created_by'] = '';
+				$case_details['street_no'] = '';
+				$case_details['street_name'] = '';
+				$case_details['city'] = '';
+				$case_details['province'] = 'ON';
+				$case_details['post_code'] = '';
+				$case_details['assign_to'] = '';
+				$case_details['reason'] = '';
+				$case_details['first_name'] = '';
+				$case_details['last_name'] = '';
+				$case_details['phone_number'] = '';
+				$case_details['email'] = '';
+				$case_details['place_of_call'] = '';
+				$case_details['incident_date'] = '';
+				$case_details['relations'] = '';
+				$case_details['addmission_date'] = '';
+				$case_details['discharge_date'] = '';
+				$case_details['room_number'] = '';
+				$case_details['account_number'] = '';
+				$case_details['hospital_charge'] = '';
+				$case_details['doctor_first_name'] = '';
+				$case_details['doctor_last_name'] = '';
+				$case_details['doctor_address'] = '';
+				$case_details['doctor_city'] = '';
+				$case_details['doctor_post_code'] = '';
+				$case_details['doctor_phone'] = '';
+				$case_details['outpatient_provider'] = '';
+				$case_details['outpatient_federal_tax'] = '';
+				$case_details['outpatient_facility'] = '';
+				$case_details['outpatient_physician'] = '';
+				$case_details['outpatient_address1'] = '';
+				$case_details['outpatient_address2'] = '';
+				$case_details['outpatient_city'] = '';
+				$case_details['outpatient_post_code'] = '';
+				$case_details['outpatient_phone'] = '';
+				$case_details['outpatient_fax'] = '';
+				$case_details['diagnosis'] = '';
+				$case_details['treatment'] = '';
+				$case_details['third_party_recovery'] = '';
+				$case_details['medical_notes'] = '';
+				$case_details['case_manager'] = '';
+				$case_details['priority'] = '';
 				
 				$this->data['policy'] = array();
 				if (empty($case_details)) {
@@ -292,16 +337,17 @@ class Emergency_assistance extends CI_Controller {
 						$case_details['province'] = $this->data['case_details']['province'] = 'ON';
 					}
 				} else {
-					if ($policies = $this->api_model->get_policy(array(
-							'policy' => $case_details['policy_no'] 
-					))) {
+					if ($policies = $this->api_model->get_policy(array('policy' => $case_details['policy_no']))) {
 						$this->data['policy'] = $policies[0];
 					}
+					$case_details['country2'] = $this->data['case_details']['country2'] = 'CA';
+					$case_details['country'] = $this->data['case_details']['country2'] = 'CA';
+					$case_details['province'] = $this->data['case_details']['province'] = 'ON';
 				}
 				
 				// load dropdowns data
 				$this->data['country'] = $this->data['country2'] = $this->country_model->get_list(TRUE);
-				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name, $case_details));
+				$this->data['province'] = $this->province_model->get_list_by_country_short(isset($case_details['country']) ? $case_details['country'] : 'CA');
 				
 				// Load model if needs
 				
@@ -341,17 +387,20 @@ class Emergency_assistance extends CI_Controller {
 				$vdata['loadurl'] = '';
 				$this->data['outpatient_province'] = $this->load->view('template/selection', $vdata, TRUE);
 				
-				$additional_conditions = " and users.active = '1'";
-				$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "assign_to", $selected = ($this->common_model->field_val($field_name, $case_details)), $group = array(
-						"'eacmanager'" 
-				), $empty = "--Follow Up EAC--", $additional_conditions);
+				$this->data['eacs'] = $this->users_model->search(array('groups' => Users_model::GROUP_EAC, 'active' => 1));
 				
-				$additional_conditions = " and users.active = '1'";
-				$this->data['casemamager'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->common_model->field_val($field_name, $case_details), $group = "casemamager", $empty = "--Select Case Manager--", $additional_conditions);
+				$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
 				
-				$this->data['reasons'] = $this->common_model->getreasons($field_name = "reason", $selected = $this->common_model->field_val($field_name, $case_details));
-				$this->data['relations'] = $this->common_model->getrelations($field_name = "relations", $selected = $this->common_model->field_val($field_name, $case_details));
-				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE);
+				$this->data['reasons'] = $this->reasons_model->get_list();
+				$this->data['relationships'] = $this->relations_model->get_list();
+				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE); // XXXXXXXXXXXXXXXXXXXx
+				
+				$post = $this->input->post();
+				if (is_array($post) && (sizeof($post) > 1)) {
+					$case_details = array_merge($case_details, $post);
+				}
+				$this->data['case_details'] = $case_details;
+				$this->data['priorities'] = $this->mytask_model->get_priorities();
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Create Case', TRUE);
