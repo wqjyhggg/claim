@@ -11,11 +11,18 @@ class Case_model extends CI_Model {
 	const CASE_PRIORITY_HIGH="High";
 	const CASE_PRIORITY_NORMAL="Normal";
 	
-	/**
-	 * Generate case no if there is none
-	 * 
-	 * @param unknown $id
-	 */
+	const STATUS_CLOSED="C";
+	const STATUS_DEACTIVE="D";
+	const STATUS_ACTIVE="A";
+	
+	public function get_status_list() {
+		return array(
+				self::STATUS_CLOSED => 'Closed',
+				self::STATUS_DEACTIVE => 'Deactive',
+				self::STATUS_ACTIVE => 'Active'
+		);
+	}
+	
 	public function get_priorities() {
 		return array(
 				self::CASE_PRIORITY_NORMAL,
@@ -106,14 +113,33 @@ class Case_model extends CI_Model {
 	}
 
 	/**
+	 * Return a list users
+	 *
+	 * @param array $data
+	 *        	search parameter
+	 * @return array result array, maybe null
+	 */
+	public function last_rows() {
+		return $this->db->query("SELECT FOUND_ROWS() as rows")->row()->rows;
+	}
+	
+	/**
 	 * Return a list of policy status
 	 *
 	 * @param array $data
 	 *        	search parameter
 	 * @return array result array, maybe null
 	 */
-	public function search($data) {
+	public function search($data, $count=-1, $limit=-1) {
+		$this->db->select('SQL_CALC_FOUND_ROWS *', FALSE);
 		$this->db->where($data);
+		if ($count >= 0) {
+			if ($limit < 0) {
+				$this->db->limit($count);
+			} else {
+				$this->db->limit($count, $limit);
+			}
+		}
 		return $this->db->get('case')->result_array();
 	}
 
@@ -209,5 +235,15 @@ class Case_model extends CI_Model {
 		$id = $this->db->insert_id();
 		$this->active_model->log_new('case', $id, $data, $sql);
 		return $id;
+	}
+	
+	function get_auto_assign_manager_id() {
+		$sql = "SELECT u.id, (SELECT count(c.case_manager) FROM `case` c WHERE c.status='".self::STATUS_ACTIVE."' AND c.case_manager=u.id) as cnt FROM users u WHERE u.active='1' AND groups LIKE '%".Users_model::GROUP_MANAGER."%' ORDER BY cnt ASC, u.id ASC";
+		$rt = $this->db->query($sql);
+		$rc = $rt->row_array();
+		if ($rc) {
+			return $rc['id'];
+		}
+		return 0;
 	}
 }

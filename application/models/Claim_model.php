@@ -179,7 +179,16 @@ class Claim_model extends CI_Model {
 
 	public function get_payee_by_id($id) {
 		$this->db->where('id', $id);
-		$this->db->get('payees')->row_array();
+		return $this->db->get('payees')->row_array();
+	}
+
+	public function payee_search($array) {
+		$this->db->where($array);
+		return $this->db->get('payees')->result_array();
+	}
+
+	public function payee_remove_by_claim_id($claim_id) {
+		$this->db->query("DELETE FROM payees WHERE claim_id='" . (int)$claim_id . "'");
 	}
 
 	/**

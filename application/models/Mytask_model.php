@@ -15,7 +15,8 @@ class Mytask_model extends CI_Model {
 	const CATEGORY_CLAIMS='Claims';
 	
 	const USER_TYPE_EAC='EAC';
-	const USER_TYPE_EXAM='EXAM';
+	const USER_TYPE_MANAGER='Manager';
+	const USER_TYPE_EXAM='Exam';
 	
 	const PRIORITY_CRITICAL='Critical';
 	const PRIORITY_HIGH='High';

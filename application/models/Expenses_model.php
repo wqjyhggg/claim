@@ -113,11 +113,11 @@ class Expenses_model extends CI_Model {
 			// Update
 			$id = $data['id'];
 			unset($data['id']);
-			$cur = $this->get_by_id($id);
+			$cur = $this->get_expenses_by_id($id);
 			if ($cur) {
 				$this->db->where('id', $id);
 				$this->db->update('expenses_claimed', $data);
-				$this->active_model->log_update('expenses_claimed', $id, $rc, $data, $this->db->last_query());
+				$this->active_model->log_update('expenses_claimed', $id, $cur, $data, $this->db->last_query());
 				return $id;
 			}
 			return 0;
@@ -132,7 +132,15 @@ class Expenses_model extends CI_Model {
 		}
 	}
 
-
+	public function expenses_history($claim_id) { // Stupid function !!!!!
+		$this->db->select(array('claim_no','case_no','claim_date','currency','pay_to'));
+		$this->db->select_sum('amount_claimed', 'amount_claimed');
+		$this->db->select_sum('amount_client_paid', 'amount_client_paid');
+		$this->db->where('claim_id', $claim_id);
+		$this->db->group_by('id');
+		return $this->db->get('expenses_claimed')->row_array();
+	}
+	
 	/**
 	 * Return a summary of a Claim
 	 *

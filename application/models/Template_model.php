@@ -8,6 +8,9 @@ if (! defined ( 'BASEPATH' )) exit ( 'No direct script access allowed' );
  */
 
 class Template_model extends CI_Model {
+	const TEMPLATE_CASE="Case";
+	const TEMPLATE_CLAIM="Claim";
+	
 	/**
 	 * Return a list of mytake
 	 *

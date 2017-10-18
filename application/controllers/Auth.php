@@ -93,6 +93,22 @@ class Auth extends CI_Controller {
 				}
 				$this->mytask_model->save($data);
 				$this->active_model->log_update('mytask', $id, $task, $data, $this->db->last_query());
+				
+				if ($task['type'] == Mytask_model::TASK_TYPE_CASE) {
+					$this->load->model('case_model');
+					$case = $this->case_model->get_by_id($task['item_id']);
+					if ($case && (($data['finished'] == 1) || ($case['assign_to'] == $this->ion_auth->get_user_id()))) {
+						$para = array('id', $task['item_id'], 'assign_to' => 0);
+						$this->case_model->save($para);
+					}
+				} else if ($task['type'] == Mytask_model::TASK_TYPE_CLAIM) {
+					$this->load->model('claim_model');
+					$claim = $this->case_model->get_by_id($task['item_id']);
+					if ($claim && (($data['finished'] == 1) || ($claim['assign_to'] == $this->ion_auth->get_user_id()))) {
+						$para = array('id', $task['item_id'], 'assign_to' => 0);
+						$this->claim_model->save($para);
+					}
+				}
 			}
 		}
 		redirect('auth/mytasks', 'refresh');
@@ -442,6 +458,7 @@ class Auth extends CI_Controller {
 		
 		$this->load->model('groups_model');
 		$this->load->model('product_model');
+		$this->load->model('schedule_model');
 		
 		$user = $this->users_model->get_by_id($id);
 		$groups = $this->users_model->get_groups();
@@ -596,7 +613,7 @@ class Auth extends CI_Controller {
 				'class' => 'form-control',
 				'type' => 'password' 
 		);
-		$this->data['shift_options'] = $this->users_model->get_shift_options(1);
+		$this->data['shift_options'] = $this->schedule_model->get_shift_options(1);
 		
 		$this->template->write('title', SITE_TITLE . ' - Edit User', TRUE);
 		$this->template->write_view('content', 'auth/edit_user', $this->data);

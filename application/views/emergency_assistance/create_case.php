@@ -394,7 +394,7 @@
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Case Manager:', 'case_manager', array("class" => 'col-sm-12')); ?>
 							<select name="case_manager" class="form-control">
-								<option value=""> -- Select Priority -- </option>
+								<option value=""> -- Select -- </option>
 								<?php foreach ($managers as $rc) :?>
 								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['case_manager']) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
 								<?php endforeach; ?>
@@ -404,7 +404,7 @@
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Priority:', 'priority', array("class" => 'col-sm-12')); ?>
 							<select name="priority" class="form-control">
-								<option value=""> -- Select Priority -- </option>
+								<option value=""> -- Select -- </option>
 								<?php foreach ($priorities as $val):?>
 								<option value="<?php echo $val; ?>" <?php if ($val == $case_details['priority']) { echo "selected"; } ?>><?php echo $val; ?></option>
 								<?php endforeach; ?>

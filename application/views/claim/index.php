@@ -57,13 +57,21 @@
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('EAC:', 'eac', array("class"=>'col-sm-12')); ?>
-							<?php array_unshift($eacs, '-- EAC --'); ?>
-							<?php echo form_dropdown ( "assign_to", $eacs, $this->input->post ( "assign_to" ), array ("class" => 'form-control') );?>
+							<select name="assign_to" class="form-control">
+								<option value=""> -- Select EAC -- </option>
+								<?php foreach ($eacs as $rc):?>
+								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("assign_to")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+								<?php endforeach; ?>
+							</select>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Case Manager:', 'case', array("class"=>'col-sm-12')); ?>
-							<?php array_unshift($casemamagers, '-- Case Manager --'); ?>
-							<?php echo form_dropdown ( "case_manager", $casemamagers, $this->input->post ( "case_manager" ), array ("class" => 'form-control') );?>
+							<select name="case_manager" class="form-control">
+								<option value=""> -- Select Manager -- </option>
+								<?php foreach ($mamagers as $rc) :?>
+								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("case_manager")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+								<?php endforeach; ?>
+							</select>
 						</div>
 						<div class="col-sm-3">
 							<label class="col-sm-12">&nbsp;</label>
@@ -268,6 +276,7 @@
 							</div>
 							<div class="col-sm-8 employees-section" style="display: none">
 								<div class="col-sm-4">
+								claim_examiner
 									<?php echo $claim_examiner; ?>
 								</div>
 								<div class="col-sm-3">

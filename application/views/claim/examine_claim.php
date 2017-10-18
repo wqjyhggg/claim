@@ -401,7 +401,11 @@
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label ( 'Province:', 'province_email', array ("class" => 'col-sm-12') ); ?>
-							<?php echo $province2; ?>
+							<select name="province_email" class="form-control">
+								<?php foreach ($province as $key => $val): ?>
+								<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post("province_email")) { echo "selected"; } ?>><?php echo $val; ?></option>
+								<?php endforeach; ?>
+							</select>
 							<?php echo form_error ( "province_email" ); ?>
 						</div>
 						<?php echo form_label ( 'Select Template:', 'select_template', array ("class" => 'col-sm-12') ); ?>
@@ -447,8 +451,13 @@
 <!-- end here -->
 <div style="display: none">
 	<div id="products">
-		<?php echo $products; ?>
-   </div>
+		<select name="product_short" class="form-control">
+			<option value="">--Select Product--</option>
+			<?php foreach ($products as $key => $val): ?>
+			<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post("product_short")) { echo "selected"; } ?>><?php echo $val; ?></option>
+			<?php endforeach; ?>
+		</select>
+	</div>
 </div>
 
 <!-- Create Intake Form Modal -->

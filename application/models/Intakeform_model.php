@@ -44,8 +44,8 @@ class Intakeform_model extends CI_Model {
 		return $id;
 	}
 	
-	public function get_list_by_case_id($id) {
-		$sql = "SELECT i.*, CONCAT_WS(' ', u.first_name, u.last_name) as username FROM intake_form i LEFT JOIN users u ON (i.created_by=u.id) WHERE i.case_id='" . (int)$id . "'";
+	public function get_list_by_case_id($id, $type='CASE') {
+		$sql = "SELECT i.*, CONCAT_WS(' ', u.first_name, u.last_name) as username FROM intake_form i LEFT JOIN users u ON (i.created_by=u.id) WHERE i.case_id='" . (int)$id . "' AND i.type=" . $this->db->escape($type);
 		
 		return $this->db->query($sql)->result_array();
 	}

@@ -1,416 +1,348 @@
 <style>
-.modal-lg {
-    width: 75%;
-}
+.modal-lg {width: 75%;}
 </style>
-<duv>
-   <div class="page-title">
-      <div class="title_left">
-         <h3>Case Management</h3>
-      </div>
-   </div>
-   <div class="clearfix"></div>
-   <?php echo $message; ?>
+<div class="page-title">
+	<div class="title_left"><h3>Case Management</h3></div>
+</div>
+<div class="clearfix"></div>
+<?php echo $message; ?>
 
-   <!-- Case search and List Section -->
-   <div class="row">
-      <div class="col-md-12 col-sm-12 col-xs-12">
-         <div class="x_panel">
-         <div class="x_title">
-            <h2>Case Filter<small></small></h2>
-            <div class="clearfix"></div>
-         </div>
-         <div class="x_content">
+<!-- Case search and List Section -->
+<div class="row">
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="x_panel">
+			<div class="x_title">
+				<h2>Case Filter</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="x_content">
+				<!-- search case filter start -->
+				<?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>
+				<div class="row">
+					<div class="form-group col-sm-3">
+						<?php echo form_input("case_no", $this->input->get("case_no"), array ("class" => "form-control", 'placeholder' => 'Case No')); ?>
+					</div>
+					<div class="form-group col-sm-3">
+						<?php echo form_input("policy_no", $this->input->get("policy_no"), array ("class" => "form-control", 'placeholder' => 'Policy No')); ?>
+					</div>
+					<div class="form-group col-sm-3">
+						<div class="input-group date">
+							<?php echo form_input("created_from", $this->input->get("created_from"), array ("class" => "form-control datepicker", 'placeholder' => 'Create Date From')); ?>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+					<div class="form-group col-sm-3">
+						<div class="input-group date">
+							<?php echo form_input("created_to", $this->input->get("created_to"), array ("class" => "form-control datepicker", 'placeholder' => 'Create Date To')); ?>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+					<div class="form-group col-sm-3">
+						<?php echo form_input("insured_lastname", $this->input->get("insured_lastname"), array ("class" => "form-control", 'placeholder' => 'Insured Last Name')); ?>
+					</div>
+					<div class="form-group col-sm-3">
+						<?php echo form_input("insured_firstname", $this->input->get("insured_firstname"), array ("class" => "form-control", 'placeholder' => 'Insured First Name')); ?>
+					</div>
+					<div class="form-group col-sm-3">
+						<select name="status" class="form-control">
+							<option value="">-- Select Case Status --</option>
+							<?php foreach ($case_status as $key => $val):?>
+							<option value="<?php echo $key; ?>" <?php if ($key == $this->input->get("status")) { echo "selected"; } ?>><?php echo $val; ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+					<div class="form-group col-sm-3">
+						<select name="assigned_status" class="form-control">
+							<option value="">-- Select Assigned Status --</option>
+							<option value="assigned" <?php if ('assigned' == $this->input->get("assigned_status")) { echo "selected"; } ?>>Assigned</option>
+							<option value="unassigned" <?php if ('unassigned' == $this->input->get("assigned_status")) { echo "selected"; } ?>>Unassigned</option>
+						</select>
+					</div>
+					<div class="form-group col-sm-3">
+						<?php echo form_label('My Task:', 'case_manager', array ("class" => 'col-sm-4')); ?>
+						<div class="form-group col-sm-8">
+							<?php echo form_checkbox("case_manager", $case_manager, ($this->input->get("case_manager") == $case_manager ? TRUE : FALSE), array ("id" => 'case_manager', 'class' => 'col-sm-1')); ?>
+							<?php echo form_label('Owned by Me', 'case_manager', array ("class" => 'col-sm-10 pull-right', 'style' => 'margin-top: 3px;')); ?>
+						</div>
+					</div>
+					<div class="form-group col-sm-3">
+						<?php echo form_label('Priority:', 'priority_label', array ("class" => 'col-sm-4')); ?>
+						<div class="form-group col-sm-6">
+							<select name="priority" class="form-control">
+								<option value="">-- none --</option>
+								<?php foreach ($priorities as $val) { ?>
+								<option value="<?php echo $val; ?>" <?php if ($val == $this->input->get("priority")) { echo "selected"; } ?>><?php echo $val; ?></option>
+								<?php } ?>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<button class="btn btn-primary" name="filter" value="case">Search</button>
+						<?php echo anchor("emergency_assistance/case_management", "Reset", array('class'=>'btn btn-info')); ?>
+					</div>
+				</div>
+				<?php echo form_close(); ?>
+				<!-- search case filter end -->
+				<div class="clearfix"><br /></div>
 
-            <!-- search case filter start -->
-           <?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>
-            <div class="row">
-               <div class="form-group col-sm-3">
-                  <?php
-                  echo form_input("case_no", $this->input->get("case_no"), array("class"=>"form-control", 'placeholder'=>'Case No'));
-                  ?>
-               </div>
-               <div class="form-group col-sm-3">
-                  <?php
-                  echo form_input("policy_no", $this->input->get("policy_no"), array("class"=>"form-control", 'placeholder'=>'Policy No'));
-                  ?>
-               </div>
-               <div class="form-group col-sm-3">
-                  <div class="input-group date">
-                     <?php
-                     echo form_input("created_from", $this->input->get("created_from"), array("class"=>"form-control datepicker", 'placeholder'=>'Create Date From'));
-                     ?>
-                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                  </div>
-               </div>
-               <div class="form-group col-sm-3">
-                  <div class="input-group date">
-                     <?php
-                     echo form_input("created_to", $this->input->get("created_to"), array("class"=>"form-control datepicker", 'placeholder'=>'Create Date To'));
-                     ?>
-                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                  </div>
-               </div>
+				<!-- search results start -->
+				<div class="x_content">
+				<?php if(!empty($cases)): ?>
+					<div class="table-responsive">
+						<table class="table table-hover table-bordered">
+							<thead>
+								<tr>
+									<th><?php echo form_checkbox("selectall", 1); ?></th>
+									<th>Case number</th>
+									<th>Create Date</th>
+									<th>Place</th>
+									<th>Reason</th>
+									<th>Policy Number</th>
+									<th>Insured Name</th>
+									<th>DOB</th>
+									<th>Follow Up EAC</th>
+									<th>Case Manager</th>
+									<th>Priority</th>
+									<th>Status</th>
+									<th>Last Update</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($cases as $key => $value): ?>
+								<!-- placing all attributes in table row to replace feature in doc via js -->
+								<tr class="row-link" alt="<?php echo $value['id']; ?>" insured_address="<?php echo nl2br($value['insured_address']) ?>" insured_lastname="<?php echo $value['insured_lastname'] ?>" insured_firstname="<?php echo $value['insured_firstname'] ?>" policy_no="<?php echo $value['policy_no'] ?>" policy_info='<?php echo $value['policy_info'] ?>' case_no="<?php echo $value['case_no'] ?>" casemanager_name="<?php echo $value['case_manager_name'] ?>">
+									<th><?php echo form_checkbox("case", $value['id'], FALSE, array('class'=>($case_manager <> $value['case_manager']?'own_by_other':''), ($value['status'] == 'C'?'disabled':'')=>'')); ?></th>
+									<td><?php echo $value['case_no']; ?></td>
+									<td><?php echo date('d/m/Y', strtotime($value['created'])); ?></td>
+									<td><?php echo $value['province']; ?></td>
+									<td><?php echo $value['reason']; ?></td>
+									<td><?php echo $value['policy_no']; ?></td>
+									<td><?php echo $value['insured_firstname'] . " " . $value['insured_lastname']; ?></td>
+									<td><?php echo ($value['dob']<>'N/A')?date('d/m/Y', strtotime($value['dob'])):'N/A'; ?></td>
+									<td><?php echo $value['assign_to_name']; ?></td>
+									<td><?php echo $value['case_manager_name']; ?></td>
+									<td><?php echo $value['priority']; ?></td>
+									<td><?php echo @$case_status[$value['status']]; ?></td>
+									<td><?php echo date('Y-m-d h:i a', strtotime($value['last_update'])); ?></td>
+								</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+					</div>
+					</br>
+					<div class="row form-group">
+						<div class="col-sm-12">
+							<div class="col-sm-2">
+								<button class="btn btn-primary show_button auto_assign" disabled>Auto Assign</button>
+							</div>
+							<div class="col-sm-2">
+								<div class="col-sm-12">
+									<button class="btn btn-primary show_button assign_to" disabled>Transfer CM <i class="fa fa-angle-double-right"></i></button>
+								</div>
+								<div class="col-sm-12">
+									<button class="btn btn-primary show_button follow_up" data-toggle="modal" data-target="#follow_reason" disabled>EAC Follow Up <i class="fa fa-angle-double-right"></i></button>
+								</div>
+							</div>
+							<div class="col-sm-8 employees-section" style="display: none">
+								<div class="col-sm-4">
+									<select name="case_manager" class="form-control">
+										<option value=""> -- Select Manager -- </option>
+										<?php foreach ($managers as $rc) :?>
+										<option value="<?php echo $rc['id']; ?>" ><?php echo $rc['email']; ?></option>
+										<?php endforeach; ?>
+									</select>
+								</div>
+								<div class="col-sm-2">
+									<button class="btn btn-primary pull-right save_assign" style="display: none"><i class="fa fa-check-circle-o"></i> Save </button>
+								</div>
+							</div>
+						</div>
 
-               <div class="form-group col-sm-3">
-                  <?php
-                  echo form_input("insured_lastname", $this->input->get("insured_lastname"), array("class"=>"form-control", 'placeholder'=>'Insured Last Name'));
-                  ?>
-               </div>
+						<div class="col-sm-12 form-group">
+							<div class="col-sm-2">
+								<button class="btn btn-primary show_button view_edit editable" disabled>View/Edit Case</button>
+							</div>
 
-               <div class="form-group col-sm-3">
-                  <?php
-                  echo form_input("insured_firstname", $this->input->get("insured_firstname"), array("class"=>"form-control", 'placeholder'=>'Insured First Name'));
-                  ?>
-               </div>
+							<div class="col-sm-2">
+								<div class="col-sm-12">
+									<button class="btn btn-primary show_button mark_inactive editable" disabled>Set Inactive</button>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="col-sm-12">
+									<button class="btn btn-primary show_button mark_close editable" disabled>Set Close</button>
+								</div>
+							</div>
 
-               <div class="form-group col-sm-3">
-                  <?php
-                  $options_status = array(
-                     ''=>'--Case Status--',
-                     'A'=>'Active',
-                     'D'=>'Inactive',
-                     'C'=>'Close'
-                     );
-                  echo form_dropdown("status", $options_status, $this->input->get("status"), array("class"=>"form-control"));
-                  ?>
-               </div>
-
-               <div class="form-group col-sm-3">
-                  <?php
-                  $options = array(
-                     ''=>'--Assigned Status--',
-                     'assigned'=>'Assigned',
-                     'unassigned'=>'Unassigned'
-                     );
-                  echo form_dropdown("assigned_status", $options, $this->input->get("assigned_status"), array("class"=>"form-control"));
-                  ?>
-               </div>
-
-               <div class="form-group col-sm-3">
-                  <?php
-                  echo form_label('My Task:', 'case_manager', array("class"=>'col-sm-4'));
-                  ?>
-                  <div class="form-group col-sm-8">
-                     <?php
-                     echo form_checkbox("case_manager", $case_manager, ($this->input->get("case_manager") == $case_manager ? TRUE : FALSE), array("id"=>'case_manager', 'class'=>'col-sm-1'));
-                     echo form_label('Owned by Me', 'case_manager', array("class"=>'col-sm-10 pull-right', 'style'=>'margin-top: 3px;'));
-                     ?>
-                  </div>
-               </div>
-
-               <div class="form-group col-sm-3">
-                  <?php
-                  echo form_label('Priority:', 'priority_label', array("class"=>'col-sm-4'));
-                  ?>
-                  <div class="form-group col-sm-6">
-                     <?php
-                     echo form_checkbox("priority", "HIGH", ($this->input->get("priority") == 'HIGH' ? TRUE : FALSE), array("id"=>'priority', 'class'=>'col-sm-1'));
-                     echo form_label('High', 'priority', array("class"=>'col-sm-10 pull-right', 'style'=>'margin-top: 3px; float: left; text-align: left; margin-right: 34px; width: 47px;'));
-                     ?>
-                  </div>
-               </div>
-
-               <div class="col-sm-3">
-                  <button class="btn btn-primary" name="filter" value="case">Search</button>
-                  <?php echo anchor("emergency_assistance/case_management", "Reset", array('class'=>'btn btn-info')); ?>
-               </div>
-            </div>
-            <?php echo form_close(); ?>
-            <!-- search case filter end -->
-            <div class="clearfix"><br/></div>
-
-            <!-- search results start -->
-            <div class="x_content">
-               <?php if(!empty($cases)): ?>
-               <div class="table-responsive">
-                  <table class="table table-hover table-bordered">
-                     <thead>
-                        <tr>
-                           <th><?php echo form_checkbox("selectall", 1); ?></th>
-                           <th>Case number</th>
-                           <th>Create Date</th>
-                           <th>Place</th>
-                           <th>Reason</th>
-                           <th>Policy Number</th>
-                           <th>Insured Name</th>
-                           <th>DOB</th>
-                           <th>Follow Up EAC</th>
-                           <th>Case Manager</th>
-                           <th>Priority</th>
-                           <th>Status</th>
-                           <th>Last Update</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                     <?php foreach ($cases as $key => $value): ?>
-                        <!-- placing all attributes in table row to replace feature in doc via js -->
-                        <tr class="row-link" alt="<?php echo $value['id']; ?>"
-                           insured_address="<?php echo nl2br($value['insured_address']) ?>"
-                           insured_lastname="<?php echo $value['insured_lastname'] ?>"
-                           insured_name="<?php echo $value['insured_name'] ?>"
-                           policy_no="<?php echo $value['policy_no'] ?>"
-                           policy_info='<?php echo $value['policy_info'] ?>'
-                           case_no="<?php echo $value['case_no'] ?>"
-                           casemanager_name="<?php echo $value['case_manager_name'] ?>"
-                           >
-                           <th><?php echo form_checkbox("case", $value['id'], FALSE, array('class'=>($case_manager <> $value['case_manager']?'own_by_other':''), ($value['status'] == 'C'?'disabled':'')=>'')); ?></th>
-                           <td><?php echo $value['case_no']; ?></td>
-                           <td><?php echo date('d/m/Y', strtotime($value['created'])); ?></td>
-                           <td><?php echo $value['province']; ?></td>
-                           <td><?php echo $value['reason']; ?></td>
-                           <td><?php echo $value['policy_no']; ?></td>
-                           <td><?php echo $value['insured_name']; ?></td>
-                           <td><?php echo ($value['dob']<>'N/A')?date('d/m/Y', strtotime($value['dob'])):'N/A'; ?></td>
-                           <td><?php echo $value['assign_to_name']; ?></td>
-                           <td><?php echo $value['case_manager_name']; ?></td>
-                           <td><?php echo $value['priority']; ?></td>
-                           <td><?php echo @$options_status[$value['status']]; ?></td>
-                           <td><?php echo date('Y-m-d h:i a', strtotime($value['last_update'])); ?></td>
-                        </tr>
-                     <?php endforeach; ?>
-                     </tbody>
-                  </table>
-               </div>
-               </br>
-               <div class="row form-group">
-                  <div class="col-sm-12">
-                     <div class="col-sm-2">
-                        <button class="btn btn-primary show_button auto_assign" disabled>Auto Assign</button>
-                     </div>
-                     <div class="col-sm-2">
-                        <div class="col-sm-12">
-                           <button class="btn btn-primary show_button assign_to" disabled>Transfer CM <i class="fa fa-angle-double-right"></i> </button>
-                        </div>
-                        <div class="col-sm-12">
-                           <button class="btn btn-primary show_button follow_up"  data-toggle="modal" data-target="#follow_reason" disabled>EAC Follow Up <i class="fa fa-angle-double-right"></i></button>
-                        </div>
-                     </div>
-                     <div class="col-sm-8 employees-section" style="display:none">
-                        <div class="col-sm-4">
-                           <?php echo $casemanagers;?>
-                        </div>
-                        <div class="col-sm-2">
-                           <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save</button>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="col-sm-12 form-group">
-                     <div class="col-sm-2">
-                        <button class="btn btn-primary show_button view_edit editable" disabled>View/Edit Case</button>
-                     </div>
-
-                     <div class="col-sm-2">
-                         <div class="col-sm-12">
-                           <button class="btn btn-primary show_button mark_inactive editable" disabled>Set Inactive</button>
-                        </div>
-                     </div>
-
-
-                     <div class="col-sm-2">
-                         <div class="col-sm-12">
-                           <button class="btn btn-primary show_button mark_close editable" disabled>Set Close</button>
-                        </div>
-                     </div>
-
-                     <div class="col-sm-2">
-                        <button class="btn btn-primary show_button email_print editable"  data-toggle="modal" data-target="#print_template" disabled>Email/Print</button>
-                     </div>
-                  </div>
-               </div>
-
-               <?php else:?>
-                  <center><?php echo heading("No record available", 4); ?></center>
-               <?php endif;
-               echo $pagination;
-               ?>
-            </div>
-            <!-- End Search List Section -->
-         </div>
-      </div>
-   </div>
-</duv>
+							<div class="col-sm-2">
+								<button class="btn btn-primary show_button email_print editable" data-toggle="modal" data-target="#print_template" disabled>Email/Print</button>
+							</div>
+						</div>
+					</div>
+					<?php else:?>
+					<center><?php echo heading("No record available", 4); ?></center>
+					<?php endif; echo $pagination; ?>
+				</div>
+				<!-- End Search List Section -->
+			</div>
+		</div>
+	</div>
+</div>
 
 <!-- follow up model window here -->
 <div id="follow_reason" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Follow up case</h4>
-      </div>
-      <?php
-         echo form_open_multipart("emergency_assistance/follow_up_cases", array("id"=>'follow_up_cases'));
-       ?>
-      <div class="modal-body">
-          <div class="row">
-            <div class="col-sm-12">
-               <div>
-                  <?php
-                  echo form_label('Please Enter The Reason:', 'notes', array("class"=>'col-sm-12'));
-                  ?>
-                  <div class="col-sm-12">
-                     <?php
-                     echo form_textarea("notes", "", array("class"=>"form-control col-sm-6 form-group required", 'placeholder'=>'Please Enter The Reason'));
-                     ?>
-                  </div>
-                  <div class="col-sm-12 follow-section">
-                     <?php foreach ($employee_shift as $key => $value): ?>
-                        <div class="col-sm-4">
-                           <fieldset>
-                              <legend><?php echo $value; ?></legend>
-                              <?php
-                                 $list = "employees_".$key;
-                                 echo $$list;
-                               ?>
-                           </fieldset>
-                           <div class="clearfix"><br/></div>
-                        </div>
-                     <?php endforeach; ?>
-
-                     <div class="col-sm-12">
-                        <button class="btn btn-primary pull-right save_assign" style="display:none" ><i class="fa fa-check-circle-o"></i> Save</button>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <div class="modal-footer">
-         <label class="col-sm-12">&nbsp;</label>
-         <button class="btn btn-info complete-follow">Follow Up</button>
-         <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
-      </div>
-      <?php echo form_close(); ?>
-    </div>
-
-  </div>
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Follow up case</h4>
+			</div>
+			<?php echo form_open_multipart("emergency_assistance/follow_up_cases", array("id" => 'follow_up_cases')); ?>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-sm-12">
+						<div>
+							<?php echo form_label('Please Enter The Reason:', 'notes', array("class" => 'col-sm-12')); ?>
+							<div class="col-sm-12">
+								<?php echo form_textarea("notes", "", array("class" => "form-control col-sm-6 form-group required", 'placeholder' => 'Please Enter The Reason')); ?>
+							</div>
+							<div class="col-sm-12 follow-section">
+								<select name="assign_to" class="form-control">
+									<option value=""> -- Select EAC -- </option>
+									<?php foreach ($eacs as $rc): ?>
+									<option value="<?php echo $rc['id']; ?>" ><?php echo $rc['email']; ?></option>
+									<?php endforeach; ?>
+								</select>
+								<div class="col-sm-12">
+									<button class="btn btn-primary pull-right save_assign" style="display: none"><i class="fa fa-check-circle-o"></i> Save </button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<label class="col-sm-12">&nbsp;</label>
+				<button class="btn btn-info complete-follow">Follow Up</button>
+				<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+			</div>
+			<?php echo form_close(); ?>
+		</div>
+	</div>
 </div>
 <!-- follow up model end here -->
 
 <!-- Email print doc content here -->
 <div id="print_template" class="modal fade" role="dialog">
-  <div class="modal-dialog  modal-lg">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Print/email Template Letter</h4>
-      </div>
-      <?php
-         echo form_open_multipart("emergency_assistance/send_print_email", array("id"=>'send_print_email'));
-       ?>
-      <div class="modal-body reload_docs">
-          <div class="row">
-            <div class="col-sm-6">
-               <div>
-                  <label for="mail_label" class="col-sm-2">Mail Addres:</label>
-                  <div class="form-group col-sm-6">
-                     <input name="priority" value="HIGH" id="mail_address" class="col-sm-1" type="checkbox">
-                     <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address with the policy</label>
-                  </div>
-               </div>
-               <div>
-                  <?php
-                  echo form_label('To:', 'email', array("class"=>'col-sm-12'));
-                  ?>
-                  <div class="form-group col-sm-12">
-                     <?php
-                     echo form_input("email", "", array("class"=>"form-control col-sm-6 form-group email required", 'placeholder'=>'Email Address'));
-                     ?>
-                  </div>
-               </div>
-            </div>
-            <div class="form-group col-sm-12">
-
-               <div class="form-group col-sm-3">
-                  <?php
-                  echo form_label('Street No.:', 'street_no', array("class"=>'col-sm-12'));
-                  echo form_input("street_no", "", array("class"=>"form-control required", 'placeholder'=>'Street No.'));
-                  echo form_error("street_no");
-                  ?>
-               </div>
-               <div class="form-group col-sm-3">
-                  <?php
-                  echo form_label('Street Name.:', 'street_name', array("class"=>'col-sm-12'));
-                  echo form_input("street_name", "", array("class"=>"form-control required", 'placeholder'=>'Street Name.'));
-                  echo form_error("street_name");
-                  ?>
-               </div>
-               <div class="form-group col-sm-3">
-                  <?php
-                  echo form_label('City:', 'city', array("class"=>'col-sm-12'));
-                  echo form_input("city", "", array("class"=>"form-control required", 'placeholder'=>'City'));
-                  echo form_error("city");
-                  ?>
-               </div>
-
-               <div class="form-group col-sm-3">
-                  <?php
-                     echo form_label('Province:', 'province', array("class"=>'col-sm-12'));
-                     echo $province;
-                     echo form_error("province");
-                  ?>
-               </div>
-
-               <?php
-                  echo form_label('Select Template:', 'select_template', array("class"=>'col-sm-12'));
-               ?>
-               <div class="form-group col-sm-12">
-                  <?php foreach($docs as $doc): ?>
-                     <div class="select-doc col-sm-2" doc="<?php echo $doc['id'] ?>">
-                        <i class="fa fa-file-word-o large"></i>
-                        <?php echo $doc['name'] ?>
-                     </div>
-                  <?php endforeach; ?>
-               </div>
-            </div>
-            <div class="form-group col-sm-12 docfiles">
-               <?php foreach($docs as $doc): ?>
-                  <div class="col-sm-12 doc-description doc-<?php echo $doc['id'] ?>" style="display:none">
-                     <div class="col-sm-12 doc_title">
-                        <?php echo heading($doc['name']); ?>
-                     </div>
-                     <div class="col-sm-12 doc-desc">
-                        <?php
-                           // find and replace text
-                           $find = array(
-                              '{otc_logo}',
-                              '{otc_logo_big}',
-                              '{current_date}'
-                              );
-                           $replace = array(
-                              img(array('src'=>'assets/img/otc.jpg','width'=>'130')),
-                              img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')),
-                              date("F d, Y")
-                              );
-                         echo str_replace($find, $replace, $doc['description']);
-                        ?>
-                     </div>
-                  </div>
-               <?php endforeach; ?>
-            </div>
-         </div>
-      </div>
-      <div class="modal-footer">
-         <label class="col-sm-12">&nbsp;</label>
-         <button type="button" class="btn btn-info preview-template" disabled>Preview</button>
-         <button class="btn btn-primary email-intakeform" disabled >Email</button>
-         <button type="button" class="btn btn-info print" disabled>Print</button>
-         <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
-      </div>
-      <?php echo form_close(); ?>
-    </div>
-
-  </div>
+	<div class="modal-dialog  modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Print/email Template Letter</h4>
+			</div>
+			<?php echo form_open_multipart("emergency_assistance/send_print_email", array("id" => 'send_print_email')); ?>
+			<div class="modal-body reload_docs">
+				<div class="row">
+					<div class="col-sm-6">
+						<div>
+							<label for="mail_label" class="col-sm-2">Mail Addres:</label>
+							<div class="form-group col-sm-6">
+								<input name="priority" value="HIGH" id="mail_address" class="col-sm-1" type="checkbox">
+								<label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address with the policy</label>
+							</div>
+						</div>
+						<div>
+							<?php echo form_label('To:', 'email', array("class" => 'col-sm-12')); ?>
+							<div class="form-group col-sm-12">
+								<?php echo form_input("email", "", array("class" => "form-control col-sm-6 form-group email required", 'placeholder' => 'Email Address')); ?>
+							</div>
+						</div>
+					</div>
+					<div class="form-group col-sm-12">
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Street No.:', 'street_no', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("street_no", "", array("class" => "form-control required", 'placeholder' => 'Street No.')); ?>
+							<?php echo form_error("street_no"); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Street Name.:', 'street_name', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("street_name", "", array("class" => "form-control required", 'placeholder' => 'Street Name.')); ?>
+							<?php echo form_error("street_name"); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('City:', 'city', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("city", "", array("class" => "form-control required", 'placeholder' => 'City')); ?>
+							<?php echo form_error("city"); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Province:', 'province', array("class" => 'col-sm-12')); ?>
+							<select name="province" class="form-control">
+								<option value=""> -- Select Province -- </option>
+								<?php foreach ($province as $key => $val):?>
+								<option value="<?php echo $key; ?>"><?php echo $val; ?></option>
+								<?php endforeach; ?>
+							</select>
+							<?php echo form_error("province"); ?>
+						</div>
+						<?php echo form_label('Select Template:', 'select_template', array("class" => 'col-sm-12')); ?>
+						<div class="form-group col-sm-12">
+							<?php foreach($docs as $doc): ?>
+							<div class="select-doc col-sm-2" doc="<?php echo $doc['id'] ?>"><i class="fa fa-file-word-o large"></i><?php echo $doc['name']?></div>
+							<?php endforeach; ?>
+						</div>
+					</div>
+					<div class="form-group col-sm-12 docfiles">
+						<?php foreach($docs as $doc): ?>
+						<div class="col-sm-12 doc-description doc-<?php echo $doc['id'] ?>" style="display: none">
+							<div class="col-sm-12 doc_title"><?php echo heading($doc['name']); ?></div>
+							<div class="col-sm-12 doc-desc"><?php
+																// find and replace text
+																$find = array (
+																		'{otc_logo}',
+																		'{otc_logo_big}',
+																		'{current_date}' 
+																);
+																$replace = array (
+																		img(array (
+																				'src' => 'assets/img/otc.jpg',
+																				'width' => '130' 
+																		)),
+																		img(array (
+																				'src' => 'assets/img/otc_big.jpg',
+																				'width' => '262' 
+																		)),
+																		date("F d, Y") 
+																);
+																echo str_replace($find, $replace, $doc ['description']);
+																?>
+							</div>
+						</div>
+						<?php endforeach; ?>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<label class="col-sm-12">&nbsp;</label>
+				<button type="button" class="btn btn-info preview-template" disabled>Preview</button>
+				<button class="btn btn-primary email-intakeform" disabled>Email</button>
+				<button type="button" class="btn btn-info print" disabled>Print</button>
+				<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+			</div>
+			<?php echo form_close(); ?>
+		</div>
+	</div>
 </div>
 <!-- end here -->
-<div style="display:none" id="products"><?php echo $products; ?></div>
-
+<div style="display: none" id="products">
+	<select name="product" class="form-control">
+		<option value=""> -- Select Product -- </option>
+		<?php foreach ($products as $key => $val): ?>
+		<option value="<?php echo $key; ?>" ><?php echo $val; ?></option>
+		<?php endforeach; ?>
+	</select>
+</div>
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
@@ -425,32 +357,27 @@ $(document).ready(function() {
         endDate: '+2y',
     });
 }).on("click", ".row-link", function(){                                                // open edit case page to enter reserver amount
-
    var id = $(this).attr("alt");
    window.location = "<?php echo base_url("emergency_assistance/edit_case") ?>/"+id+"?ref=manage";
-}).on("click", "input[name=selectall]",  function(){                                   // select all checkboxes script
-
-   if($(this).is(":checked"))                                                          // check user click check or uncheck tickbox
+}).on("click", "input[name=selectall]", function(){                                   // select all checkboxes script
+   if ($(this).is(":checked")) {                                                          // check user click check or uncheck tickbox
       $("input[name=case]").prop("checked", true);
-   else
+   } else {
       $("input[name=case]").prop("checked", false);
-
+   }
    $("input[name=case]:disabled").prop("checked", false);
 }).on("click", "input[name=case], input[name=selectall]",  function(e){                // enable disable buttons
-
    e.stopPropagation();
    var length = $("input[name=case]:checked").length;
    var length_other = $("input[name=case].own_by_other:checked").length;
-   if(length && !length_other)
-   {
+   if (length && !length_other) {
       $(".show_button").removeAttr("disabled");
-      if(length > 1)
+      if(length > 1) {
           $(".view_edit, .email_print").attr("disabled", "disabled");
-   }
-   else
-   {
+      }
+   } else {
       $(".show_button").attr("disabled", "disabled");
-      if(length == 1) {
+      if (length == 1) {
           $(".view_edit, .email_print").removeAttr("disabled");
 
            // reload all case docs again
