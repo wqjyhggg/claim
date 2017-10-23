@@ -145,10 +145,12 @@ class Claim_model extends CI_Model {
 				return $id;
 			}
 		}
-		
-		// insert
-		$this->load->model('master_model');
-		$data['id'] = $this->master_model->get_id('claim');
+
+		if (empty($data['id'])) {
+			// insert
+			$this->load->model('master_model');
+			$data['id'] = $this->master_model->get_id('claim');
+		}
 		
 		$this->db->insert('claim', $data);
 		$sql = $this->db->last_query();

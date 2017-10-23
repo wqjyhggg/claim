@@ -69,9 +69,9 @@ class Claim extends CI_Controller {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			// validate form input
-			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required|alpha');
-			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'alpha');
-			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', 'alpha');
+			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required|alpha_numeric_spaces');
+			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('city', 'city ', 'alpha');
 			$this->form_validation->set_rules('province', 'province ', 'alpha');
 			$this->form_validation->set_rules('full_name', 'full name ', 'alpha_numeric_spaces');
@@ -152,6 +152,7 @@ class Claim extends CI_Controller {
 				
 				$this->load->model('master_model');
 				$this->load->model('case_model');
+				$this->load->model('claim_model');
 				
 				$data['id'] = 0;
 				if (! empty($case_no = $this->input->post('case_no'))) {
@@ -162,10 +163,11 @@ class Claim extends CI_Controller {
 				}
 				if (empty($data['id'])) {
 					$data['id'] = $this->master_model->get_id('claim'); // Get new id
+					$claim_no = str_pad($data['id'], 7, 0, STR_PAD_LEFT);
+					$data['claim_no'] = $claim_no; 
 				}
-				
 				// insert values to database
-				$record_id = $this->common_model->save("claim", $data);
+				$record_id = $this->claim_model->save($data);
 				$record_id = $data['id'];
 				
 				// create directory to copy/shift files
@@ -190,10 +192,10 @@ class Claim extends CI_Controller {
 								'address' => $array['payees']['address'][$key],
 								'created' => date('Y-m-d H:i:s') 
 						);
-						$this->common_model->save("payees", $payee_data);
+						$this->claim_model->payees_save($payee_data);
 					}
 				}
-				
+				/*
 				// update case no(7 length) to table
 				$claim_no = str_pad($record_id, 7, 0, STR_PAD_LEFT);
 				$this->common_model->update("claim", array(
@@ -201,6 +203,7 @@ class Claim extends CI_Controller {
 				), array(
 						"id" => $record_id 
 				));
+				*/
 				if (! empty($data['case_no'])) {
 					$this->common_model->update("case", array(
 							"claim_no" => $claim_no 
@@ -231,7 +234,7 @@ class Claim extends CI_Controller {
 								'amount_client_paid' => $array['expenses_claimed']['amount_client_paid'][$key],
 								'pay_to' => $array['expenses_claimed']['payee'][$key],
 								'comment' => $array['expenses_claimed']['comment'][$key],
-								'created_by' => $this->ion_authget_user_id(),
+								'created_by' => $this->ion_auth->get_user_id(),
 								'created' => date('Y-m-d H:i:s') 
 						);
 						$this->common_model->save("expenses_claimed", $payee_data);
