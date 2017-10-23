@@ -4,18 +4,21 @@
 	<?php endif; ?>
 	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EAC, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) : ?>
 	<li> <?php echo anchor("auth/mytasks", '<i class="fa fa-briefcase"></i>My Tasks</a>', array("class"=>'leftmeun')) ?> </li>
+	<li> <?php echo anchor("emergency_assistance", '<i class="fa fa-briefcase"></i>Emergency assistance</a>', array("class"=>'leftmeun')) ?> </li>
+	<?php endif; ?>
+	
+	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EAC, Users_model::GROUP_INSURER, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) : ?>
+	<li>  <?php echo anchor("emergency_assistance/case_management", '<i class="fa fa-list-ul"></i>Case management</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
 
-	<li> <?php echo anchor("emergency_assistance", '<i class="fa fa-briefcase"></i>Emergency assistance</a>', array("class"=>'leftmeun')) ?> </li>
-	
-	<li>  <?php echo anchor("emergency_assistance/case_management", '<i class="fa fa-list-ul"></i>Case management</a>', array("class"=>'leftmeun')) ?> </li>
-
+	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_INSURER, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) : ?>
 	<li> <?php echo anchor("claim", '<i class="fa fa-files-o"></i>Claim</a>', array("class"=>'leftmeun')) ?> </li>
+	<?php endif; ?>
 
-	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN))): ?>
+	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) : ?>
 	<li> <?php echo anchor("emergency_assistance/schedule", '<i class="fa fa-calendar"></i>Schedule</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
-	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN))): ?>
+	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_INSURER))): ?>
 	<li><a href="#" class="leftmeun"><i class="fa fa-list-alt"></i>Report</a></li>
 	<?php endif; ?>
 	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) : ?>
