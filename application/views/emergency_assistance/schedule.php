@@ -14,7 +14,7 @@
 					<h2>Schedule Calendar</h2>
 					<div class="form-group col-sm-4 pull-right">
 						<div class="form-group col-sm-3">
-							<?php echo form_label('Employee:', 'emc', array("class" => 'col-sm-12')); ?>
+							<?php echo form_label('Employee:', 'EAC', array("class" => 'col-sm-12')); ?>
 							<?php $priority = array("" => '--Select Priority--', "HIGH" => 'High', "Normal" => 'Normal'); ?>
 						</div>
 						<div class="form-group col-sm-9">
@@ -317,7 +317,7 @@ $(document).on("click", ".fa.fa-trash.row-link", function() {
 
 // once user click on auto-schedule button
 .on("click", ".auto-schedule", function() {
-	if(confirm("Are you sure, you want to auto schedule whole emc? Schedule will be auto generated for all future dates for this month.")) {
+	if(confirm("Are you sure, you want to auto schedule whole EAC? Schedule will be auto generated for all future dates for this month.")) {
 		var url = "<?php echo base_url("emergency_assistance/auto_schedule/$emc/$year/$month"); ?>";
 		$.ajax({
 			url:url,
@@ -331,7 +331,7 @@ $(document).on("click", ".fa.fa-trash.row-link", function() {
 					// in succss place return responce to list
 					reload_calendar();
 				} else {
-					alert("Sorry, no auto schedule specified for this emc user. ");
+					alert("Sorry, no auto schedule specified for this EAC user. ");
 					return false;
 				}
 			}
