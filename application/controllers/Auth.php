@@ -86,29 +86,28 @@ class Auth extends CI_Controller {
 			
 			$task = $this->mytask_model->get_by_id($id);
 			if ($task) {
-				$data = array('id' => $id, 'status' => Mytask_model::STATUS_COMPLETED, 'completion_date' => date("Y-m-d"));
-			
-				if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
-					$data['finished'] = 1; 
-				}
+				$data = array('id' => $id, 'status' => Mytask_model::STATUS_COMPLETED, 'completion_date' => date("Y-m-d"), 'finished' => 1);
+
 				$this->mytask_model->save($data);
 				$this->active_model->log_update('mytask', $id, $task, $data, $this->db->last_query());
-				
+
+				/* No need setup item assign_to for tracking 
 				if ($task['type'] == Mytask_model::TASK_TYPE_CASE) {
 					$this->load->model('case_model');
 					$case = $this->case_model->get_by_id($task['item_id']);
 					if ($case && (($data['finished'] == 1) || ($case['assign_to'] == $this->ion_auth->get_user_id()))) {
-						$para = array('id', $task['item_id'], 'assign_to' => 0);
+						$para = array('id' => $task['item_id'], 'assign_to' => 0);
 						$this->case_model->save($para);
 					}
 				} else if ($task['type'] == Mytask_model::TASK_TYPE_CLAIM) {
 					$this->load->model('claim_model');
 					$claim = $this->case_model->get_by_id($task['item_id']);
 					if ($claim && (($data['finished'] == 1) || ($claim['assign_to'] == $this->ion_auth->get_user_id()))) {
-						$para = array('id', $task['item_id'], 'assign_to' => 0);
+						$para = array('id' => $task['item_id'], 'assign_to' => 0);
 						$this->claim_model->save($para);
 					}
 				}
+				*/
 			}
 		}
 		redirect('auth/mytasks', 'refresh');
