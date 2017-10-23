@@ -659,23 +659,26 @@ class Claim extends CI_Controller {
 				);
 				// $this->data['case_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u3.first_name, u3.last_name) as assign_to_name", $conditions = array('case.case_no'=>$this->data['claim_details']['case_no']), $joins);
 				$this->data['case_details'] = $this->case_model->get_by_id($id);
-				$this->data['case_details']['assign_to_name'] = "";
-				$this->data['case_details']['assign_to_email'] = "";
 				if ($this->data['case_details'] && $this->data['case_details']['assign_to']) {
 					$assign_to = $this->users_model->get_by_id($this->data['case_details']['assign_to']);
 					if ($assign_to) {
 						$this->data['case_details']['assign_to_name'] = $assign_to['first_name'] . " " . $assign_to['last_name'];
 						$this->data['case_details']['assign_to_email'] = $assign_to['email'];
 					}
-				}
-				$this->data['case_details']['case_manager_name'] = "";
-				$this->data['case_details']['case_manager_email'] = "";
+				} 
 				if ($this->data['case_details'] && $this->data['case_details']['case_manager']) {
 					$case_manager = $this->users_model->get_by_id($this->data['case_details']['case_manager']);
 					if ($case_manager) {
 						$this->data['case_details']['case_manager_name'] = $case_manager['first_name'] . " " . $case_manager['last_name'];
 						$this->data['case_details']['case_manager_email'] = $case_manager['email'];
 					}
+				} else {
+					$this->data['case_details']['case_manager_name'] = "";
+					$this->data['case_details']['case_manager_email'] = "";
+				}
+				if (empty($this->data['case_details']['assign_to_email'])) {
+					$this->data['case_details']['assign_to_name'] = "";
+					$this->data['case_details']['assign_to_email'] = "";
 				}
 				
 				$this->data['policy_info'] = $this->parser->parse("claim/policy_info", $this->data, TRUE);
