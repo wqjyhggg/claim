@@ -37,9 +37,9 @@
 							</div>
 						</div>
 						<div class="form-group col-sm-4">
-							<?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12')); ?>
+							<?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
-							<?php echo form_input("dob", $case_details["dob"], array("class" => "form-control datepicker", 'placeholder' => 'Day of Birth')); ?>
+							<?php echo form_input("dob", $case_details["dob"], array("class" => "form-control datepicker", 'placeholder' => 'Date of Birth')); ?>
 							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 							<?php echo form_error("dob"); ?>
@@ -60,7 +60,7 @@
 							<?php echo form_label('Sum Insured:', 'Sum Insured') . '$' . number_format($policy['sum_insured'], 2); ?>
 						</div>
 						<div class="form-group col-sm-4">
-							<?php echo form_label('Deductive:', 'Deductive') . '$' . number_format($policy['deductible_amount'], 2); ?>
+							<?php echo form_label('Deductible:', 'Deductible') . '$' . number_format($policy['deductible_amount'], 2); ?>
 						</div>
 						<?php if (!empty($policy['stable_condition'])) { ?>
 						<div class="form-group col-sm-4">
@@ -127,8 +127,8 @@
 						<?php echo form_error("country"); ?>
 						</div>
 						<div class="form-group col-sm-2">
-						<?php echo form_label('Post Code:', 'post_code', array("class" => 'col-sm-12')); ?>
-						<?php echo form_input("post_code", $case_details["post_code"], array("class" => "form-control", 'placeholder' => 'Post Code')); ?>
+						<?php echo form_label('Postal Code:', 'post_code', array("class" => 'col-sm-12')); ?>
+						<?php echo form_input("post_code", $case_details["post_code"], array("class" => "form-control", 'placeholder' => 'Postal Code')); ?>
 						<?php echo form_error("post_code"); ?>
 						</div>
 						<div class="col-sm-2">
@@ -293,8 +293,8 @@
 							<?php echo form_error("doctor_city"); ?>
 						</div>
 						<div class="form-group col-sm-4">
-							<?php echo form_label('Post Code:', 'doctor_post_code', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("doctor_post_code", $case_details["doctor_post_code"], array("class" => "form-control", 'placeholder' => 'Post Code')); ?>
+							<?php echo form_label('Postal Code:', 'doctor_post_code', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("doctor_post_code", $case_details["doctor_post_code"], array("class" => "form-control", 'placeholder' => 'Postal Code')); ?>
 							<?php echo form_error("doctor_post_code"); ?>
 						</div>
 						<div class="form-group col-sm-4">
@@ -351,8 +351,8 @@
 							<?php echo form_error("outpatient_country"); ?>
 						</div>
 						<div class="form-group col-sm-4">
-							<?php echo form_label('Post Code:', 'outpatient_post_code', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("outpatient_post_code", $case_details["outpatient_post_code"], array("class" => "form-control", 'placeholder' => 'Post Code')); ?>
+							<?php echo form_label('Postal Code:', 'outpatient_post_code', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("outpatient_post_code", $case_details["outpatient_post_code"], array("class" => "form-control", 'placeholder' => 'Postal Code')); ?>
 							<?php echo form_error("outpatient_post_code"); ?>
 						</div>
 						<div class="form-group col-sm-4">
@@ -442,12 +442,12 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Create Intake Form</h4>
+				<h4 class="modal-title">Create Note</h4>
 			</div>
 			<div class="modal-body">
 				<div class="row">
 					<div class="form-group col-sm-6">
-						<?php echo form_label('Intake Form #:', 'form_id', array("class" => 'col-sm-12')); ?>
+						<?php echo form_label('Note #:', 'form_id', array("class" => 'col-sm-12')); ?>
 						<div class="form-group col-sm-12">####</div>
 					</div>
 					<div class="form-group col-sm-6">

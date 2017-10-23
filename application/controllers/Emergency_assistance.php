@@ -106,7 +106,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('first_name', 'First Name', 'required|callback_alpha_dash_space');
 			$this->form_validation->set_rules('last_name', 'Last Name', 'callback_alpha_dash_space');
 			$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
-			$this->form_validation->set_rules('post_code', 'Post Code', 'required|trim|max_length[9]|min_length[5]');
+			$this->form_validation->set_rules('post_code', 'Postal Code', 'required|trim|max_length[9]|min_length[5]');
 			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('relations', 'Relations', 'required');
@@ -431,7 +431,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('relations', 'Relations', 'required');
-			$this->form_validation->set_rules('post_code', 'Post Code', 'required|trim|max_length[9]|min_length[5]');
+			$this->form_validation->set_rules('post_code', 'Postal Code', 'required|trim|max_length[9]|min_length[5]');
 			$this->form_validation->set_rules('incident_date', 'Incident Date', 'required');
 			
 			$this->form_validation->set_rules('insured_firstname', 'Insured First Name', 'required');
@@ -566,6 +566,11 @@ class Emergency_assistance extends CI_Controller {
 					))) {
 						$this->data['policy'] = $policies[0];
 					}
+				}
+				if ($this->data['policy'] && isset($this->data['policy']['effective_date'])) {
+					$this->data['customer_ages'] = round((strtotime($this->data['policy']['effective_date']) - strtotime($this->data['case_details']["dob"])) / (3600*24*365.25));
+				} else {
+					$this->data['customer_ages'] = -1;
 				}
 				
 				$this->data['assign_to_name'] = '-';

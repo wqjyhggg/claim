@@ -467,12 +467,12 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Create Intake Form</h4>
+				<h4 class="modal-title">Create Note</h4>
 			</div>
 			<div class="modal-body">
 				<div class="row">
 					<div class="form-group col-sm-6">
-						<?php echo form_label ( 'Intake Form #:', 'form_id', array ("class" => 'col-sm-12') ); ?>
+						<?php echo form_label ( 'Note #:', 'form_id', array ("class" => 'col-sm-12') ); ?>
 						<div class="form-group col-sm-12">####</div>
 					</div>
 					<div class="form-group col-sm-6">

@@ -449,7 +449,7 @@ class Auth extends CI_Controller {
 	
 	// create / edit a user
 	public function edit_user($id = 0) {
-		$this->data ['title'] = $this->lang->line('edit_user_heading');
+		$this->data ['pagetitle'] = $this->lang->line('edit_user_heading');
 		
 		if (!$this->ion_auth->logged_in() || !$this->ion_auth->in_group(Users_model::GROUP_ADMIN)) {
 			redirect('auth/users', 'refresh');
@@ -464,10 +464,10 @@ class Auth extends CI_Controller {
 		$currentGroups = $this->users_model->get_users_groups($id);
 
 		if ($user) {
-			$this->data ['title'] = $this->lang->line('edit_user_heading');
+			$this->data ['pagetitle'] = $this->lang->line('edit_user_heading');
 		} else {
 			$user = array();
-			$this->data ['title'] = $this->lang->line('create_user_heading');
+			$this->data ['pagetitle'] = $this->lang->line('create_user_heading');
 		}
 		
 		// validate form input
@@ -502,6 +502,7 @@ class Auth extends CI_Controller {
 						'company' => $this->input->post('company'),
 						'ip_address' => $this->input->server('REMOTE_ADDR'),
 						'groups' => json_encode($this->input->post('groups')),
+						'title' => $this->input->post('title'),
 						'phone' => $this->input->post('phone'),
 						'shift' => $this->input->post('shift') 
 				);
@@ -585,6 +586,13 @@ class Auth extends CI_Controller {
 				'class' => 'form-control',
 				'type' => 'text',
 				'value' => $this->form_validation->set_value('last_name', empty($this->data ['last_name']) ? '' : $this->data ['last_name']) 
+		);
+		$this->data['title'] = array(
+				'name' => 'title',
+				'id' => 'title',
+				'class' => 'form-control',
+				'type' => 'text',
+				'value' => $this->form_validation->set_value('title', empty($this->data ['title']) ? '' : $this->data ['title']) 
 		);
 		$this->data['company'] = array(
 				'name' => 'company',

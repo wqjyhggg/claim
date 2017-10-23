@@ -55,8 +55,8 @@
 							<?php echo form_hidden("policy_info", $this->input->post("policy_info")); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<?php echo form_label('Case No#:', 'case_no', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("case_no", ($this->input->post("case_no") ? $this->input->post("case_no") : $this->input->get("case_no")), array("class" => "form-control", 'placeholder' => 'Case No#')); ?>
+							<?php echo form_label('Case #:', 'case_no', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("case_no", ($this->input->post("case_no") ? $this->input->post("case_no") : $this->input->get("case_no")), array("class" => "form-control", 'placeholder' => 'Case #')); ?>
 							<?php echo form_error("case_no"); ?>
 						</div>
 						<div class="form-group col-sm-3">
@@ -198,8 +198,8 @@
 								</select>
 							</div>
 							<div class="form-group col-sm-3">
-								<?php echo form_label('Post Code:', 'physician_post_code', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("physician_post_code", $this->input->post("physician_post_code"), array("class" => "form-control", 'placeholder' => 'Post Code')); ?>
+								<?php echo form_label('Postal Code:', 'physician_post_code', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("physician_post_code", $this->input->post("physician_post_code"), array("class" => "form-control", 'placeholder' => 'Postal Code')); ?>
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Telephone:', 'physician_telephone', array("class" => 'col-sm-12')); ?>
@@ -236,8 +236,8 @@
 								<?php echo form_error("physician_city_canada"); ?>
 							</div>
 							<div class="form-group col-sm-3">
-								<?php echo form_label('Post Code:', 'physician_post_code_canada', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("physician_post_code_canada", $this->input->post("physician_post_code_canada"), array("class" => "form-control", 'placeholder' => 'Post Code')); ?>
+								<?php echo form_label('Postal Code:', 'physician_post_code_canada', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("physician_post_code_canada", $this->input->post("physician_post_code_canada"), array("class" => "form-control", 'placeholder' => 'Postal Code')); ?>
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Telephone:', 'physician_telephone_canada', array("class" => 'col-sm-12')); ?>
@@ -404,7 +404,7 @@
 
 					<!-- Intake Forms List Section -->
 					<br />
-					<h2 class="modal-title intake-heading move_down" style="display: none">Intake Forms</h2>
+					<h2 class="modal-title intake-heading move_down" style="display: none">Notes</h2>
 					<div class="row intake-forms-list col-sm-12"></div>
 					<input type="hidden" name="no_of_form" value="0" />
 					<!-- used to knnow how many forms added in this page -->
@@ -558,12 +558,12 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Create Intake Form</h4>
+				<h4 class="modal-title">Create Note</h4>
 			</div>
 			<div class="modal-body">
 				<div class="row">
 					<div class="form-group col-sm-6">
-						<?php echo form_label('Intake Form #:', 'form_id', array("class" => 'col-sm-12')); ?>
+						<?php echo form_label('Note #:', 'form_id', array("class" => 'col-sm-12')); ?>
 						<div class="form-group col-sm-12">####</div>
 					</div>
 					<div class="form-group col-sm-6">

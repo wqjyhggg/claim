@@ -176,6 +176,7 @@ class Case_model extends CI_Model {
 		if (isset($indata['medical_notes'])) $data['medical_notes'] = $indata['medical_notes'];
 		if (isset($indata['policy_no'])) $data['policy_no'] = $indata['policy_no'];
 		if (isset($indata['policy_info'])) $data['policy_info'] = $indata['policy_info'];
+		if (isset($indata['departure_date'])) $data['departure_date'] = $indata['departure_date'];
 		if (isset($indata['insured_firstname'])) $data['insured_firstname'] = $indata['insured_firstname'];
 		if (isset($indata['insured_lastname'])) $data['insured_lastname'] = $indata['insured_lastname'];
 		if (isset($indata['insured_address'])) $data['insured_address'] = $indata['insured_address'];

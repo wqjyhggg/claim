@@ -39,7 +39,7 @@
 		<div class="form-group col-sm-12"><?php echo $case_details['country']; ?></div>
 	</div>
 	<div class="form-group col-sm-2">
-		<?php echo form_label('Post Code:', 'post_code', array("class" => 'col-sm-12')); ?>
+		<?php echo form_label('Postal Code:', 'post_code', array("class" => 'col-sm-12')); ?>
 		<div class="form-group col-sm-12"><?php echo $case_details['post_code']; ?></div>
 	</div>
 	<div class="form-group col-sm-4">
@@ -111,7 +111,7 @@
 		<div class="form-group col-sm-12"><?php echo $case_details['insured_address']; ?></div>
 	</div>
 	<div class="form-group col-sm-4">
-		<?php echo form_label('Day of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
+		<?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
 		<div class="form-group col-sm-6"><?php echo ($case_details['dob'] <> '0000-00-00')?$case_details['dob']:'N/A'; ?></div>
 	</div>
 </div>

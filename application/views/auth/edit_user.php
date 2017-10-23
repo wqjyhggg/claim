@@ -1,7 +1,7 @@
 <div>
 	<div class="page-title">
 		<div class="title_left">
-			<h3><?php echo $title; ?></h3>
+			<h3><?php echo $pagetitle; ?></h3>
 		</div>
 	</div>
 	<div class="clearfix"></div>
@@ -34,6 +34,12 @@
 							<?php echo form_label('Confirm Password', 'password_confirm', array("class"=>'col-sm-12'));?>
 							<div class="col-sm-12 input-group">
 								<?php echo form_input($password_confirm);?>
+							</div>
+						</div>
+						<div class="col-sm-3 form-group">
+							<?php echo form_label('Title', 'title', array("class"=>'col-sm-12'));?>
+							<div class="col-sm-12 input-group">
+								<?php echo form_input($title);?>
 							</div>
 						</div>
 						<div class="clearfix"></div>

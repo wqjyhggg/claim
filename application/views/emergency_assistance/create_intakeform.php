@@ -1,7 +1,7 @@
 <duv >
    <div class="page-title">
       <div class="title_left">
-         <h3>Create Intake Form</h3>         
+         <h3>Create Note</h3>         
       </div>
    </div>
    <div class="clearfix"></div>
@@ -12,7 +12,7 @@
          <div class="x_panel">
 
             <div class="x_title">
-               <h2>Intake Form Detail<small></small></h2>
+               <h2>Note Detail<small></small></h2>
                <div class="clearfix"></div>
             </div>
             <div class="x_content">  
@@ -20,7 +20,7 @@
                 <div class="row">
                   <div class="form-group col-sm-6">
                      <?php 
-                        echo form_label('Intake Form #:', 'form_id', array("class"=>'col-sm-12'));
+                        echo form_label('Note #:', 'form_id', array("class"=>'col-sm-12'));
                      ?>
                      <div class="form-group col-sm-12">
                         ####
