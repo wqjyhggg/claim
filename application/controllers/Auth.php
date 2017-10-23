@@ -275,7 +275,7 @@ class Auth extends CI_Controller {
 			$offset = $this->uri->segment(3);
 			$get = $this->input->get();
 			if (isset($get['status']) && ($get['status'] >= 0)) $get['active'] = $get['status'];
-			$this->data['users'] = $this->users_model->search($this->input->get(), $limit, $offset);
+			$this->data['users'] = $this->users_model->search($get, $limit, $offset);
 			$config['total_rows'] = $this->users_model->last_rows();
 				
 			$config['base_url'] = site_url('auth/users');
