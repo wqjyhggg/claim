@@ -213,7 +213,7 @@
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Exempt : </label>
-													<div class='col-sm-12'><input type='number' step='0.01' name='amt_payable' value="<?php echo $value['amt_exempt']; ?>"></div>
+													<div class='col-sm-12'><input type='number' step='0.01' name='amt_exempt' value="<?php echo $value['amt_exempt']; ?>"></div>
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Status : </label>
@@ -245,7 +245,15 @@
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Reason : </label>
-													<div class='col-sm-12'><?php echo $value['reason']; ?>&nbsp;</div>
+													<div class='col-sm-12'>
+														<?php echo $value['reason']; ?>
+														<select name="reason" class="form-control">
+															<option value=""> -- Select Reason -- </option>
+															<?php foreach ($reasons as $rc):?>
+															<option value="<?php echo $rc; ?>" <?php if ($rc == $value['reason']) { echo "selected"; } ?>><?php echo $rc; ?></option>
+															<?php endforeach; ?>
+														</select>
+													</div>
 												</div>
 												<div class="form-group col-sm-3">
 													<div class='col-sm-12'><?php echo form_submit("Save", "Save", 'class="btn btn-primary"'); ?></div>
@@ -260,7 +268,26 @@
 						</div>
 					<?php } ?>
 					</div>
+					<hr />
+	
+					<h4 style="margin-top: 35px; margin-bottom: 26px;">Policy Pay info</h4>
+					<div class="row actions" style="margin-top: 20px;">
+						<div class="col-sm-3">
+							<label class="col-sm-12">Policy Deductible Amount</label>
+							<div class='col-sm-12'>$ <?php echo number_format($policy['deductible_amount'], 2); ?></div>
+						</div>
+						<div class="col-sm-3">
+							<label class="col-sm-12">Claimed Payable Amount</label>
+							<div class='col-sm-12'>$ <?php echo number_format($payinfo['payable'], 2); ?></div>
+						</div>
+						<div class="col-sm-3">
+							<label class="col-sm-12">Claimed Deductible Amount</label>
+							<div class='col-sm-12'>$ <?php echo number_format($payinfo['deductible'], 2); ?></div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
     				<hr />
+
 					<h4 style="margin-top: 35px; margin-bottom: 26px;">CASE INFO</h4>
 					<div class="case_info">
 						<?php echo $case_info; ?>
@@ -531,7 +558,6 @@ $(document).ready(function() {
 	$(".claim_items_submit").on("submit", function(e) {
 		e.preventDefault();
 		var href = $(this).attr("action");
-
 		$.ajax({
 			url: href,
 			method: "post",
@@ -887,23 +913,6 @@ $(document).ready(function() {
    .on("click", ".move_down", function(){
       $(this).next("div.row").slideToggle();
       $(this).children("i").toggleClass("fa-angle-up").toggleClass("fa-angle-down");
-   })
-
-   .on("submit", "#save_item", function(e){
-      e.preventDefault();
-      var href = $(this).attr("action");
-
-      $.ajax({
-         url: href,
-         method: "post",
-         data:$(this).serialize(),
-         beforeSend: function(){
-            $(".modal-content").addClass("csspinner load1");
-         },
-         success: function() {
-            window.location.reload();
-         }
-      })
    })
 
    // send email print to recepient email:-

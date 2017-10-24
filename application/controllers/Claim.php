@@ -365,7 +365,7 @@ class Claim extends CI_Controller {
 					}
 				}
 				
-				$this->data['docs'] = $this->template_model->search(array());
+				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(TRUE);
 				
 				// get all word documents
@@ -402,6 +402,7 @@ class Claim extends CI_Controller {
 			$this->load->model('expenses_model');
 			$this->load->model('intakeform_model');
 			$this->load->model('word_comments_model');
+			$this->load->model('reasons_model');
 			
 			$claim = $this->claim_model->get_by_id($id);
 			if (empty($claim)) {
@@ -598,6 +599,7 @@ class Claim extends CI_Controller {
 				
 				// get expenses climed items list
 				$this->data['items'] = $this->expenses_model->search(array('claim_id' => $claim['id']));
+				$this->data['payinfo'] = $this->expenses_model->get_policy_payinfo($claim['policy_no']);
 				
 				// get claim items history
 				$this->data['claim_history'] = $this->expenses_model->expenses_history($id);
@@ -630,9 +632,10 @@ class Claim extends CI_Controller {
 				$this->data['products'] = $this->product_model->get_list();
 				$this->data['payees'] = $this->claim_model->payee_search(array("claim_id" => $id));
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
+				$this->data['reasons'] = $this->reasons_model->get_list();
 				
 				// get all documents for sending email/print.
-				$this->data['docs'] = $this->data['docs'] = $this->template_model->search(array());
+				$this->data['docs'] = $this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
 				
 				// get all payees infomation
 				$this->data['custom_payees'] = $this->data['payees'];
@@ -672,13 +675,6 @@ class Claim extends CI_Controller {
 						$this->data['case_details']['case_manager_name'] = $case_manager['first_name'] . " " . $case_manager['last_name'];
 						$this->data['case_details']['case_manager_email'] = $case_manager['email'];
 					}
-				} else {
-					$this->data['case_details']['case_manager_name'] = "";
-					$this->data['case_details']['case_manager_email'] = "";
-				}
-				if (empty($this->data['case_details']['assign_to_email'])) {
-					$this->data['case_details']['assign_to_name'] = "";
-					$this->data['case_details']['assign_to_email'] = "";
 				}
 				
 				$this->data['policy_info'] = $this->parser->parse("claim/policy_info", $this->data, TRUE);
@@ -992,7 +988,7 @@ class Claim extends CI_Controller {
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(1);
 				
 				// get all documents for sending email/print.
-				$this->data['docs'] = $this->data['docs'] = $this->template_model->search(array());
+				$this->data['docs'] = $this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
 				
 				// get all payees infomation
 				$this->data['payees'] = $this->data['payees_list'];
@@ -1121,7 +1117,7 @@ class Claim extends CI_Controller {
 		
 		// generate data array
 		$data = $this->input->post();
-		unset($data['id']);
+		// unset($data['id']);
 		unset($data['Save']);
 		unset($data['arrival_date']);
 		unset($data['effective_date']);
@@ -1132,9 +1128,9 @@ class Claim extends CI_Controller {
 		unset($data['deny_reason']);
 		unset($data['total_amount_payble']);
 		// update values to database
-		$this->common_model->update("expenses_claimed", $data, array(
-				'id' => $this->input->post('id') 
-		));
+		$this->load->model('expenses_model');
+		
+		$this->expenses_model->save($data);
 		echo TRUE;
 	}
 	

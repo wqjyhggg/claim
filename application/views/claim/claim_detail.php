@@ -184,6 +184,7 @@
 										<?php foreach ($country as $key => $val):?>
 										<option value="<?php echo $key; ?>" <?php if ($key == $claim_details['country']) { echo "selected"; } ?>><?php echo $val; ?></option>
 										<?php endforeach; ?>
+										<option value=""> N/A </option>
 									</select>
 								</div>
 								<div class="form-group col-sm-3">
@@ -282,6 +283,7 @@
 											<?php foreach ($country2 as $key => $val):?>
 											<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post('country2')) { echo "selected"; } ?>><?php echo $val; ?></option>
 											<?php endforeach; ?>
+											<option value=""> N/A </option>
 										</select>
 									</div>
 									<div class="col-sm-3">
@@ -1366,7 +1368,6 @@
    .on("submit", "#save_item", function(e){
       e.preventDefault();
       var href = $(this).attr("action");
-
       $.ajax({
             url: href,
             method: "post",
@@ -1375,7 +1376,7 @@
                $(".modal-content").addClass("csspinner load1");
             },
             success: function() {
-               window.location.reload();
+               //XXXXXXXXX window.location.reload();
             }
          })
    })

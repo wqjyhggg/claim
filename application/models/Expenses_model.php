@@ -8,6 +8,11 @@ if (! defined ( 'BASEPATH' )) exit ( 'No direct script access allowed' );
  */
 
 class Expenses_model extends CI_Model {
+	const EXPENSE_STATUS_Examined='Examined';
+	const EXPENSE_STATUS_Approved='Approved';
+	const EXPENSE_STATUS_Declined='Declined';
+	const EXPENSE_STATUS_Paid='Paid';
+	
 	/**
 	 * 
 	 */
@@ -68,10 +73,10 @@ class Expenses_model extends CI_Model {
 	public function get_status($withempty=TRUE) {
 		$rt =  array(
 				0 => '-- Select Status --',
-				'Examined' => 'Examined',
-				'Approved' => 'Approved',
-				'Declined' => 'Declined',
-				'Paid' => 'Paid',
+				'Examined' => self::EXPENSE_STATUS_Examined,
+				'Approved' => self::EXPENSE_STATUS_Approved,
+				'Declined' => self::EXPENSE_STATUS_Declined,
+				'Paid' => self::EXPENSE_STATUS_Paid,
 		);
 		if (!$withempty) {
 			unset($rt[0]);
@@ -158,5 +163,12 @@ class Expenses_model extends CI_Model {
 		$this->db->select_sum('amt_exempt', 'exempt');
 		$this->db->where('claim_id', $claim_id);
 		return $this->db->get('expenses_claimed')->row_array();
+	}
+	
+	public function get_policy_payinfo($policy_no) {
+		$sql  = "SELECT sum(e.amt_payable) as payable, sum(e.amt_deductible) as deductible FROM claim c";
+		$sql .= " JOIN expenses_claimed e ON (e.claim_id=c.id)";
+		$sql .= " WHERE c.policy_no=".$this->db->escape($policy_no)." AND e.status IN ('".self::EXPENSE_STATUS_Approved."','".self::EXPENSE_STATUS_Paid."')";
+		return $this->db->query($sql)->row_array();
 	}
 }
