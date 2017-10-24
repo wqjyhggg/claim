@@ -103,7 +103,7 @@ class Case_model extends CI_Model {
 			return array();
 		}
 		
-		$sql  = "SELECT concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, `case`.case_no, DATE_FORMAT(`case`.created, '%Y-%m-%d') as created, `case`.province, `case`.reason, `case`.policy_no, concat_ws(' ', `case`.insured_firstname, `case`.insured_lastname) as insured_name, IF(`case`.dob='0000-00-00', 'N/A', DATE_FORMAT(`case`.dob, '%Y-%m-%d')) as dob, `case`.assign_to, `case`.case_manager, `case`.priority, `case`.id, `case`.last_update FROM `case`";
+		$sql  = "SELECT u2.email as manager_email, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.email as assign_to_email, u1.first_name, u1.last_name) as assign_to_name, `case`.case_no, DATE_FORMAT(`case`.created, '%Y-%m-%d') as created, `case`.province, `case`.reason, `case`.policy_no, concat_ws(' ', `case`.insured_firstname, `case`.insured_lastname) as insured_name, IF(`case`.dob='0000-00-00', 'N/A', DATE_FORMAT(`case`.dob, '%Y-%m-%d')) as dob, `case`.assign_to, `case`.case_manager, `case`.priority, `case`.id, `case`.last_update FROM `case`";
 		$sql .= " LEFT JOIN users u1 ON u1.id = `case`.assign_to";
 		$sql .= " LEFT JOIN users u2 ON u2.id = `case`.case_manager";
 		if ($where) $sql .= " WHERE ". $where;

@@ -647,7 +647,7 @@ class Emergency_assistance extends CI_Controller {
 				
 				$this->data['priorities'] = $this->mytask_model->get_priorities();
 				
-				$this->data['docs'] = $this->template_model->search(array());
+				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CASE));
 				
 				// $this->data['priorities'] = $this->case_model->get_priorities();
 				

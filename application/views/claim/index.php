@@ -212,8 +212,8 @@
 									<td><?php echo $value['policy_no']; ?></td>
 									<td><?php echo $value['insured_name']; ?></td>
 									<td><?php echo $value['dob']; ?></td>
-									<td><?php echo $value['assign_to_name']; ?></td>
-									<td><?php echo $value['case_manager_name']; ?></td>
+									<td><?php echo $value['assign_to_email']; ?></td>
+									<td><?php echo $value['manager_email']; ?></td>
 									<td><?php echo $value['priority']; ?></td>
 									<!-- <td><?php echo anchor('emergency_assistance/create_claim?policy='.$value['policy_no'].'&case_no='.$value['case_no'], 'Detail'); ?></td> -->
 									<td><?php echo anchor('emergency_assistance/edit_case/'.$value['id'].'?type=add_claim', 'Detail'); ?></td>
@@ -261,7 +261,7 @@
 									<td><?php echo $value['dob']; ?></td>
 									<td><?php echo $value['claim_date']; ?></td>
 									<td><?php echo $value['amount_claimed'] ?></td>
-									<td><?php echo $value['claim_examiner']; ?></td>
+									<td><?php echo $value['email']; ?></td>
 									<td><?php echo anchor("claim/claim_detail/".$value['id'], "View"); ?></td>
 								</tr>
 								<?php endforeach; ?>

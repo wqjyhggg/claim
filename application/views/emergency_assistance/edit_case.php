@@ -91,6 +91,28 @@
 							<?php echo form_label('Created By:', 'created_by', array("class"=>'col-sm-12')); ?>
 							<div class="form-group col-sm-12"><?php echo $case_details['created_by']; ?></div>
 						</div>
+						<div class="form-group col-sm-4">
+							<?php echo form_label('Follow Up EAC:', 'assign_to', array("class"=>'col-sm-12')); ?>
+							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>
+							<select name="assign_to" class="form-control">
+								<option value="">-- Select EAC --</option>
+								<?php foreach ($eacs as $rc) { ?>
+								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['assign_to']) { echo "selected"; } ?>><?php echo $rc['email'] . ' ' . $rc['shift']; ?></option>
+								<?php } ?>
+							</select>
+							<?php } else { ?>
+							<div class="form-group col-sm-12"><?php echo $assign_to_name; ?></div>
+							<?php } ?>
+						</div>
+						<div class="form-group col-sm-4">
+							<?php echo form_label('Case catagory:', 'reason', array("class"=>'col-sm-12')); ?>
+							<select name="reason" class="form-control">
+								<option value="">-- Select Catagory --</option>
+								<?php foreach ($reasons as $rc) { ?>
+								<option value="<?php echo $rc; ?>" <?php if ($rc == $case_details['reason']) { echo "selected"; } ?>><?php echo $rc; ?></option>
+								<?php } ?>
+							</select>
+						</div>
 					</div>
 					<h4>Visiting Address</h4>
 					<div class="row">
@@ -136,28 +158,6 @@
 						<div class="col-sm-2">
 							<label class="col-sm-12">&nbsp;</label>
 							<?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary search_provider')) ?>
-						</div>
-						<div class="form-group col-sm-4">
-							<?php echo form_label('Follow Up EAC:', 'assign_to', array("class"=>'col-sm-12')); ?>
-							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>
-							<select name="assign_to" class="form-control">
-								<option value="">-- Select EAC --</option>
-								<?php foreach ($eacs as $rc) { ?>
-								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['assign_to']) { echo "selected"; } ?>><?php echo $rc['email'] . ' ' . $rc['shift']; ?></option>
-								<?php } ?>
-							</select>
-							<?php } else { ?>
-							<div class="form-group col-sm-12"><?php echo $assign_to_name; ?></div>
-							<?php } ?>
-						</div>
-						<div class="form-group col-sm-4">
-							<?php echo form_label('Reason:', 'reason', array("class"=>'col-sm-12')); ?>
-							<select name="reason" class="form-control">
-								<option value="">-- Select Reasion --</option>
-								<?php foreach ($reasons as $rc) { ?>
-								<option value="<?php echo $rc; ?>" <?php if ($rc == $case_details['reason']) { echo "selected"; } ?>><?php echo $rc; ?></option>
-								<?php } ?>
-							</select>
 						</div>
 					</div>
 					<h4>Caller Info</h4>
@@ -522,36 +522,42 @@
 						<div>
 							<?php echo form_label('To:', 'email', array("class"=>'col-sm-12')); ?>
 							<div class="form-group col-sm-12">
-								<?php echo form_input("email_template", "", array("class"=>"form-control col-sm-6 form-group email required", 'placeholder'=>'Email Address')); ?>
+								<?php echo form_input("email_template", $case_details['email'], array("class"=>"form-control col-sm-6 form-group email required", 'placeholder'=>'Email Address')); ?>
 							</div>
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-4">
 							<?php echo form_label('Street No.:', 'street_no_email', array("class"=>'col-sm-12')); ?>
-							<?php echo form_input("street_no_email", "", array("class"=>"form-control required", 'placeholder'=>'Street No.')); ?>
+							<?php echo form_input("street_no_email", $case_details['street_no'], array("class"=>"form-control required", 'placeholder'=>'Street No.')); ?>
 							<?php echo form_error("street_no_email"); ?>
 						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-4">
 							<?php echo form_label('Street Name.:', 'street_name_email', array("class"=>'col-sm-12')); ?>
-							<?php echo form_input("street_name_email", "", array("class"=>"form-control required", 'placeholder'=>'Street Name.')); ?>
+							<?php echo form_input("street_name_email", $case_details['street_name'], array("class"=>"form-control required", 'placeholder'=>'Street Name.')); ?>
 							<?php echo form_error("street_name_email"); ?>
 						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-4">
 							<?php echo form_label('City:', 'city_email', array("class"=>'col-sm-12')); ?>
-							<?php echo form_input("city_email", "", array("class"=>"form-control required", 'placeholder'=>'City')); ?>
+							<?php echo form_input("city_email", $case_details['city'], array("class"=>"form-control required", 'placeholder'=>'City')); ?>
 							<?php echo form_error("city"); ?>
 						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-4">
 							<?php echo form_label('Province:', 'province_email', array("class"=>'col-sm-12')); ?>
-							<select name="province_email" class="form-control">
-								<option value="">-- Select Province --</option>
-								<?php foreach ($province as $key => $val):?>
-								<option value="<?php echo $key; ?>"><?php echo $val; ?></option>
-								<?php endforeach; ?>
-							</select>
+							<?php echo form_input("province_email", $case_details['province'], array("class"=>"form-control required", 'placeholder'=>'Province')); ?>
 							<?php echo form_error("province_email"); ?>
 						</div>
+						<div class="form-group col-sm-4">
+							<?php echo form_label('Country:', 'country_email', array("class"=>'col-sm-12')); ?>
+							<?php echo form_input("country_email", $case_details['country'], array("class"=>"form-control required", 'placeholder'=>'Country')); ?>
+							<?php echo form_error("country_email"); ?>
+						</div>
+						<div class="form-group col-sm-4">
+							<?php echo form_label('Post Code:', 'post_code_email', array("class"=>'col-sm-12')); ?>
+							<?php echo form_input("post_code_email", $case_details['post_code'], array("class"=>"form-control required", 'placeholder'=>'Post Code')); ?>
+							<?php echo form_error("post_code_email"); ?>
+						</div>
+						<div class="clearfix"></div>
 						<?php echo form_label('Select Template:', 'select_template', array("class"=>'col-sm-12')); ?>
 						<div class="form-group col-sm-12">
 							<?php foreach($docs as $doc): ?>
@@ -569,7 +575,8 @@
 								<?php
 								// find and replace text
 								$find = array('{otc_logo}', '{otc_logo_big}', '{current_date}');
-								$replace = array(img(array('src'=>'assets/img/otc.jpg','width'=>'130')), img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')), date("F d, Y"));
+								// $replace = array(img(array('src'=>'assets/img/otc.jpg','width'=>'130')), img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')), date("F d, Y"));
+								$replace = array('', '', date("F d, Y"));
 								echo str_replace($find, $replace, $doc['description']);
 								?>
 							</div>

@@ -86,6 +86,30 @@
 						<?php echo form_input("created_by", $case_details["created_by"], array("class" => "form-control", 'placeholder' => 'Create By')); ?>
 						<?php echo form_error("created_by"); ?>
 						</div>  -->
+						<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>
+						<div class="form-group col-sm-4">
+							<?php echo form_label('Follow Up EAC:', 'assign_to', array("class" => 'col-sm-12')); ?>
+							<select name="assign_to" class="form-control">
+								<option value=""> -- Select EAC -- </option>
+								<?php foreach ($eacs as $rc):?>
+								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['assign_to']) { echo "selected"; } ?>><?php echo $rc['email'] . ' ' . $rc['shift']; ?></option>
+								<?php endforeach; ?>
+							</select>
+							<?php echo form_error("assign_to"); ?>
+						</div>
+						<?php } else { ?>
+						<input type='hidden' name='assign_to' value=''>
+						<?php } ?>
+						<div class="form-group col-sm-4">
+						<?php echo form_label('Case catagory:', 'reason', array("class" => 'col-sm-12')); ?>
+							<select name="reason" class="form-control">
+								<option value=""> -- Select Catagory -- </option>
+								<?php foreach ($reasons as $rc):?>
+								<option value="<?php echo $rc; ?>" <?php if ($rc == $case_details['reason']) { echo "selected"; } ?>><?php echo $rc; ?></option>
+								<?php endforeach; ?>
+							</select>
+							<?php echo form_error("reason"); ?>
+						</div>
 					</div>
 
 					<h4>Visiting Address</h4>
@@ -134,30 +158,6 @@
 						<div class="col-sm-2">
 							<label class="col-sm-12">&nbsp;</label>
 							<?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary search_provider', 'target'=>'_blank'))?>
-						</div>
-						<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>
-						<div class="form-group col-sm-4">
-							<?php echo form_label('Follow Up EAC:', 'assign_to', array("class" => 'col-sm-12')); ?>
-							<select name="assign_to" class="form-control">
-								<option value=""> -- Select EAC -- </option>
-								<?php foreach ($eacs as $rc):?>
-								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['assign_to']) { echo "selected"; } ?>><?php echo $rc['email'] . ' ' . $rc['shift']; ?></option>
-								<?php endforeach; ?>
-							</select>
-							<?php echo form_error("assign_to"); ?>
-						</div>
-						<?php } else { ?>
-						<input type='hidden' name='assign_to' value=''>
-						<?php } ?>
-						<div class="form-group col-sm-4">
-						<?php echo form_label('Reason:', 'reason', array("class" => 'col-sm-12')); ?>
-							<select name="reason" class="form-control">
-								<option value=""> -- Select Reasion -- </option>
-								<?php foreach ($reasons as $rc):?>
-								<option value="<?php echo $rc; ?>" <?php if ($rc == $case_details['reason']) { echo "selected"; } ?>><?php echo $rc; ?></option>
-								<?php endforeach; ?>
-							</select>
-							<?php echo form_error("reason"); ?>
 						</div>
 					</div>
 
