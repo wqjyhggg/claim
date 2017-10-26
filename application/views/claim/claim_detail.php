@@ -63,12 +63,12 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('School Name:', 'school_name', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("school_name", $claim_details["school_name"], array("class" => "form-control required", 'placeholder' => 'School Name')); ?>
+								<?php echo form_input("school_name", $claim_details["school_name"], array("class" => "form-control", 'placeholder' => 'School Name')); ?>
 								<?php echo form_error("school_name"); ?>
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Group ID:', 'group_id', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("group_id", $claim_details["group_id"], array("class" => "form-control required", 'placeholder' => 'Group ID')); ?>
+								<?php echo form_input("group_id", $claim_details["group_id"], array("class" => "form-control", 'placeholder' => 'Group ID')); ?>
 								<?php echo form_error("group_id"); ?>
 							</div>
 							<div class="form-group col-sm-3">
@@ -733,8 +733,8 @@
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
-						<?php echo form_label('Intake Notes:', 'intake_notes', array("class" => 'col-sm-12')); ?>
-						<?php echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class" => "form-control", 'placeholder' => 'Intake Notes', 'style' => "height:100px")); ?>
+						<?php echo form_label('Note:', 'intake_notes', array("class" => 'col-sm-12')); ?>
+						<?php echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class" => "form-control", 'placeholder' => 'Note', 'style' => "height:100px")); ?>
 						<?php echo form_error("intake_notes"); ?>
 					</div>
 					<div class="form-group col-sm-12 files"></div>
@@ -1320,7 +1320,7 @@
       // check notes field filled or not
       if(!$("textarea[name=intake_notes]").val())
       {
-         alert("Please add intake notes first.")
+         alert("Please add note first.")
          return false;
       }
 

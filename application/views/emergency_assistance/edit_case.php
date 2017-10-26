@@ -6,7 +6,7 @@
 		<div class="title_left">
 			<h3>Case Details</h3>
 			<?php
-			if (($this->ion_auth->is_admin() OR $this->ion_auth->is_claimsmanager() OR $this->ion_auth->is_claimexaminer()) and empty($case_details['claim_no'])) {
+			if (($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) && empty($case_details['claim_no']) && !empty($case_details['policy_no'])) {
 				echo anchor('claim/create_claim?policy='.$case_details['policy_no'].'&case_no='.$case_details['case_no'], '<i class="fa fa-plus-circle"></i> Create Claim', array("class"=>'btn btn-primary'));
 			}
 			?>   
@@ -391,7 +391,7 @@
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Case Manager:', 'case_manager', array("class"=>'col-sm-12')); ?>
 							<select name="case_manager" class="form-control">
-								<option value="">-- Select Priority --</option>
+								<option value="">-- Select Manager --</option>
 								<?php foreach ($managers as $rc) { ?>
 								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['case_manager']) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
 								<?php } ?>
@@ -430,7 +430,7 @@
 						<div class="col-sm-12">
 							<label class="col-sm-12">&nbsp;</label>
 							<button class="btn btn-primary">Save</button>
-							<button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create InTakeForm</button>
+							<button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create Note</button>
 							<?php echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info')); ?>
 							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>
 							<button type="button" class="btn btn-primary follow_up" data-toggle="modal" data-target="#follow_reason">Follow Up <i class="fa fa-angle-double-right"></i></button>
@@ -446,7 +446,7 @@
 								insured_firstname="<?php echo $case_details['insured_firstname'] ?>"
 								policy_no="<?php echo $case_details['policy_no'] ?>"
 								case_no="<?php echo $case_details['case_no'] ?>"
-								casemanager_name="<?php echo $case_details['case_manager_name'] ?>"
+								casemanager_name="<?php echo isset($case_details['case_manager_name']) ? $case_details['case_manager_name'] : ''; ?>"
 								class="btn btn-primary email_print" type="button"
 								data-toggle="modal" data-target="#print_template">Email/Print</button>
 						</div>
@@ -647,25 +647,30 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Create Note</h4>
+				<h4 class="modal-title">Create Note <small style='padding-left: 20px;'><a href="<?php echo $phone_list_url;?>" target='_blank'>Find phone file</a></small></h4>
 			</div>
 			<?php echo form_open_multipart("emergency_assistance/create_intakeform", array("id"=>'create_intakeform')); ?>
 			<?php echo form_hidden("case_id", $case_id); ?>
 			<div class="modal-body">
 				<div class="row">
-					<div class="form-group col-sm-6">
+					<div class="form-group col-sm-4">
 						<?php echo form_label('Note #:', 'form_id', array("class"=>'col-sm-12')); ?>
 						<div class="form-group col-sm-12">####</div>
 					</div>
-					<div class="form-group col-sm-6">
+					<div class="form-group col-sm-4">
 						<?php echo form_label('Create Date:', 'create_date', array("class"=>'col-sm-12')); ?>
 						<div class="form-group col-sm-12">
 							<?php echo date("Y-m-d"); ?>
 						</div>
 					</div>
+					<div class="form-group col-sm-4">
+						<?php echo form_label('Phone File:', 'phonefile', array("class" => 'col-sm-12')); ?>
+						<?php echo form_input("phonefile", $this->input->post("phonefile"), array("class" => "form-control", 'placeholder' => 'Phone File')); ?>
+						<?php echo form_error("intake_notes"); ?>
+					</div>
 					<div class="form-group col-sm-12">
-						<?php echo form_label('Intake Notes:', 'intake_notes', array("class"=>'col-sm-12')); ?>
-						<?php echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class"=>"form-control required", 'placeholder'=>'Intake Notes', 'style'=>"height:100px")); ?>
+						<?php echo form_label('Notes:', 'intake_notes', array("class"=>'col-sm-12')); ?>
+						<?php echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class"=>"form-control required", 'placeholder'=>'Notes', 'style'=>"height:100px")); ?>
 						<?php echo form_error("intake_notes"); ?>
 					</div>
 					<div class="form-group col-sm-12 files"></div>

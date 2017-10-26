@@ -192,12 +192,13 @@ class Emergency_assistance extends CI_Controller {
 								'case_id' => $record_id,
 								'created_by' => $this->ion_auth->get_user_id(),
 								'notes' => $array['notes_' . $i],
+								'phonefile' => $array['phonefile_' . $i],
 								'created' => date("Y-m-d H:i:s"),
 								'docs' => implode(",", $file_names) 
 						);
 						
 						// save values to database
-						$intake_form_id = $this->intakeform_model->save($record_id, $array['notes_' . $i], implode(",", $file_names));
+						$intake_form_id = $this->intakeform_model->save($record_id, $array['notes_' . $i], implode(",", $file_names), $array['phonefile_' . $i]);
 						
 						// create directory to identify intake files
 						@mkdir(UPLOADFULLPATH . 'intake_forms/' . $intake_form_id, 0777);
@@ -393,6 +394,7 @@ class Emergency_assistance extends CI_Controller {
 				}
 				$this->data['case_details'] = $case_details;
 				$this->data['priorities'] = $this->mytask_model->get_priorities();
+				$this->data['phone_list_url'] = base_url('phone/search');
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Create Case', TRUE);
@@ -648,6 +650,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['priorities'] = $this->mytask_model->get_priorities();
 				
 				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CASE));
+				$this->data['phone_list_url'] = base_url('phone/search');
 				
 				// $this->data['priorities'] = $this->case_model->get_priorities();
 				
@@ -664,7 +667,7 @@ class Emergency_assistance extends CI_Controller {
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} elseif (!$this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
+		} else if (!$this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
 			// redirect them to the home page because they must be an administrator to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
@@ -1266,7 +1269,7 @@ class Emergency_assistance extends CI_Controller {
 				redirect('emergency_assistance/edit_case/' . $array['case_id'], 'refresh');
 			} else {
 				// load view data
-				$this->template->write('title', SITE_TITLE . ' - Create IntakeForm', TRUE);
+				$this->template->write('title', SITE_TITLE . ' - Create Note', TRUE);
 				$this->template->write_view('content', 'emergency_assistance/create_intakeform');
 				$this->template->render();
 			}
@@ -1690,7 +1693,7 @@ class Emergency_assistance extends CI_Controller {
 		else if ($type == 'automatic') {
 			// asigning process
 			foreach ( $cases as $key => $value ) {
-				$employee_id = $this->case_model->get_auto_assign_manager_id();
+				$employee_id = $this->mytask_model->get_auto_assign_manager_id();
 				if (empty($employee_id)) {
 					echo "0";
 					return;

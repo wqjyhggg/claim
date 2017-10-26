@@ -420,6 +420,15 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-3">
+							<?php echo form_label('Examiner:', 'assign_to', array("class" => 'col-sm-12')); ?>
+							<select name="assign_to" class="form-control required">
+								<option value="">-- Select Examiner --</option>
+								<?php foreach ($examiners as $rc):?>
+								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post('assign_to')) { echo "selected"; } ?>><?php echo $rc['email'] . ' ' . $rc['shift']; ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<div class="col-sm-3">
 							<?php echo form_label('Status:', 'status', array("class" => 'col-sm-12')); ?>
 							<select name="status" class="form-control">
 								<?php foreach ($status_list as $key => $val): ?>
@@ -571,8 +580,8 @@
 						<div class="form-group col-sm-12"><?php echo date("Y-m-d"); ?></div>
 					</div>
 					<div class="form-group col-sm-12">
-						<?php echo form_label('Intake Notes:', 'intake_notes', array("class" => 'col-sm-12')); ?>
-						<?php echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class" => "form-control", 'placeholder' => 'Intake Notes', 'style' => "height:100px")); ?>
+						<?php echo form_label('Notes:', 'intake_notes', array("class" => 'col-sm-12')); ?>
+						<?php echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class" => "form-control", 'placeholder' => 'Notes', 'style' => "height:100px")); ?>
 						<?php echo form_error("intake_notes"); ?>
 					</div>
 					<div class="form-group col-sm-12 files"></div>
@@ -1083,7 +1092,7 @@
       // check notes field filled or not
       if(!$("textarea[name=intake_notes]").val())
       {
-         alert("Please add intake notes first.")
+         alert("Please add notes first.")
          return false;
       }
 
@@ -1162,7 +1171,7 @@
 
             }
             else{
-               alert("Sorry, policy information does not exists, please check policy no and try again");
+               alert("Sorry1, policy information does not exists, please check policy no and try again");
                $("input[name=policy_no]").val('Unknown - ' + $("input[name=policy_no]").val());
 
                // reset all fields
@@ -1317,7 +1326,8 @@
                $("input[name=guardian_phone]").val();
             }
             else{
-               alert("Sorry, policy information does not exists, please check policy no and try again");
+               $(".nav-m22d").removeClass("csspinner load1");
+               alert("Sorry2, policy information does not exists, please check policy no and try again");
                $(this).val('Unknown - ' + $(this).val());
             }
             $(".nav-m22d").removeClass("csspinner load1");

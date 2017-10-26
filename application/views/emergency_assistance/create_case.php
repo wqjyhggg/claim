@@ -414,7 +414,7 @@
 						<div class="col-sm-4">
 							<label class="col-sm-12">&nbsp;</label>
 							<button class="btn btn-primary">Save</button>
-							<button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create InTakeForm</button>
+							<button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create Note</button>
 							<?php echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info')); ?>
 						</div>
 					</div>
@@ -442,21 +442,26 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Create Note</h4>
+				<h4 class="modal-title">Create Note</h4><a href="<?php echo $phone_list_url;?>" target='_blank'>Find phone file</a>
 			</div>
 			<div class="modal-body">
 				<div class="row">
-					<div class="form-group col-sm-6">
+					<div class="form-group col-sm-4">
 						<?php echo form_label('Note #:', 'form_id', array("class" => 'col-sm-12')); ?>
 						<div class="form-group col-sm-12">####</div>
 					</div>
-					<div class="form-group col-sm-6">
+					<div class="form-group col-sm-4">
 						<?php echo form_label('Create Date:', 'create_date', array("class" => 'col-sm-12')); ?>
 						<div class="form-group col-sm-12"><?php echo date("Y-m-d"); ?></div>
 					</div>
+					<div class="form-group col-sm-4">
+						<?php echo form_label('Phone File:', 'phonefile', array("class" => 'col-sm-12')); ?>
+						<?php echo form_input("phonefile", $this->input->post("phonefile"), array("class" => "form-control", 'placeholder' => 'Phone File')); ?>
+						<?php echo form_error("intake_notes"); ?>
+					</div>
 					<div class="form-group col-sm-12">
-						<?php echo form_label('Intake Notes:', 'intake_notes', array("class" => 'col-sm-12')); ?>
-						<?php echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class" => "form-control", 'placeholder' => 'Intake Notes', 'style' => "height:100px")); ?>
+						<?php echo form_label('Notes:', 'intake_notes', array("class" => 'col-sm-12')); ?>
+						<?php echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class" => "form-control", 'placeholder' => 'Notes', 'style' => "height:100px")); ?>
 						<?php echo form_error("intake_notes"); ?>
 					</div>
 					<div class="form-group col-sm-12 files"></div>
@@ -520,7 +525,7 @@ $(document).ready(function() {
       // check notes field filled or not
       if(!$("textarea[name=intake_notes]").val())
       {
-         alert("Please add intake notes first.")
+         alert("Please add notes first.")
          return false;
       }
 
@@ -532,10 +537,11 @@ $(document).ready(function() {
 
       // get notes and files
       var notes = $("textarea[name=intake_notes]").val();
+      var phonefile = $("input[name=phonefile]").val();
       var files = $(".modal-body .files").clone();
 
       // generate html data
-      var html = '<div class="col-sm-12 intake-forms"><div class="col-sm-2"><div class="col-sm-12">'+count+'. #<?php echo $this->ion_auth->user()->row()->id; ?></div><div class="col-sm-12"><?php echo $this->ion_auth->user()->row()->first_name; ?></div><div class="col-sm-12"><?php echo date("Y-m-d H:i:s"); ?></div></div><div class="col-sm-10"><div class=col-sm-12"><input type="hidden" name="notes_'+count+'" value="'+notes+'" />' + notes + '</div><div id="intake-files-'+count+'" class="form-group col-sm-11"></div><div class="col-sm-1&quot;"><i class="fa fa-remove row-link remove-form pull-right"></i></div></div></div>';
+      var html = '<div class="col-sm-12 intake-forms"><div class="col-sm-2"><div class="col-sm-12">'+count+'. #<?php echo $this->ion_auth->user()->row()->id; ?></div><div class="col-sm-12"><?php echo $this->ion_auth->user()->row()->first_name; ?></div><div class="col-sm-12"><?php echo date("Y-m-d H:i:s"); ?></div></div><div class="col-sm-10"><div class=col-sm-12"><input type="hidden" name="phonefile_'+count+'" value="'+phonefile+'" /><input type="hidden" name="notes_'+count+'" value="'+notes+'" />' + notes + '</div><div id="intake-files-'+count+'" class="form-group col-sm-11"></div><div class="col-sm-1&quot;"><!-- i class="fa fa-remove row-link remove-form pull-right"></i --></div></div></div>';
 
       // place every value to intake display area
       $(".intake-forms-list").append(html);

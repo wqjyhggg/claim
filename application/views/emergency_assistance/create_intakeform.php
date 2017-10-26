@@ -18,7 +18,7 @@
             <div class="x_content">  
               <?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'post')); ?>
                 <div class="row">
-                  <div class="form-group col-sm-6">
+                  <div class="form-group col-sm-4">
                      <?php 
                         echo form_label('Note #:', 'form_id', array("class"=>'col-sm-12'));
                      ?>
@@ -26,7 +26,7 @@
                         ####
                      </div>
                   </div>              
-                  <div class="form-group col-sm-6">
+                  <div class="form-group col-sm-4">
                      <?php      
                      echo form_label('Create Date:', 'create_date', array("class"=>'col-sm-12')); 
                      ?>
@@ -44,8 +44,8 @@
                   </div>  --> 
                   <div class="form-group col-sm-12">
                      <?php 
-                        echo form_label('Intake Notes:', 'intake_notes', array("class"=>'col-sm-12'));
-                        echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class"=>"form-control", 'placeholder'=>'Intake Notes'));
+                        echo form_label('Notes:', 'intake_notes', array("class"=>'col-sm-12'));
+                        echo form_textarea("intake_notes", $this->input->post("intake_notes"), array("class"=>"form-control", 'placeholder'=>'Notes'));
                         echo form_error("intake_notes");
                      ?>
                   </div>  

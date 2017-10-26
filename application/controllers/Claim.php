@@ -114,7 +114,7 @@ class Claim extends CI_Controller {
 						$data[$key] = $value;
 				}
 				$data['created'] = date('Y-m-d H:i:s');
-				$data['created_by'] = $this->ion_auth->user()->row()->id;
+				$data['created_by'] = $this->ion_auth->get_user_id();
 				
 				// set default status processing
 				if (! $data['status'])
@@ -159,6 +159,8 @@ class Claim extends CI_Controller {
 					$case = $this->case_model->get_id_by_case_no($case_no); // Get case
 					if ($case) {
 						$data['id'] = $case['id'];
+						$claim_no = str_pad($data['id'], 7, 0, STR_PAD_LEFT);
+						$data['claim_no'] = $claim_no; 
 					}
 				}
 				if (empty($data['id'])) {
@@ -282,7 +284,7 @@ class Claim extends CI_Controller {
 						// generate data array
 						$data_intake = array(
 								'case_id' => $record_id,
-								'created_by' => $this->ion_auth->user()->row()->id,
+								'created_by' => $this->ion_auth->get_user_id(),
 								'notes' => $array['notes_' . $i],
 								'created' => date("Y-m-d H:i:s"),
 								'docs' => implode(",", $file_names),
@@ -315,20 +317,25 @@ class Claim extends CI_Controller {
 					}
 				}
 				
+				$assign_to = $array = $this->input->post('assign_to');
+				if (empty($assign_to)) {
+					$assign_to = $this->mytask_model->get_auto_assign_examiner_id();
+				}
 				// settings for my task section for case manager
 				$task_data = array(
-						'user_id' => $this->ion_auth->user()->row()->id,
+						'user_id' => $assign_to,
 						'item_id' => $record_id,
 						'task_no' => $claim_no,
 						'category' => 'Claims',
 						'type' => 'CLAIM',
 						'priority' => 'Normal',
-						'created_by' => $this->ion_auth->user()->row()->id,
+						'status' => Mytask_model::STATUS_ASSIGNED,
+						'created_by' => $this->ion_auth->get_user_id(),
 						'created' => date('Y-m-d H:i:s'),
 						'user_type' => 'claimsmanager' 
 				);
 				// insert values to database
-				$this->common_model->save("mytask", $task_data);
+				$this->mytask_model->save($task_data);
 				
 				// send success message
 				$this->session->set_flashdata('success', "Claim successfully created");
@@ -367,6 +374,8 @@ class Claim extends CI_Controller {
 				
 				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(TRUE);
+				
+				$this->data['examiners'] = $this->users_model->search(array('groups' => Users_model::GROUP_EXAMINER, 'active' => 1));
 				
 				// get all word documents
 				$fields = "id, title, content";
@@ -437,7 +446,7 @@ class Claim extends CI_Controller {
 						$data[$key] = $value;
 				}
 				$data['created'] = date('Y-m-d H:i:s');
-				$data['created_by'] = $this->ion_auth->user()->row()->id;
+				$data['created_by'] = $this->ion_auth->get_user_id();
 				
 				// upload claim pdf files to server
 				$files = @$_FILES['files_multi'];
@@ -553,7 +562,7 @@ class Claim extends CI_Controller {
 						// generate data array
 						$data_intake = array(
 								'case_id' => $record_id,
-								'created_by' => $this->ion_auth->user()->row()->id,
+								'created_by' => $this->ion_auth->get_user_id(),
 								'notes' => $array['notes_' . $i],
 								'created' => date("Y-m-d H:i:s"),
 								'docs' => implode(",", $file_names),
@@ -919,7 +928,7 @@ class Claim extends CI_Controller {
 						// generate data array
 						$data_intake = array(
 								'case_id' => $record_id,
-								'created_by' => $this->ion_auth->user()->row()->id,
+								'created_by' => $this->ion_auth->get_user_id(),
 								'notes' => $array['notes_' . $i],
 								'created' => date("Y-m-d H:i:s"),
 								'docs' => implode(",", $file_names),
@@ -1164,7 +1173,7 @@ class Claim extends CI_Controller {
 				"Province: " . $province 
 		);
 		$data_intake = array(
-				'created_by' => $this->ion_auth->user()->row()->id,
+				'created_by' => $this->ion_auth->get_user_id(),
 				'notes' => implode(", ", $intake_notes),
 				'created' => date("Y-m-d H:i:s"),
 				'docs' => $filename 
@@ -1222,7 +1231,7 @@ class Claim extends CI_Controller {
 		);
 		$data_intake = array(
 				'case_id' => $case_id,
-				'created_by' => $this->ion_auth->user()->row()->id,
+				'created_by' => $this->ion_auth->get_user_id(),
 				'notes' => implode(", ", $intake_notes),
 				'created' => date("Y-m-d H:i:s"),
 				'docs' => $filename,
@@ -1643,7 +1652,7 @@ class Claim extends CI_Controller {
 	
 	// return list of role for current user
 	function get_access_list() {
-		$id = $this->ion_auth->user()->row()->id;
+		$id = $this->ion_auth->get_user_id();
 		
 		$joins[] = array(
 				'table' => 'groups',

@@ -509,8 +509,8 @@
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
-						<?php echo form_label ( 'Intake Notes:', 'intake_notes', array ("class" => 'col-sm-12') ); ?>
-						<?php echo form_textarea ( "intake_notes", $this->input->post ( "intake_notes" ), array ("class" => "form-control", 'placeholder' => 'Intake Notes', 'style' => "height:100px") ); ?>
+						<?php echo form_label ( 'Notes:', 'intake_notes', array ("class" => 'col-sm-12') ); ?>
+						<?php echo form_textarea ( "intake_notes", $this->input->post ( "intake_notes" ), array ("class" => "form-control", 'placeholder' => 'Notes', 'style' => "height:100px") ); ?>
 						<?php echo form_error ( "intake_notes" ); ?>
 					</div>
 					<div class="form-group col-sm-12 files"></div>
@@ -879,7 +879,7 @@ $(document).ready(function() {
       // check notes field filled or not
       if(!$("textarea[name=intake_notes]").val())
       {
-         alert("Please add intake notes first.")
+         alert("Please add notes first.")
          return false;
       }
 

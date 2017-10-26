@@ -237,14 +237,4 @@ class Case_model extends CI_Model {
 		$this->active_model->log_new('case', $id, $data, $sql);
 		return $id;
 	}
-	
-	function get_auto_assign_manager_id() {
-		$sql = "SELECT u.id, (SELECT count(c.case_manager) FROM `case` c WHERE c.status='".self::STATUS_ACTIVE."' AND c.case_manager=u.id) as cnt FROM users u WHERE u.active='1' AND groups LIKE '%".Users_model::GROUP_MANAGER."%' ORDER BY cnt ASC, u.id ASC";
-		$rt = $this->db->query($sql);
-		$rc = $rt->row_array();
-		if ($rc) {
-			return $rc['id'];
-		}
-		return 0;
-	}
 }

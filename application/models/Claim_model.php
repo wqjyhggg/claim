@@ -8,6 +8,15 @@ if (! defined ( 'BASEPATH' )) exit ( 'No direct script access allowed' );
  */
 
 class Claim_model extends CI_Model {
+	const STATUS_Processing='Processing';
+	const STATUS_Pending='Pending';
+	const STATUS_Processed='Processed';
+	const STATUS_Paid='Paid';
+	const STATUS_Closed='Closed';
+	const STATUS_Recovered='Recovered';
+	const STATUS_Appealed='Appealed';
+	const STATUS_Exempted='Exempted';
+	
 	/**
 	 * Generate claim no if there is none
 	 * 
@@ -27,14 +36,14 @@ class Claim_model extends CI_Model {
 	public function get_claim_status_list($need_empty=0) {
 		$arr = array(
 				0	=> '-- Claim Status --',
-				'Processing' => 'Processing',
-				'Pending' => 'Pending',
-				'Processed' => 'Processed',
-				'Paid' => 'Paid',
-				'Closed' => 'Closed',
-				'Recovered' => 'Recovered',
-				'Appealed' => 'Appealed',
-				'Exempted' => 'Exempted',
+				'Processing' => self::STATUS_Processing,
+				'Pending' => self::STATUS_Pending,
+				'Processed' => self::STATUS_Processed,
+				'Paid' => self::STATUS_Paid,
+				'Closed' => self::STATUS_Closed,
+				'Recovered' => self::STATUS_Recovered,
+				'Appealed' => self::STATUS_Appealed,
+				'Exempted' => self::STATUS_Exempted,
 		);
 		
 		if (empty($need_empty)) unset($arr[0]);
