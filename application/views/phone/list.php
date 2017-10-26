@@ -32,6 +32,7 @@
 									<th>Dest</th>
 									<th>Direction</th>
 									<th>Minutes</th>
+									<th>URL</th>
 							</thead>
 							<tbody>
 								<?php
@@ -48,6 +49,7 @@
 									<td><?php echo $value['destination_number']; ?></td>
 									<td><?php echo $value['direction']; ?></td>
 									<td><?php echo $value['minutes']; ?></td>
+									<td><?php echo $value['recording_url']; ?></td>
 								</tr>
 								<?php endforeach; ?>
 							</tbody>
