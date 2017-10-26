@@ -49,7 +49,7 @@
 									<td><?php echo $value['destination_number']; ?></td>
 									<td><?php echo $value['direction']; ?></td>
 									<td><?php echo $value['minutes']; ?></td>
-									<td><?php echo $value['recording_url']; ?></td>
+									<td><?php echo isset($value['recording_url']) ? $value['recording_url'] : ''; ?></td>
 								</tr>
 								<?php endforeach; ?>
 							</tbody>
