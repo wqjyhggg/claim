@@ -11,7 +11,9 @@ class Active_model extends CI_Model {
 	
 	private function init_log($type, $data, $query) {
 		$this->data = array();
-		$this->data['user_id'] = $this->ion_auth->get_user_id();
+		$user_id = $this->ion_auth->get_user_id();
+		if (empty($user_id)) $user_id = 0;
+		$this->data['user_id'] = $user_id;
 		$this->data['claim_id'] = isset($data['claim_id']) ? $data['claim_id'] : 0;
 		$this->data['case_id'] = isset($data['case_id']) ? $data['case_id'] : 0;
 		$this->data['plan_id'] = isset($data['plan_id']) ? $data['plan_id'] : 0;
