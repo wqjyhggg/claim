@@ -317,7 +317,7 @@ class Ion_auth_model extends CI_Model {
 		
 		// bcrypt
 		if ($use_sha1_override === FALSE && $this->hash_method == 'bcrypt') {
-			if ($this->bcrypt->verify($password, $hash_password_db->password)) {
+			if (password_verify($password, $hash_password_db->password) === TRUE) {
 				return TRUE;
 			}
 			
@@ -951,7 +951,6 @@ class Ion_auth_model extends CI_Model {
 
 		if ($user) {
 			$password = $this->hash_password_db($user['id'], $password);
-
 			if ($password === TRUE) {
 				if ($user['active'] == 0) {
 					$this->trigger_events('post_login_unsuccessful');
@@ -959,7 +958,6 @@ class Ion_auth_model extends CI_Model {
 					
 					return FALSE;
 				}
-				
 				$this->set_session($user);
 				
 				$this->update_last_login($user['id']);
