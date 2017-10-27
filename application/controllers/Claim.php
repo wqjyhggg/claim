@@ -379,7 +379,8 @@ class Claim extends CI_Controller {
 				
 				// get all word documents
 				$fields = "id, title, content";
-				$this->data['word_templates'] = $this->word_comments_model->search(array()); // $this->common_model->select($record = "list", $typecast = "array", $table = "word_comments", $fields);
+				// $this->data['word_templates'] = $this->word_comments_model->search(array()); // $this->common_model->select($record = "list", $typecast = "array", $table = "word_comments", $fields);
+				$this->data['word_templates'] = $this->data['word_templates'] = $this->word_comments_model->search(array());
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Create Claim', TRUE);
@@ -1019,23 +1020,16 @@ class Claim extends CI_Controller {
 	
 	// reload all docs email/print
 	public function reload_docs() {
+		$this->load->model('template_model');
+		$this->load->model('province_model');
+		$this->load->model('word_comments_model');
 		
 		// get all documents for sending email/print.
-		$fields = "id, name, description";
-		$access_types = $this->get_access_list();
-		if ($access_types)
-			$conditions = "type in (" . implode(', ', $access_types) . ")";
-		else
-			$conditions = "type in (0)";
-		$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
+		$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
+		$this->data['province2'] = $this->province_model->get_list_by_country_short('CA');
+		$this->data['word_templates'] = $this->data['word_templates'] = $this->word_comments_model->search(array());
 		
-		// get all word documents
-		$fields = "id, title, content";
-		$this->data['word_templates'] = $this->common_model->select($record = "list", $typecast = "array", $table = "word_comments", $fields);
-		$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key = "short_code", $value = "name");
-		$data = array(
-				'reload_docs' => $this->parser->parse("claim/reload_docs", $this->data, TRUE) 
-		);
+		$data = array('reload_docs' => $this->parser->parse("claim/reload_docs", $this->data, TRUE));
 		echo json_encode($data);
 	}
 	function import_files() {
