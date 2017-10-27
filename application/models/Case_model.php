@@ -84,11 +84,11 @@ class Case_model extends CI_Model {
 		}
 		
 		if (!empty($post["firstname"])) {
-			$where .= " AND `case`.insured_first_name like ". $this->db->escape("%" . $post["firstname"] . "%");
+			$where .= " AND `case`.insured_firstname like ". $this->db->escape("%" . $post["firstname"] . "%");
 		}
 
 		if (!empty($post["lastname"])) {
-			$where .= " AND `case`.insured_last_name like ". $this->db->escape("%" . $post["lastname"] . "%");
+			$where .= " AND `case`.insured_lastname like ". $this->db->escape("%" . $post["lastname"] . "%");
 		}
 
 		if (!empty($post["assign_to"])) {

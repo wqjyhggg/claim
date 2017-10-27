@@ -306,19 +306,18 @@ class Emergency_assistance extends CI_Controller {
 				$case_details['medical_notes'] = '';
 				$case_details['case_manager'] = '';
 				$case_details['priority'] = '';
-				
+
 				$this->data['policy'] = array();
-				if (empty($case_details)) {
+				if (empty($case_details['policy_no'])) {
 					$policy = $this->input->get('policy');
 					if (!empty($policy)) {
-						if ($policies = $this->api_model->get_policy(array(
-								'policy' => $policy 
-						))) {
+						if ($policies = $this->api_model->get_policy(array('policy' => $policy))) {
 							$this->data['policy'] = $policies[0];
-							$this->data['case_details']['street_no'] = $this->data['policy']['street_number'];
-							$this->data['case_details']['street_name'] = $this->data['policy']['street_name'];
-							$this->data['case_details']['city'] = $this->data['policy']['city'];
-							$this->data['case_details']['province'] = $this->data['policy']['province2'];
+							$case_details['policy_no'] = $this->data['policy']['policy'];
+							$case_details['street_no'] = $this->data['policy']['street_number'];
+							$case_details['street_name'] = $this->data['policy']['street_name'];
+							$case_details['city'] = $this->data['policy']['city'];
+							$case_details['province'] = $this->data['policy']['province2'];
 							$case_details['country2'] = $this->data['case_details']['country2'] = $this->data['policy']['country2'];
 							$case_details['country'] = $this->data['case_details']['country'] = $this->data['policy']['country2'];
 							$case_details['province'] = $this->data['case_details']['province'] = $this->data['policy']['province2'];
