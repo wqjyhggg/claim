@@ -1227,6 +1227,7 @@
       if($(this).is(":checked"))
       {
          // fill all json values to address fields
+         $("input[name=email]").val(data[0].contact_emai);
          $("input[name=street_no_email]").val(data[0].street_number);
          $("input[name=street_name_email]").val(data[0].street_name);
          $("input[name=city_email]").val(data[0].city);
