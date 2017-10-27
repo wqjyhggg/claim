@@ -492,7 +492,7 @@ $(document).ready(function() {
       // check if employee selected or not
       if(!employee_id)
       {
-         alert("Please select emc user first.");
+         alert("Please select user first.");
          return false;
       }
 
