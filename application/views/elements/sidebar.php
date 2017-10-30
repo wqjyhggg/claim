@@ -7,7 +7,7 @@
 	<li> <?php echo anchor("emergency_assistance", '<i class="fa fa-briefcase"></i>Emergency assistance</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
 	
-	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EAC, Users_model::GROUP_INSURER, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) : ?>
+	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_INSURER, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) : ?>
 	<li>  <?php echo anchor("emergency_assistance/case_management", '<i class="fa fa-list-ul"></i>Case management</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
 

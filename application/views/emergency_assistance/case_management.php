@@ -111,7 +111,7 @@
 								<?php foreach ($cases as $key => $value): ?>
 								<!-- placing all attributes in table row to replace feature in doc via js -->
 								<tr class="row-link" alt="<?php echo $value['id']; ?>" insured_address="<?php echo nl2br($value['insured_address']) ?>" insured_lastname="<?php echo $value['insured_lastname'] ?>" insured_firstname="<?php echo $value['insured_firstname'] ?>" policy_no="<?php echo $value['policy_no'] ?>" policy_info='<?php echo $value['policy_info'] ?>' case_no="<?php echo $value['case_no'] ?>" casemanager_name="<?php echo $value['case_manager_name'] ?>">
-									<th><?php echo form_checkbox("case", $value['id'], FALSE, array('class'=>($case_manager <> $value['case_manager']?'own_by_other':''), ($value['status'] == 'C'?'disabled':'')=>'')); ?></th>
+									<th><?php echo form_checkbox("case", $value['id'], FALSE, array('class'=>((($case_manager != $value['case_manager']) && (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN))) )?'own_by_other':''), ($value['status'] == 'C'?'disabled':'')=>'')); ?></th>
 									<td><?php echo $value['case_no']; ?></td>
 									<td><?php echo date('d/m/Y', strtotime($value['created'])); ?></td>
 									<td><?php echo $value['province']; ?></td>
@@ -133,7 +133,7 @@
 					<div class="row form-group">
 						<div class="col-sm-12">
 							<div class="col-sm-2">
-								<button class="btn btn-primary show_button auto_assign" disabled>Auto Assign</button>
+								<button class="btn btn-primary show_button auto_assign" disabled>Auto Assign CM</button>
 							</div>
 							<div class="col-sm-2">
 								<div class="col-sm-12">

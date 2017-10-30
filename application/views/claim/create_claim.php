@@ -616,6 +616,7 @@
 			<div class="col-sm-3">
 				<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
 				<select name="expenses_claimed[coverage_code][]" class="form-control required">
+					<option value="0">-- Select Coverage Code --</option>
 					<?php foreach ($expenses_list as $key => $val): ?>
 					<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post("coverage_code")) { echo "selected"; } ?>><?php echo $val; ?></option>
 					<?php endforeach; ?>
