@@ -1282,59 +1282,52 @@ class Claim extends CI_Controller {
 		$claim = $this->input->post("claim");
 		$claim = explode(",", $claim);
 		$employee_id = $this->input->post("employee_id");
+		if (! $this->ion_auth->logged_in()) {
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EAC, Users_model::GROUP_INSURER))) {
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		} else {
+			$this->load->model('claim_model');
+			$this->load->model('mytask_model');
 		
-		// asigning process
-		foreach ( $claim as $key => $value ) {
-			$this->common_model->update("claim", array(
-					"assign_to" => $employee_id 
-			), array(
-					"id" => $value 
-			));
-			
-			// check task, if already exists
-			$task_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "mytask", $fields = "mytask.id", $conditions = array(
-					'item_id' => $value,
-					'type' => 'CLAIM',
-					'user_type' => 'claimexaminer' 
-			));
-			
-			if (! empty($task_details)) {
-				// update my task data
-				$data_task = array(
-						'user_id' => $employee_id 
-				);
-				$this->common_model->update("mytask", $data_task, array(
-						'item_id' => $value,
-						'type' => 'CLAIM',
-						'user_type' => 'claimexaminer' 
-				));
-			} else {
-				// get case details here
-				$claim_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "claim", $fields = "created_by, created, claim_no", $conditions = array(
-						'claim.id' => $value 
-				));
-				
-				// create new task here
-				$task_data = array(
-						'user_id' => $employee_id,
-						'item_id' => $value,
-						'task_no' => $claim_details['claim_no'],
-						'category' => 'Claims',
-						'type' => 'CLAIM',
-						'priority' => 'Normal',
-						'created_by' => $claim_details['created_by'],
-						'created' => $claim_details['created'],
-						'user_type' => 'claimexaminer' 
-				);
-				// insert values to database
-				$this->common_model->save("mytask", $task_data);
+			// asigning process
+			foreach ( $claim as $key => $value ) {
+				$cl = $this->claim_model->get_by_id($value);
+				if ($cl) {
+					$this->claim_model->save(array("assign_to" => $employee_id, "id" => $value));
+					
+					// check task, if already exists
+					$task_details = $this->mytask_model->search(array('item_id' => $value, 'type' => Mytask_model::TASK_TYPE_CLAIM, 'user_type' => Mytask_model::USER_TYPE_EXAM));
+					
+					if (! empty($task_details)) {
+						// update my task data
+						$data_task = array('id' => $task_details[0]['id'], 'user_id' => $employee_id, 'status' => Mytask_model::STATUS_REASSIGNED);
+					} else {
+						// get case details here
+						$claim_details = $this->claim_model->get_by_id($value);
+						
+						// create new task here
+						$data_task = array(
+								'user_id' => $employee_id,
+								'item_id' => $value,
+								'task_no' => $claim_details['claim_no'],
+								'category' => Mytask_model::CATEGORY_CLAIMS,
+								'type' => Mytask_model::TASK_TYPE_CLAIM,
+								'priority' => Mytask_model::PRIORITY_NORMAL,
+								'created_by' => $this->ion_auth->get_user_id(),
+								'created' => date('Y-m-d H:i:s'),
+								'user_type' => Mytask_model::USER_TYPE_EXAM
+						);
+					}
+					$this->mytask_model->save($data_task);
+				}
 			}
+			
+			// send success message
+			$this->session->set_flashdata('success', "Claim asssigned successfully");
+			
+			echo TRUE;
 		}
-		
-		// send success message
-		$this->session->set_flashdata('success', "Claim asssigned successfully");
-		
-		echo TRUE;
 	}
 	
 	// change status of claim - for ajax request

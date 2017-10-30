@@ -276,7 +276,13 @@
 							</div>
 							<div class="col-sm-8 employees-section" style="display: none">
 								<div class="col-sm-4">
-								claim_examiner
+									<select name="assign_user" class="form-control">
+										<option value=""> -- Select examiner -- </option>
+										<?php foreach ($examiners as $rc) { ?>
+										<option value="<?php echo $rc['id']; ?>"><?php echo $rc['email']; ?></option>
+										<?php } ?>
+									</select>
+								
 									<?php echo $claim_examiner; ?>
 								</div>
 								<div class="col-sm-3">
