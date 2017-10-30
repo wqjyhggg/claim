@@ -56,7 +56,7 @@ class Auth extends CI_Controller {
 			foreach ($this->data['records'] as $key => $rc) {
 				if ($rc['type'] == 'CASE') {
 					$case = $this->case_model->get_by_id($rc['item_id']);
-					$this->data['records'][$key]['insured_name'] = $case['first_name'] . " " . $case['last_name'];
+					$this->data['records'][$key]['insured_name'] = $case['insured_firstname'] . " " . $case['insured_lastname'];
 				} else {
 					$claim = $this->claim_model->get_by_id($rc['item_id']);
 					$this->data['records'][$key]['insured_name'] = $claim['insured_first_name'] . " " . $claim['insured_last_name'];
