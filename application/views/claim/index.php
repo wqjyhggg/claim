@@ -50,11 +50,11 @@
 						<div class="clearfix"></div>
 					</div>
 					<div class="row">
-						<div class="form-group col-sm-3">
+						<!-- div class="form-group col-sm-3">
 							<?php echo form_label('Products:', 'products', array("class"=>'col-sm-12')); ?>
 							<?php array_unshift($products, '-- Product --'); ?>
 							<?php echo form_dropdown ( "product_short", $products, $this->input->post ( "product_short" ), array ("class" => 'form-control') );?>
-						</div>
+						</div -->
 						<div class="form-group col-sm-3">
 							<?php echo form_label('EAC:', 'eac', array("class"=>'col-sm-12')); ?>
 							<select name="assign_to" class="form-control">

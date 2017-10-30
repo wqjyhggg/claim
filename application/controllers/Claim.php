@@ -33,6 +33,7 @@ class Claim extends CI_Controller {
 			
 			// pass policies data to view
 			$this->data['policies_error'] = $this->api_model->errormsg;
+			if ($this->data['policies_error'] == 'Empty query condition') $this->data['policies_error'] = ''; 
 			$this->data['policies_success'] = $this->api_model->success;
 			$this->data['policy_status'] = $this->api_model->status_list;
 			// echo "<pre>"; print_r($this->input->post()); print_r($this->data['policy_status']); die("XX"); //XXXXXXXXXXXx
@@ -153,6 +154,7 @@ class Claim extends CI_Controller {
 				$this->load->model('master_model');
 				$this->load->model('case_model');
 				$this->load->model('claim_model');
+				$this->load->model('mytask_model');
 				
 				$data['id'] = 0;
 				if (! empty($case_no = $this->input->post('case_no'))) {
