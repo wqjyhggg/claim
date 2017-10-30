@@ -22,6 +22,7 @@ class Bcrypt {
   }
 
   public function hash($input) {
+  	/*
     $hash = crypt($input, $this->getSalt());
 
     if(strlen($hash) > 13) {
@@ -29,6 +30,8 @@ class Bcrypt {
     }
 
     return false;
+    */
+  	return password_hash($input, PASSWORD_DEFAULT);
   }
 
   /**
@@ -37,8 +40,11 @@ class Bcrypt {
    * @return bool
      */
   public function verify($input, $existingHash) {
+  	/*
     $hash = crypt($input, $existingHash);
     return hash_equals($hash, crypt($input, $hash));
+    */
+  	return password_verify($input , $existingHash);
   }
 
   private function getSalt() {

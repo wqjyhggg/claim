@@ -95,7 +95,9 @@ class Users_model extends CI_Model {
 	 */
 	public function save($data) {
 		if (isset($data['password'])) {
-			$data['password'] = $this->ion_auth_model->hash_password($data['password']);
+			if (substr($data['password'], 0, 1) != '$') {
+				$data['password'] = $this->ion_auth_model->hash_password($data['password']);
+			}
 		}
 		if (isset($data['id'])) {
 			// Update
