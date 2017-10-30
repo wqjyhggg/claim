@@ -190,6 +190,9 @@ switch (ENVIRONMENT)
  *  Resolve the system path for increased reliability
  * ---------------------------------------------------------------
  */
+defined('DEFAULT_MY_ZONE')          OR define('DEFAULT_MY_ZONE', 'America/New_York');
+date_default_timezone_set(DEFAULT_MY_ZONE);
+
 
 	// Set the current directory correctly for CLI requests
 	if (defined('STDIN'))
