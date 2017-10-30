@@ -214,5 +214,9 @@ function &DB($params = '', $query_builder_override = NULL)
 	}
 
 	$DB->initialize();
+	
+	$tz = (new DateTime('now', new DateTimeZone(DEFAULT_MY_ZONE)))->format('P');
+	$DB->query("SET time_zone='$tz';");
+	
 	return $DB;
 }

@@ -20,7 +20,7 @@ class Claim extends CI_Controller {
 		if (! $this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_INSURER))) {
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
@@ -395,7 +395,7 @@ class Claim extends CI_Controller {
 		if (! $this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER))) {
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else if (empty($id)) {
@@ -708,7 +708,7 @@ class Claim extends CI_Controller {
 	public function claim_detail($id) {
 		if (! $this->ion_auth->logged_in()) {
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EAC, Users_model::GROUP_INSURER))) {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			$this->load->model('api_model');
@@ -751,6 +751,9 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('contact_phone', 'physician alt telephone ', 'numeric');
 			
 			if ($this->form_validation->run() == TRUE) {
+				if ($this->ion_auth->in_group(Users_model::GROUP_INSURER)) {
+					return show_error('Sorry, you don\'t have any permission to edit.');
+				}
 				// prepare post data array
 				$data =[ ];
 				$array = $this->input->post();
