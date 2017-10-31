@@ -35,7 +35,7 @@ class Phone extends CI_Controller {
 		$rt = $this->phone_model->sendRequest($req, $data, 'GET');
 		
 		$data['call_list'] = json_decode($rt, true);
-		echo "<pre>"; print_r($data['call_list']); die("XX"); //XXXXXXXXXXXXXXXXXXXXXX
+		// echo "<pre>"; print_r($data['call_list']); die("XX"); //XXXXXXXXXXXXXXXXXXXXXX
 		$data['date'] = $date;
 		$data['action_url'] = base_url('phone/search');
 		
@@ -49,6 +49,9 @@ class Phone extends CI_Controller {
 		$arr = array();
 		$arr['get'] = var_export($_GET, TRUE);
 		$arr['post'] = var_export($_POST, TRUE);
+		$json = file_get_contents("php://input");
+		$arr['json'] = json_decode($json, TRUE);
+		
 		$this->load->model('phone_model');
 		$this->phone_model->save(array('data' => json_encode($arr)));
 	}

@@ -68,6 +68,14 @@
 						</div>
 						<?php } ?>
 						<?php } ?>
+						<div class="form-group col-sm-6">
+							<div class="col-sm-4">
+							<?php echo form_label('Departure Date:', 'Departure') ?>
+							</div>
+							<div class="input-group date col-sm-8">
+								<?php echo form_input("departure_date", $case_details["departure_date"], array("class"=>"form-control datepicker", 'placeholder'=>'Departure Date')); ?><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
 					</div>
 
 					<h4>Case Basic Info option</h4>
@@ -442,7 +450,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Create Note</h4><a href="<?php echo $phone_list_url;?>" target='_blank'>Find phone file</a>
+				<h4 class="modal-title">Create Note <small style='padding-left: 20px;'><a href="<?php echo $phone_list_url;?>" target='_blank'>Find phone file</a></small></h4>
 			</div>
 			<div class="modal-body">
 				<div class="row">

@@ -264,6 +264,7 @@ class Emergency_assistance extends CI_Controller {
 				$case_details['insured_firstname'] = '';
 				$case_details['insured_lastname'] = '';
 				$case_details['dob'] = '';
+				$case_details['departure_date'] = '';
 				$case_details['created_by'] = '';
 				$case_details['street_no'] = '';
 				$case_details['street_name'] = '';
