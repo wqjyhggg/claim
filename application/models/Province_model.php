@@ -18,7 +18,7 @@ class Province_model extends CI_Model {
 		$this->db->where('country_id', $country_id);
 		$this->db->order_by('name');
 		$rt = $this->db->get('province')->result_array();
-		$rArr = array();
+		$rArr = array('' => '-- Selecet Province --');
 		foreach ($rt as $rc) {
 			$rArr[$rc['short_code']] = $rc['name'];
 		}

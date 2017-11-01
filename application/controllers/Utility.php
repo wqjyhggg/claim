@@ -31,7 +31,7 @@ class Utility extends CI_Controller {
 		$this->load->model('country_model');
 		$this->load->model('province_model');
 
-		$cid = $this->country_model->get_by_short($country);
+		$cid = $this->country_model->get_id_by_short($country);
 		if ($cid) {
 			$data['name'] = $name;
 			$data['options'] = $this->province_model->get_list($cid);

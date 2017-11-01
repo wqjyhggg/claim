@@ -2080,16 +2080,23 @@ class Emergency_assistance extends CI_Controller {
 	function get_provinces($type = 'return', $country_name = '', $selected = '') {
 		// get country id from name
 		$country_name = urldecode($country_name);
-		$country_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "country", $fields = "`country`.id", $conditions = array(
-				'country.short_code' => $country_name 
-		));
-		$country_id = @$country_details['id'];
-		$conditions = "province.country_id = '$country_id'";
+		$this->load->model('province_model');
+		
+		if (empty($country_name)) $country_name = "CA";
+		
+		$provinces = $this->province_model->get_list_by_country_short($country_name);
+		$html  = "<select name=\"province\" class=\"form-control\">\n";
+		foreach ($provinces as $short => $name) {
+			$selected = '';
+			if ($selected == $short) $selected = "selected";
+			$html .= "<option value=\"".$short."\" ".$selected.">".$name."</option>\n";
+		}
+		$html .= "</select>\n";
 		
 		if ($type == 'return')
-			return $this->common_model->getprovinces($field_name = "province", $selected, $key = "short_code", $value = "name", $conditions);
+			return $html;
 		else
-			echo $this->common_model->getprovinces($field_name = "province", $selected, $key = "short_code", $value = "name", $conditions);
+			echo $html;
 	}
 	
 	// to clear schedule for eac users
