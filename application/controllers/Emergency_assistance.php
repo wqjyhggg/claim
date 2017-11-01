@@ -257,7 +257,11 @@ class Emergency_assistance extends CI_Controller {
 				$this->session->set_flashdata('success', "Case successfully created");
 				
 				// redirect them to the login page
-				redirect('emergency_assistance', 'refresh');
+				if ($this->ion_auth->in_group(array(Users_model::GROUP_EAC))) {
+					redirect('emergency_assistance', 'refresh');
+				} else {
+					redirect('emergency_assistance/edit_case/'.$record_id, 'refresh');
+				}
 			} else {
 				$case_details = array();
 				$case_details['policy_no'] = '';
@@ -545,11 +549,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->session->set_flashdata('success', "Case successfully updated");
 				
 				// redirect them to the login page
-				if ($this->input->get('ref') == 'manage') {
-					redirect('emergency_assistance/case_management', 'refresh');
-				} else {
-					redirect('emergency_assistance', 'refresh');
-				}
+				redirect('emergency_assistance/edit_case/'.$id, 'refresh');
 			} else {
 //				echo validation_errors(); //XXXXXXXXXXXXXXXX
 //				die("X2"); //XXXXXXXXXXXXXXXXXXX
@@ -1347,7 +1347,7 @@ class Emergency_assistance extends CI_Controller {
 		$this->load->model('schedule_model');
 		if ($eac) {
 			// get all eac
-			$eacs = $this->users_model->search(array('id' => $eac, 'groups' => Users_model::GROUP_EAC, 'active' => 1));
+			$eacs = $this->users_model->search(array('id' => $eac, 'groups' => Users_model::GROUP_EAC, 'active' => 1), 100);
 		} else {
 			// get all eac's list
 			$eacs = $this->users_model->search(array('groups' => Users_model::GROUP_EAC, 'active' => 1));
