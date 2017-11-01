@@ -424,7 +424,7 @@
 							<select name="assign_to" class="form-control required">
 								<option value="">-- Select Examiner --</option>
 								<?php foreach ($examiners as $rc):?>
-								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post('assign_to')) { echo "selected"; } ?>><?php echo $rc['email'] . ' ' . $rc['shift']; ?></option>
+								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post('assign_to')) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
 								<?php endforeach; ?>
 							</select>
 						</div>

@@ -104,6 +104,11 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 			$this->form_validation->set_rules('case_no', 'Case No', 'numeric');
 			
+			$this->load->model('master_model');
+			$this->load->model('case_model');
+			$this->load->model('claim_model');
+			$this->load->model('mytask_model');
+				
 			if ($this->form_validation->run() == TRUE) {
 				// prepare post data array
 				$data =[ ];
@@ -119,7 +124,7 @@ class Claim extends CI_Controller {
 				
 				// set default status processing
 				if (! $data['status'])
-					$data['status'] = 'processing';
+					$data['status'] = Claim_model::STATUS_Processing;
 					
 					// upload claim pdf files to server
 				$files = @$_FILES['files_multi'];
@@ -150,11 +155,6 @@ class Claim extends CI_Controller {
 					}
 				}
 				$data['files'] = implode(",", $file_names);
-				
-				$this->load->model('master_model');
-				$this->load->model('case_model');
-				$this->load->model('claim_model');
-				$this->load->model('mytask_model');
 				
 				$data['id'] = 0;
 				if (! empty($case_no = $this->input->post('case_no'))) {
@@ -323,18 +323,21 @@ class Claim extends CI_Controller {
 				if (empty($assign_to)) {
 					$assign_to = $this->mytask_model->get_auto_assign_examiner_id();
 				}
+				
 				// settings for my task section for case manager
 				$task_data = array(
 						'user_id' => $assign_to,
 						'item_id' => $record_id,
 						'task_no' => $claim_no,
-						'category' => 'Claims',
-						'type' => 'CLAIM',
-						'priority' => 'Normal',
+						'category' => Mytask_model::CATEGORY_CLAIMS,
+						'type' => Mytask_model::TASK_TYPE_CLAIM,
+						'due_date' => date("Y-m-d", time() + 86400),
+						'due_time' => date("H:i:s", time() + 86400),
+						'priority' => Mytask_model::PRIORITY_NORMAL,
 						'status' => Mytask_model::STATUS_ASSIGNED,
 						'created_by' => $this->ion_auth->get_user_id(),
 						'created' => date('Y-m-d H:i:s'),
-						'user_type' => 'claimsmanager' 
+						'user_type' => Mytask_model::USER_TYPE_EXAM
 				);
 				// insert values to database
 				$this->mytask_model->save($task_data);
@@ -354,7 +357,6 @@ class Claim extends CI_Controller {
 				$this->load->model('province_model');
 				$this->load->model('template_model');
 				$this->load->model('product_model');
-				$this->load->model('claim_model');
 				$this->load->model('expenses_model');
 				$this->load->model('word_comments_model');
 				
@@ -744,8 +746,8 @@ class Claim extends CI_Controller {
 			// $this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			$this->form_validation->set_rules('case_no', 'Case No', 'is_unique[claim.case_no]');
-			$this->form_validation->set_rules('school_name', 'School Name', 'required');
-			$this->form_validation->set_rules('group_id', 'Group ID', 'required');
+			//$this->form_validation->set_rules('school_name', 'School Name', 'required');
+			//$this->form_validation->set_rules('group_id', 'Group ID', 'required');
 			
 			$this->form_validation->set_rules('contact_first_name', 'First Name', 'alpha');
 			$this->form_validation->set_rules('contact_last_name', 'Last Name', 'alpha');
@@ -1312,6 +1314,8 @@ class Claim extends CI_Controller {
 								'item_id' => $value,
 								'task_no' => $claim_details['claim_no'],
 								'category' => Mytask_model::CATEGORY_CLAIMS,
+								'due_date' => date("Y-m-d", time() + 86400),
+								'due_time' => date("H:i:s", time() + 86400),
 								'type' => Mytask_model::TASK_TYPE_CLAIM,
 								'priority' => Mytask_model::PRIORITY_NORMAL,
 								'created_by' => $this->ion_auth->get_user_id(),
@@ -1331,8 +1335,11 @@ class Claim extends CI_Controller {
 	}
 	
 	// change status of claim - for ajax request
-	public function status($type = "Processing", $is_accepted = '') {
+	public function status($type = "", $is_accepted = '') {
 		$this->load->model('claim_model');
+		if (empty($type)) {
+			$type = Claim_model::STATUS_Processing;
+		}
 		$statusArr = $this->claim_model->get_claim_status_list();
 		
 		if (! array_key_exists($type, $statusArr))
@@ -1355,17 +1362,17 @@ class Claim extends CI_Controller {
 		}
 		
 		switch ($type) {
-			case 'Processing' :
-			case 'Recovered' :
-			case 'Appealed' :
+			case Claim_model::STATUS_Processing :
+			case Claim_model::STATUS_Recovered :
+			case Claim_model::STATUS_Appealed :
 			default :
 				$data['is_complete'] = 'N';
 				break;
-			case 'Pending' :
-			case 'Processed' :
-			case 'Paid' :
-			case 'Closed' :
-			case 'Exempted' :
+			case Claim_model::STATUS_Pending :
+			case Claim_model::STATUS_Processed :
+			case Claim_model::STATUS_Paid :
+			case Claim_model::STATUS_Closed :
+			case Claim_model::STATUS_Exempted :
 				$data['is_complete'] = 'Y';
 				break;
 		}

@@ -64,7 +64,7 @@
 					<div class="clearfix"></div>
 
 					<div class="row">
-						<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>					
+						<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN))) { ?>					
 						<div class="form-group col-sm-6">
 							<?php echo form_label('Follow Up EAC:', 'user_id', array("class" => 'col-sm-12')); ?>
 							<div class="form-group col-sm-12">

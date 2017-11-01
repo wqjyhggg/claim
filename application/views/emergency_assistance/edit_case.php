@@ -716,7 +716,8 @@ function page_info_adjust() {
 	}
 }
 
-   var employee_id;
+   var employee_id = '<?php echo isset($case_details['assign_to']) ? (int)$case_details['assign_to'] : 0; ?>';
+   
    $(document).ready(function() {
       $("#create_intakeform").validate();
       $(".datepicker").datepicker({
@@ -993,9 +994,6 @@ function page_info_adjust() {
    .on("change", "select[name=assign_to_follow]", function(){
 
       var val = $(this).val();
-      $("select").val("");
-      $(this).val(val);
-
       // set selected employee
       employee_id = val;
    })

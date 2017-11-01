@@ -479,43 +479,68 @@ class Emergency_assistance extends CI_Controller {
 				}
 				
 				if ($new_case['case_manager'] && ($case_details['case_manager'] != $new_case['case_manager'])) {
+					$tasks = $this->mytask_model->search(array('item_id' => $new_case['id'], 'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE, 'user_type' => Mytask_model::USER_TYPE_MANAGER));
 					$new_task = array();
-					$new_task['user_id'] = $new_case['case_manager'];
-					$new_task['item_id'] = $new_case['id'];
-					$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
-					$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
-					$new_task['due_date'] = date("Y-m-d", time() + 86400);
-					$new_task['due_time'] = date("H:i:s", time() + 86400);
-					$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
-					$new_task['priority'] = $new_case['priority'];
-					$new_task['created_by'] = $this->ion_auth->get_user_id();
-					$new_task['created'] = date("Y-m-d H:i:s");
-					$new_task['user_type'] = Mytask_model::USER_TYPE_EAC;
-					$new_task['status'] = Mytask_model::STATUS_ASSIGNED;
-					$new_task['notes'] = "New Assign";
-
+					if ($tasks) {
+						// Change manager
+						$new_task['id'] = $tasks[0]['id'];
+						$new_task['user_id'] = $new_case['case_manager'];
+						$new_task['due_date'] = date("Y-m-d", time() + 86400);
+						$new_task['due_time'] = date("H:i:s", time() + 86400);
+						$new_task['priority'] = $new_case['priority'];
+						$new_task['status'] = Mytask_model::STATUS_REASSIGNED;
+						$new_task['finished'] = 0;
+						$new_task['notes'] = "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $tasks[0]['notes'];
+					} else {
+						// Assign manager
+						$new_task['user_id'] = $new_case['case_manager'];
+						$new_task['item_id'] = $new_case['id'];
+						$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
+						$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
+						$new_task['due_date'] = date("Y-m-d", time() + 86400);
+						$new_task['due_time'] = date("H:i:s", time() + 86400);
+						$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
+						$new_task['priority'] = $new_case['priority'];
+						$new_task['created_by'] = $this->ion_auth->get_user_id();
+						$new_task['created'] = date("Y-m-d H:i:s");
+						$new_task['user_type'] = Mytask_model::USER_TYPE_MANAGER;
+						$new_task['status'] = Mytask_model::STATUS_ASSIGNED;
+						$new_task['notes'] = "New Assign";
+					}
 					$this->mytask_model->save($new_task);
 				}
 
 				if ($new_case['assign_to'] && ($case_details['assign_to'] != $new_case['assign_to'])) {
+					$tasks = $this->mytask_model->search(array('item_id' => $new_case['id'], 'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE, 'user_type' => Mytask_model::USER_TYPE_EAC));
+					// assign eac
 					$new_task = array();
-					$new_task['user_id'] = $new_case['assign_to'];
-					$new_task['item_id'] = $new_case['id'];
-					$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
-					$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
-					$new_task['due_date'] = date("Y-m-d", time() + 86400);
-					$new_task['due_time'] = date("H:i:s", time() + 86400);
-					$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
-					$new_task['priority'] = $new_case['priority'];
-					$new_task['created_by'] = $this->ion_auth->get_user_id();
-					$new_task['created'] = date("Y-m-d H:i:s");
-					$new_task['user_type'] = Mytask_model::USER_TYPE_EAC;
-					$new_task['status'] = Mytask_model::STATUS_ASSIGNED;
-					$new_task['notes'] = "New Assign";
-
-					$this->mytask_model->save($new_task);
+					if ($tasks) {
+						// Change EAC
+						$new_task['id'] = $tasks[0]['id'];
+						$new_task['user_id'] = $new_case['assign_to'];
+						$new_task['due_date'] = date("Y-m-d", time() + 86400);
+						$new_task['due_time'] = date("H:i:s", time() + 86400);
+						$new_task['priority'] = $new_case['priority'];
+						$new_task['status'] = Mytask_model::STATUS_REASSIGNED;
+						$new_task['finished'] = 0;
+						$new_task['notes'] = "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $tasks[0]['notes'];
+					} else {
+						$new_task['user_id'] = $new_case['assign_to'];
+						$new_task['item_id'] = $new_case['id'];
+						$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
+						$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
+						$new_task['due_date'] = date("Y-m-d", time() + 86400);
+						$new_task['due_time'] = date("H:i:s", time() + 86400);
+						$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
+						$new_task['priority'] = $new_case['priority'];
+						$new_task['created_by'] = $this->ion_auth->get_user_id();
+						$new_task['created'] = date("Y-m-d H:i:s");
+						$new_task['user_type'] = Mytask_model::USER_TYPE_EAC;
+						$new_task['status'] = Mytask_model::STATUS_ASSIGNED;
+						$new_task['notes'] = "New Assign";
+					}
+					$taks_id = $this->mytask_model->save($new_task);
 				}
-				
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully updated");
 				
@@ -1653,19 +1678,22 @@ class Emergency_assistance extends CI_Controller {
 			foreach ( $cases as $key => $value ) {
 				$data = array("case_manager" => $employee_id, "id" => $value);
 				$this->case_model->save($data);
-				
+
 				// check task, if already exists
-				$task_details = $this->mytask_model->search(array('item_id' => $value, 'type' => Mytask_model::TASK_TYPE_CASE, 'user_type' => Mytask_model::USER_TYPE_MANAGER, 'finished' => '0'));
+				$task_details = $this->mytask_model->search(array('item_id' => $value,  'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE, 'user_type' => Mytask_model::USER_TYPE_MANAGER));
 				
 				if (!empty($task_details)) {
 					$task = array_shift($task_details);
-					$data_task = array('user_id' => $employee_id, 'status' => Mytask_model::STATUS_REASSIGNED, 'id' => $task['id']);
+					$data_task = array(
+							'id' => $task['id'],
+							'user_id' => $employee_id,
+							'due_date' => date("Y-m-d", time() + 86400),
+							'due_time' => date("H:i:s", time() + 86400),
+							'finished' => 0,
+							'status' => Mytask_model::STATUS_REASSIGNED,
+							'notes' => "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'],
+					);
 					$this->mytask_model->save($data);
-					
-					// Finish all task if there is
-					foreach ($task_details as $task) {
-						$data_task = array('finished' => '1', 'status' => Mytask_model::STATUS_CANCELLED, 'id' => $task['id']);
-					}
 				} else {
 					// create new task here
 					$task_data = array(
@@ -1674,6 +1702,8 @@ class Emergency_assistance extends CI_Controller {
 							'task_no' => $case_details['case_no'],
 							'category' => Mytask_model::CATEGORY_ASSISTANCE,
 							'type' => Mytask_model::TASK_TYPE_CASE,
+							'due_date' => date("Y-m-d", time() + 86400),
+							'due_time' => date("H:i:s", time() + 86400),
 							'priority' => $case_details['priority'],
 							'created_by' => $this->ion_auth->get_user_id(),
 							'created' => date("Y-m-d H:i:s"),
@@ -1699,11 +1729,19 @@ class Emergency_assistance extends CI_Controller {
 				$this->case_model->save($data);
 			
 				// check task, if already exists
-				$task_details = $this->mytask_model->search(array('item_id' => $value, 'type' => Mytask_model::TASK_TYPE_CASE, 'user_type' => Mytask_model::USER_TYPE_MANAGER, 'finished' => '0'));
-			
+				$task_details = $this->mytask_model->search(array('item_id' => $value,  'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE, 'user_type' => Mytask_model::USER_TYPE_MANAGER));
+				
 				if (!empty($task_details)) {
 					$task = array_shift($task_details);
-					$data_task = array('user_id' => $employee_id, 'status' => Mytask_model::STATUS_REASSIGNED, 'id' => $task['id']);
+					$data_task = array(
+							'id' => $task['id'],
+							'user_id' => $employee_id,
+							'due_date' => date("Y-m-d", time() + 86400),
+							'due_time' => date("H:i:s", time() + 86400),
+							'finished' => 0,
+							'status' => Mytask_model::STATUS_REASSIGNED,
+							'notes' => "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'],
+					);
 					$this->mytask_model->save($data);
 						
 					// Finish all task if there is
@@ -1718,6 +1756,8 @@ class Emergency_assistance extends CI_Controller {
 							'task_no' => $case_details['case_no'],
 							'category' => Mytask_model::CATEGORY_ASSISTANCE,
 							'type' => Mytask_model::TASK_TYPE_CASE,
+							'due_date' => date("Y-m-d", time() + 86400),
+							'due_time' => date("H:i:s", time() + 86400),
 							'priority' => $case_details['priority'],
 							'created_by' => $this->ion_auth->get_user_id(),
 							'created' => date("Y-m-d H:i:s"),
@@ -1739,67 +1779,46 @@ class Emergency_assistance extends CI_Controller {
 		$cases = explode(",", $cases);
 		$employee_id = $this->input->post("employee_id");
 		
+		$this->load->model('mytask_model');
+		$this->load->model('intakeform_model');
+		$this->load->model('case_model');
 		// follow up process
 		foreach ( $cases as $key => $value ) {
-			
-			$data_intake = array(
-					'case_id' => $value,
-					'created_by' => $this->ion_auth->get_user_id(),
-					'notes' => $notes,
-					'followup' => 1,
-					'created' => date("Y-m-d H:i:s") 
-			);
-			
 			// save values to intake database
-			$this->common_model->save("intake_form", $data_intake);
-			
+			$iid = $this->intakeform_model->save($value, $notes, '', '');
+					
 			// save record in intake form as notes
-			$this->common_model->update("case", array(
-					"assign_to" => $employee_id 
-			), array(
-					"id" => $value 
-			));
+			$this->case_model->save(array("assign_to" => $employee_id, "id" => $value));
 			
-			// check task, if already exists
-			$task_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "mytask", $fields = "mytask.id", $conditions = array(
-					'item_id' => $value,
-					'type' => 'CASE',
-					'user_type' => 'eac' 
-			));
-			
-			if (!empty($task_details)) {
-				// update my task data
-				$data_task = array(
-						'user_id' => $employee_id 
-				);
-				$this->common_model->update("mytask", $data_task, array(
-						'item_id' => $value,
-						'type' => 'CASE',
-						'user_type' => 'eac' 
-				));
+			$tasks = $this->mytask_model->search(array('item_id' => $value, 'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE, 'user_type' => Mytask_model::USER_TYPE_EAC));
+			// assign eac
+			$new_task = array();
+			if ($tasks) {
+				// Change EAC
+				$new_task['id'] = $tasks[0]['id'];
+				$new_task['user_id'] = $employee_id;
+				$new_task['due_date'] = date("Y-m-d", time() + 86400);
+				$new_task['due_time'] = date("H:i:s", time() + 86400);
+				$new_task['priority'] = Mytask_model::PRIORITY_NORMAL;
+				$new_task['status'] = Mytask_model::STATUS_REASSIGNED;
+				$new_task['finished'] = 0;
+				$new_task['notes'] = "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $tasks[0]['notes'];
 			} else {
-				// get case details here
-				$case_details = $this->common_model->select($record = 'first', $typecast = 'array', $table = "case", $fields = "created_by, created, priority, case_no, case_manager", $conditions = array(
-						'case.id' => $value 
-				));
-				
-				if ($case_details['case_manager'] != $employee_id) {
-					// create new task here
-					$task_data = array(
-							'user_id' => $employee_id,
-							'item_id' => $value,
-							'task_no' => $case_details['case_no'],
-							'category' => 'Assistance',
-							'type' => 'CASE',
-							'priority' => $case_details['priority'],
-							'created_by' => $case_details['created_by'],
-							'created' => $case_details['created'],
-							'user_type' => 'eac' 
-					);
-					// insert values to database
-					$this->common_model->save("mytask", $task_data);
-				}
+				$new_task['user_id'] = $employee_id;
+				$new_task['item_id'] = $value;
+				$new_task['task_no'] = str_pad($value, 6, "0", STR_PAD_LEFT);
+				$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
+				$new_task['due_date'] = date("Y-m-d", time() + 86400);
+				$new_task['due_time'] = date("H:i:s", time() + 86400);
+				$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
+				$new_task['priority'] = Mytask_model::PRIORITY_NORMAL;
+				$new_task['created_by'] = $this->ion_auth->get_user_id();
+				$new_task['created'] = date("Y-m-d H:i:s");
+				$new_task['user_type'] = Mytask_model::USER_TYPE_EAC;
+				$new_task['status'] = Mytask_model::STATUS_ASSIGNED;
+				$new_task['notes'] = "New Assign";
 			}
+			$taks_id = $this->mytask_model->save($new_task);
 		}
 		
 		$this->session->set_flashdata('success', "Follow up case successfully.");
