@@ -16,7 +16,7 @@ class Phone_model extends CI_Model {
 				'content-type: application/json'
 		);
 		$url = self::PHONE_URL . $req;
-		$postdata = urldecode(http_build_query($data));
+		$postdata = json_encode($data);
 		
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, $url);
