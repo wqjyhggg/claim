@@ -30,9 +30,9 @@
 					<div class="row more_items" style="display: none">
 						<div class="form-group col-sm-3">
 							<select name="status" class="form-control">
-								<option value="-1"  <?php if ($this->input->get("status") == -1) { echo "selected"; } ?>> --status-- </option>
-								<option value="0"  <?php if ($this->input->get("status") == 0) { echo "selected"; } ?>> Inactive </option>
-								<option value="1"  <?php if ($this->input->get("status") == 1) { echo "selected"; } ?>> Active </option>
+								<option value="-1"  <?php if ($status == -1) { echo "selected"; } ?>> --status-- </option>
+								<option value="0"  <?php if ($status == 0) { echo "selected"; } ?>> Inactive </option>
+								<option value="1"  <?php if ($status == 1) { echo "selected"; } ?>> Active </option>
 							</select>
 						</div>
 						<div class="form-group col-sm-3">

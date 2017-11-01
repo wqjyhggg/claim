@@ -226,7 +226,7 @@ class Auth extends CI_Controller {
 			// check for "remember me"
 			$remember = (bool)$this->input->post('remember');
 
-			if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
+			if ($this->ion_auth->login(strtolower($this->input->post('identity')), $this->input->post('password'), $remember)) {
 				// if the login is successful
 				// redirect them back to the home page
 				$this->session->set_flashdata('success', $this->ion_auth->messages());
@@ -273,7 +273,11 @@ class Auth extends CI_Controller {
 			$limit = $this->limit;
 			$offset = $this->uri->segment(3);
 			$get = $this->input->get();
-			if (isset($get['status']) && ($get['status'] >= 0)) $get['active'] = $get['status'];
+			$this->data['status'] = -1;
+			if (isset($get['status']) && ($get['status'] >= 0)) {
+				$get['active'] = $get['status'];
+				$this->data['status'] = $get['status'];
+			}
 			$this->data['users'] = $this->users_model->search($get, $limit, $offset);
 			$config['total_rows'] = $this->users_model->last_rows();
 				
