@@ -1,3 +1,4 @@
+<?php $this->load->model('expenses_model'); ?>
 <duv>
    <div class="page-title">
       <div class="title_left">
@@ -335,10 +336,9 @@ $(document).on("click", "button[name=search_claim]", function(){
       items.push($(this).attr('item_id'));
    })
    var items = items.join(",");
-
    // confirm payment code goes here.
    $.ajax({
-      url: $(this).attr("action")+"/paid/"+items,
+      url: $(this).attr("action")+"/<?php echo Expenses_model::EXPENSE_STATUS_Paid; ?>/"+items,
       method: "post",
       data:$(this).serialize(),
       dataType:"json",

@@ -738,8 +738,12 @@ class Claim extends CI_Controller {
 			
 			// get all expenses items
 			$this->data['expenses_claimed'] = $this->expenses_model->search(array("claim_id" => $id));
-			$this->data['edit'] = ($this->data['claim_details']['status'] != 'Paid') && ($this->data['claim_details']['status'] != 'Closed'); // Editable
 			
+			//$this->data['edit'] = ($this->data['claim_details']['status'] != Claim_model::STATUS_Paid) && ($this->data['claim_details']['status'] != Claim_model::STATUS_Closed); // Editable
+			$this->data['edit'] = TRUE;
+			if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) {
+				$this->data['edit'] = FALSE;
+			}
 				
 			// validate form input
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name', 'required');
@@ -1388,7 +1392,7 @@ class Claim extends CI_Controller {
 		if (! $this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->is_admin() and ! $this->ion_auth->is_accountant()) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
@@ -1548,6 +1552,7 @@ class Claim extends CI_Controller {
 	
 	// for ajax request
 	public function confirm_payment($type = '', $items = "") {
+		$this->load->model('claim_model');
 		
 		// generate data array
 		$claim_id = $this->input->post('claim_id');
@@ -1593,7 +1598,7 @@ class Claim extends CI_Controller {
 		if (! $check['counter']) {
 			// update claim status to complete
 			$this->common_model->update("claim", array(
-					'status' => $type ? $type : 'paid' 
+					'status' => $type ? $type : Claim_model::STATUS_Paid 
 			), array(
 					"id" => $claim_id 
 			));
@@ -1602,27 +1607,21 @@ class Claim extends CI_Controller {
 	
 	// for ajax request
 	public function close_claim() {
+		$this->load->model('claim_model');
+		$this->load->model('case_model');
 		
 		// generate data array
 		$claim_id = $this->input->post('claim_id');
-		
-		// updates claim items status here
-		$cond = "id = '$claim_id'";
-		$this->common_model->update("claim", array(
-				'status' => 'closed' 
-		), $cond);
-		
-		// get claim details
-		$claim_details = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "case_no", $conditions = array(
-				'claim.id' => $claim_id 
-		));
-		
-		// close case if there is
-		$this->common_model->update("case", array(
-				'status' => 'C' 
-		), array(
-				'case_no' => $claim_details['case_no'] 
-		));
+		$claim_details = $this->claim_model->get_by_id($claim_id);
+		if ($claim_details) {
+			$this->claim_model->save(array('id' => $claim_details['id'], 'status' => Claim_model::STATUS_Closed));
+			if ($claim_details['case_no']) {
+				$case = $this->case_model->search(array('case_no' => $claim_details['case_no']));
+				if ($case) {
+					$this->case_model->save(array('id' => $case['id'], 'status' => Case_model::STATUS_CLOSED));
+				}
+			}
+		}
 		
 		$this->session->set_flashdata('success', "Claim successfully closed");
 		

@@ -230,7 +230,11 @@ class Auth extends CI_Controller {
 				// if the login is successful
 				// redirect them back to the home page
 				$this->session->set_flashdata('success', $this->ion_auth->messages());
-				redirect('auth/mytasks', 'refresh');
+				if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) {
+					redirect('claim', 'refresh');
+				} else {
+					redirect('auth/mytasks', 'refresh');
+				}
 			} else {
 				// if the login was un-successful
 				// redirect them back to the login page

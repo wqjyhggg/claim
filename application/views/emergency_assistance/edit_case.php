@@ -427,6 +427,7 @@
 						<?php } else { ?>
 						<input type='hidden' name='reserve_amount' value='<?php echo $case_details['reserve_amount']; ?>'>
 						<?php } ?>
+						<?php if (! $this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
 						<div class="col-sm-12">
 							<label class="col-sm-12">&nbsp;</label>
 							<button class="btn btn-primary">Save</button>
@@ -450,6 +451,7 @@
 								class="btn btn-primary email_print" type="button"
 								data-toggle="modal" data-target="#print_template">Email/Print</button>
 						</div>
+						<?php } ?>
 					</div>
 					<?php if(!empty($intake_forms)) { ?>
 					<h4 class="modal-title intake-heading" <?php if(empty($intake_forms)) { ?> style="display: none" <?php } ?>>Notes</h4>
