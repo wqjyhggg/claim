@@ -51,7 +51,7 @@
 									<td><?php echo anchor(($value['type']=='CLAIM'?'claim/claim_detail/'.$value['item_id']:'emergency_assistance/edit_case/'.$value['item_id']), $value['task_no'], array('title'=>'Item Details')) ?></td>
 									<td><?php echo $value['status']; ?></td>
 									<td><?php echo $value['insured_name']; ?></td>
-									<td><?php echo $value['created_by']; ?></td>
+									<td><?php echo $value['created_email']; ?></td>
 									<td><?php echo date('Y-m-d h:i a', strtotime($value['created'])); ?></td>
 									<td><?php echo $value['due_date'] . " " . $value['due_time']; ?></td>
 									<?php if ($this->ion_auth->in_group(Users_model::GROUP_ADMIN)) { ?>
