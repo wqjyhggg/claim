@@ -1510,7 +1510,7 @@ class Emergency_assistance extends CI_Controller {
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EAC))) {
 			// redirect them to the home page because they must be an case manager to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
@@ -1518,7 +1518,10 @@ class Emergency_assistance extends CI_Controller {
 			
 			// get user type if exists
 			$this->data['emc'] = $this->input->get('emc') ? $this->input->get('emc') : $emc;
-			
+			if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) {
+				$this->data['emc'] = $this->ion_auth->get_user_id();
+			}
+					
 			// get schedule calendar
 			$this->data['calendar'] = $this->schedule_calendar($this->data['emc'], $year, $month, "return");
 			

@@ -429,7 +429,7 @@
 
 					<!-- Intake Forms List Section -->
 					<br />
-					<h4 class="modal-title intake-heading" style="display: none">Intake Froms</h4>
+					<h4 class="modal-title intake-heading" style="display: none">Notess</h4>
 					<div class="row intake-forms-list col-sm-12"></div>
 					<input type="hidden" name="no_of_form" value="0" />
 					<!-- used to knnow how many forms added in this page -->

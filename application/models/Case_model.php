@@ -188,6 +188,7 @@ class Case_model extends CI_Model {
 		if (isset($indata['relations'])) $data['relations'] = $indata['relations'];
 		if (isset($indata['diagnosis'])) $data['diagnosis'] = $indata['diagnosis'];
 		if (isset($indata['treatment'])) $data['treatment'] = $indata['treatment'];
+		$data['third_party_recovery'] = 'N';
 		if (isset($indata['third_party_recovery'])) $data['third_party_recovery'] = $indata['third_party_recovery'];
 		if (isset($indata['medical_notes'])) $data['medical_notes'] = $indata['medical_notes'];
 		if (isset($indata['policy_no'])) $data['policy_no'] = $indata['policy_no'];

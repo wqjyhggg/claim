@@ -348,7 +348,7 @@ class Auth extends CI_Controller {
 		
 		if ($this->form_validation->run() == true) {
 			$email = strtolower($this->input->post('email'));
-			$identity = ($identity_column === 'email') ? $email : $this->input->post('identity');
+			$identity = $email; //($identity_column === 'email') ? $email : $this->input->post('identity');
 			$password = $this->input->post('password');
 			
 			$additional_data = array(
@@ -500,7 +500,7 @@ class Auth extends CI_Controller {
 			
 			if ($this->form_validation->run() === TRUE) {
 				$data = array(
-						'email' => $this->input->post('email'),
+						'email' => strtolower($this->input->post('email')),
 						'first_name' => $this->input->post('first_name'),
 						'last_name' => $this->input->post('last_name'),
 						'company' => $this->input->post('company'),

@@ -12,10 +12,10 @@
 			<div class="x_panel">
 				<div class="x_title">
 					<h2>Schedule Calendar</h2>
+					<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) { ?>
 					<div class="form-group col-sm-4 pull-right">
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Employee:', 'EAC', array("class" => 'col-sm-12')); ?>
-							<?php $priority = array("" => '--Select Priority--', "HIGH" => 'High', "Normal" => 'Normal'); ?>
 						</div>
 						<div class="form-group col-sm-9">
 							<select name="emc" class="form-control">
@@ -29,6 +29,7 @@
 
 					<a href="javascript:void(0)" class="btn btn-primary pull-right auto-schedule"><i class="fa fa-clock-o"></i> Auto Schedule Whole EACs</a>
 					<a href="javascript:void(0)" data-toggle="modal" data-target="#clear_schedule_template" class="btn btn-primary pull-right"><i class="fa fa-trash"></i>Clear Schedule</a>
+					<?php } ?>
 
 					<div class="clearfix"></div>
 				</div>
@@ -43,6 +44,7 @@
 	</div>
 </div>
 
+<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) { ?>
 <!-- Create Intake Form Modal -->
 <div id="model_window" class="modal fade" role="dialog">
 	<div class="modal-dialog  modal-lg">
@@ -88,6 +90,7 @@
 	</div>
 </div>
 <!-- end intake form model here -->
+<?php } ?>
 
 <!-- Email print doc content here -->
 <div id="clear_schedule_template" class="modal fade" role="dialog">

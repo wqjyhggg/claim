@@ -89,7 +89,7 @@
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Created By:', 'created_by', array("class"=>'col-sm-12')); ?>
-							<div class="form-group col-sm-12"><?php echo $case_details['created_by']; ?></div>
+							<div class="form-group col-sm-12"><?php echo $case_details['case_manager_email']; ?></div>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Follow Up EAC:', 'assign_to', array("class"=>'col-sm-12')); ?>
@@ -452,7 +452,7 @@
 						</div>
 					</div>
 					<?php if(!empty($intake_forms)) { ?>
-					<h4 class="modal-title intake-heading" <?php if(empty($intake_forms)) { ?> style="display: none" <?php } ?>>Intake Froms</h4>
+					<h4 class="modal-title intake-heading" <?php if(empty($intake_forms)) { ?> style="display: none" <?php } ?>>Notes</h4>
 					<div class="row intake-forms-list col-sm-12">
 						<?php $i = 0; ?>
 						<?php foreach ($intake_forms as $key => $value) { ?>
