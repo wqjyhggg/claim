@@ -11,6 +11,7 @@ class Users_model extends CI_Model {
 	const GROUP_ADMIN='Admin';
 	const GROUP_EAC='EAC';
 	const GROUP_MANAGER='Case Manager';
+	const GROUP_CLAIMER='Claim Creater';
 	const GROUP_EXAMINER='Examiner';
 	const GROUP_ACCOUNTANT='Accountant';
 	const GROUP_INSURER='Upper Insurer';
@@ -18,10 +19,11 @@ class Users_model extends CI_Model {
 	public function get_groups() {
 		return array(
 				self::GROUP_ADMIN,
+				self::GROUP_ACCOUNTANT,
 				self::GROUP_EAC,
 				self::GROUP_MANAGER,
+				self::GROUP_CLAIMER,
 				self::GROUP_EXAMINER,
-				self::GROUP_ACCOUNTANT,
 				self::GROUP_INSURER,
 		);
 	}
@@ -172,7 +174,7 @@ class Users_model extends CI_Model {
 		$this->db->where('id', $user_id);
 		$user = $this->db->get('users')->row_array();
 		if ($user) {
-			return json_decode($user['products']);
+			return json_decode($user['products'], TRUE);
 		} else {
 			return array();
 		}
@@ -182,7 +184,7 @@ class Users_model extends CI_Model {
 		$this->db->where('id', $user_id);
 		$user = $this->db->get('users')->row_array();
 		if ($user && !empty($user['groups'])) {
-			return json_decode($user['groups']);
+			return json_decode($user['groups'], TRUE);
 		} else {
 			return array();
 		}

@@ -72,6 +72,7 @@
 									<th><?php echo $this->pagination->sort("last_name", "Last Name") ?></th>
 									<th><?php echo $this->pagination->sort("email", "Email Address") ?></th>
 									<th>Group</th>
+									<th>Product</th>
 									<th><?php echo $this->pagination->sort("active", "Status") ?></th>
 									<th>Action</th>
 								</tr>
@@ -84,6 +85,7 @@
 									<td><?php echo htmlspecialchars($user['last_name'],ENT_QUOTES,'UTF-8');?></td>
 									<td><?php echo htmlspecialchars($user['email'],ENT_QUOTES,'UTF-8');?></td>
 									<td><?php if (json_decode($user['groups'])) { echo join("<br />",json_decode($user['groups'])); } ?></td>
+									<td><?php if (json_decode($user['products'])) { echo join("<br />",json_decode($user['products'])); } ?></td>
 									<td><?php echo ($user['active']) ? anchor("auth/deactivate/".$user['id'], lang('index_active_link')) : anchor("auth/activate/". $user['id'], lang('index_inactive_link'));?></td>
 									<td><?php echo anchor("auth/edit_user/".$user['id'], 'Edit'); ?></td>
 								</tr>

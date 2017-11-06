@@ -57,7 +57,17 @@ class Claim_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function get_by_id($id) {
+		$products = FALSE;
+		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+			$products = $this->ion_auth->get_users_products();
+		}
 		$this->db->where('id', $id);
+		if ($products !== FALSE) {
+			if (empty($products)) {
+				return array();
+			}
+			$this->db->where_in('product_short', $products);
+		}
 		return $this->db->get('claim')->row_array();
 	}
 
@@ -69,6 +79,11 @@ class Claim_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function post_search($post, $policies) {
+		$products = FALSE;
+		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+			$products = $this->ion_auth->get_users_products();
+		}
+		
 		$where = '';
 		
 		if (!empty($post["claim_no"])) {
@@ -78,6 +93,11 @@ class Claim_model extends CI_Model {
 		if (!empty($post["status"])) {
 			if ($where) $where .= ' AND'; 
 			$where .= ' claim.status=' . $this->db->escape($post["status"]);
+		}
+		
+		if ($products && (sizeof($products) > 0)) {
+			if ($where) $where .= ' AND';
+			$where .= ' `case`.product_short IN (' . join("','", $products) . "')";
 		}
 		
 		if (!empty($policies)) {
@@ -131,7 +151,17 @@ class Claim_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function search($data) {
+		$products = FALSE;
+		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+			$products = $this->ion_auth->get_users_products();
+		}
 		$this->db->where($data);
+		if ($products !== FALSE) {
+			if (empty($products)) {
+				return array();
+			}
+			$this->db->where_in('product_short', $products);
+		}
 		return $this->db->get('claim')->result_array();
 	}
 

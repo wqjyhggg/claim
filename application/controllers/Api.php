@@ -121,6 +121,7 @@ class Api extends CI_Controller {
 				$ncs['created'] = $cs['created'];
 				$ncs['reason'] = $cs['reason'];
 				$ncs['policy_no'] = $cs['policy_no'];
+				$ncs['product_short'] = $cs['product_short'];
 				$rdata['cases'][] = $ncs;
 			}
 		}
@@ -144,6 +145,7 @@ class Api extends CI_Controller {
 				$ncl['insured_last_name'] = $cl['insured_last_name'];
 				$ncl['dob'] = $cl['dob'];
 				$ncl['policy_no'] = $cl['policy_no'];
+				$ncl['product_short'] = $cl['product_short'];
 				$ncl['case_no'] = $cl['case_no'];
 				$ncl['physician_name'] = $cl['physician_name'];
 				$ncl['clinic_name'] = $cl['clinic_name'];
@@ -193,6 +195,7 @@ class Api extends CI_Controller {
 			}
 			
 			$data['policy_no'] = $this->api['policy'];
+			$data['product_short'] = $this->api['product_short'];
 			$data['policy_info'] = $this->input->post('policy_info');
 			$data['case_no'] = $this->input->post('case_no');
 			$data['school_name'] = $this->input->post('school_name');

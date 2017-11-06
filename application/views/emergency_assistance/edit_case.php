@@ -6,7 +6,7 @@
 		<div class="title_left">
 			<h3>Case Details</h3>
 			<?php
-			if (($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) && empty($case_details['claim_no']) && !empty($case_details['policy_no'])) {
+			if (($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) && empty($case_details['claim_no']) && !empty($case_details['policy_no'])) {
 				echo anchor('claim/create_claim?policy='.$case_details['policy_no'].'&case_no='.$case_details['case_no'], '<i class="fa fa-plus-circle"></i> Create Claim', array("class"=>'btn btn-primary'));
 			}
 			?>   
@@ -35,6 +35,7 @@
 							<?php echo form_input("policy_no", $case_details["policy_no"], array("class"=>"form-control", 'placeholder'=>'Policy Number')); ?>
 							<?php echo form_error("policy_no"); ?>
 							<?php echo form_hidden('policy_info', $case_details['policy_info']); ?>
+							<input type='hidden' name='product_short' value='<?php echo $case_details["product_short"]; ?>'>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Insured Name:', 'insured_name', array("class"=>'col-sm-12')); ?>

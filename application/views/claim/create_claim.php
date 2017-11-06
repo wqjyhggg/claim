@@ -53,6 +53,7 @@
 							<?php echo form_input("policy_no", ($this->input->post("policy_no") ? $this->input->post("policy_no") : $this->input->get("policy")), array("class" => "form-control required", 'placeholder' => 'Policy#')); ?>
 							<?php echo form_error("policy_no"); ?>
 							<?php echo form_hidden("policy_info", $this->input->post("policy_info")); ?>
+							<input type='hidden' name='product_short' value=''>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Case #:', 'case_no', array("class" => 'col-sm-12')); ?>
@@ -859,8 +860,6 @@
       .replace("{insured_dob}", $("input[name=dob]").val())
 
       .replace("{policy_holder}", $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
-      .replace("{policy_no}", $("input[name=policy_no]").val())
-      .replace("{policy_no}", $("input[name=policy_no]").val())
       .replace("{coverage_period}", data[0].effective_date+" to  "+data[0].expiry_date);
 
       $(".doc-"+id+" .doc-desc").html(str);
@@ -1138,6 +1137,7 @@
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+               $("input[name=product_short]").val(data.plan_list[0].product_short);
 
                $("input[name=insured_first_name]").val(data.plan_list[0].firstname);
                $("input[name=insured_last_name]").val(data.plan_list[0].lastname);
@@ -1175,6 +1175,9 @@
                alert("Sorry1, policy information does not exists, please check policy no and try again");
                $("input[name=policy_no]").val('Unknown - ' + $("input[name=policy_no]").val());
 
+               $("input[name=policy_info]").val('');
+               $("input[name=product_short]").val('');
+               
                // reset all fields
                $("input[name=insured_first_name]").val('');
                $("input[name=insured_last_name]").val('');

@@ -46,7 +46,18 @@ class Case_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function get_by_id($id) {
+		$products = FALSE;
+		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN))) {
+			$products = $this->ion_auth->get_users_products();
+		}
+		
 		$this->db->where('id', $id);
+		if ($products !== FALSE) {
+			if (empty($products)) {
+				return array();
+			}
+			$this->db->where_in('product_short', $products);
+		}
 		return $this->db->get('case')->row_array();
 	}
 
@@ -57,6 +68,13 @@ class Case_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function get_id_by_case_no($case_no) {
+		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+			$products = $this->ion_auth->get_users_products();
+			if (empty($products)) {
+				return array();
+			}
+			$this->db->where_in('product_short', $products);
+		}
 		$this->db->where('case_no', $case_no);
 		return $this->db->get('case')->row_array();
 	}
@@ -70,6 +88,14 @@ class Case_model extends CI_Model {
 	 */
 	public function post_search($post, $policies=array()) {
 		$where = "`case`.status = 'A'";
+		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+			$products = $this->ion_auth->get_users_products();
+			if ($products && (sizeof($products) > 0)) {
+				$where .= ' AND `case`.product_short IN (' . join("','", $products) . "')";
+			} else {
+				return array();
+			}
+		}
 		
 		if (!empty($post["case_no"])) {
 			$where .= ' AND `case`.case_no=' . $this->db->escape($post["case_no"]);
@@ -147,8 +173,19 @@ class Case_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function search($data, $count=-1, $limit=-1) {
+		$products = FALSE;
+		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+			$products = $this->ion_auth->get_users_products();
+		}
+		
 		$this->db->select('SQL_CALC_FOUND_ROWS *', FALSE);
 		$this->db->where($data);
+		if ($products !== FALSE) {
+			if (empty($products)) {
+				return array();
+			}
+			$this->db->where_in('product_short', $products);
+		}
 		if ($count >= 0) {
 			if ($limit < 0) {
 				$this->db->limit($count);
@@ -192,6 +229,7 @@ class Case_model extends CI_Model {
 		if (isset($indata['third_party_recovery'])) $data['third_party_recovery'] = $indata['third_party_recovery'];
 		if (isset($indata['medical_notes'])) $data['medical_notes'] = $indata['medical_notes'];
 		if (isset($indata['policy_no'])) $data['policy_no'] = $indata['policy_no'];
+		if (isset($indata['product_short'])) $data['product_short'] = $indata['product_short'];
 		if (isset($indata['policy_info'])) $data['policy_info'] = $indata['policy_info'];
 		if (isset($indata['departure_date'])) $data['departure_date'] = $indata['departure_date'];
 		if (isset($indata['insured_firstname'])) $data['insured_firstname'] = $indata['insured_firstname'];

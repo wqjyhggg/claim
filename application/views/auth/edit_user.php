@@ -76,7 +76,7 @@
 						<?php echo heading('Member of groups', 2);?>
 						<div class="col-sm-12 form-group">
 							<?php foreach ($allgroups as $group):?>
-							<div class="col-sm-2">
+							<div class="col-sm-3">
 								<label class="form_checkbox">
 									<input type="checkbox" name="groups[]" value="<?php echo $group; ?>" <?php echo in_array($group, $currentGroups) ? ' checked="checked"' : '';?>>
 									<?php echo htmlspecialchars($group,ENT_QUOTES,'UTF-8');?>
@@ -85,6 +85,20 @@
 							<?php endforeach?>
 						</div>
 						<div class="clearfix"></div>
+					</div>
+
+					<div class="row" id='products_div' style="display: none">
+						<div class="col-sm-12 form-group">
+							<?php echo form_label('Select Products', 'products', array("class"=>'col-sm-12'));?>
+							<?php foreach ($allproducts as $key => $name):?>
+							<div class="col-sm-2">
+								<label class="form_checkbox">
+									<input type="checkbox" name="products[]" value="<?php echo $key; ?>" <?php echo in_array($key, $currentProducts) ? ' checked="checked"' : '';?>>
+									<?php echo htmlspecialchars($name,ENT_QUOTES,'UTF-8');?>
+								</label>
+							</div>
+							<?php endforeach?>
+						</div>
 					</div>
 
 					<div class="row">
@@ -110,15 +124,34 @@
 
 <script>
 // check on window load function
+var GROUP_ADMIN,GROUP_ACCOUNTANT,GROUP_EAC,GROUP_MANAGER,GROUP_CLAIMER,GROUP_EXAMINER,GROUP_INSURER;
+
 function manager_panel() {
 	if ($(this).val() == '<?php echo Users_model::GROUP_EAC; ?>') {
-		if ($(this).is(":checked")) {
-			// show manager panel
-			$(".manager_panel").show();
-		} else {
-			// hide manager panel
-			$(".manager_panel").hide();
-		}
+		GROUP_EAC = ($(this).is(":checked"));
+	} else if ($(this).val() == '<?php echo Users_model::GROUP_ADMIN; ?>') {
+		GROUP_ADMIN = ($(this).is(":checked"));
+	} else if ($(this).val() == '<?php echo Users_model::GROUP_ACCOUNTANT; ?>') {
+		GROUP_ACCOUNTANT = ($(this).is(":checked"));
+	} else if ($(this).val() == '<?php echo Users_model::GROUP_MANAGER; ?>') {
+		GROUP_MANAGER = ($(this).is(":checked"));
+	} else if ($(this).val() == '<?php echo Users_model::GROUP_CLAIMER; ?>') {
+		GROUP_CLAIMER = ($(this).is(":checked"));
+	} else if ($(this).val() == '<?php echo Users_model::GROUP_EXAMINER; ?>') {
+		GROUP_EXAMINER = ($(this).is(":checked"));
+	} else if ($(this).val() == '<?php echo Users_model::GROUP_INSURER; ?>') {
+		GROUP_INSURER = ($(this).is(":checked"));
+	}
+	if (GROUP_EAC) {
+		// show manager panel
+		$(".manager_panel").show();
+	} else {
+		$(".manager_panel").hide();
+	}
+	if (GROUP_ADMIN || GROUP_ACCOUNTANT) {
+		$("#products_div").hide();
+	} else {
+		$("#products_div").show();
 	}
 }
 

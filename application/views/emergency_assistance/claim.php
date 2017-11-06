@@ -2,8 +2,9 @@
    <div class="page-title">
       <div class="title_left">
          <h3>View Edit Emergency Assistance Case</h3>
-
+		<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER, Users_model::GROUP_CLAIMER))) { ?>
          <?php echo anchor("emergency_assistance/create_claim", '<i class="fa fa-plus-circle"></i> Create New Claim', array("class"=>'btn btn-primary')) ?>
+		<?php } ?>
          
       </div>
    </div>

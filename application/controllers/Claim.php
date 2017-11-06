@@ -168,7 +168,7 @@ class Claim extends CI_Controller {
 				if (empty($data['id'])) {
 					$data['id'] = $this->master_model->get_id('claim'); // Get new id
 					$claim_no = str_pad($data['id'], 7, 0, STR_PAD_LEFT);
-					$data['claim_no'] = $claim_no; 
+					$data['claim_no'] = $claim_no;
 				}
 				// insert values to database
 				$record_id = $this->claim_model->save($data);

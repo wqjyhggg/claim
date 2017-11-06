@@ -47,9 +47,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['status'] = $this->api_model->status_list;
 				
 				foreach ( $this->data['policies'] as $k => $pl ) {
-					if ($this->claim_model->search(array(
-							'policy_no' => $pl['policy'] 
-					))) {
+					if ($this->claim_model->search(array('policy_no' => $pl['policy']))) {
 						$this->data['policies'][$k]['has_claim'] = 1;
 					} else {
 						$this->data['policies'][$k]['has_claim'] = 0;
@@ -257,14 +255,11 @@ class Emergency_assistance extends CI_Controller {
 				$this->session->set_flashdata('success', "Case successfully created");
 				
 				// redirect them to the login page
-				if ($this->ion_auth->in_group(array(Users_model::GROUP_EAC))) {
-					redirect('emergency_assistance', 'refresh');
-				} else {
-					redirect('emergency_assistance/edit_case/'.$record_id, 'refresh');
-				}
+				redirect('emergency_assistance/edit_case/'.$record_id, 'refresh');
 			} else {
 				$case_details = array();
 				$case_details['policy_no'] = '';
+				$case_details['product_short'] = '';
 				$case_details['insured_firstname'] = '';
 				$case_details['insured_lastname'] = '';
 				$case_details['dob'] = '';
@@ -319,6 +314,7 @@ class Emergency_assistance extends CI_Controller {
 						if ($policies = $this->api_model->get_policy(array('policy' => $policy))) {
 							$this->data['policy'] = $policies[0];
 							$case_details['policy_no'] = $this->data['policy']['policy'];
+							$case_details['product_short'] = $this->data['policy']['product_short'];
 							$case_details['street_no'] = $this->data['policy']['street_number'];
 							$case_details['street_name'] = $this->data['policy']['street_name'];
 							$case_details['city'] = $this->data['policy']['city'];
@@ -326,7 +322,7 @@ class Emergency_assistance extends CI_Controller {
 							$case_details['country2'] = $this->data['case_details']['country2'] = $this->data['policy']['country2'];
 							$case_details['country'] = $this->data['case_details']['country'] = $this->data['policy']['country2'];
 							$case_details['province'] = $this->data['case_details']['province'] = $this->data['policy']['province2'];
-							$this->data['case_details']['post_code'] = $this->data['policy']['postcode'];
+							$case_details['post_code'] = $this->data['case_details']['post_code'] = $this->data['policy']['postcode'];
 						}
 					} else {
 						$case_details['country2'] = $this->data['case_details']['country2'] = 'CA';

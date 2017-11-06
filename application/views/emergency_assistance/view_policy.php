@@ -103,7 +103,7 @@
 								</div>
 								<div class="form-group col-sm-3">
 									<span class="creates">
-										<a href="<?php echo $create_claim_url; ?>" class="btn btn-primary">New Claim</a>
+										<!-- a href="<?php echo $create_claim_url; ?>" class="btn btn-primary">New Claim</a -->
 										<a href="<?php echo $create_case_url; ?>" class="btn btn-primary">New Case</a>
 									</span>
 								</div>
@@ -124,7 +124,7 @@
 								</div>
 								<div class="form-group col-sm-3">
 									<span class="creates">
-										<a href="<?php echo $val['create_claim_url']; ?>" class="btn btn-primary">New Claim</a>
+										<!-- a href="<?php echo $val['create_claim_url']; ?>" class="btn btn-primary">New Claim</a -->
 										<a href="<?php echo $val['create_case_url']; ?>" class="btn btn-primary">New Case</a>
 									</span>
 								</div>

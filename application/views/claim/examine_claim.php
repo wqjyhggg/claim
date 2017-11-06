@@ -669,8 +669,6 @@ $(document).ready(function() {
       .replace("{insured_dob}", claim_data.dob)
 
       .replace("{policy_holder}", claim_data.insured_first_name+' '+claim_data.insured_last_name)
-      .replace("{policy_no}", claim_data.policy_no)
-      .replace("{policy_no}", claim_data.policy_no);
       if(data)
          str = str.replace("{coverage_period}", data[0].effective_date+" to "+data[0].expiry_date);
       else

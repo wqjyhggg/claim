@@ -55,6 +55,7 @@
 								<?php echo form_label('Policy#:', 'policy_no', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("policy_no", $claim_details["policy_no"], array("class" => "form-control required", 'placeholder' => 'Policy#', 'disabled' => 'disabled')); ?>
 								<?php echo form_error("policy_no"); ?>
+								<input type='hidden' name='product_short' value='<?php echo $claim_details["product_short"]; ?>'>
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Case #:', 'case_no', array("class" => 'col-sm-12')); ?>
@@ -1122,8 +1123,6 @@
       .replace("{insured_diagnosis}", $("input[name='expenses_claimed[diagnosis][]']").val())
 
       .replace("{policy_holder}", $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
-      .replace("{policy_no}", $("input[name=policy_no]").val())
-      .replace("{policy_no}", $("input[name=policy_no]").val())
       .replace("{coverage_period}", "<?php echo @$policy_info[0]['effective_date']." to ".@$policy_info[0]['expiry_date'] ?>");
 
       $(".doc-"+id+" .doc-desc").html(str);
