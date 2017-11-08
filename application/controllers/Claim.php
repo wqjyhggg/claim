@@ -20,7 +20,7 @@ class Claim extends CI_Controller {
 		if (! $this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_INSURER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_INSURER, Users_model::GROUP_CLAIMER))) {
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
@@ -65,7 +65,7 @@ class Claim extends CI_Controller {
 		if (! $this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
@@ -712,7 +712,7 @@ class Claim extends CI_Controller {
 	public function claim_detail($id) {
 		if (! $this->ion_auth->logged_in()) {
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EAC, Users_model::GROUP_INSURER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EAC, Users_model::GROUP_INSURER, Users_model::GROUP_CLAIMER))) {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			$this->load->model('api_model');
@@ -727,7 +727,6 @@ class Claim extends CI_Controller {
 				
 			// get claim details
 			$this->data['claim_details'] = $this->claim_model->get_by_id($id);
-			
 			if (empty($this->data['claim_details'])) {
 				// send error message
 				$this->session->set_flashdata('error', "Something went wrong, please try after some time.");
@@ -1290,7 +1289,7 @@ class Claim extends CI_Controller {
 		$employee_id = $this->input->post("employee_id");
 		if (! $this->ion_auth->logged_in()) {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EAC, Users_model::GROUP_INSURER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			$this->load->model('claim_model');
@@ -1303,11 +1302,11 @@ class Claim extends CI_Controller {
 					$this->claim_model->save(array("assign_to" => $employee_id, "id" => $value));
 					
 					// check task, if already exists
-					$task_details = $this->mytask_model->search(array('item_id' => $value, 'type' => Mytask_model::TASK_TYPE_CLAIM, 'user_type' => Mytask_model::USER_TYPE_EXAM));
+					$task_details = $this->mytask_model->search(array('item_id' => $value, 'category' => Mytask_model::CATEGORY_CLAIMS, 'type' => Mytask_model::TASK_TYPE_CLAIM, 'user_type' => Mytask_model::USER_TYPE_EXAM));
 					
 					if (! empty($task_details)) {
 						// update my task data
-						$data_task = array('id' => $task_details[0]['id'], 'user_id' => $employee_id, 'status' => Mytask_model::STATUS_REASSIGNED);
+						$data_task = array('id' => $task_details[0]['id'], 'user_id' => $employee_id, 'status' => Mytask_model::STATUS_REASSIGNED, 'notes' => 'Reassign');
 					} else {
 						// get case details here
 						$claim_details = $this->claim_model->get_by_id($value);

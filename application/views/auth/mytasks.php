@@ -52,7 +52,7 @@
 									<td><?php echo $value['status']; ?></td>
 									<td><?php echo $value['insured_name']; ?></td>
 									<td><?php echo $value['created_email']; ?></td>
-									<td><?php echo date('Y-m-d h:i a', strtotime($value['created'])); ?></td>
+									<td><?php echo $value['created']; ?></td>
 									<td><?php echo $value['due_date'] . " " . $value['due_time']; ?></td>
 									<?php if ($this->ion_auth->in_group(Users_model::GROUP_ADMIN)) { ?>
 									<td><?php echo $value['assign_name']; ?></td>

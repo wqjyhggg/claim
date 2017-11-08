@@ -130,6 +130,7 @@
 						</table>
 					</div>
 					</br>
+					<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_EAC))) { ?>
 					<div class="row form-group">
 						<div class="col-sm-12">
 							<div class="col-sm-2">
@@ -179,6 +180,7 @@
 							</div>
 						</div>
 					</div>
+					<?php } ?>
 					<?php else:?>
 					<center><?php echo heading("No record available", 4); ?></center>
 					<?php endif; echo $pagination; ?>

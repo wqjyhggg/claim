@@ -4,10 +4,10 @@
 <div>
 	<div class="page-title">
 		<div class="title_left">
-			<h3>Case Details</h3>
+			<h3>Case Information <?php if (isset($case_details['case_no'])) { echo " - #" . $case_details['case_no']; } ?></h3>
 			<?php
 			if (($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) && empty($case_details['claim_no']) && !empty($case_details['policy_no'])) {
-				echo anchor('claim/create_claim?policy='.$case_details['policy_no'].'&case_no='.$case_details['case_no'], '<i class="fa fa-plus-circle"></i> Create Claim', array("class"=>'btn btn-primary'));
+				echo anchor('claim/create_claim?policy='.$case_details['policy_no'].'&case_no='.$case_details['case_no'].'&product_short='.$case_details['product_short'], '<i class="fa fa-plus-circle"></i> Create Claim', array("class"=>'btn btn-primary'));
 			}
 			?>   
       </div>
@@ -125,7 +125,6 @@
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Province:', 'province', array("class"=>'col-sm-12')); ?>
 							<select name="province" class="form-control">
-								<option value="">-- Select Province --</option>
 								<?php foreach ($province as $key => $val) { ?>
 								<option value="<?php echo $key; ?>" <?php if ($key == $case_details['province']) { echo "selected"; } ?>><?php echo $val; ?></option>
 								<?php } ?>
@@ -423,7 +422,13 @@
 							<label class="col-sm-12">&nbsp;</label>
 							<button class="btn btn-primary">Save</button>
 							<button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create Note</button>
-							<?php echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info')); ?>
+							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_EAC))) { ?>
+							<?php echo anchor("auth/mytasks", "No Change", array("class"=>'btn btn-info')); ?>
+							<?php } else if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
+							<?php echo anchor("emergency_assistance/case_management", "No Change", array("class"=>'btn btn-info')); ?>
+							<?php } else { ?>
+							<?php echo anchor("emergency_assistance", "No Change", array("class"=>'btn btn-info')); ?>
+							<?php } ?>
 							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>
 							<button type="button" class="btn btn-primary follow_up" data-toggle="modal" data-target="#follow_reason">Follow Up <i class="fa fa-angle-double-right"></i></button>
 							<?php if($case_details['status'] == 'A') { ?>

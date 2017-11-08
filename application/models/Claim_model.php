@@ -92,12 +92,12 @@ class Claim_model extends CI_Model {
 		
 		if (!empty($post["status"])) {
 			if ($where) $where .= ' AND'; 
-			$where .= ' claim.status=' . $this->db->escape($post["status"]);
+			$where .= " claim.status=" . $this->db->escape($post["status"]);
 		}
 		
 		if ($products && (sizeof($products) > 0)) {
 			if ($where) $where .= ' AND';
-			$where .= ' `case`.product_short IN (' . join("','", $products) . "')";
+			$where .= " `claim`.product_short IN ('" . join("','", $products) . "')";
 		}
 		
 		if (!empty($policies)) {

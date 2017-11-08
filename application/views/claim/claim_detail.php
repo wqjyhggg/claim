@@ -1,14 +1,19 @@
 <div .on("keyup", ".company_nameinput", function(){ $(".company_nameinput").val($(this).val()); }) >
 	<div class="page-title">
 		<div class="title_left">
-			<h3>Claim Details - #<?php echo $claim_details['claim_no']; ?></h3>
-		</div>
+			<h3>Claim Information - #<?php echo $claim_details['claim_no']; ?></h3>
+      </div>
 	</div>
 	<div class="clearfix"></div>
 	<!-- Policy search and List Section -->
 	<div class="row">
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="x_panel">
+				<div class="x_title">
+					<h2>Claim Details</h2>
+					<?php if (!empty($claim_details['case_no'])) { echo anchor("emergency_assistance/edit_case/".$claim_details['id'], 'Case Info <i class="fa fa-link"></i>', array("class"=>'btn btn-primary pull-right')); } ?>
+					<div class="clearfix"></div>
+				</div>
 				<?php echo $message; ?>
 				<div class="x_content">
 					<?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post', 'onsubmit'=>'return validate_form()', 'id'=>'main_form')); ?>
@@ -592,12 +597,16 @@
 							<div class="col-sm-2">
 								<?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
 							</div>
+							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER))) { ?>
 							<div class="col-sm-2">
 								<?php echo anchor('claim/examine_claim/'.$claim_details['id'], 'Examine', array('class'=>'btn btn-primary'))?>
 							</div>
+							<?php } ?>
+							<?php if (!$this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
 							<div class="col-sm-2">
 								<input class="btn btn-primary email_print" data-toggle="modal" name="Email" value="Email/Print" type="button" data-target="#print_template">
 							</div>
+							<?php } ?>
 							<?php else: ?>
 							<div class="col-sm-2">
 								<?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>

@@ -141,7 +141,10 @@ class Auth extends CI_Controller {
 			if (empty($task_details)) {
 				redirect('auth/mytasks', 'refresh');
 			}
-			
+
+			$due_date = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d");
+			$due_time = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s");
+				
 			// validate form input
 			/*
 			if ($task_details ['type'] == 'CASE' and ($this->ion_auth->in_group(Users_model::GROUP_ADMIN) or $this->ion_auth->is_casemamager()))
@@ -150,13 +153,14 @@ class Auth extends CI_Controller {
 				$this->form_validation->set_rules('assign_to', 'Assign To', 'required');
 			*/
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
-			$this->form_validation->set_rules('priority', 'Priority', 'required');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 				
 			if ($this->form_validation->run() == TRUE) {
 				// update case/claim details
 				$data = array(
 						'id' => $id,
+						'due_date' => $due_date,
+						'due_time' => $due_time,
 						'status' => $this->input->post('status'),
 						'priority' => $this->input->post('priority') 
 				);
@@ -198,8 +202,8 @@ class Auth extends CI_Controller {
 
 				$this->data ['priorities'] = $this->mytask_model->get_all_priority();
 				$this->data ['statuses'] = $this->mytask_model->get_all_status();
-				
-				$para = array('groups' => Users_model::GROUP_EAC /*, 'shift' => Users_model::SHIFT_2PM */);
+				/*
+				$para = array('groups' => Users_model::GROUP_EAC);
 				$this->data['eacs'] = $this->users_model->search($para);
 
 				$para = array('groups' => Users_model::GROUP_EXAMINER);
@@ -207,7 +211,7 @@ class Auth extends CI_Controller {
 				
 				$para = array('groups' => Users_model::GROUP_MANAGER);
 				$this->data['managers'] = $this->users_model->search($para);
-				
+				*/
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Edit Task', TRUE);
 				$this->template->write_view('content', 'auth/edit_task', $this->data);
@@ -233,7 +237,11 @@ class Auth extends CI_Controller {
 				if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) {
 					redirect('claim', 'refresh');
 				} else {
-					redirect('auth/mytasks', 'refresh');
+					if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER, Users_model::GROUP_CLAIMER))) {
+						redirect('claim', 'refresh');
+					} else {
+						redirect('auth/mytasks', 'refresh');
+					}
 				}
 			} else {
 				// if the login was un-successful

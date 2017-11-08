@@ -53,7 +53,7 @@
 							<?php echo form_input("policy_no", ($this->input->post("policy_no") ? $this->input->post("policy_no") : $this->input->get("policy")), array("class" => "form-control required", 'placeholder' => 'Policy#')); ?>
 							<?php echo form_error("policy_no"); ?>
 							<?php echo form_hidden("policy_info", $this->input->post("policy_info")); ?>
-							<input type='hidden' name='product_short' value=''>
+							<input type='hidden' name='product_short' value='<?php echo ($this->input->post("product_short") ? $this->input->post("product_short") : $this->input->get("product_short")); ?>'>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Case #:', 'case_no', array("class" => 'col-sm-12')); ?>
@@ -412,7 +412,7 @@
 					<!-- end intake forms list  -->
 
 
-					<h2 style="border-bottom: 1px solid #eee; font-size: 14px !important; padding-bottom: 7px;">Attached List <button class="btn btn-primary multiupload_files" type="button">Upload Attached</button></h2>
+					<h2 style="border-bottom: 1px solid #eee; font-size: 14px !important; padding-bottom: 7px;">Attached List (pdf only) <button class="btn btn-primary multiupload_files" type="button">Upload Attached</button></h2>
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="col-sm-3 uploaded_files"></div>
@@ -649,11 +649,6 @@
 				<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[amount_claimed][]", $this->input->post("amount_claimed"), array("class" => "form-control required")); ?>
 				<?php echo form_error("amount_claimed"); ?>
-			</div>
-			<div class="col-sm-3">
-				<?php echo form_label('Amount Deductible:', 'amt_deductible', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[amt_deductible][]", $this->input->post("amt_deductible"), array("class" => "form-control required")); ?>
-				<?php echo form_error("amt_deductible"); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>

@@ -34,9 +34,19 @@
 							<?php echo form_label('Assigned To:', 'assigned', array("class" => 'col-sm-12')); ?>
 							<div class="form-group col-sm-12"><?php echo $task_details['assigned_email']; ?></div>
 						</div>
-						<div class="form-group col-sm-6">
-							<?php echo form_label('Due Date/Time:', 'due', array("class" => 'col-sm-12')); ?>
-							<div class="form-group col-sm-12"><?php echo $task_details['due_date'] . " " . $task_details['due_time']; ?></div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Due Date:', 'due_date', array("class" => 'col-sm-12')); ?>
+							<div class="input-group date">
+								<?php echo form_input("due_date", $task_details['due_date'], array("class"=>"form-control datepicker_due", 'placeholder'=>'Due Date')); ?>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Due Time:', 'due_time', array("class" => 'col-sm-12')); ?>
+							<div class="input-group time">
+							<?php echo form_input(array("name" => "due_time", "type" => "time"), $task_details['due_time'], array("class" => "form-control datepicker_time", 'placeholder' => 'Due Time')); ?>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+							</div>
 						</div>
 						
 						<div class="col-sm-6">
@@ -101,10 +111,15 @@
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
 $(document).ready(function() {
-   $(".datepicker").datepicker({
-        startDate: '-105y',
-        endDate: '+2y',
-    });
+	$(".datepicker").datepicker({
+		startDate: '-105y',
+		endDate: '+2y',
+	});
+
+	$(".datepicker_due").datepicker({
+		startDate: '-0y',
+		endDate: '+1m',
+	});
 })
 $(document).on("click",".more_filters", function(){
    $(".more_items").toggle();
