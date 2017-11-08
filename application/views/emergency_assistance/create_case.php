@@ -90,25 +90,7 @@
 						<?php echo form_label('Create Date:', 'created', array("class"=>'col-sm-12')); ?>
 							<div class="form-group col-sm-12"><?php echo date("Y-m-d"); ?></div>
 						</div>
-						<!-- <div class="form-group col-sm-4">
-						<?php echo form_label('Create By:', 'created_by', array("class" => 'col-sm-12')); ?>
-						<?php echo form_input("created_by", $case_details["created_by"], array("class" => "form-control", 'placeholder' => 'Create By')); ?>
-						<?php echo form_error("created_by"); ?>
-						</div>  -->
-						<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>
-						<div class="form-group col-sm-4">
-							<?php echo form_label('Follow Up EAC:', 'assign_to', array("class" => 'col-sm-12')); ?>
-							<select name="assign_to" class="form-control">
-								<option value=""> -- Select EAC -- </option>
-								<?php foreach ($eacs as $rc):?>
-								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['assign_to']) { echo "selected"; } ?>><?php echo $rc['email'] . ' ' . $rc['shift']; ?></option>
-								<?php endforeach; ?>
-							</select>
-							<?php echo form_error("assign_to"); ?>
-						</div>
-						<?php } else { ?>
 						<input type='hidden' name='assign_to' value=''>
-						<?php } ?>
 						<div class="form-group col-sm-4">
 						<?php echo form_label('Case catagory:', 'reason', array("class" => 'col-sm-12')); ?>
 							<select name="reason" class="form-control">
@@ -209,6 +191,7 @@
 						<?php echo form_input("place_of_call", $case_details["place_of_call"], array("class" => "form-control", 'placeholder' => 'Place of Call')); ?>
 						<?php echo form_error("place_of_call"); ?>
 						</div>
+						<div class="clearfix"></div>
 						<div class="form-group col-sm-4">
 						<?php echo form_label('Incident Date:', 'incident_date', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
@@ -227,6 +210,7 @@
 							</select>
 						<?php echo form_error("country2"); ?>
 						</div>
+						<div class="clearfix"></div>
 					</div>
 
 					<h4 class="hospital_info">Doctor Info/Hospital Info</h4>
@@ -456,17 +440,23 @@
 			<div class="modal-body">
 				<div class="row">
 					<div class="form-group col-sm-4">
-						<?php echo form_label('Note #:', 'form_id', array("class" => 'col-sm-12')); ?>
-						<div class="form-group col-sm-12">####</div>
-					</div>
-					<div class="form-group col-sm-4">
 						<?php echo form_label('Create Date:', 'create_date', array("class" => 'col-sm-12')); ?>
 						<div class="form-group col-sm-12"><?php echo date("Y-m-d"); ?></div>
 					</div>
 					<div class="form-group col-sm-4">
 						<?php echo form_label('Phone File:', 'phonefile', array("class" => 'col-sm-12')); ?>
 						<?php echo form_input("phonefile", $this->input->post("phonefile"), array("class" => "form-control", 'placeholder' => 'Phone File')); ?>
-						<?php echo form_error("intake_notes"); ?>
+					</div>
+					<div class="form-group col-sm-2">
+						<?php echo form_label('Due Date:', 'due_date', array("class" => 'col-sm-12')); ?>
+						<div class="input-group date">
+							<?php echo form_input("due_date", $this->input->post("due_date"), array("class"=>"form-control datepicker_due", 'placeholder'=>'Due Date')); ?>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+					<div class="form-group col-sm-2">
+						<?php echo form_label('Due Time:', 'due_time', array("class" => 'col-sm-12')); ?>
+						<?php echo form_input(array("name" => "due_time", "type" => "time"), $this->input->post("due_time"), array("class" => "form-control datepicker_time", 'placeholder' => 'Due Time')); ?>
 					</div>
 					<div class="form-group col-sm-12">
 						<?php echo form_label('Notes:', 'intake_notes', array("class" => 'col-sm-12')); ?>

@@ -245,18 +245,28 @@ class Mytask_model extends CI_Model {
 			$sql .= " AND user_id='".$this->ion_auth->get_user_id()."'";
 		}
 		
-		$oarr = array('id', 'user_id', 'task_no', 'due_date', 'completion_date', 'priority', 'created_by', 'status', 'created');
+		$orderby = array();
+		$order = "DESC";
+		if (isset($para['order']) && ($para['order'] == 'asc')) {
+			$order = "ASC";
+		}
+		
+		$oarr = array('id', 'user_id', 'task_no', 'due_date', 'completion_date', 'priority', 'created_by', 'status', 'created', 'due');
 		if (isset($para['field']) && (in_array($para['field'], $oarr))) {
-			$sql .= " ORDER BY ".$para['field'];
-		} else {
-			$sql .= " ORDER BY id";
+			if ($para['field'] != 'due') {
+				$orderby[] = $para['field'] . " " . $order;
+			} else {
+				$orderby[] = 'due_date '.$order;
+				$orderby[] = 'due_time '.$order;
+			}
 		}
 
-		if (isset($para['order']) && ($para['order'] == 'asc')) {
-			$sql .= " ASC";
+		if ($orderby) {
+			$sql .= " ORDER BY " .join(',', $orderby);
 		} else {
-			$sql .= " DESC";
+			$sql .= " ORDER BY id DESC";
 		}
+		
 		$sql .= " LIMIT " . (int)$offset . ", " . (int)$limit;
 		
 		$query = $this->db->query($sql);

@@ -20,9 +20,8 @@
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="x_panel">
 				<div class="x_title">
-					<h2>
-						Case Details<small></small>
-					</h2>
+					<h2>Case Details</h2>
+					<?php if (!empty($case_details['claim_no'])) { echo anchor("claim/claim_detail/".$case_details['id'], 'Claim Info <i class="fa fa-link"></i>', array("class"=>'btn btn-primary pull-right')); } ?>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
@@ -93,17 +92,8 @@
 							<div class="form-group col-sm-12"><?php echo $case_details['case_manager_email']; ?></div>
 						</div>
 						<div class="form-group col-sm-4">
-							<?php echo form_label('Follow Up EAC:', 'assign_to', array("class"=>'col-sm-12')); ?>
-							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>
-							<select name="assign_to" class="form-control">
-								<option value="">-- Select EAC --</option>
-								<?php foreach ($eacs as $rc) { ?>
-								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['assign_to']) { echo "selected"; } ?>><?php echo $rc['email'] . ' ' . $rc['shift']; ?></option>
-								<?php } ?>
-							</select>
-							<?php } else { ?>
-							<div class="form-group col-sm-12"><?php echo $assign_to_name; ?></div>
-							<?php } ?>
+							<?php echo form_label('Assigned To:', 'assign_to_email', array("class"=>'col-sm-12')); ?>
+							<div class="form-group col-sm-12"><?php echo $assign_to_email; ?></div>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Case catagory:', 'reason', array("class"=>'col-sm-12')); ?>
@@ -454,17 +444,54 @@
 						</div>
 						<?php } ?>
 					</div>
+					<?php echo form_close(); ?>
 					<?php if(!empty($intake_forms)) { ?>
 					<h4 class="modal-title intake-heading" <?php if(empty($intake_forms)) { ?> style="display: none" <?php } ?>>Notes</h4>
 					<div class="row intake-forms-list col-sm-12">
-						<?php $i = 0; ?>
+						<?php $i = 0; $last_form = sizeof($intake_forms); ?>
 						<?php foreach ($intake_forms as $key => $value) { ?>
-                        <?php $i++; ?>
+                        <?php $i++; $last = false; if ($i == $last_form) { $last = true; } ?>
                         <div class="col-sm-12 intake-forms">
 							<div class="col-sm-2">
 								<div class="col-sm-12"><?php echo $i." : " . $value['created'] ?></div>
-								<div class="col-sm-12"><?php echo "By : " . $value['username'] ?></div>
+								<div class="col-sm-12"><?php echo "Created by : " . $value['username'] ?></div>
+								<?php if ($value['followup']) { echo '<div class="col-sm-12">Follow up by: ' . $value['followup'] ."</div>"; } ?>
 							</div>
+							<?php $note_tm = strtotime($value['created']) + (10 * 60) - time(); ?>
+							<?php if (($my_user_id == $value['created_by']) && $last && ($note_tm > 0)) { ?>
+							<div class="col-sm-10">
+								<div class="col-sm-12">
+									<form action="<?php echo $note_update_url."/".$value['id']; ?>" method="POST" class="form-horizontal">
+										<div class="col-sm-11">
+											<textarea name="new_note" cols="40" rows="10"  class="form-control required" placeholder="Notes" style="height:100px"><?php echo $value['notes'] ?></textarea>
+										</div>
+										<div class="col-sm-1">
+											<input type="submit" value="Update">
+										</div>
+									</form>
+								</div>
+								<div class="form-group col-sm-11 files">
+									<br />
+									<?php $files = $value['docs'] ? explode(",", $value['docs']) : array(); ?>
+									<?php if (!empty($files)) { ?>
+									<?php foreach ($files as $file) { ?>
+									<div class="col-sm-9" style="">
+										<span class="file-label"><?php echo anchor("file/".$file . '__' . $value['id'], $file, array('target'=>'_blank')); ?></span>
+										<?php echo anchor("file/" . $file . '__' . $value['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
+										<?php echo anchor("download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File','data-id'=>$value['id'])); ?>
+										<i class="fa fa-remove row-link remove-form pull-right remove_doc" data-id="<?php echo $value['id']; ?>" data-file="<?php echo $file; ?>"></i>
+									</div>
+									<?php } ?>
+									<?php } ?>
+									<?php if (!empty($value['phonefile'])) { ?>
+									<div class="col-sm-9" style="">
+										<span class="file-label"><?php echo anchor($value['phonefile'], $value['phonefile'], array('target'=>'_blank')); ?>
+										<i class="fa fa-remove row-link remove-form pull-right remove_phone" data-id="<?php echo $value['id']; ?>"></i></span>
+									</div>
+									<?php } ?>
+								</div>
+							</div>
+							<?php } else { ?>
 							<div class="col-sm-10">
 								<div class="col-sm-12"><?php echo $value['notes'] ?></div>
 								<div class="form-group col-sm-11 files">
@@ -487,11 +514,11 @@
 								</div>
 								<!-- div class="col-sm-1&quot;"><i class="fa fa-remove row-link remove-form pull-right" alt="<?php echo $value['id']; ?>"></i></div -->
 							</div>
+							<?php } ?>
 						</div>
 						<?php } ?>
 					</div>
 					<?php } ?>
-					<?php echo form_close(); ?>
 					<!-- search policy filter end -->
 					<div class="clearfix"></div>
 				</div>
@@ -623,10 +650,24 @@
 							<div class="col-sm-12 follow-section">
 								<select name="assign_to_follow" class="form-control">
 									<option value="">-- Select EAC --</option>
-									<?php foreach ($eacs as $rc):?>
-									<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['assign_to']) { echo "selected"; } ?>><?php echo $rc['email'] . ' ' . $rc['shift']; ?></option>
+									<?php foreach ($seacs as $rc):?>
+									<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $case_details['assign_to']) { echo "selected"; } ?>><?php echo $rc['schedule']; ?></option>
 									<?php endforeach; ?>
 								</select>
+							</div>
+							<div class="form-group col-sm-6">
+								<?php echo form_label('Due Date:', 'due_date', array("class" => 'col-sm-12')); ?>
+								<div class="input-group date">
+									<?php echo form_input("due_date", $this->input->post("due_date"), array("class"=>"form-control datepicker_due", 'placeholder'=>'Due Date')); ?>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+							</div>
+							<div class="form-group col-sm-6">
+								<?php echo form_label('Due Time:', 'due_time', array("class" => 'col-sm-12')); ?>
+								<div class="input-group time">
+								<?php echo form_input(array("name" => "due_time", "type" => "time"), $this->input->post("due_time") ? $this->input->post("due_time") : date("H:i"), array("class" => "form-control datepicker_time", 'placeholder' => 'Due Time')); ?>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -656,10 +697,6 @@
 			<?php echo form_hidden("case_id", $case_id); ?>
 			<div class="modal-body">
 				<div class="row">
-					<div class="form-group col-sm-4">
-						<?php echo form_label('Note #:', 'form_id', array("class"=>'col-sm-12')); ?>
-						<div class="form-group col-sm-12">####</div>
-					</div>
 					<div class="form-group col-sm-4">
 						<?php echo form_label('Create Date:', 'create_date', array("class"=>'col-sm-12')); ?>
 						<div class="form-group col-sm-12">
@@ -723,6 +760,12 @@ function page_info_adjust() {
    
    $(document).ready(function() {
       $("#create_intakeform").validate();
+
+      $(".datepicker_due").datepicker({
+          startDate: '-0y',
+          endDate: '+1m',
+      });
+
       $(".datepicker").datepicker({
            startDate: '-117y',
            endDate: '+0y',
@@ -767,23 +810,58 @@ function page_info_adjust() {
       $(this).children("i").toggleClass("fa-angle-up").toggleClass("fa-angle-down");
    })
 
+   	// delete intake form phone file
+	.on("click",".remove_doc", function() {
+		var id = $(this).attr("data-id");
+		var file = $(this).attr("data-file");
+
+		if (confirm('Are you sure you want to remove? ')) {
+			$.ajax({
+				url: "<?php echo base_url("emergency_assistance/removedocfile/") ?>" + id + "/" + file,
+				method: "get",
+				success: function() {
+					window.location.reload();
+				}
+			})
+		} else {
+			return false;
+		}
+	})
+
+	// delete intake form phone file
+	.on("click",".remove_phone", function() {
+		var id = $(this).attr("data-id");
+
+		if (confirm('Are you sure you want to remove? ')) {
+			$.ajax({
+				url: "<?php echo base_url("emergency_assistance/removephonefile/") ?>" + id,
+				method: "get",
+				success: function() {
+					window.location.reload();
+				}
+			})
+		} else {
+			return false;
+		}
+	})
+   
    // delete intake form
-   .on("click",".fa.fa-remove.row-link.remove-form.pull-right", function(){
-      var id = $(this).attr("alt");
+   //.on("click",".fa.fa-remove.row-link.remove-form.pull-right", function(){
+   //   var id = $(this).attr("alt");
 
-      if(confirm('Are you sure you want to delete? '))
-      {
+   //   if(confirm('Are you sure you want to delete? '))
+   //   {
          // remove form area instant to make it visible fast
-         $(this).parent("div").parent("div").parent("div.intake-forms").remove();
+         //$(this).parent("div").parent("div").parent("div.intake-forms").remove();
 
-         $.ajax({
-            url: "<?php echo base_url("emergency_assistance/deleteform/") ?>"+id,
-            method: "get"
-         })
-      } else {
-         return false;
-      }
-   })
+         //$.ajax({
+         //   url: "<?php echo base_url("emergency_assistance/deleteform/") ?>"+id,
+         //   method: "get"
+         //})
+   //   } else {
+   //      return false;
+   //   }
+   //})
 
    // clicking on save assign button
    .on("click", ".mark_inactive", function(){
@@ -1030,7 +1108,7 @@ function page_info_adjust() {
       $.ajax({
          url: "<?php echo base_url("emergency_assistance/follow_up_cases") ?>",
          method: "post",
-         data:{cases:"<?php echo $case_id; ?>", employee_id: employee_id, notes: $("textarea[name=notes]").val() },
+         data:{cases:"<?php echo $case_id; ?>", employee_id: employee_id, notes: $("textarea[name=notes]").val(), due_date: $("input[name=due_date]").val(), due_time: $("input[name=due_time]").val() },
          beforeSend: function(){
             $(".modal-dialog").addClass("csspinner load1");
          },

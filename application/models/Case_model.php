@@ -91,7 +91,7 @@ class Case_model extends CI_Model {
 		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
 			$products = $this->ion_auth->get_users_products();
 			if ($products && (sizeof($products) > 0)) {
-				$where .= ' AND `case`.product_short IN (' . join("','", $products) . "')";
+				$where .= " AND `case`.product_short IN ('" . join("','", $products) . "')";
 			} else {
 				return array();
 			}

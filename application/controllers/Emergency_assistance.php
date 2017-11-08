@@ -8,6 +8,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Emergency_assistance extends CI_Controller {
 	private $limit = 10;
+	private $notes_dealy = 10 * 60;	// seconds
+	
 	public function __construct() {
 		parent::__construct();
 		
@@ -57,7 +59,6 @@ class Emergency_assistance extends CI_Controller {
 			
 			// send case manager and eac managers list
 			$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
-			
 			// send countries and province list
 			$this->data['country'] = $this->country_model->get_list(TRUE);
 			$this->data['province'] = $this->province_model->get_list_by_country_short('CA');
@@ -88,6 +89,10 @@ class Emergency_assistance extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		} else {
+			if ($this->input->post('product_short') && !$this->users_model->verify_users_product($this->input->post('product_short'))) {
+				show_error("Sorry, you don't have permission to create this product's case.");
+			}
+				
 			$this->load->model('case_model');
 			$this->load->model('api_model');
 			$this->load->model('intakeform_model');
@@ -219,27 +224,28 @@ class Emergency_assistance extends CI_Controller {
 					$new_task['item_id'] = $new_case['id'];
 					$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
 					$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
-					$new_task['due_date'] = date("Y-m-d", time() + 86400);
-					$new_task['due_time'] = date("H:i:s", time() + 86400);
+					$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
+					$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
 					$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
 					$new_task['priority'] = $new_case['priority'];
 					$new_task['created_by'] = $this->ion_auth->get_user_id();
 					$new_task['created'] = date("Y-m-d H:i:s");
-					$new_task['user_type'] = Mytask_model::USER_TYPE_EAC;
+					$new_task['user_type'] = Mytask_model::USER_TYPE_MANAGER;
 					$new_task['status'] = Mytask_model::STATUS_ASSIGNED;
 					$new_task['notes'] = "New Case Assign";
 								
 					$this->mytask_model->save($new_task);
 				}
 				
+				/*
 				if ($new_case['assign_to'] && ($new_case['assign_to'] != $new_case['case_manager'])) {
 					$new_task = array();
 					$new_task['user_id'] = $new_case['assign_to'];
 					$new_task['item_id'] = $new_case['id'];
 					$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
 					$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
-					$new_task['due_date'] = date("Y-m-d", time() + 86400);
-					$new_task['due_time'] = date("H:i:s", time() + 86400);
+					$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
+					$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
 					$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
 					$new_task['priority'] = $new_case['priority'];
 					$new_task['created_by'] = $this->ion_auth->get_user_id();
@@ -250,6 +256,7 @@ class Emergency_assistance extends CI_Controller {
 								
 					$this->mytask_model->save($new_task);
 				}
+				*/
 
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully created");
@@ -323,6 +330,9 @@ class Emergency_assistance extends CI_Controller {
 							$case_details['country'] = $this->data['case_details']['country'] = $this->data['policy']['country2'];
 							$case_details['province'] = $this->data['case_details']['province'] = $this->data['policy']['province2'];
 							$case_details['post_code'] = $this->data['case_details']['post_code'] = $this->data['policy']['postcode'];
+							if (!$this->users_model->verify_users_product($case_details['product_short'])) {
+								show_error("Sorry, you don't have permission to create this product's case.");
+							}
 						}
 					} else {
 						$case_details['country2'] = $this->data['case_details']['country2'] = 'CA';
@@ -332,6 +342,9 @@ class Emergency_assistance extends CI_Controller {
 				} else {
 					if ($policies = $this->api_model->get_policy(array('policy' => $case_details['policy_no']))) {
 						$this->data['policy'] = $policies[0];
+						if (!$this->users_model->verify_users_product($this->data['policy']['product_short'])) {
+							show_error("Sorry, you don't have permission to create this product's case.");
+						}
 					}
 					$case_details['country2'] = $this->data['case_details']['country2'] = 'CA';
 					$case_details['country'] = $this->data['case_details']['country2'] = 'CA';
@@ -379,8 +392,6 @@ class Emergency_assistance extends CI_Controller {
 				$vdata['selected'] = 'ON';
 				$vdata['loadurl'] = '';
 				$this->data['outpatient_province'] = $this->load->view('template/selection', $vdata, TRUE);
-				
-				$this->data['eacs'] = $this->users_model->search(array('groups' => Users_model::GROUP_EAC, 'active' => 1));
 				
 				$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
 				
@@ -485,8 +496,8 @@ class Emergency_assistance extends CI_Controller {
 						// Change manager
 						$new_task['id'] = $tasks[0]['id'];
 						$new_task['user_id'] = $new_case['case_manager'];
-						$new_task['due_date'] = date("Y-m-d", time() + 86400);
-						$new_task['due_time'] = date("H:i:s", time() + 86400);
+						$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
+						$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
 						$new_task['priority'] = $new_case['priority'];
 						$new_task['status'] = Mytask_model::STATUS_REASSIGNED;
 						$new_task['finished'] = 0;
@@ -497,8 +508,8 @@ class Emergency_assistance extends CI_Controller {
 						$new_task['item_id'] = $new_case['id'];
 						$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
 						$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
-						$new_task['due_date'] = date("Y-m-d", time() + 86400);
-						$new_task['due_time'] = date("H:i:s", time() + 86400);
+						$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
+						$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
 						$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
 						$new_task['priority'] = $new_case['priority'];
 						$new_task['created_by'] = $this->ion_auth->get_user_id();
@@ -518,8 +529,8 @@ class Emergency_assistance extends CI_Controller {
 						// Change EAC
 						$new_task['id'] = $tasks[0]['id'];
 						$new_task['user_id'] = $new_case['assign_to'];
-						$new_task['due_date'] = date("Y-m-d", time() + 86400);
-						$new_task['due_time'] = date("H:i:s", time() + 86400);
+						$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
+						$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
 						$new_task['priority'] = $new_case['priority'];
 						$new_task['status'] = Mytask_model::STATUS_REASSIGNED;
 						$new_task['finished'] = 0;
@@ -529,8 +540,8 @@ class Emergency_assistance extends CI_Controller {
 						$new_task['item_id'] = $new_case['id'];
 						$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
 						$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
-						$new_task['due_date'] = date("Y-m-d", time() + 86400);
-						$new_task['due_time'] = date("H:i:s", time() + 86400);
+						$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
+						$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
 						$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
 						$new_task['priority'] = $new_case['priority'];
 						$new_task['created_by'] = $this->ion_auth->get_user_id();
@@ -567,6 +578,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->load->model('relations_model');
 				$this->load->model('Intakeform_model');
 				$this->load->model('template_model');
+				$this->load->model('schedule_model');
 				
 				$this->data['policy'] = array();
 				
@@ -600,10 +612,10 @@ class Emergency_assistance extends CI_Controller {
 				}
 				
 				$this->data['assign_to_name'] = '-';
-				if ($users = $this->users_model->search(array(
-						'id' => $case_details['assign_to'] 
-				))) {
+				$this->data['assign_to_email'] = 'N / A';
+				if ($users = $this->users_model->search(array('id' => $case_details['assign_to']))) {
 					$this->data['assign_to_name'] = $users[0]['first_name'] . " " . $users[0]['last_name'];
+					$this->data['assign_to_email'] = $users[0]['email'];
 				}
 				
 				// load dropdowns data
@@ -653,7 +665,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['outpatient_province'] = $this->load->view('template/selection', $vdata, TRUE);
 				
 				$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
-				$this->data['eacs'] = $this->users_model->search(array('groups' => Users_model::GROUP_EAC, 'active' => 1));
+				$this->data['seacs'] = $this->schedule_model->get_eacs();
 				
 				$this->data['province2'] = $this->data['province'];
 				
@@ -675,6 +687,9 @@ class Emergency_assistance extends CI_Controller {
 				
 				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CASE));
 				$this->data['phone_list_url'] = base_url('phone/search');
+				$this->data['note_delay'] = $this->notes_dealy;
+				$this->data['my_user_id'] = $this->ion_auth->get_user_id();
+				$this->data['note_update_url'] = base_url('emergency_assistance/updatenotes');
 				
 				// $this->data['priorities'] = $this->case_model->get_priorities();
 				
@@ -1315,6 +1330,78 @@ class Emergency_assistance extends CI_Controller {
 		readfile(UPLOADFULLPATH . 'intake_forms/' . $id . '/' . urldecode($file));
 	}
 	
+	public function removedocfile($id, $file) {
+		if (!$this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		} else {
+			$this->load->model('intakeform_model');
+			$file = urldecode($file);
+			$intakeform = $this->intakeform_model->get_by_id($id);
+			if ($intakeform) {
+				$delay = time() - strtotime($intakeform['created']);
+				if ($delay <= $this->notes_dealy) {
+					$files = $intakeform['docs'] ? explode(",", $intakeform['docs']) : array();
+					foreach ($files as $key => $fn) {
+						if ($fn == $file) {
+							unlink(UPLOADFULLPATH . 'intake_forms/' . $id . '/' . $file);
+							unset($files[$key]);
+						}
+					}
+					$intakeform['docs'] = join(",", $files);
+					$this->intakeform_model->update($intakeform);
+				} else {
+					$this->session->set_flashdata('error', "You must update in ".$this->notes_dealy." seconds.");
+				}
+				echo "OK";
+			}
+		}
+		echo "Fail";
+	}
+	
+	public function removephonefile($id) {
+		if (!$this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		} else {
+			$this->load->model('intakeform_model');
+
+			$intakeform = $this->intakeform_model->get_by_id($id);
+			if ($intakeform) {
+				$delay = time() - strtotime($intakeform['created']);
+				if ($delay <= $this->notes_dealy) {
+					$intakeform['phonefile'] = '';
+					$this->intakeform_model->update($intakeform);
+					echo "OK";
+				} else {
+					$this->session->set_flashdata('error', "You must update in ".$this->notes_dealy." seconds.");
+				}
+			}
+		}
+		echo "Fail";
+	}
+	
+	public function updatenotes($id) {
+		if (!$this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		} else {
+			$this->load->model('intakeform_model');
+			$intakeform = $this->intakeform_model->get_by_id($id);
+			if ($intakeform) {
+				$delay = time() - strtotime($intakeform['created']);
+				if ($delay <= $this->notes_dealy) {
+					$intakeform['notes'] = $this->input->post("new_note");
+					$this->intakeform_model->update($intakeform);
+				} else {
+					$this->session->set_flashdata('error', "You must update in ".$this->notes_dealy." seconds.");
+				}
+				redirect('emergency_assistance/edit_case/'.$intakeform['case_id']);
+			}
+		}
+		redirect('emergency_assistance');
+	}
+	
 	// delete intake form here for ajax request
 	public function deleteform($form_id) {
 		
@@ -1520,7 +1607,7 @@ class Emergency_assistance extends CI_Controller {
 					
 			// get schedule calendar
 			$this->data['calendar'] = $this->schedule_calendar($this->data['emc'], $year, $month, "return");
-			
+					
 			// pass month and year to calender page
 			$this->data['year'] = $year;
 			$this->data['month'] = $month;
@@ -1534,7 +1621,7 @@ class Emergency_assistance extends CI_Controller {
 					"'eacmanager'" 
 			), $empty = "--Select Employee--", $additional_conditions = " and users.active = '1'", $user_code = "EAC");
 			*/
-			
+
 			$this->template->write('title', SITE_TITLE . ' - Employee Schedule', TRUE);
 			$this->template->write_view('content', 'emergency_assistance/schedule', $this->data);
 			$this->template->render();
@@ -1558,7 +1645,10 @@ class Emergency_assistance extends CI_Controller {
 			$month = date('m');
 		}
 		// only accessible for case managers
-		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) {
+		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EAC))) {
+			// redirect them to the home page because they must be an case manager to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		} else if (empty($emc) && $this->ion_auth->in_group(array(Users_model::GROUP_EAC))) {
 			// redirect them to the home page because they must be an case manager to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
@@ -1686,8 +1776,8 @@ class Emergency_assistance extends CI_Controller {
 					$data_task = array(
 							'id' => $task['id'],
 							'user_id' => $employee_id,
-							'due_date' => date("Y-m-d", time() + 86400),
-							'due_time' => date("H:i:s", time() + 86400),
+							'due_date' => $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400),
+							'due_time' => $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400),
 							'finished' => 0,
 							'status' => Mytask_model::STATUS_REASSIGNED,
 							'notes' => "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'],
@@ -1701,8 +1791,8 @@ class Emergency_assistance extends CI_Controller {
 							'task_no' => $case_details['case_no'],
 							'category' => Mytask_model::CATEGORY_ASSISTANCE,
 							'type' => Mytask_model::TASK_TYPE_CASE,
-							'due_date' => date("Y-m-d", time() + 86400),
-							'due_time' => date("H:i:s", time() + 86400),
+							'due_date' => $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400),
+							'due_time' => $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400),
 							'priority' => $case_details['priority'],
 							'created_by' => $this->ion_auth->get_user_id(),
 							'created' => date("Y-m-d H:i:s"),
@@ -1735,8 +1825,8 @@ class Emergency_assistance extends CI_Controller {
 					$data_task = array(
 							'id' => $task['id'],
 							'user_id' => $employee_id,
-							'due_date' => date("Y-m-d", time() + 86400),
-							'due_time' => date("H:i:s", time() + 86400),
+							'due_date' => $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400),
+							'due_time' => $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400),
 							'finished' => 0,
 							'status' => Mytask_model::STATUS_REASSIGNED,
 							'notes' => "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'],
@@ -1755,8 +1845,8 @@ class Emergency_assistance extends CI_Controller {
 							'task_no' => $case_details['case_no'],
 							'category' => Mytask_model::CATEGORY_ASSISTANCE,
 							'type' => Mytask_model::TASK_TYPE_CASE,
-							'due_date' => date("Y-m-d", time() + 86400),
-							'due_time' => date("H:i:s", time() + 86400),
+							'due_date' => $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400),
+							'due_time' => $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400),
 							'priority' => $case_details['priority'],
 							'created_by' => $this->ion_auth->get_user_id(),
 							'created' => date("Y-m-d H:i:s"),
@@ -1784,7 +1874,7 @@ class Emergency_assistance extends CI_Controller {
 		// follow up process
 		foreach ( $cases as $key => $value ) {
 			// save values to intake database
-			$iid = $this->intakeform_model->save($value, $notes, '', '');
+			$iid = $this->intakeform_model->save($value, $notes, '', '', $employee_id);
 					
 			// save record in intake form as notes
 			$this->case_model->save(array("assign_to" => $employee_id, "id" => $value));
@@ -1796,8 +1886,8 @@ class Emergency_assistance extends CI_Controller {
 				// Change EAC
 				$new_task['id'] = $tasks[0]['id'];
 				$new_task['user_id'] = $employee_id;
-				$new_task['due_date'] = date("Y-m-d", time() + 86400);
-				$new_task['due_time'] = date("H:i:s", time() + 86400);
+				$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
+				$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
 				$new_task['priority'] = Mytask_model::PRIORITY_NORMAL;
 				$new_task['status'] = Mytask_model::STATUS_REASSIGNED;
 				$new_task['finished'] = 0;
@@ -1807,8 +1897,8 @@ class Emergency_assistance extends CI_Controller {
 				$new_task['item_id'] = $value;
 				$new_task['task_no'] = str_pad($value, 6, "0", STR_PAD_LEFT);
 				$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
-				$new_task['due_date'] = date("Y-m-d", time() + 86400);
-				$new_task['due_time'] = date("H:i:s", time() + 86400);
+				$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
+				$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
 				$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
 				$new_task['priority'] = Mytask_model::PRIORITY_NORMAL;
 				$new_task['created_by'] = $this->ion_auth->get_user_id();
@@ -2122,11 +2212,13 @@ class Emergency_assistance extends CI_Controller {
 					'date like ' => "%$selected_month%" 
 			);
 		}
-		if ($employee_id)
+		if ($employee_id) {
 			$conditions['employee_id'] = $employee_id;
+		}
 		
-		$this->common_model->delete('schedule', $conditions);
-		echo $this->db->last_query();
+		if (isset($conditions)) {
+			$this->common_model->delete('schedule', $conditions);
+		}
 		echo TRUE;
 	}
 }

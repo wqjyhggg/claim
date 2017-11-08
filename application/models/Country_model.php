@@ -15,6 +15,8 @@ class Country_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function get_list($flag=FALSE) {
+		$this->db->reset_query();
+		
 		if ($flag !== FALSE) {
 			$this->db->where('active', $flag);
 		}

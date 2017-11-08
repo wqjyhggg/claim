@@ -330,7 +330,7 @@
                            <td><?php echo $value['assign_to_email']; ?></td>
                            <td><?php echo $value['manager_email']; ?></td>
                            <td><?php echo $value['priority']; ?></td>
-                           <td><?php echo anchor("emergency_assistance/create_case/".$value['id'], "Clone"); ?></td>
+                           <td><?php echo anchor("emergency_assistance/edit_case/".$value['id'], "Detail"); ?></td>
                            <td><?php echo date('Y-m-d h:i a', strtotime($value['last_update'])); ?></td>
                         </tr>
                      <?php endforeach; ?>

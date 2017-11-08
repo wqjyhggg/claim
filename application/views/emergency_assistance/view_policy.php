@@ -5,7 +5,11 @@
 				echo anchor ( "claim/create_claim?policy=", '<i class="fa fa-plus-circle"></i> New Claim', array ("class" => 'btn btn-primary new_claim') );
 			}
 		?>
-		<?php echo anchor("emergency_assistance/create_provider", '<i class="fa fa-plus-circle"></i> New Provider', array("class"=>'btn btn-primary'))?>
+		<?php
+			if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
+				echo anchor("emergency_assistance/create_provider", '<i class="fa fa-plus-circle"></i> New Provider', array("class"=>'btn btn-primary'));
+			}
+		?>
 		<a class="btn btn-primary pull-right" onclick="window.history.back()"><i class="fa fa-arrow-left"></i>Back</a>
 	</div>
 	<div class="clearfix"></div>

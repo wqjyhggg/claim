@@ -56,6 +56,15 @@ class Schedule_model extends CI_Model {
 		return $rt;
 	}
 
+	public function get_eacs($maxtime=86400) {
+		$st_tm = time() + $maxtime;
+		$now = date("Y-m-d H:i:s");
+		$maxtm = date("Y-m-d H:i:s", $st_tm);
+		$sql = "SELECT u.id, CONCAT(s.date, ' ', s.schedule, ' ', u.email) as schedule FROM schedule s LEFT JOIN users u ON (s.employee_id=u.id) WHERE s.start_tm<='".$maxtm."' AND ADDTIME(s.start_tm, CONCAT(s.shour, ':00:00'))>='".$now."' AND u.active='1'";
+		$sql .= " ORDER BY s.start_tm ASC, u.email ASC";
+		return $this->db->query($sql)->result_array();
+	}
+	
 	public function get_schedule($year, $month, $user_id = 0) {
 		$first_day = $year."-".$month."-1";
 		$first_tm = strtotime($first_day);

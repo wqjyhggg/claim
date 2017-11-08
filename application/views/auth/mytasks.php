@@ -28,7 +28,7 @@
 									<th>Insured Name</th>
 									<th>Created By</th>
 									<th>Created DateTime</th>
-									<th>Due DateTime</th>
+									<th><?php echo $this->pagination->sort("due", "Due DateTime") ?></th>
 									<?php if ($this->ion_auth->in_group(Users_model::GROUP_ADMIN)) { ?>
 									<th>Assign to</th>
 									<?php } ?>
