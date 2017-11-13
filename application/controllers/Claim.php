@@ -238,6 +238,7 @@ class Claim extends CI_Controller {
 								'amount_client_paid' => $array['expenses_claimed']['amount_client_paid'][$key],
 								'pay_to' => $array['expenses_claimed']['payee'][$key],
 								'comment' => $array['expenses_claimed']['comment'][$key],
+								'status' => Expenses_model::EXPENSE_STATUS_Pending,
 								'created_by' => $this->ion_auth->get_user_id(),
 								'created' => date('Y-m-d H:i:s') 
 						);
@@ -657,24 +658,6 @@ class Claim extends CI_Controller {
 				// get intake forms
 				$this->data['intake_forms'] = $this->intakeform_model->get_list_by_case_id($id, 'CLAIM');
 				
-				// get case info details if exists
-				$joins =[ ];
-				$joins[] = array(
-						'table' => 'users u1',
-						'on' => 'u1.id = case.created_by',
-						'type' => 'LEFT' 
-				);
-				$joins[] = array(
-						'table' => 'users u2',
-						'on' => 'u2.id = case.case_manager',
-						'type' => 'LEFT' 
-				);
-				$joins[] = array(
-						'table' => 'users u3',
-						'on' => 'u3.id = case.assign_to',
-						'type' => 'LEFT' 
-				);
-				// $this->data['case_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "case", $fields = "`case`.*, concat_ws(' ', u1.first_name, u1.last_name) as created_by, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u3.first_name, u3.last_name) as assign_to_name", $conditions = array('case.case_no'=>$this->data['claim_details']['case_no']), $joins);
 				$this->data['case_details'] = $this->case_model->get_by_id($id);
 				if ($this->data['case_details'] && $this->data['case_details']['assign_to']) {
 					$assign_to = $this->users_model->get_by_id($this->data['case_details']['assign_to']);
@@ -764,7 +747,6 @@ class Claim extends CI_Controller {
 				// prepare post data array
 				$data =[ ];
 				$array = $this->input->post();
-				
 				foreach ( $array as $key => $value ) {
 					// code...
 					if ($key != "expenses_claimed" && $key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf") && ! strpos($key, "ayment_type"))
@@ -1140,6 +1122,7 @@ class Claim extends CI_Controller {
 		unset($data['policy_info']);
 		unset($data['deny_reason']);
 		unset($data['total_amount_payble']);
+		if (empty($data['updated_by'])) $data['updated_by'] = $this->ion_auth->get_user_id();
 		// update values to database
 		$this->load->model('expenses_model');
 		
@@ -1339,6 +1322,9 @@ class Claim extends CI_Controller {
 	
 	// change status of claim - for ajax request
 	public function status($type = "", $is_accepted = '') {
+		if (! $this->ion_auth->logged_in()) {
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		}
 		$this->load->model('claim_model');
 		if (empty($type)) {
 			$type = Claim_model::STATUS_Processing;

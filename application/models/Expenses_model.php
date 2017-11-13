@@ -8,7 +8,7 @@ if (! defined ( 'BASEPATH' )) exit ( 'No direct script access allowed' );
  */
 
 class Expenses_model extends CI_Model {
-	const EXPENSE_STATUS_Examined='Examined';
+	const EXPENSE_STATUS_Pending='Pending';
 	const EXPENSE_STATUS_Approved='Approved';
 	const EXPENSE_STATUS_Declined='Declined';
 	const EXPENSE_STATUS_Paid='Paid';
@@ -73,7 +73,7 @@ class Expenses_model extends CI_Model {
 	public function get_status($withempty=TRUE) {
 		$rt =  array(
 				0 => '-- Select Status --',
-				'Examined' => self::EXPENSE_STATUS_Examined,
+				'Pending' => self::EXPENSE_STATUS_Pending,
 				'Approved' => self::EXPENSE_STATUS_Approved,
 				'Declined' => self::EXPENSE_STATUS_Declined,
 				'Paid' => self::EXPENSE_STATUS_Paid,

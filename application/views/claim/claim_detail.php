@@ -9,12 +9,12 @@
 	<div class="row">
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="x_panel">
+				<?php echo $message; ?>
 				<div class="x_title">
 					<h2>Claim Details</h2>
 					<?php if (!empty($claim_details['case_no'])) { echo anchor("emergency_assistance/edit_case/".$claim_details['id'], 'Case Info <i class="fa fa-link"></i>', array("class"=>'btn btn-primary pull-right')); } ?>
 					<div class="clearfix"></div>
 				</div>
-				<?php echo $message; ?>
 				<div class="x_content">
 					<?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post', 'onsubmit'=>'return validate_form()', 'id'=>'main_form')); ?>
 					<div class="case_info">
@@ -1495,13 +1495,21 @@
    })
 
    // to list payee in expenses payee
-   .on("keyup", "input[name='payees[payee_name][]']", function(){
+   .on("keyup", "input[name='payees[payee_name][]'],input[name='payees[address][]'],input[name='payees[bank][]'],input[name='payees[account_cheque][]']", function(){
       // build a list of all payees name here
 
       var html = "<option value=''>--Select Payee--</option>";
       $("input[name='payees[payee_name][]']").each(function(){
-         if($(this).val())
-            html += '<option value="'+$(this).val()+'">'+$(this).val()+'</option>';
+         if($(this).val()) {
+             var p = $(this).parent().parent();
+             var v = p.find('input[type=radio]:checked').val();
+             if (v == 'cheque') {
+                 v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
+             } else {
+                 v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
+             }
+            html += '<option value="'+v+'">'+$(this).val()+'</option>';
+         }
       })
 
       $("select[name='expenses_claimed[payee][]']").html(html);
@@ -1581,7 +1589,7 @@ function validate_form(){
 
    // validate invoice required
    var $validate = 1;
-   $("#main_form .required").map(function(){
+   $("#main_form .required").map(function(o){
       if(!$(this).val()){
          $validate = 0;
          $(this).addClass('error-true');

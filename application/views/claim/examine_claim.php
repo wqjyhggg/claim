@@ -1,8 +1,9 @@
+<?php $this->load->model('claim_model'); ?>
 <?php $total_payable = 0; $total_this_payable = 0; ?>
 <div>
 	<div class="page-title">
 		<div class="title_left">
-			<h3>Claim Examine</h3>
+			<h3>Claim Examine - #<?php echo $claim_details['claim_no']; ?></h3>
 		</div>
 	</div>
 	<div class="clearfix"></div>
@@ -11,6 +12,12 @@
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="x_panel">
 	            <?php echo $message; ?>
+	            <div class="x_title">
+					<h2>Claim Details</h2>
+					<?php if (!empty($claim_details['case_no'])) { echo anchor("emergency_assistance/edit_case/".$claim_details['id'], 'Case Info <i class="fa fa-link"></i>', array("class"=>'btn btn-primary pull-right')); } ?>
+					<div class="clearfix"></div>
+				</div>
+	            
 				<div class="x_content">
 					<h4 style="margin-top: 25px;">POLICY INFO</h4>
 					<div class="row policy_info">
@@ -34,9 +41,9 @@
 						<div class="form-group col-sm-3">
 							<label>Sum Insured : </label>$<?php echo number_format($policy['sum_insured'], 2); ?>
 						</div>
-						<!-- div class="form-group col-sm-3">
+						<div class="form-group col-sm-3">
 							<label>Deductible Amount : </label>$<?php echo number_format($policy['deductible_amount'], 2); ?>
-						</div -->
+						</div>
 						<div class="form-group col-sm-3">
 							<?php if ($policy['stable_condition'] == 1) { ?>
 							<label>&nbsp;</label>Include stable pre-existing condition coverage
@@ -116,12 +123,13 @@
 						<div class="form-group col-sm-3">
 							<label>Decision : </label>
 							<?php 
-								if (($claim['status'] == 'Processed') || ($claim['status'] == 'Paid') || ($claim['status'] == 'Closed')) {
+								if (($claim['status'] == Claim_model::STATUS_Processed) || ($claim['status'] == Claim_model::STATUS_Paid) || ($claim['status'] == Claim_model::STATUS_Closed)) {
 									echo ($claim['is_accepted'] == 'N') ? 'Deny' : 'Accept'; 
 								} else {
 									echo "&nbsp;";
 								}
 							?>
+							<?php echo form_hidden("policy_info", $claim['policy_info'] ); ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<label>Priority : </label><?php echo $claim['priority']; ?>
@@ -145,12 +153,12 @@
 								<thead>
 									<tr>
 										<th>No</th>
-										<th>Claim No</th>
 										<th>Claim Item No</th>
 										<th>Invoice No</th>
 										<th>Service Date</th>
 										<th>Coverage</th>
 										<th>Diagnosis</th>
+										<th>Amt Billed</th>
 										<th>Amt Claimed</th>
 										<th>Amt Payable</th>
 										<th>Amt Received</th>
@@ -166,12 +174,12 @@
 								?>
 									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>">
 										<td><?php echo $i++; ?></td>
-										<td><?php echo $value['claim_no']; ?></td>
 										<td><?php echo $value['claim_item_no']; ?></td>
 										<td><?php echo $value['invoice']; ?></td>
 										<td><?php echo $value['date_of_service']; ?></td>
 										<td><?php echo $value['coverage_code']; ?></td>
 										<td><?php echo $value['diagnosis']; ?></td>
+										<td><?php echo $value['amount_billed']?$value['amount_billed']:0; ?></td>
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
 										<td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
@@ -182,8 +190,8 @@
 											<div class="row policy_info">
 											<?php 
 												echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal claim_items_submit', 'method'=>'post'));
-												echo form_hidden ( "id",  $value['id']);
-												echo form_hidden ( "claim_id", $value['claim_id'] );
+												echo form_hidden("id",  $value['id']);
+												echo form_hidden("claim_id", $value['claim_id'] );
 											?>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Provider Name : </label>
@@ -199,10 +207,14 @@
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Created: </label>
-													<div class='col-sm-12'><?php echo $value['created']; ?> by (ID : <?php echo $value['created_by']; ?>)</div>
+													<div class='col-sm-12'><?php echo $value['created']; ?></div>
 												</div>
 												<div class="clearfix"></div>
 
+												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Deductible : </label>
+													<div class='col-sm-12'><input type='number' step='0.01' name='amt_deductible' value="<?php echo $value['amt_deductible']; ?>"></div>
+												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">New Payable : </label>
 													<div class='col-sm-12'><input type='number' step='0.01' name='amt_payable' value="<?php echo $value['amt_payable']; ?>"></div>
@@ -212,12 +224,8 @@
 													<div class='col-sm-12'><input type='number' step='0.01' name='amt_received' value="<?php echo $value['amt_received']; ?>"></div>
 												</div>
 												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Exempt : </label>
+													<label class="col-sm-12">Exempted : </label>
 													<div class='col-sm-12'><input type='number' step='0.01' name='amt_exempt' value="<?php echo $value['amt_exempt']; ?>"></div>
-												</div>
-												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Status : </label>
-													<div class='col-sm-12'><?php echo form_dropdown ( "status", $examine_status, $value['status'], array () ); ?></div>
 												</div>
 												<div class="clearfix"></div>
 												
@@ -226,18 +234,18 @@
 													<div class='col-sm-12'><?php echo $value['pay_to']; ?>&nbsp;</div>
 												</div>
 												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Cellular : </label>
-													<div class='col-sm-12'><?php echo $value['cellular']; ?>&nbsp;</div>
+													<label class="col-sm-12">Last Update : </label>
+													<div class='col-sm-12'><?php echo $value['last_update']; ?></div>
 												</div>
 												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Last Update : </label>
-													<div class='col-sm-12'><?php echo $value['last_update']; ?> by (ID : <?php echo $value['updated_by']; ?>)</div>
+													<label class="col-sm-12">Status : </label>
+													<div class='col-sm-12'><?php echo form_dropdown ( "status", $examine_status, $value['status'], array () ); ?></div>
 												</div>
 												<div class="clearfix"></div>
 												
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Recovery Name : </label>
-													<div class='col-sm-12'><?php echo $value['recovery_name']; ?>&nbsp;</div>
+													<div class='col-sm-12'><input type='text' name='recovery_name' value="<?php echo $value['recovery_name']; ?>"></div>
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Recovery Amount : </label>
@@ -246,8 +254,7 @@
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Reason : </label>
 													<div class='col-sm-12'>
-														<?php echo $value['reason']; ?>
-														<select name="reason" class="form-control">
+														<select name="reason">
 															<option value=""> -- Select Reason -- </option>
 															<?php foreach ($reasons as $rc):?>
 															<option value="<?php echo $rc; ?>" <?php if ($rc == $value['reason']) { echo "selected"; } ?>><?php echo $rc; ?></option>
@@ -270,46 +277,42 @@
 					</div>
 					<hr />
 	
-					<h4 style="margin-top: 35px; margin-bottom: 26px;">Policy Pay info</h4>
+					<h4 style="margin-top: 35px; margin-bottom: 26px;">Total Pay info By Policy</h4>
 					<div class="row actions" style="margin-top: 20px;">
+						<div class="col-sm-3">
+							<label class="col-sm-12">Total Approved or Paid Amount</label>
+							<div class='col-sm-12'>$ <?php echo number_format($payinfo['payable'], 2); ?></div>
+						</div>
 						<div class="col-sm-3">
 							<label class="col-sm-12">Policy Deductible Amount</label>
 							<div class='col-sm-12'>$ <?php echo number_format($policy['deductible_amount'], 2); ?></div>
 						</div>
 						<div class="col-sm-3">
-							<label class="col-sm-12">Claimed Payable Amount</label>
-							<div class='col-sm-12'>$ <?php echo number_format($payinfo['payable'], 2); ?></div>
-						</div>
-						<div class="col-sm-3">
-							<label class="col-sm-12">Claimed Deductible Amount</label>
+							<label class="col-sm-12">Total Deducted Amount</label>
 							<div class='col-sm-12'>$ <?php echo number_format($payinfo['deductible'], 2); ?></div>
 						</div>
 						<div class="clearfix"></div>
 					</div>
     				<hr />
 
-					<h4 style="margin-top: 35px; margin-bottom: 26px;">CASE INFO</h4>
-					<div class="case_info">
-						<?php echo $case_info; ?>
-					</div>
-					<hr />
 					<div class="row actions" style="margin-top: 20px;">
 						<div class="row">
-							<div class="col-sm-2">
+							<div class="col-sm-3">
 								<?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
 							</div>
-							<?php if (($claim['status'] != 'Processed') && ($claim['status'] != 'Paid') && ($claim['status'] != 'Closed')) { ?>
-							<div class="col-sm-2 investigate_pending">
+							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER))) { ?>
+							<?php if (($claim['status'] != Claim_model::STATUS_Processed) && ($claim['status'] != Claim_model::STATUS_Pending) && ($claim['status'] != Claim_model::STATUS_Paid) && ($claim['status'] != Claim_model::STATUS_Closed)) { ?>
+							<div class="col-sm-3 investigate_pending">
 								<input class="btn btn-primary" name="Investigate Pending" value="Investigate Pending" type="button">
 							</div>
-							<div class="col-sm-2 record_exempt">
-								<input class="btn btn-primary" name="Record Exempt" value="Record Exempt" type="button">
+	                     	<?php } ?>
+							<?php if (($claim['status'] != Claim_model::STATUS_Processed) && ($claim['status'] != Claim_model::STATUS_Paid) && ($claim['status'] != Claim_model::STATUS_Closed)) { ?>
+							<div class="col-sm-3 accept_decision">
+								<input class="btn btn-primary" name="Accept" value="Investigate Finished" type="button">
 							</div>
-							<?php if (($claim['status'] == 'Processing') || ($claim['status'] == 'Recovered') || ($claim['status'] == 'Appealed')) { ?>
-							<div class="col-sm-2 accept_decision">
-								<input class="btn btn-primary" name="Accept" value="Accept" type="button">
-							</div>
-							<div class="col-sm-2 deny_decision">
+							<?php } ?>
+							<?php if (0) { ?>
+							<div class="col-sm-3 deny_decision">
 								<input class="btn btn-primary" name="Deny" value="Deny" type="button">
 								<div class="col-sm-12 deny_reasons" style="display: none">
 									<?php
@@ -319,10 +322,10 @@
 									?>
 								</div>
 							</div>
-	                     	<?php } ?>
-							<div class="col-sm-2">
+							<?php } ?>
+							<!-- div class="col-sm-2">
 								<input class="btn btn-primary email_print" data-toggle="modal" name="Email" value="Email/Print" type="button" data-target="#print_template">
-							</div>
+							</div -->
 							<?php } ?>
 						</div>
 					</div>
@@ -582,7 +585,7 @@ $(document).ready(function() {
          $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").show();
          $(".my_decision").hide();
       } else {
-         if(decision == 'accepted' || decision == 'denied' || decision == 'paid')
+         if(decision == '<?php Claim_model::STATUS_Processed?>' || decision == '<?php Claim_model::STATUS_Exempted?>' || decision == '<?php Claim_model::STATUS_Paid?>')
             $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").hide();
          else
             $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").show();
@@ -948,16 +951,9 @@ $(document).ready(function() {
    })
 
 	.on("click", "input[name=Accept]", function() {
-		<?php if ($total_this_payable <= 0) { ?>
-		alert("Please add payable amount to any claim item first to accept claim.")
-		return false;
-		<?php } else if ($total_payable >= (float)$policy['sum_insured']) { ?>
-		alert("Payable amount should be less then insured amount($"+"<?php echo number_format($policy['sum_insured'], 2); ?>"+").");
-		return false;
-		<?php } else { ?>
-		if (confirm('Are you sure you want to accept claim?')) {
+		if (confirm('Are you sure you want to change claim status to processed ?')) {
 			$.ajax({
-				url: "<?php echo base_url("claim/status/Processed/Y") ?>",
+				url: "<?php echo base_url("claim/status/".Claim_model::STATUS_Processed."/Y") ?>",
 				method: "post",
 				data:{claim_id:<?php echo $claim['id']; ?>},
 				beforeSend: function(){
@@ -970,11 +966,10 @@ $(document).ready(function() {
 		} else {
 			return false;
 		}
-		<?php } ?>
 	}).on("click", "input[name='Investigate Pending']", function() {
 		if (confirm('Are you sure you want to mark this claim as pending?')) {
 			$.ajax({
-				url: "<?php echo base_url("claim/status/Pending") ?>",
+				url: "<?php echo base_url("claim/status/".Claim_model::STATUS_Pending) ?>",
 				method: "post",
 				data:{claim_id:<?php echo $claim['id']; ?>},
 				beforeSend: function() {
@@ -990,7 +985,7 @@ $(document).ready(function() {
 	}).on("click", "input[name='Record Exempt']", function() {
 		if (confirm('Are you sure you want to mark this claim as record exempted?')) {
 			$.ajax({
-				url: "<?php echo base_url("claim/status/Exempted") ?>",
+				url: "<?php echo base_url("claim/status/".Claim_model::STATUS_Exempted) ?>",
 				method: "post",
 				data:{claim_id:<?php echo $claim['id']; ?>},
 				beforeSend: function() {
@@ -1009,7 +1004,7 @@ $(document).ready(function() {
 		if ($(this).val()) {
 			if (confirm('Are you sure you want to deny claim?')) {
 				$.ajax({
-					url: "<?php echo base_url("claim/status/Closed/N") ?>",
+					url: "<?php echo base_url("claim/status/".Claim_model::STATUS_Closed."/N") ?>",
 					method: "post",
 					data:{
 						claim_id:<?php echo $claim['id']; ?>,

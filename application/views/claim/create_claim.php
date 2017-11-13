@@ -391,7 +391,7 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="payee-data">
-							show submited payee data!!!!!!
+								Please Add payee information.
 							</div>
 						</div>
 					</div>
@@ -1264,13 +1264,20 @@
    })
 
    // to list payee in expenses payee
-   .on("keyup", "input[name='payees[payee_name][]']", function(){
+   .on("keyup", "input[name='payees[payee_name][]'],input[name='payees[address][]'],input[name='payees[bank][]'],input[name='payees[account_cheque][]']", function(){
       // build a list of all payees name here
-
       var html = "<option value=''>--Select Payee--</option>";
       $("input[name='payees[payee_name][]']").each(function(){
-         if($(this).val())
-            html += '<option value="'+$(this).val()+'">'+$(this).val()+'</option>';
+         if($(this).val()) {
+             var p = $(this).parent().parent();
+             var v = p.find('input[type=radio]:checked').val();
+             if (v == 'cheque') {
+                 v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
+             } else {
+                 v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
+             }
+            html += '<option value="'+v+'">'+$(this).val()+'</option>';
+         }
       })
 
       $("select[name='expenses_claimed[payee][]']").html(html);
@@ -1280,13 +1287,13 @@
    .on("change", "input[name='payees[payee_name][]']", function(){
       // check all payees name here
       var val = $(this).val();
-      if(val){
+      if (val){
          var counter = 0;
          $("input[name='payees[payee_name][]']").each(function(){
             if($(this).val() == val)
                counter++;
          })
-         if(counter > 1){
+         if (counter > 1){
             alert("payee name already exists, please try different name.");
             $(this).val("");
             return false;
