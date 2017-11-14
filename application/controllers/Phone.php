@@ -35,7 +35,7 @@ class Phone extends CI_Controller {
 		$rt = $this->phone_model->sendRequest($req, $data, 'GET');
 		
 		$data['call_list'] = json_decode($rt, true);
-		// echo "<pre>"; print_r($data['call_list']); die("XX"); //XXXXXXXXXXXXXXXXXXXXXX
+		echo "<pre>"; print_r($data['call_list']); die("XX"); //XXXXXXXXXXXXXXXXXXXXXX
 		$data['date'] = $date;
 		$data['action_url'] = base_url('phone/search');
 		
@@ -70,18 +70,18 @@ class Phone extends CI_Controller {
 			$date = date("Y-m-d");
 		}
 		
-		$req = '/api/subscriptions';
+		$req = '/api/subscription';
 		$data = array('url' => base_url('phone/hangup'), 'event' => 'Hangup');
 		$rt = $this->phone_model->sendRequest($req, $data);
 		
 		$data['data_list'] = json_decode($rt, true);
-		echo "<pre>"; print_r($rt); die("XX"); //XXXXXXXXXXXXXXXXXXXXXX
-		$data['date'] = $date;
-		$data['action_url'] = base_url('phone/search');
+		echo "<pre>"; print_r($rt); 
+		$req = '/api/subscriptions';
+		$data = array();
+		$rt = $this->phone_model->sendRequest($req, $data, 'GET');
 		
-		// render view data
-		$this->template->write('title', SITE_TITLE . ' - Call list', TRUE);
-		$this->template->write_view('content', 'phone/list', $data);
-		$this->template->render();
+		$data['data_list'] = json_decode($rt, true);
+		echo "<pre>"; print_r($rt); 
+		die("End of All"); //XXXXXXXXXXXXXXXXXXXXXX
 	}
 }
