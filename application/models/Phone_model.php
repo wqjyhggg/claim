@@ -22,6 +22,8 @@ class Phone_model extends CI_Model {
 		curl_setopt($curl, CURLOPT_URL, $url);
 		if ($method == 'POST') {
 			curl_setopt($curl, CURLOPT_POST, true);
+		} else if ($method == 'DELETE') {
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 		} else if ($method == 'PUT') {
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
 		}
