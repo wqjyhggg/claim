@@ -23,9 +23,9 @@ class Phone_model extends CI_Model {
 		if ($method == 'POST') {
 			curl_setopt($curl, CURLOPT_POST, true);
 		} else if ($method == 'DELETE') {
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 		} else if ($method == 'PUT') {
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
 		}
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $http_header);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
