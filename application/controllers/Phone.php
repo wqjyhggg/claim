@@ -35,7 +35,7 @@ class Phone extends CI_Controller {
 		$rt = $this->phone_model->sendRequest($req, $data, 'GET');
 		
 		$data['call_list'] = json_decode($rt, true);
-		echo "<pre>"; print_r($data['call_list']); die("XX"); //XXXXXXXXXXXXXXXXXXXXXX
+		// echo "<pre>"; print_r($data['call_list']); die("XX"); //XXXXXXXXXXXXXXXXXXXXXX
 		$data['date'] = $date;
 		$data['action_url'] = base_url('phone/search');
 		
@@ -46,39 +46,24 @@ class Phone extends CI_Controller {
 	}
 	
 	public function hangup() {
-		$arr = array();
-		$arr['get'] = var_export($_GET, TRUE);
-		$arr['post'] = var_export($_POST, TRUE);
 		$json = file_get_contents("php://input");
-		$arr['json'] = json_decode($json, TRUE);
-		$arr['type'] = 'hangup';
 		
 		$this->load->model('phone_model');
-		$this->phone_model->save(array('data' => json_encode($arr)));
+		$this->phone_model->save_callback_hangup($json);
 	}
 	
 	public function newcall() {
-		$arr = array();
-		$arr['get'] = var_export($_GET, TRUE);
-		$arr['post'] = var_export($_POST, TRUE);
 		$json = file_get_contents("php://input");
-		$arr['json'] = json_decode($json, TRUE);
-		$arr['type'] = 'newcall';
 		
 		$this->load->model('phone_model');
-		$this->phone_model->save(array('data' => json_encode($arr)));
+		$this->phone_model->save_callback_newcall($json);
 	}
 	
 	public function answer() {
-		$arr = array();
-		$arr['get'] = var_export($_GET, TRUE);
-		$arr['post'] = var_export($_POST, TRUE);
 		$json = file_get_contents("php://input");
-		$arr['json'] = json_decode($json, TRUE);
-		$arr['type'] = 'answer';
 		
 		$this->load->model('phone_model');
-		$this->phone_model->save(array('data' => json_encode($arr)));
+		$this->phone_model->save_callback_answer($json);
 	}
 	
 	public function sub() {
@@ -86,37 +71,42 @@ class Phone extends CI_Controller {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
 		}
-		// if (!$this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_EAC)))
 		$this->load->model('phone_model');
 		
-		if ($this->input->post()) {
-			$date = $this->input->post('dt');
-		} else {
-			$date = date("Y-m-d");
+		echo "<pre>";
+		$req = '/api/subscriptions';
+		$rt = $this->phone_model->sendRequest($req, $data, 'GET');
+		$data = json_decode($rt, true);
+		print_r($data);
+		// Remove if there is any
+		foreach ($data as $rc) {
+			$req = '/api/subscription/'.$rc['id'];
+			$para = array();
+			$this->phone_model->sendRequest($req, $para, "DELETE");
 		}
 		
-		/*
 		$req = '/api/subscription';
-		$data = array('url' => base_url('phone/hangup'), 'event' => 'Hangup');
-		$rt = $this->phone_model->sendRequest($req, $data);
-		*/
+		$para = array('url' => base_url('phone/hangup'), 'event' => 'Hangup');
+		$rt = $this->phone_model->sendRequest($req, $para);
+		print_r($rt); 
 
 		$req = '/api/subscription';
-		$data = array('url' => base_url('phone/newcall'), 'event' => 'NewCall');
-		$rt = $this->phone_model->sendRequest($req, $data);
+		$para = array('url' => base_url('phone/newcall'), 'event' => 'NewCall');
+		$rt = $this->phone_model->sendRequest($req, $para);
+		print_r($rt);
 		
 		$req = '/api/subscription';
-		$data = array('url' => base_url('phone/answer'), 'event' => 'Answer');
-		$rt = $this->phone_model->sendRequest($req, $data);
-		
-		$data['data_list'] = json_decode($rt, true);
-		echo "<pre>"; print_r($rt); 
+		$para = array('url' => base_url('phone/answer'), 'event' => 'Answer');
+		$rt = $this->phone_model->sendRequest($req, $para);
+		print_r($rt);
+
+		// Get current all setted event
 		$req = '/api/subscriptions';
-		$data = array();
-		$rt = $this->phone_model->sendRequest($req, $data, 'GET');
-		
-		$data['data_list'] = json_decode($rt, true);
-		echo "<pre>"; print_r($rt); 
-		die("End of All"); //XXXXXXXXXXXXXXXXXXXXXX
+		$para = array();
+		$rt = $this->phone_model->sendRequest($req, $para, 'GET');
+		$data = json_decode($rt, true);
+		print_r($data); 
+		echo "<pre>";
+		die("\nEnd of All"); //XXXXXXXXXXXXXXXXXXXXXX
 	}
 }

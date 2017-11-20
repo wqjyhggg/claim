@@ -7,8 +7,14 @@ if (! defined('BASEPATH')) exit('No direct script access allowed');
  *        
  */
 class Phone_model extends CI_Model {
+	/* test */ 
 	const PHONE_KEY = '6bd7053312e9927c61ff57dd8202ba6c';
 	const PHONE_URL = 'http://portal.aurat.genvoice.net';
+	/**/
+	/* JF  
+	const PHONE_KEY = 'a72e4f38c69af9ae20c95e9067099044';
+	const PHONE_URL = 'http://api.jfgroup.genvoice.net';
+	*/
 	
 	public function sendRequest($req, $data, $method = "POST") {
 		$http_header = array (
@@ -65,5 +71,104 @@ class Phone_model extends CI_Model {
 			$this->active_model->log_new('phone_call', $id, $data, $sql);
 			return $id;
 		}
+	}
+
+	public function save_callback_newcall($data) {
+		/* {
+			"account":"aurat",
+			"caller_id_name":"4167106618",
+			"caller_id_number":"4167106618",
+			"destination_number":"19054756656",
+			"direction":"inbound",
+			"event":"NewCall",
+			"event_time":1511205004437,
+			"fs_node":"fs4.internal",
+			"id":"33340e2e-a4da-4f59-85e4-55e3f4b0f66c",
+			"start_time":1511205004437}
+		} */
+		$this->save(array('data' => $data));
+		$para = array();
+		$json = json_decode($data, true);
+		if (empty($json['id']) || empty($json['direction']) || ($json['direction'] != 'inbound')) return NULL;
+		$para['id'] = $json['id'];
+		if (empty($json['event']) || ($json['event'] != 'NewCall')) return NULL;
+		
+		$event_time = $json['event_time'];
+		if (is_numeric($event_time)) {
+			$tm = $event_time / 1000;
+		} else {
+			$tm = strtotime($event_time);
+		}
+		$para['event_time'] = date('Y-m-d H:i:s', $tm);
+		$sql = "INSERT into phone_records (phone_id, agent, caller_id_number, newcall) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE newcall=".$this->db->escape(date("Y-m-d H:i:s", $tm));
+		$this->db->query($sql);
+		return $this->db->insert_id();
+	}
+
+	public function save_callback_answer($data) {
+		/* {
+			"account":"aurat",
+			"agent":"test1",
+			"caller_id_name":"4167106618",
+			"caller_id_number":"4167106618",
+			"destination_number":"19054756656",
+			"direction":"inbound",
+			"event":"Answer",
+			"event_time":"2017-11-20T19:10:36Z",
+			"id":"33340e2e-a4da-4f59-85e4-55e3f4b0f66c",
+			"queue":"jf",
+			"start_time":"2017-11-20T19:10:04Z"
+		} */
+		$this->save(array('data' => $data));
+		$para = array();
+		$json = json_decode($data, true);
+		if (empty($json['id']) || empty($json['direction']) || ($json['direction'] != 'inbound')) return NULL;
+		$para['id'] = $json['id'];
+		if (empty($json['event']) || ($json['event'] != 'Answer')) return NULL;
+		
+		$event_time = $json['event_time'];
+		if (is_numeric($event_time)) {
+			$tm = $event_time / 1000;
+		} else {
+			$tm = strtotime($event_time);
+		}
+		$para['event_time'] = date('Y-m-d H:i:s', $tm);
+		$sql = "INSERT into phone_records (phone_id, answer) values (".$this->db->escape($json['id']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE answer=".$this->db->escape(date("Y-m-d H:i:s", $tm));
+		$this->db->query($sql);
+		return $this->db->insert_id();
+	}
+
+	public function save_callback_hangup($data) {
+		/* {
+			"account":"aurat",
+			"agent":"test1",
+			"caller_id_name":"4167106618",
+			"caller_id_number":"4167106618",
+			"destination_number":"19054756656",
+			"direction":"inbound",
+			"end_time":"2017-11-20T19:10:47Z",
+			"event":"Hangup",
+			"event_time":"2017-11-20T19:10:47Z",
+			"id":"33340e2e-a4da-4f59-85e4-55e3f4b0f66c",
+			"queue":"jf",
+			"start_time":"2017-11-20T19:10:04Z"
+		} */
+		$this->save(array('data' => $data));
+		$para = array();
+		$json = json_decode($data, true);
+		if (empty($json['id']) || empty($json['direction']) || ($json['direction'] != 'inbound')) return NULL;
+		$para['id'] = $json['id'];
+		if (empty($json['event']) || ($json['event'] != 'Hangup')) return NULL;
+		
+		$event_time = $json['event_time'];
+		if (is_numeric($event_time)) {
+			$tm = $event_time / 1000;
+		} else {
+			$tm = strtotime($event_time);
+		}
+		$para['event_time'] = date('Y-m-d H:i:s', $tm);
+		$sql = "INSERT into phone_records (phone_id, hangup) values (".$this->db->escape($json['id']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE hangup=".$this->db->escape($json['id']);
+		$this->db->query($sql);
+		return $this->db->insert_id();
 	}
 }
