@@ -51,6 +51,31 @@ class Phone extends CI_Controller {
 		$arr['post'] = var_export($_POST, TRUE);
 		$json = file_get_contents("php://input");
 		$arr['json'] = json_decode($json, TRUE);
+		$arr['type'] = 'hangup';
+		
+		$this->load->model('phone_model');
+		$this->phone_model->save(array('data' => json_encode($arr)));
+	}
+	
+	public function newcall() {
+		$arr = array();
+		$arr['get'] = var_export($_GET, TRUE);
+		$arr['post'] = var_export($_POST, TRUE);
+		$json = file_get_contents("php://input");
+		$arr['json'] = json_decode($json, TRUE);
+		$arr['type'] = 'newcall';
+		
+		$this->load->model('phone_model');
+		$this->phone_model->save(array('data' => json_encode($arr)));
+	}
+	
+	public function answer() {
+		$arr = array();
+		$arr['get'] = var_export($_GET, TRUE);
+		$arr['post'] = var_export($_POST, TRUE);
+		$json = file_get_contents("php://input");
+		$arr['json'] = json_decode($json, TRUE);
+		$arr['type'] = 'answer';
 		
 		$this->load->model('phone_model');
 		$this->phone_model->save(array('data' => json_encode($arr)));
@@ -70,8 +95,18 @@ class Phone extends CI_Controller {
 			$date = date("Y-m-d");
 		}
 		
+		/*
 		$req = '/api/subscription';
 		$data = array('url' => base_url('phone/hangup'), 'event' => 'Hangup');
+		$rt = $this->phone_model->sendRequest($req, $data);
+		*/
+
+		$req = '/api/subscription';
+		$data = array('url' => base_url('phone/newcall'), 'event' => 'NewCall');
+		$rt = $this->phone_model->sendRequest($req, $data);
+		
+		$req = '/api/subscription';
+		$data = array('url' => base_url('phone/answer'), 'event' => 'Answer');
 		$rt = $this->phone_model->sendRequest($req, $data);
 		
 		$data['data_list'] = json_decode($rt, true);
