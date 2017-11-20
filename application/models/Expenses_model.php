@@ -90,7 +90,7 @@ class Expenses_model extends CI_Model {
 	 * @param int $id
 	 * @return array result array, maybe null
 	 */
-	public function get_expenses_by_id($id) {
+	public function get_by_id($id) {
 		$this->db->where('id', $id);
 		return $this->db->get('expenses_claimed')->row_array();
 	}
@@ -102,11 +102,21 @@ class Expenses_model extends CI_Model {
 	 *        	search parameter
 	 * @return array result array, maybe null
 	 */
-	public function search($data) {
+	public function search($data, $limit=0, $offset=0) {
+		$this->db->select('SQL_CALC_FOUND_ROWS *', false);
 		$this->db->where($data);
+		if ($offset) {
+			$this->db->limit($limit, $offset);
+		} else if ($limit) {
+			$this->db->limit($limit);
+		}
 		return $this->db->get('expenses_claimed')->result_array();
 	}
 
+	public function last_rows() {
+		return $this->db->query("SELECT FOUND_ROWS() as rows")->row()->rows;
+	}
+	
 	/**
 	 * Save or Update a Claim
 	 *
@@ -118,7 +128,7 @@ class Expenses_model extends CI_Model {
 			// Update
 			$id = $data['id'];
 			unset($data['id']);
-			$cur = $this->get_expenses_by_id($id);
+			$cur = $this->get_by_id($id);
 			if ($cur) {
 				$this->db->where('id', $id);
 				$this->db->update('expenses_claimed', $data);
@@ -170,5 +180,26 @@ class Expenses_model extends CI_Model {
 		$sql .= " JOIN expenses_claimed e ON (e.claim_id=c.id)";
 		$sql .= " WHERE c.policy_no=".$this->db->escape($policy_no)." AND e.status IN ('".self::EXPENSE_STATUS_Approved."','".self::EXPENSE_STATUS_Paid."')";
 		return $this->db->query($sql)->row_array();
+	}
+	
+	public function make_pay($item_id, $update_claim_status=TRUE) {
+		$this->load->model('claim_model');
+		$item = $this->expenses_model->get_by_id($item_id);
+		if ($item && $item['status'] == Expenses_model::EXPENSE_STATUS_Approved) {
+			$para = array('id' => $item_id, 'status' => self::EXPENSE_STATUS_Paid);
+			$this->save($para);
+			if ($update_claim_status) {
+				$sdata = array('claim_id' => $item['claim_id'], 'status' => self::EXPENSE_STATUS_Approved);
+				$appr = $this->search($sdata);
+				if (empty($appr)) {
+					$sdata = array('claim_id' => $item['claim_id'], 'status' => self::EXPENSE_STATUS_Pending);
+					$pend = $this->search($sdata);
+					if (empty($sdata)) {
+						$sdata = array('id' => $item['claim_id'], 'status' => Claim_model::STATUS_Paid);
+						$this->claim_model->save($data);
+					}
+				}
+			}
+		}
 	}
 }

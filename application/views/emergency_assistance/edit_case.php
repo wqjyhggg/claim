@@ -147,7 +147,9 @@
 						</div>
 						<div class="col-sm-2">
 							<label class="col-sm-12">&nbsp;</label>
+							<?php if (! $this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
 							<?php echo anchor("emergency_assistance/search_provider", '<i class="fa fa-search"></i> Search Provider', array("class"=>'btn btn-primary search_provider')) ?>
+							<?php } ?>
 						</div>
 					</div>
 					<h4>Caller Info</h4>

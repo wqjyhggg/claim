@@ -394,6 +394,365 @@ class Claim extends CI_Controller {
 			}
 		}
 	}
+
+	// redirect if needed, otherwise display the create claim page
+	public function create_other($formtype='') {
+		if (! $this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
+			// redirect them to the home page because they must be an claim manager or claim examiner to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		} else {
+			// validate form input
+			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required|alpha_numeric_spaces');
+			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('city', 'city ', 'alpha');
+			$this->form_validation->set_rules('province', 'province ', 'alpha');
+			$this->form_validation->set_rules('full_name', 'full name ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('employee_name', 'employee name ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('city_town', 'city town ', 'alpha');
+			$this->form_validation->set_rules('employee_telephone', 'employee telephone ', 'numeric');
+			$this->form_validation->set_rules('amount_billed', 'amount billed ', 'numeric');
+			$this->form_validation->set_rules('account_cheque', 'account no ', 'numeric');
+			$this->form_validation->set_rules('amount_client_paid', 'amount client paid ', 'numeric');
+			$this->form_validation->set_rules('physician_name_canada', 'physician name canada ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('physician_city', 'physician city ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('payee_name', 'payee name ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('bank', 'bank name ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('physician_city_canada', 'physician city canada ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('guardian_phone', 'Guardian Phone ', 'numeric');
+			$this->form_validation->set_rules('telephone', 'Telephone ', 'numeric');
+			$this->form_validation->set_rules('physician_telephone', 'Physician Telephone ', 'numeric');
+			$this->form_validation->set_rules('physician_alt_telephone_canada', 'physician alt telephone canada ', 'numeric');
+			$this->form_validation->set_rules('physician_telephone_canada', 'physician telephone canada ', 'numeric');
+			$this->form_validation->set_rules('physician_alt_telephone', 'physician alt telephone ', 'numeric');
+			$this->form_validation->set_rules('email', 'Email', 'valid_email');
+				
+			$this->form_validation->set_rules('contact_first_name', 'First Name', 'alpha');
+			$this->form_validation->set_rules('contact_last_name', 'Last Name', 'alpha');
+			$this->form_validation->set_rules('contact_email', 'Email', 'valid_email');
+			$this->form_validation->set_rules('contact_phone', 'physician alt telephone ', 'numeric');
+				
+			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
+			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
+			$this->form_validation->set_rules('case_no', 'Case No', 'numeric');
+				
+			$this->load->model('master_model');
+			$this->load->model('case_model');
+			$this->load->model('claim_model');
+			$this->load->model('mytask_model');
+			$this->load->model('expenses_model');
+				
+			if ($this->form_validation->run() == TRUE) {
+				// prepare post data array
+				$data =[ ];
+				$array = $this->input->post();
+	
+				foreach ( $array as $key => $value ) {
+					// code...
+					if ($key != "exinfo" && $key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf") && ! strpos($key, "ayment_type")) {
+						$data[$key] = $value;
+					} else if ($key == "exinfo") {
+						$data["exinfo"] = json_encode($value);
+						$data['exinfo_type'] = $formtype;
+					}
+				}
+				$data['created'] = date('Y-m-d H:i:s');
+				$data['created_by'] = $this->ion_auth->get_user_id();
+	
+				// set default status processing
+				if (! $data['status'])
+					$data['status'] = Claim_model::STATUS_Processing;
+						
+					// upload claim pdf files to server
+					$files = @$_FILES['files_multi'];
+					$file_names =[ ];
+	
+					// load upload class
+					$config['upload_path'] = UPLOADFULLPATH . 'claim_files/';
+					$config['allowed_types'] = '*';
+					$config['overwrite'] = FALSE;
+					$this->load->library('upload', $config);
+	
+					// initialize upload config
+					$this->upload->initialize($config);
+					if (! empty($files)) {
+						foreach ( $files['name'] as $key => $value ) {
+							if ($files['name'][$key]) {
+								$_FILES['userfile']['name'] = $files['name'][$key];
+								$_FILES['userfile']['type'] = $files['type'][$key];
+								$_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+								$_FILES['userfile']['error'] = $files['error'][$key];
+								$_FILES['userfile']['size'] = $files['size'][$key];
+									
+								// upload file to server
+								$this->upload->do_upload();
+								$file_data = $this->upload->data();
+								$file_names[] = $file_data['file_name'];
+							}
+						}
+					}
+					$data['files'] = implode(",", $file_names);
+	
+					$data['id'] = 0;
+					if (! empty($case_no = $this->input->post('case_no'))) {
+						$case = $this->case_model->get_id_by_case_no($case_no); // Get case
+						if ($case) {
+							$data['id'] = $case['id'];
+							$claim_no = str_pad($data['id'], 7, 0, STR_PAD_LEFT);
+							$data['claim_no'] = $claim_no;
+						}
+					}
+					if (empty($data['id'])) {
+						$data['id'] = $this->master_model->get_id('claim'); // Get new id
+						$claim_no = str_pad($data['id'], 7, 0, STR_PAD_LEFT);
+						$data['claim_no'] = $claim_no;
+					}
+					// insert values to database
+					$record_id = $this->claim_model->save($data);
+					$record_id = $data['id'];
+	
+					// create directory to copy/shift files
+					@mkdir(UPLOADFULLPATH . 'claim_files/' . $record_id, 0777);
+	
+					// move all files to that directory
+					if (! empty($file_names))
+						foreach ( $file_names as $fname ) {
+							copy(UPLOADFULLPATH . "claim_files/$fname", UPLOADFULLPATH . "claim_files/$record_id/$fname");
+							unlink(UPLOADFULLPATH . "claim_files/$fname");
+						}
+						
+					// insert payee information
+					if (! empty($array['payees'])) {
+						foreach ( $array['payees']['bank'] as $key => $val ) {
+							$payee_data = array(
+									'payment_type' => $array['payment_type_' . ($key + 1)],
+									'claim_id' => $record_id,
+									'bank' => $val,
+									'payee_name' => $array['payees']['payee_name'][$key],
+									'account_cheque' => $array['payees']['account_cheque'][$key],
+									'address' => $array['payees']['address'][$key],
+									'created' => date('Y-m-d H:i:s')
+							);
+							$this->claim_model->payees_save($payee_data);
+						}
+					}
+					/*
+					 // update case no(7 length) to table
+					 $claim_no = str_pad($record_id, 7, 0, STR_PAD_LEFT);
+					 $this->common_model->update("claim", array(
+					 "claim_no" => $claim_no
+					 ), array(
+					 "id" => $record_id
+					 ));
+					 */
+					if (! empty($data['case_no'])) {
+						$this->common_model->update("case", array(
+								"claim_no" => $claim_no
+						), array(
+								"case_no" => $data['case_no']
+						));
+					}
+	
+					// insert expenses_claimed data
+					if (! empty($array['expenses_claimed'])) {
+						$i = 0;
+						foreach ( $array['expenses_claimed']['invoice'] as $key => $val ) {
+							$i ++;
+							$payee_data = array(
+									'claim_id' => $record_id,
+									'cellular' => $array['cellular'],
+									'invoice' => $val,
+									'claim_no' => $claim_no,
+									'claim_item_no' => $claim_no . '_' . $i,
+									'case_no' => $array['case_no'],
+									'provider_name' => $array['expenses_claimed']['provider_name'][$key],
+									'referencing_physician' => $array['expenses_claimed']['referencing_physician'][$key],
+									'coverage_code' => $array['expenses_claimed']['coverage_code'][$key],
+									'diagnosis' => $array['expenses_claimed']['diagnosis'][$key],
+									'service_description' => $array['expenses_claimed']['service_description'][$key],
+									'date_of_service' => $array['expenses_claimed']['date_of_service'][$key],
+									'amount_billed' => $array['expenses_claimed']['amount_billed'][$key],
+									'amount_client_paid' => $array['expenses_claimed']['amount_client_paid'][$key],
+									'pay_to' => $array['expenses_claimed']['payee'][$key],
+									'comment' => $array['expenses_claimed']['comment'][$key],
+									'status' => Expenses_model::EXPENSE_STATUS_Pending,
+									'created_by' => $this->ion_auth->get_user_id(),
+									'created' => date('Y-m-d H:i:s')
+							);
+							$this->common_model->save("expenses_claimed", $payee_data);
+						}
+					}
+	
+					// insert intake forms if exists
+					$no_of_form = $array['no_of_form'];
+	
+					// load upload class
+					$config['upload_path'] = UPLOADFULLPATH . 'intake_forms/';
+					$config['allowed_types'] = '*';
+					$config['overwrite'] = FALSE;
+					$this->load->library('upload', $config);
+	
+					// initialize upload config
+					$this->upload->initialize($config);
+					if ($no_of_form) {
+						// add intake form batch
+						for($i = 1; $i <= $no_of_form; $i ++) {
+							// initialize file names array
+							$file_names =[ ];
+	
+							// upload files to server
+							$files = @$_FILES['files_' . $i];
+							if (! empty($files)) {
+								foreach ( $files['name'] as $key => $value ) {
+									if ($files['name'][$key]) {
+										$_FILES['userfile']['name'] = $files['name'][$key];
+										$_FILES['userfile']['type'] = $files['type'][$key];
+										$_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+										$_FILES['userfile']['error'] = $files['error'][$key];
+										$_FILES['userfile']['size'] = $files['size'][$key];
+											
+										$field_name = 'userfile';
+											
+										// upload file to server
+										$this->upload->do_upload();
+										$file_data = $this->upload->data();
+										$file_names[] = $file_data['file_name'];
+									}
+								}
+							}
+	
+							// generate data array
+							$data_intake = array(
+									'case_id' => $record_id,
+									'created_by' => $this->ion_auth->get_user_id(),
+									'notes' => $array['notes_' . $i],
+									'created' => date("Y-m-d H:i:s"),
+									'docs' => implode(",", $file_names),
+									'type' => 'CLAIM'
+							);
+	
+							// if file is getting from email/print function
+							if (@$array['file_pdf_' . $i]) {
+								$data_intake['docs'] = $array['file_pdf_' . $i];
+							}
+	
+							// save values to database
+							$intake_form_id = $this->common_model->save("intake_form", $data_intake);
+	
+							// create directory to identify intake files
+							@mkdir(UPLOADFULLPATH . 'intake_forms/' . $intake_form_id, 0777);
+	
+							// if file is getting from email/print function
+							if (@$array['file_pdf_' . $i]) {
+								$fname = $array['file_pdf_' . $i];
+								copy(UPLOADFULLPATH . "temp/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
+								unlink(UPLOADFULLPATH . "temp/$fname");
+							}
+							// move all files to that directory
+							if (! empty($file_names))
+								foreach ( $file_names as $fname ) {
+									copy(UPLOADFULLPATH . "intake_forms/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
+									unlink(UPLOADFULLPATH . "intake_forms/$fname");
+								}
+						}
+					}
+	
+					$assign_to = $array = $this->input->post('assign_to');
+					if (empty($assign_to)) {
+						$assign_to = $this->mytask_model->get_auto_assign_examiner_id();
+					}
+	
+					// settings for my task section for case manager
+					$task_data = array(
+							'user_id' => $assign_to,
+							'item_id' => $record_id,
+							'task_no' => $claim_no,
+							'category' => Mytask_model::CATEGORY_CLAIMS,
+							'type' => Mytask_model::TASK_TYPE_CLAIM,
+							'due_date' => date("Y-m-d", time() + 86400),
+							'due_time' => date("H:i:s", time() + 86400),
+							'priority' => Mytask_model::PRIORITY_NORMAL,
+							'status' => Mytask_model::STATUS_ASSIGNED,
+							'created_by' => $this->ion_auth->get_user_id(),
+							'created' => date('Y-m-d H:i:s'),
+							'user_type' => Mytask_model::USER_TYPE_EXAM
+					);
+					// insert values to database
+					$this->mytask_model->save($task_data);
+	
+					// send success message
+					$this->session->set_flashdata('success', "Claim successfully created");
+	
+					if ($this->input->post('Examine') == 'Examine')
+						// redirect them to the examine claim page
+						redirect("claim/examine_claim/$record_id");
+						else
+							// redirect them to the claim page
+							redirect("claim/claim_detail/$record_id");
+			} else {
+				$this->load->model('api_model');
+				$this->load->model('country_model');
+				$this->load->model('province_model');
+				$this->load->model('template_model');
+				$this->load->model('product_model');
+				$this->load->model('word_comments_model');
+	
+				// load dropdowns- countries, province, products data
+				$this->data['country'] = $this->country_model->get_list(TRUE);
+				$this->data['country2'] = $this->country_model->get_list(FALSE);
+				$this->data['province'] = $this->province_model->get_list_by_country_short($this->input->post('country') ? $this->input->post('country') : 'CA');
+				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
+				$this->data['products'] = $this->product_model->get_list();
+				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
+	
+				$policy = $this->input->get('policy');
+				if (empty($policy)) {
+					$policy = $this->input->post('policy_no');
+				}
+				$this->data['policy'] = array();
+				if (!empty($policy)) {
+					if ($policies = $this->api_model->get_policy(array('policy' => $policy))) {
+						$this->data['policy'] = $policies[0];
+					}
+				}
+				if ($this->input->post('exinfo')) {
+					$data["exinfo"] = $this->input->post('exinfo');
+				}
+				
+				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
+				$this->data['status_list'] = $this->claim_model->get_claim_status_list(TRUE);
+	
+				$this->data['examiners'] = $this->users_model->search(array('groups' => Users_model::GROUP_EXAMINER, 'active' => 1));
+	
+				$this->data['getpara'] = '';
+				if ($this->input->get()) {
+					$this->data['getpara'] = '?' . http_build_query($this->input->get());
+				}
+				$this->data['word_templates'] = $this->data['word_templates'] = $this->word_comments_model->search(array());
+	
+				// load view data
+				$this->template->write('title', SITE_TITLE . ' - Create Claim', TRUE);
+				switch ($formtype) {
+					case "top_baggage":
+						$this->template->write_view('content', 'claim/create_top_baggage', $this->data);
+						break;
+					case "top_medical":
+						$this->template->write_view('content', 'claim/create_top_medical', $this->data);
+						break;
+					case "top_trip":
+						$this->template->write_view('content', 'claim/create_top_trip', $this->data);
+						break;
+					default:
+						$this->template->write_view('content', 'claim/create_other', $this->data);
+						break;
+				}
+				$this->template->render();
+			}
+		}
+	}
 	
 	// redirect if needed, otherwise display the edit case page
 	public function examine_claim($id = 0) {
@@ -423,7 +782,9 @@ class Claim extends CI_Controller {
 			if (empty($claim)) {
 				return show_error('Sorry, Unknown Claim Record ID.');
 			}
-			
+			if (!empty($claim['exinfo'])) {
+				$this->data['exinfo'] = json_decode($claim['exinfo'], true);
+			}
 			// get claim details
 			$claim['assign_to_name'] = "";
 			$claim['assign_to_email'] = "";
@@ -685,7 +1046,20 @@ class Claim extends CI_Controller {
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Examine Claim', TRUE);
-				$this->template->write_view('content', 'claim/examine_claim', $this->data);
+				switch ($this->data['claim_details']['exinfo_type']) {
+					case "top_baggage":
+						$this->template->write_view('content', 'claim/examine_top_baggage', $this->data);
+						break;
+					case "top_medical":
+						$this->template->write_view('content', 'claim/examine_top_medical', $this->data);
+						break;
+					case "top_trip":
+						$this->template->write_view('content', 'claim/examine_top_trip', $this->data);
+						break;
+					default:
+						$this->template->write_view('content', 'claim/examine_claim', $this->data);
+						break;
+				}
 				$this->template->render();
 			}
 		}
@@ -710,6 +1084,9 @@ class Claim extends CI_Controller {
 				
 			// get claim details
 			$this->data['claim_details'] = $this->claim_model->get_by_id($id);
+			if (!empty($this->data['claim_details']['exinfo'])) {
+				$this->data['exinfo'] = json_decode($this->data['claim_details']['exinfo'], true);
+			}
 			if (empty($this->data['claim_details'])) {
 				// send error message
 				$this->session->set_flashdata('error', "Something went wrong, please try after some time.");
@@ -749,8 +1126,11 @@ class Claim extends CI_Controller {
 				$array = $this->input->post();
 				foreach ( $array as $key => $value ) {
 					// code...
-					if ($key != "expenses_claimed" && $key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf") && ! strpos($key, "ayment_type"))
+					if ($key != "exinfo" && $key != "expenses_claimed" && $key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf") && ! strpos($key, "ayment_type")) {
 						$data[$key] = $value;
+					} else if ($key == "exinfo") {
+						$data["exinfo"] = json_encode($value);
+					}
 				}
 				$data['created'] = date('Y-m-d H:i:s');
 				$data['created_by'] = $this->ion_auth->get_user_id();
@@ -1004,7 +1384,20 @@ class Claim extends CI_Controller {
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Claim Details', TRUE);
-				$this->template->write_view('content', 'claim/claim_detail', $this->data);
+				switch ($this->data['claim_details']['exinfo_type']) {
+					case "top_baggage":
+						$this->template->write_view('content', 'claim/claim_top_baggage', $this->data);
+						break;
+					case "top_medical":
+						$this->template->write_view('content', 'claim/claim_top_medical', $this->data);
+						break;
+					case "top_trip":
+						$this->template->write_view('content', 'claim/claim_top_trip', $this->data);
+						break;
+					default:
+						$this->template->write_view('content', 'claim/claim_detail', $this->data);
+						break;
+				}
 				$this->template->render();
 			}
 		}
@@ -1381,62 +1774,152 @@ class Claim extends CI_Controller {
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
+			$this->load->model('expenses_model');
 			
-			// get all providers list
-			$order_by = array(
-					'field' => 'claim.id',
-					'order' => 'desc' 
-			);
+			$limit = 10;
+			$offset = $this->uri->segment(3);
 			
-			$joins =[ ];
-			$joins[] = array(
-					'table' => 'expenses_claimed',
-					'on' => 'claim.id = expenses_claimed.claim_id',
-					'type' => 'INNER' 
-			);
-			
-			// prepare conditions
-			$conditions =[ ];
-			if ($this->input->get("claim"))
-				$conditions['claim.id'] = $this->input->get("claim");
-			if ($this->input->get("claim_no_claim"))
-				$conditions['claim.claim_no'] = $this->input->get("claim_no_claim");
-			if ($this->input->get("policy_claim"))
-				$conditions['claim.policy_no'] = $this->input->get("policy_claim");
-			if ($this->input->get("created"))
-				$conditions['claim.created like'] = "%" . $this->input->get("created") . "%";
-			if ($this->input->get("firstname_claim"))
-				$conditions['claim.insured_first_name like'] = "%" . $this->input->get("firstname_claim") . "%";
-			if ($this->input->get("lastname_claim"))
-				$conditions['claim.insured_last_name like'] = "%" . $this->input->get("lastname_claim") . "%";
-			
-			if ($this->input->get("claim_date_from"))
-				$conditions['claim.claim_date >'] = $this->input->get("claim_date_from");
-			if ($this->input->get("claim_date_to"))
-				$conditions['claim.claim_date <'] = $this->input->get("claim_date_to");
-			
-			$parse_cond =[ ];
-			foreach ( $conditions as $key => $value ) {
-				if (strpos($key, 'like'))
-					$parse_cond[] = $key . " '$value'";
-				else
-					$parse_cond[] = $key . "='$value'";
+			$this->data['export_para'] = '';
+			$para = array('status' => Expenses_model::EXPENSE_STATUS_Approved);
+			if ($this->input->get('last_update_from')) $para['last_update >='] = $this->input->get('last_update_from');
+			if ($this->input->get('last_update_to')) $para['last_update <='] = $this->input->get('last_update_to');
+			if ($this->input->get('claim_no_claim')) $para['claim_no'] = $this->input->get('claim_no_claim');
+			if ($this->input->get('created_from')) $para['created >='] = $this->input->get('created_from');
+			if ($this->input->get('created_to')) $para['created <='] = $this->input->get('created_to');
+
+			$this->data['items'] = $this->expenses_model->search($para, $limit, $offset);
+			$config['total_rows'] = $this->expenses_model->last_rows();
+			$config['base_url'] = site_url('claim/payments');
+			$config['per_page'] = $limit;
+			$config['first_url'] = $config ['base_url'] . '?' . http_build_query($this->input->get());
+			if (count($this->input->get()) > 0) {
+				$config ['suffix'] = '?' . http_build_query($this->input->get(), '', "&");
+				$this->data['export_para'] = $config ['suffix'];
 			}
-			$parse_cond = implode(" and ", $parse_cond);
-			
-			$conditions = "claim.status = 'Processed'";
-			if ($parse_cond) {
-				$conditions .= " and " . implode(" and ", $parse_cond);
-			}
-			
-			$fields = "expenses_claimed.claim_id, expenses_claimed.claim_no, expenses_claimed.case_no,expenses_claimed.claim_date,sum(expenses_claimed.amount_claimed) as amount_claimed, sum(expenses_claimed.amount_client_paid) as amount_client_paid, expenses_claimed.currency,expenses_claimed.pay_to, sum(expenses_claimed.amt_received) as amt_received, claim.insured_first_name, claim.insured_first_name, claim.insured_last_name, claim.street_address, claim.city, claim.province, claim.policy_no, claim.case_no, claim.clinic_name, claim.dob, claim.policy_no, claim.status";
-			$this->data['claims'] = $this->common_model->select($record = "list", $typecast = "array", $table = "claim", $fields, $conditions, $joins, $order_by, $group_by = array(
-					'expenses_claimed.claim_id' 
-			));
-			
+
+			$this->pagination->initialize($config); // initiaze pagination config
+
+			$this->data ['pagination'] = $this->pagination->create_links(); // create pagination links
+
 			$this->template->write('title', SITE_TITLE . ' - Payments', TRUE);
 			$this->template->write_view('content', 'claim/payments', $this->data);
 			$this->template->render();
+		}
+	}
+	
+	// for payment import
+	public function import() {
+		if (! $this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+			// redirect them to the home page because they must be an claim manager or claim examiner to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		} else {
+			$this->load->model('expenses_model');
+			
+			$uf = array_shift ( $_FILES );
+			$name = $uf ['name'];
+			$type = $uf ['type'];
+			$tmp_name = $uf ['tmp_name'];
+			$size = $uf ['size'];
+			$fileinfo = pathinfo ( $name );
+			if (! empty ( $uf ['error'] )) {
+				$this->session->set_flashdata('error', "Something went wrong, please check your file.");
+			} else if (! in_array ( $fileinfo ['extension'], array (/*'xlsx',*/'csv') )) {
+				$this->session->set_flashdata('error', "Unknown file type, must be csv.");
+			} else {
+				if (($handle = fopen($tmp_name, "r")) !== FALSE) {
+					$keyArr = array();
+					while (($data = fgetcsv($handle, 10000)) !== FALSE) {
+						if (empty($keyArr)) {
+							$keyArr = $data;
+							continue;
+						}
+						$para = array();
+						foreach ($keyArr as $key => $name) {
+							$para[$name] = $data[$key];
+						}
+						if ($para) {
+							$this->expenses_model->save($para);
+						}
+					}
+					fclose($handle);
+				} else {
+					$this->session->set_flashdata('error', "Can't opne upload file.");
+				}
+				$this->session->set_flashdata('success', "File data update successed");
+			}
+		}
+		redirect('claim/payments', 'refresh');
+	}
+	
+	// for payment export
+	public function export() {
+		if (! $this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+			// redirect them to the home page because they must be an claim manager or claim examiner to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		} else {
+			$this->load->model('expenses_model');
+			
+			$para = array('status' => Expenses_model::EXPENSE_STATUS_Approved);
+			if ($this->input->get('last_update_from')) $para['last_update >='] = $this->input->get('last_update_from');
+			if ($this->input->get('last_update_to')) $para['last_update <='] = $this->input->get('last_update_to');
+			if ($this->input->get('claim_no_claim')) $para['claim_no'] = $this->input->get('claim_no_claim');
+			if ($this->input->get('created_from')) $para['created >='] = $this->input->get('created_from');
+			if ($this->input->get('created_to')) $para['created <='] = $this->input->get('created_to');
+
+			$items = $this->expenses_model->search($para);
+			
+			header('Content-Type: text/csv; charset=utf-8');
+			header('Content-Disposition: attachment; filename=items.csv');
+			
+			// create a file pointer connected to the output stream
+			$output = fopen('php://output', 'w');
+			
+			// output the column headings
+			fputcsv($output, array(
+					'id', 
+					'status', 
+					'claim_id', 
+					'claim_no', 
+					'claim_item_no', 
+					'invoice', 
+					'pay_to', 
+					'amount_claimed',
+					'amt_deductible',
+					'amt_received',
+					'amt_payable',
+					'amt_exempt',
+					'recovery_name',
+					'recovery_amt',
+					'created',
+					'last_update'
+			));
+			
+			foreach ($items as $item) {
+				fputcsv($output, array(
+						$item['id'],
+						$item['status'],
+						$item['claim_id'],
+						$item['claim_no'],
+						$item['claim_item_no'],
+						$item['invoice'],
+						$item['pay_to'],
+						$item['amount_claimed'],
+						$item['amt_deductible'],
+						$item['amt_received'],
+						$item['amt_payable'],
+						$item['amt_exempt'],
+						$item['recovery_name'],
+						$item['recovery_amt'],
+						$item['created'],
+						$item['last_update']
+				));
+			}
 		}
 	}
 	
@@ -1536,58 +2019,20 @@ class Claim extends CI_Controller {
 	}
 	
 	// for ajax request
-	public function confirm_payment($type = '', $items = "") {
-		$this->load->model('claim_model');
-		
-		// generate data array
-		$claim_id = $this->input->post('claim_id');
-		
-		$array = $this->input->post();
-		
-		// get all payees list and insert it
-		if (! empty($array['payees'])) {
-			foreach ( $array['payees']['bank'] as $key => $val ) {
-				$payee_data = array(
-						'payment_type' => $array['payment_type_' . ($key + 1)],
-						'claim_id' => $claim_id,
-						'bank' => $val,
-						'payment' => $array['payees']['payment'][$key],
-						'payee_name' => $array['payees']['payee_name'][$key],
-						'account_cheque' => $array['payees']['account_cheque'][$key],
-						'address' => $array['payees']['address'][$key],
-						'created' => date('Y-m-d H:i:s') 
-				);
-				if ($payee_id = @$array['payees']['id'][$key]) {
-					unset($payee_data['created']);
-					$this->common_model->update("payees", $payee_data, array(
-							'id' => $payee_id 
-					));
-				} else {
-					$this->common_model->save("payees", $payee_data);
-				}
-			}
+	public function confirm_payment($items = "") {
+		if (! $this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			die('Need login');
 		}
 		
-		// updates claim items status here
-		$cond = "id in($items)";
-		$this->common_model->update("expenses_claimed", array(
-				'status' => $type 
-		), $cond);
-		
-		// check all payable items of claim is confirmed
-		$check = $this->common_model->select($record = "first", $typecast = "array", $table = "expenses_claimed", $fields = "count(expenses_claimed.id) as counter", $conditions = array(
-				'expenses_claimed.claim_id' => $claim_id,
-				'expenses_claimed.amt_payable > ' => 0,
-				'status' => null 
-		));
-		if (! $check['counter']) {
-			// update claim status to complete
-			$this->common_model->update("claim", array(
-					'status' => $type ? $type : Claim_model::STATUS_Paid 
-			), array(
-					"id" => $claim_id 
-			));
+		$this->load->model('expenses_model');
+
+		$itemArr = explode($items);
+		foreach ($itemArr as $item_id) {
+			$item = $this->expenses_model->make_pay($item_id);
 		}
+		
+		die("OK");
 	}
 	
 	// for ajax request

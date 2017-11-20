@@ -1,7 +1,7 @@
 <div>
 	<div class="page-title">
 		<div class="title_left">
-			<h3>New Claim</h3>
+			<h3>Medical Claim</h3>
 		</div>
 	</div>
 	<div class="clearfix"></div>
@@ -11,7 +11,7 @@
 			<div class="x_panel">
 				<div class="x_content">
 					<?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post', 'onsubmit'=>'return validate_form()', 'id'=>'main_form')); ?>
-					<h4 class="move_down">Claimant Information <i class="fa fa-angle-down pull-right"></i></h4>
+					<h4 class="move_down">SECTION A: CLAIMANT <i class="fa fa-angle-down pull-right"></i></h4>
 					<div class="row" style="margin-bottom: 15px; display: none">
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Insured First Name:', 'insured_first_name', array("class" => 'col-sm-12')); ?>
@@ -33,13 +33,11 @@
 								<?php echo form_radio("gender", "female", $this->input->post("gender"), array('class' => 'setpremium'));?> Female
 							</div>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-3" style='display:none;'>
 							<?php echo form_label('ID', 'id', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("personal_id", $this->input->post("personal_id"), array("class" => "form-control", 'placeholder' => 'ID')); ?>
 							<?php echo form_error("personal_id"); ?>
 						</div>
-						<div class="clearfix"></div>
-						
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
@@ -48,6 +46,8 @@
 							</div>
 							<?php echo form_error("dob"); ?>
 						</div>
+						<div class="clearfix"></div>
+
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Policy#:', 'policy_no', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("policy_no", ($this->input->post("policy_no") ? $this->input->post("policy_no") : $this->input->get("policy")), array("class" => "form-control required", 'placeholder' => 'Policy#')); ?>
@@ -60,46 +60,44 @@
 							<?php echo form_input("case_no", ($this->input->post("case_no") ? $this->input->post("case_no") : $this->input->get("case_no")), array("class" => "form-control", 'placeholder' => 'Case #')); ?>
 							<?php echo form_error("case_no"); ?>
 						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-3" style='display:none;'>
 							<?php echo form_label('School Name:', 'school_name', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("school_name", $this->input->post("school_name"), array("class" => "form-control", 'placeholder' => 'School Name')); ?>
 							<?php echo form_error("school_name"); ?>
 						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-3" style='display:none;'>
 							<?php echo form_label('Group ID:', 'group_id', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("group_id", $this->input->post("group_id"), array("class" => "form-control", 'placeholder' => 'Group ID')); ?>
 							<?php echo form_error("group_id"); ?>
 						</div>
 						<div class="clearfix"></div>
 						
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-3" style='display:none;'>
 							<?php echo form_label('Enroll Date:', 'apply_date', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
 								<?php echo form_input("apply_date", $this->input->post("apply_date"), array("class" => "form-control datepicker", 'placeholder' => 'Enroll Date')); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-3" style='display:none;'>
 							<?php echo form_label('Arrival Date in Canada:', 'arrival_date', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
 								<?php echo form_input("arrival_date", $this->input->post("arrival_date"), array("class" => "form-control datepicker", 'placeholder' => 'Arrival Date in Canada')); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-3" style='display:none;'>
 							<?php echo form_label('Full Name of Guardian if applicable:', 'guardian_name', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("guardian_name", $this->input->post("guardian_name"), array("class" => "form-control", 'placeholder' => 'Full Name of Guardian if applicable')); ?>
 							<?php echo form_error("guardian_name"); ?>
 						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-3" style='display:none;'>
 							<?php echo form_label('Guardian Phone#:', 'guardian_phone', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("guardian_phone", $this->input->post("guardian_phone"), array("class" => "form-control", 'placeholder' => 'Guardian Phone#')); ?>
 							<?php echo form_error("guardian_phone"); ?>
 						</div>
-					</div>
 
-					<h4 class="move_down">Address in Canada <i class="fa fa-angle-down pull-right"></i></h4>
-					<div class="row" style="display: none">
+						<h4>Address in Canada </h4>
 						<div class="col-sm-12">
 							<div class="input-group col-sm-3" style="margin-bottom: 10px">
 								<?php echo form_checkbox("same_policy", "Y", $this->input->post("same_policy"), array('class' => 'setpremium', 'style' => 'margin-left:10px')); ?>  Same with policy
@@ -120,6 +118,10 @@
 							<?php echo form_error("province"); ?>
 						</div>
 						<div class="form-group col-sm-3">
+							<?php echo form_label('PostCode:', 'post_code', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("post_code", $this->input->post("post_code"), array("class" => "form-control", 'placeholder' => 'PostCode')); ?>
+						</div>
+						<div class="form-group col-sm-3">
 							<?php echo form_label('Telephone:', 'telephone', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("telephone", $this->input->post("telephone"), array("class" => "form-control", 'placeholder' => 'Telephone')); ?>
 							<?php echo form_error("telephone"); ?>
@@ -130,17 +132,32 @@
 							<?php echo form_error("email"); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<?php echo form_label('PostCode:', 'post_code', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("post_code", $this->input->post("post_code"), array("class" => "form-control", 'placeholder' => 'PostCode')); ?>
+							<?php echo form_label('Date of Departure:', 'exinfo_depature_date', array("class"=>'col-sm-12')); ?>
+							<div class="input-group date">
+								<?php echo form_input("exinfo[depature_date]", isset($exinfo["depature_date"]) ? $exinfo["depature_date"] : '', array("class" => "form-control datepicker", 'placeholder' => 'Date of Depature')); ?>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
 						</div>
 						<div class="form-group col-sm-3">
+							<?php echo form_label('Date of Return to home province:', 'exinfo_return_date', array("class"=>'col-sm-12')); ?>
+							<div class="input-group date">
+								<?php echo form_input("exinfo[return_date]", isset($exinfo["return_date"]) ? $exinfo["return_date"] : '', array("class" => "form-control datepicker", 'placeholder' => 'Date of Return to home province')); ?>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Destination:', 'exinfo_destination', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[destination]", isset($exinfo["destination"]) ? $exinfo["destination"] : '', array("class" => "form-control", 'placeholder' => 'Destination')); ?>
+						</div>
+						
+						<div class="form-group col-sm-3" style='display:none;'>
 							<?php echo form_label('Date of Arrival in Canada:', 'arrival_date_canada', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
 								<?php echo form_input("arrival_date_canada", $this->input->post("arrival_date_canada"), array("class" => "form-control datepicker", 'placeholder' => 'Date of Arrival in Canada')); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-3" style='display:none;'>
 							<?php echo form_label('Cellular:', 'cellular', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("cellular", $this->input->post("cellular"), array("class" => "form-control", 'placeholder' => 'Cellular')); ?>
 						</div>
@@ -169,7 +186,7 @@
 							<?php echo form_error("contact_phone"); ?>
 						</div>
 					</div>
-					<h4 class="move_down">Name and Address of Family Physician in Country of Origin <i class="fa fa-angle-down pull-right"></i></h4>
+					<h4 class="move_down">Name and Address of Family Physician in Home Province <i class="fa fa-angle-down pull-right"></i></h4>
 					<div class="row" style="display: none">
 						<div class="col-sm-12">
 							<div class="form-group col-sm-3">
@@ -194,7 +211,7 @@
 								<select name="country" class="form-control">
 									<option value=""> -- Select Country -- </option>
 									<?php foreach ($country as $key => $val): ?>
-									<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post("physician_country")) { echo "selected"; } ?>><?php echo $val; ?></option>
+									<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post("country")) { echo "selected"; } ?>><?php echo $val; ?></option>
 									<?php endforeach; ?>
 								</select>
 							</div>
@@ -213,9 +230,114 @@
 								<?php echo form_error("physician_alt_telephone"); ?>
 							</div>
 						</div>
+
+						<div class="col-sm-12">
+							Do you have other travel medical insurance coverage? <input type="checkbox" name="exinfo[other_medical_insurance]" value="1" <?php if (!empty($exinfo["other_medical_insurance"])) { echo "checked"; } ?>> Yes. If 'yes', please provide the following information:_
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Name of Insurance Company:', 'exinfo_other_insurance_name', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[other_insurance_name]", isset($exinfo["other_insurance_name"]) ? $exinfo["other_insurance_name"] : '', array("class" => "form-control", 'placeholder' => 'Name of Insurance Company')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Policy #:', 'exinfo_other_insurance_policy', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[other_insurance_policy]", isset($exinfo["other_insurance_policy"]) ? $exinfo["other_insurance_policy"] : '', array("class" => "form-control", 'placeholder' => 'Policy #')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Member ID:', 'exinfo_other_insurance_number', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[other_insurance_number]", isset($exinfo["other_insurance_number"]) ? $exinfo["other_insurance_number"] : '', array("class" => "form-control", 'placeholder' => 'Member ID')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Telephone:', 'exinfo_other_insurance_phone', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[other_insurance_phone]", isset($exinfo["other_insurance_phone"]) ? $exinfo["other_insurance_phone"] : '', array("class" => "form-control", 'placeholder' => 'Telephone')); ?>
+						</div>
+						<div class="col-sm-12">
+							Do you have insurance coverage through your spouse? <input type="checkbox" name="exinfo[spouse_insurance]" value="1" <?php if (! empty($exinfo["spouse_insurance"])) { echo "checked"; } ?>> Yes. If 'yes', please provide the following information:_
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Name of Insurance Company:', 'exinfo_spouse_insurance_name', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[spouse_insurance_name]", isset($exinfo["spouse_insurance_name"]) ? $exinfo["spouse_insurance_name"] : '', array("class" => "form-control", 'placeholder' => 'Name of Insurance Company')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Policy #:', 'exinfo_spouse_insurance_policy', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[spouse_insurance_policy]", isset($exinfo["spouse_insurance_policy"]) ? $exinfo["spouse_insurance_policy"] : '', array("class" => "form-control", 'placeholder' => 'Policy #')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Member ID:', 'exinfo_spouse_insurance_number', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[spouse_insurance_number]", isset($exinfo["spouse_insurance_number"]) ? $exinfo["spouse_insurance_number"] : '', array("class" => "form-control", 'placeholder' => 'Member ID')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Telephone:', 'exinfo_spouse_insurance_phone', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[spouse_insurance_phone]", isset($exinfo["spouse_insurance_phone"]) ? $exinfo["spouse_insurance_phone"] : '', array("class" => "form-control", 'placeholder' => 'Telephone')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Spouse\’s Name:', 'exinfo_spouse_name', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[spouse_name]", isset($exinfo["spouse_name"]) ? $exinfo["spouse_name"] : '', array("class" => "form-control", 'placeholder' => 'Spouse\’s Name')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Spouse\’s Date of Birth:', 'exinfo_spouse_dob', array("class" => 'col-sm-12')); ?>
+							<div class="input-group date">
+								<?php echo form_input("exinfo[spouse_dob]", isset($exinfo["spouse_dob"]) ? $exinfo["spouse_dob"] : '', array("class" => "form-control datepicker", 'placeholder' => 'Spouse\’s Date of Birth')); ?>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						<div class="col-sm-12">
+							Do you have credit card insurance coverage? <input type="checkbox" name="exinfo[credit_card_insurance]" value="1" <?php if (! empty($exinfo["credit_card_insurance"])) { echo "checked"; } ?>> Yes. If 'yes', please provide the following information:_
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Name of the financial Institution:', 'exinfo_other_insurance_name', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[credit_card_insurance_name]", isset($exinfo["credit_card_insurance_name"]) ? $exinfo["credit_card_insurance_name"] : '', array("class" => "form-control", 'placeholder' => 'Name of the financial Institution')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('First 6 digits of credit card:', 'exinfo_credit_card_number', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[credit_card_number]", isset($exinfo["credit_card_number"]) ? $exinfo["credit_card_number"] : '', array("class" => "form-control", 'placeholder' => 'First 6 digits of credit card')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Expiry Date(MM/YYYY):', 'exinfo_credit_card_expire', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[credit_card_expire]", isset($exinfo["credit_card_expire"]) ? $exinfo["credit_card_expire"] : '', array("class" => "form-control", 'placeholder' => 'Expiry Date(MM/YYYY)')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Name of Cardholder:', 'exinfo_credit_card_holder', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[credit_card_holder]", isset($exinfo["credit_card_holder"]) ? $exinfo["credit_card_holder"] : '', array("class" => "form-control", 'placeholder' => 'Name of Cardholder')); ?>
+						</div>
+						<div class="clearfix"></div>
+						<div class="col-sm-12">
+							Do you have insurance benefits available through group insurance or any other source? <input type="checkbox" name="exinfo[group_insurance]" value="1" <?php if (! empty($exinfo["group_insurance"])) { echo "checked"; } ?>> Yes. If 'yes', please provide details below:_
+						</div>
+						<div class="col-sm-12">
+							Group Insurance
+						</div>
+						<div class="form-group col-sm-6">
+							<?php echo form_label('Name and Address of Insurance Company:', 'exinfo_group_insurance', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[group_insurance]", isset($exinfo["group_insurance"]) ? $exinfo["group_insurance"] :'', array("class" => "form-control", 'placeholder' => 'Name and Address of Insurance Company')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Policy #:', 'exinfo_group_insurance_policy', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[group_insurance_policy]", isset($exinfo["group_insurance_policy"]) ? $exinfo["group_insurance_policy"] : '', array("class" => "form-control", 'placeholder' => 'Policy #')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Telephone:', 'exinfo_group_insurance_phone', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[group_insurance_phone]", isset($exinfo["group_insurance_phone"]) ? $exinfo["group_insurance_phone"] : '', array("class" => "form-control", 'placeholder' => 'Telephone')); ?>
+						</div>
+						<div class="col-sm-12">
+							Other Travel Insurance
+						</div>
+						<div class="form-group col-sm-6">
+							<?php echo form_label('Name and Address of Insurance Company:', 'exinfo[other_travel_insurance]', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[other_travel_insurance]", isset($exinfo["other_travel_insurance"]) ? $exinfo["other_travel_insurance"] : '', array("class" => "form-control", 'placeholder' => 'Name and Address of Insurance Company')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Policy #:', 'exinfo_other_travel_insurance_policy', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[other_travel_insurance_policy]", isset($exinfo["other_travel_insurance_policy"]) ? $exinfo["other_travel_insurance_policy"] : '', array("class" => "form-control", 'placeholder' => 'Policy #')); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Telephone:', 'exinfo_other_travel_insurance_phone', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("exinfo[other_travel_insurance_phone]", isset($exinfo["other_travel_insurance_phone"]) ? $exinfo["other_travel_insurance_phone"] : '', array("class" => "form-control", 'placeholder' => 'Telephone')); ?>
+						</div>
+						<div class="clearfix"></div>
 					</div>
 
-					<h4 class="move_down">Name and Address of Family Physician in Canada <i class="fa fa-angle-down pull-right"></i></h4>
+					<h4 class="move_down" style='display:none'>Name and Address of Family Physician in Canada <i class="fa fa-angle-down pull-right"></i></h4>
 					<div class="row" style="display: none">
 						<div class="col-sm-12">
 							<div class="form-group col-sm-3">
@@ -253,7 +375,7 @@
 						</div>
 					</div>
 
-					<h2 class="move_down">Other Insurance Coverage <small></small><i class="fa fa-angle-down pull-right"></i></h2>
+					<h2 class="move_down" style='display:none'>Other Insurance Coverage <small></small><i class="fa fa-angle-down pull-right"></i></h2>
 					<div class="row" style="display: none">
 						<div class="col-sm-12">
 							<div class="row">
@@ -760,11 +882,6 @@
         endDate: '+2y',
       });
 
-      var product_short = $("input[name=product_short]").val();
-
-      if ((product_short != '') && (product_short != 'OPL') && (product_short != 'JFR') && (product_short != 'JES') && (product_short != 'JFC')) {
-      	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + $("input[name=policy_no]").val();
-      }
    })
 
    .on("click",".more_filters", function(){
@@ -1123,7 +1240,6 @@
 
    // get  policy information here
    .on("change", "input[name=policy_no]", function(){
-	   var policy_no = $(this).val();
       $.ajax({
          url: "<?php echo base_url("emergency_assistance/get_policy_info"); ?>",
          method:"get",
@@ -1133,11 +1249,9 @@
             $(".nav-m22d").addClass("csspinner load1");
          },
          success: function(data){
-            if(typeof data.plan_list != "undefined" && data.plan_list.length) {
-                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
-                if ((data.plan_list[0].product_short != 'OPL') && (data.plan_list[0].product_short != 'JFR') && (data.plan_list[0].product_short != 'JES') && (data.plan_list[0].product_short != 'JFC')) {
-                	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + policy_no;
-                }
+            if(typeof data.plan_list != "undefined" && data.plan_list.length)
+            {
+               localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
                $("input[name=product_short]").val(data.plan_list[0].product_short);
 
@@ -1321,11 +1435,7 @@
             if(typeof data.plan_list != "undefined" && data.plan_list.length)
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
-               if ((data.plan_list[0].product_short != 'OPL') && (data.plan_list[0].product_short != 'JFR') && (data.plan_list[0].product_short != 'JES') && (data.plan_list[0].product_short != 'JFC')) {
-               	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + $("input[name=policy_no]").val();
-               }
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
-               $("input[name=product_short]").val(data.plan_list[0].product_short);
 
                $("input[name=insured_first_name]").val(<?php if ($this->input->get('firstname')) { echo "'".$this->input->get('firstname')."'"; } else { ?>data.plan_list[0].firstname<?php } ?>);
                $("input[name=insured_last_name]").val(<?php if ($this->input->get('lastname')) { echo "'".$this->input->get('lastname')."'"; } else { ?>data.plan_list[0].lastname<?php } ?>);

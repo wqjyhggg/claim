@@ -271,6 +271,7 @@
 						</table>
 					</div>
 					<br />
+					<?php if (! $this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
 					<div class="row form-group">
 						<div class="col-sm-12">
 							<div class="col-sm-2">
@@ -293,6 +294,7 @@
 							</div>
 						</div>
 					</div>
+					<?php } ?>
                </div>
                <?php endif;?>
 

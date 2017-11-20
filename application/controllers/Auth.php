@@ -237,8 +237,10 @@ class Auth extends CI_Controller {
 				if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) {
 					redirect('claim', 'refresh');
 				} else {
-					if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER, Users_model::GROUP_CLAIMER, Users_model::GROUP_ACCOUNTANT))) {
+					if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER, Users_model::GROUP_CLAIMER))) {
 						redirect('claim', 'refresh');
+					} else if ($this->ion_auth->in_group(array(Users_model::GROUP_ACCOUNTANT))) {
+						redirect('claim/payments', 'refresh');
 					} else {
 						redirect('auth/mytasks', 'refresh');
 					}
