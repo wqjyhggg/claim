@@ -171,4 +171,31 @@ class Phone_model extends CI_Model {
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
+	
+	public function getmyurl() {
+		$name = $this->ion_auth->get_user_info('first_name');
+		if ($name) {
+			$sql = "SELECT * FROM phone_records WHERE agent=".$this->db->escape($name)." ORDER BY hangup DESC LIMIT 1";
+			$rc = $this->db->query($sql)->row_array();
+			
+			if ($rc) {
+				$reqArr = array('/api/cdr/'.date("Y-m-d"), '/api/cdr/'.date("Y-m-d", time() - 86400));
+				$data = array();
+				foreach ($reqArr as $req) {
+					$rt = $this->phone_model->sendRequest($req, $data, 'GET');
+				
+					$list = json_decode($rt, true);
+					if ($list) {
+						foreach ($list['rows'] as $row) {
+							if (strpos($row['recording_url'], $rc['phone_id']) > 0) {
+								$rc['url'] = $row['recording_url'];
+								return $rc;
+							}
+						}
+					}
+				}
+			}
+		}
+		return array();
+	}
 }

@@ -1,24 +1,7 @@
 <?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-/**
- * Name: Ion Auth
- *
- * Author: Ben Edmunds
- * ben.edmunds@gmail.com
- * @benedmunds
- *
- * Added Awesomeness: Phil Sturgeon
- *
- * Location: http://github.com/benedmunds/CodeIgniter-Ion-Auth
- *
- * Created: 10.01.2009
- *
- * Description: Modified auth system based on redux_auth with extensive customization. This is basically what Redux Auth 2 should be.
- * Original Author name has been kept but that does not mean that the method has not been modified.
- *
- * Requirements: PHP5 or above
- */
+
 class Ion_auth {
 	/**
 	 * account status ('not_activated', etc .
@@ -403,7 +386,6 @@ class Ion_auth {
 	 * logout
 	 *
 	 * @return void
-	 * @author Mathew
 	 *        
 	 */
 	public function logout() {
@@ -454,7 +436,6 @@ class Ion_auth {
 	 * logged_in
 	 *
 	 * @return bool
-	 * @author Mathew
 	 *        
 	 */
 	public function logged_in() {
@@ -467,7 +448,6 @@ class Ion_auth {
 	 * logged_in
 	 *
 	 * @return integer
-	 * @author jrmadsen67
 	 *        
 	 */
 	public function get_user_id() {
@@ -482,7 +462,6 @@ class Ion_auth {
 	 * is_admin
 	 *
 	 * @return bool
-	 * @author Ben Edmunds
 	 *        
 	 */
 	public function is_admin($id = false) {
@@ -497,7 +476,6 @@ class Ion_auth {
 	 * is_casemamager
 	 *
 	 * @return bool
-	 * @author Bhawani Shankar
 	 *        
 	 */
 	public function is_casemamager($id = false) {
@@ -512,7 +490,6 @@ class Ion_auth {
 	 * is_eacmanager
 	 *
 	 * @return bool
-	 * @author Bhawani Shankar
 	 *        
 	 */
 	public function is_eacmanager($id = false) {
@@ -527,7 +504,6 @@ class Ion_auth {
 	 * is_callcenteragent
 	 *
 	 * @return bool
-	 * @author Bhawani Shankar
 	 *        
 	 */
 	public function is_callcenteragent($id = false) {
@@ -542,7 +518,6 @@ class Ion_auth {
 	 * is_claimexaminer
 	 *
 	 * @return bool
-	 * @author Bhawani Shankar
 	 *        
 	 */
 	public function is_claimexaminer($id = false) {
@@ -557,7 +532,6 @@ class Ion_auth {
 	 * is_claimsmanager
 	 *
 	 * @return bool
-	 * @author Bhawani Shankar
 	 *        
 	 */
 	public function is_claimsmanager($id = false) {
@@ -572,7 +546,6 @@ class Ion_auth {
 	 * is_accountant
 	 *
 	 * @return bool
-	 * @author Bhawani Shankar
 	 *        
 	 */
 	public function is_accountant($id = false) {
@@ -581,6 +554,22 @@ class Ion_auth {
 		$group = str_replace("is_", "", __FUNCTION__);
 		
 		return $this->in_group($group, $id);
+	}
+	
+	/**
+	 * Get login info
+	 *
+	 * @param	string user column name
+	 *        	
+	 * @return	string value
+	 *        
+	 */
+	public function get_user_info($name) {
+		$val = $this->session->userdata($name);
+		if (!empty($val)) {
+			return $val;
+		}
+		return null;
 	}
 	
 	/**
@@ -594,7 +583,6 @@ class Ion_auth {
 	 *        	bool check if all groups is present, or any of the groups
 	 *        	
 	 * @return bool
-	 * @author Phil Sturgeon
 	 *        
 	 */
 	public function in_group($check_group, $id = false, $check_all = false) {

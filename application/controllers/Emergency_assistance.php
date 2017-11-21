@@ -8,7 +8,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Emergency_assistance extends CI_Controller {
 	private $limit = 10;
-	private $notes_dealy = 10 * 60;	// seconds
+	private $notes_dealy = 600;	// seconds
 	
 	public function __construct() {
 		parent::__construct();

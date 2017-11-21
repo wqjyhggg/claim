@@ -16,6 +16,18 @@ class Phone extends CI_Controller {
 		echo "OK";
 	}
 	
+	public function getfile() {
+		if (!$this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		$this->load->model('phone_model');
+		$rdata = $this->phone_model-getmyurl();
+
+		header('Content-Type: application/json');
+		echo json_encode($rdata);
+	}
+	
 	public function search() {
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
