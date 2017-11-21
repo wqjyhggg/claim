@@ -133,7 +133,7 @@ class Phone_model extends CI_Model {
 			$tm = strtotime($event_time);
 		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "INSERT into phone_records (phone_id, answer) values (".$this->db->escape($json['id']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE answer=".$this->db->escape(date("Y-m-d H:i:s", $tm));
+		$sql = "INSERT into phone_records (phone_id, agent, caller_id_number, answer) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE answer=".$this->db->escape(date("Y-m-d H:i:s", $tm));
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
@@ -167,7 +167,7 @@ class Phone_model extends CI_Model {
 			$tm = strtotime($event_time);
 		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "INSERT into phone_records (phone_id, hangup) values (".$this->db->escape($json['id']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE hangup=".$this->db->escape($json['id']);
+		$sql = "INSERT into phone_records (phone_id, agent, caller_id_number, hangup) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE hangup=".$this->db->escape($json['id']);
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
