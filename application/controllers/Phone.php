@@ -22,7 +22,7 @@ class Phone extends CI_Controller {
 			redirect('auth/login', 'refresh');
 		}
 		$this->load->model('phone_model');
-		$rdata = $this->phone_model-getmyurl();
+		$rdata = $this->phone_model->getmyurl();
 
 		header('Content-Type: application/json');
 		echo json_encode($rdata);

@@ -712,7 +712,10 @@
 					</div>
 					<div class="form-group col-sm-4">
 						<?php echo form_label('Phone File:', 'phonefile', array("class" => 'col-sm-12')); ?>
-						<?php echo form_input("phonefile", $this->input->post("phonefile"), array("class" => "form-control", 'placeholder' => 'Phone File')); ?>
+						<span id='phonelink'></span>
+						<a href="javascript:void(0)" class="btn btn-primary getmyphonefile">Get Phone File</a>
+						<a href="javascript:void(0)" class="removemyphonefile" style='display:none;'><i class="fa fa-trash row-link"></i></a>
+						<?php echo form_hidden("phonefile", $this->input->post("phonefile"), array("class" => "form-control", 'placeholder' => 'Phone File')); ?>
 						<?php echo form_error("intake_notes"); ?>
 					</div>
 					<div class="form-group col-sm-12">
@@ -783,7 +786,37 @@ function page_info_adjust() {
       page_info_adjust();
    })
 
-   // once auto file clicked
+	.on("click", ".getmyphonefile", function() {
+		$.ajax({
+			url: "<?php echo base_url("phone/getfile"); ?>",
+			method:"get",
+			// data:{policy:$(this).val()},
+			dataType: "json",
+			beforeSend: function(){
+				$(".nav-m22d").addClass("csspinner load1");
+			},
+			success: function(data){
+				if (typeof data.url != "undefined") {
+					$('#phonelink').html('<a href="' + data.url + '" target="_blank">' + data.url + '</a>');
+					$('input[name=phonefile]').val(data.url);
+					$('.removemyphonefile').show();
+					$('.getmyphonefile').hide();
+				} else {
+					alert("Sorry, Can't find rocord file for you");
+				}
+				$(".nav-m22d").removeClass("csspinner load1");
+			}
+		})
+	})
+
+	.on("click", ".removemyphonefile", function(){
+		$('#phonelink').html('');
+		$('input[name=phonefile]').val('');
+		$('.removemyphonefile').hide();
+		$('.getmyphonefile').show();
+	})
+
+	// once auto file clicked
    .on("change","input[type=file]", function(){
 
       // validate file extension

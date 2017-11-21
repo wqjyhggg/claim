@@ -447,7 +447,7 @@
 						<?php echo form_label('Phone File:', 'phonefile', array("class" => 'col-sm-12')); ?>
 						<span id='phonelink'></span>
 						<a href="javascript:void(0)" class="btn btn-primary getmyphonefile">Get Phone File</a>
-						<a href="javascript:void(0)" class="btn btn-primary removemyphonefile">Remove Phone File</a>
+						<a href="javascript:void(0)" class="removemyphonefile" style='display:none;'><i class="fa fa-trash row-link"></i></a>
 						<?php echo form_hidden("phonefile", $this->input->post("phonefile"), array("class" => "form-control", 'placeholder' => 'Phone File')); ?>
 					</div>
 					<div class="form-group col-sm-2">
@@ -644,10 +644,10 @@ $(document).ready(function() {
    })
 
    // delete files
-   .on("click",".fa-trash", function(){
-      $(this).parent("div").remove();
-      $("#file"+$(this).attr("id")).remove();
-   })
+   //.on("click",".fa-trash", function(){
+   //   $(this).parent("div").remove();
+   //   $("#file"+$(this).attr("id")).remove();
+   // })
 
 
    // delete intake-form

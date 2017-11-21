@@ -21,7 +21,7 @@
 	<li> <?php echo anchor("emergency_assistance/schedule", '<i class="fa fa-calendar"></i>Schedule</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
 	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_INSURER))): ?>
-	<li><a href="#" class="leftmeun"><i class="fa fa-list-alt"></i>Report</a></li>
+	<li> <?php echo anchor("report", '<i class="fa fa-list-alt"></i>Report</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
 	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) : ?>
 	<li> <?php echo anchor("claim/payments", '<i class="fa fa-money"></i>Payments</a>', array("class"=>'leftmeun')) ?> </li>
