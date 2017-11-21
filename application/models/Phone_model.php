@@ -89,7 +89,7 @@ class Phone_model extends CI_Model {
 		$this->save(array('data' => $data));
 		$para = array();
 		$json = json_decode($data, true);
-		if (empty($json['id']) || empty($json['direction']) || ($json['direction'] != 'inbound')) return NULL;
+		if (empty($json['id'])) return NULL;
 		$para['id'] = $json['id'];
 		if (empty($json['event']) || ($json['event'] != 'NewCall')) return NULL;
 		
@@ -100,7 +100,7 @@ class Phone_model extends CI_Model {
 			$tm = strtotime($event_time);
 		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "INSERT into phone_records (phone_id, caller_id_number, newcall) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE newcall=".$this->db->escape(date("Y-m-d H:i:s", $tm));
+		$sql = "INSERT into phone_records (phone_id, direction, caller_id_number, newcall) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['direction']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE newcall=".$this->db->escape(date("Y-m-d H:i:s", $tm));
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
@@ -122,7 +122,7 @@ class Phone_model extends CI_Model {
 		$this->save(array('data' => $data));
 		$para = array();
 		$json = json_decode($data, true);
-		if (empty($json['id']) || empty($json['direction']) || ($json['direction'] != 'inbound')) return NULL;
+		if (empty($json['id'])) return NULL;
 		$para['id'] = $json['id'];
 		if (empty($json['event']) || ($json['event'] != 'Answer')) return NULL;
 		
@@ -133,7 +133,7 @@ class Phone_model extends CI_Model {
 			$tm = strtotime($event_time);
 		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "INSERT into phone_records (phone_id, agent, caller_id_number, answer) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE answer=".$this->db->escape(date("Y-m-d H:i:s", $tm)).", agent=".$this->db->escape($json['agent']);
+		$sql = "INSERT into phone_records (phone_id, direction, agent, caller_id_number, newcall, answer) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['direction']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($json['start_time']))).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE answer=".$this->db->escape(date("Y-m-d H:i:s", $tm)).", agent=".$this->db->escape($json['agent']);
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
@@ -156,7 +156,7 @@ class Phone_model extends CI_Model {
 		$this->save(array('data' => $data));
 		$para = array();
 		$json = json_decode($data, true);
-		if (empty($json['id']) || empty($json['direction']) || ($json['direction'] != 'inbound')) return NULL;
+		if (empty($json['id'])) return NULL;
 		$para['id'] = $json['id'];
 		if (empty($json['event']) || ($json['event'] != 'Hangup')) return NULL;
 		
@@ -167,7 +167,7 @@ class Phone_model extends CI_Model {
 			$tm = strtotime($event_time);
 		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "INSERT into phone_records (phone_id, agent, caller_id_number, hangup) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE hangup=".$this->db->escape(date("Y-m-d H:i:s", $tm)).", agent=".$this->db->escape($json['agent']);
+		$sql = "INSERT into phone_records (phone_id, direction, agent, caller_id_number, newcall, answer, hangup) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['direction']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($json['start_time']))).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($json['start_time']))).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE hangup=".$this->db->escape(date("Y-m-d H:i:s", $tm)).", agent=".$this->db->escape($json['agent']);
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
