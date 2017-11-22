@@ -187,7 +187,7 @@ class Phone_model extends CI_Model {
 					$list = json_decode($rt, true);
 					if ($list) {
 						foreach ($list['rows'] as $row) {
-							if (strpos($row['recording_url'], $rc['phone_id']) > 0) {
+							if (isset($row['recording_url']) && (strpos($row['recording_url'], $rc['phone_id']) > 0)) {
 								$rc['url'] = $row['recording_url'];
 								return $rc;
 							}
