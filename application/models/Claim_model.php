@@ -155,6 +155,7 @@ class Claim_model extends CI_Model {
 		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
 			$products = $this->ion_auth->get_users_products();
 		}
+		$this->db->select('SQL_CALC_FOUND_ROWS *', FALSE);
 		$this->db->where($data);
 		if ($products !== FALSE) {
 			if (empty($products)) {
@@ -165,6 +166,10 @@ class Claim_model extends CI_Model {
 		return $this->db->get('claim')->result_array();
 	}
 
+	public function last_rows() {
+		return $this->db->query("SELECT FOUND_ROWS() as rows")->row()->rows;
+	}
+	
 	/**
 	 * Save or Update a Claim
 	 *

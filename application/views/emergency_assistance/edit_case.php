@@ -698,7 +698,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Create Note <small style='padding-left: 20px;'><a href="<?php echo $phone_list_url;?>" target='_blank'>Find phone file</a></small></h4>
+				<h4 class="modal-title">Create Note</h4>
 			</div>
 			<?php echo form_open_multipart("emergency_assistance/create_intakeform", array("id"=>'create_intakeform')); ?>
 			<?php echo form_hidden("case_id", $case_id); ?>

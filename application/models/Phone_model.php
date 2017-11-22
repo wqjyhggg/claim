@@ -198,4 +198,20 @@ class Phone_model extends CI_Model {
 		}
 		return array();
 	}
+	
+	public function search($data, $limit=-1, $offset=-1) {
+		$this->db->select('SQL_CALC_FOUND_ROWS *', false);
+		$this->db->where($data);
+		if ($offset > 0) {
+			$this->db->limit($limit, $offset);
+		} else if ($limit > 0) {
+			$this->db->limit($limit);
+		}
+		return $this->db->get('phone_records')->result_array();
+	}
+	
+	public function last_rows() {
+		return $this->db->query("SELECT FOUND_ROWS() as rows")->row()->rows;
+	}
+	
 }

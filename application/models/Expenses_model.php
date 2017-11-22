@@ -102,6 +102,27 @@ class Expenses_model extends CI_Model {
 	 *        	search parameter
 	 * @return array result array, maybe null
 	 */
+	public function report($data, $limit=0, $offset=0) {
+		$this->db->select('SQL_CALC_FOUND_ROWS *', false);
+		$this->db->where($data);
+		if (empty($data['status'])) {
+			$this->db->where_in('status', array(self::EXPENSE_STATUS_Approved, self::EXPENSE_STATUS_Paid));
+		}
+		if ($offset) {
+			$this->db->limit($limit, $offset);
+		} else if ($limit) {
+			$this->db->limit($limit);
+		}
+		return $this->db->get('expenses_claimed')->result_array();
+	}
+
+	/**
+	 * Return a list of Claim
+	 *
+	 * @param array $data
+	 *        	search parameter
+	 * @return array result array, maybe null
+	 */
 	public function search($data, $limit=0, $offset=0) {
 		$this->db->select('SQL_CALC_FOUND_ROWS *', false);
 		$this->db->where($data);

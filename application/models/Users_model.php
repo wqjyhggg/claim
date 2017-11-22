@@ -134,14 +134,25 @@ class Users_model extends CI_Model {
 	}
 	
 	/**
-	 * Get User by ID
+	 * Get User by email
 	 *
-	 * @param int $id
+	 * @param string $email
 	 * @return array
 	 */
 	public function get_by_email($email) {
 		$this->db->where('email', $email);
 		$this->db->where('active', 1);
+		return $this->db->get('users')->row_array();
+	}
+	
+	/**
+	 * Get User by first name
+	 *
+	 * @param string first_name
+	 * @return array
+	 */
+	public function get_by_fname($first_name) {
+		$this->db->where('first_name', $first_name);
 		return $this->db->get('users')->row_array();
 	}
 	
