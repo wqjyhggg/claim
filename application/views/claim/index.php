@@ -32,16 +32,16 @@
 							<?php echo form_input ( "claim_no", $this->input->post( "claim_no" ), array("class" => "form-control", 'placeholder' => 'Claim Number') );?>
 						</div>
 						<div class="form-group col-sm-2">
-							<?php echo form_label('Claim Date From:', 'claim_date_from', array("class"=>'col-sm-12')); ?>
+							<?php echo form_label('Claim Created Date From:', 'created_from', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
-								<?php echo form_input ( "claim_date_from", $this->input->post( "claim_date_from" ), array ("class" => "form-control datepicker", 'placeholder' => 'Claim Date From') ); ?>
+								<?php echo form_input ( "created_from", $this->input->post( "created_from" ), array ("class" => "form-control datepicker", 'placeholder' => 'Created Date From') ); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
 						<div class="form-group col-sm-2">
-							<?php echo form_label('Claim Date To:', 'claim_date_to', array("class"=>'col-sm-12')); ?>
+							<?php echo form_label('Claim Created Date To:', 'created_to', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
-								<?php echo form_input ( "claim_date_to", $this->input->post ( "claim_date_to" ), array ("class" => "form-control datepicker", 'placeholder' => 'Claim Date To') ); ?>
+								<?php echo form_input ( "created_to", $this->input->post ( "created_to" ), array ("class" => "form-control datepicker", 'placeholder' => 'Created Date To') ); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
@@ -261,7 +261,7 @@
 									<td><?php echo $value['insured_last_name']; ?></td>
 									<td><?php echo $value['gender']; ?></td>
 									<td><?php echo $value['dob']; ?></td>
-									<td><?php echo $value['claim_date']; ?></td>
+									<td><?php echo $value['created']; ?></td>
 									<td><?php echo $value['amount_claimed'] ?></td>
 									<td><?php echo $value['email']; ?></td>
 									<td><?php echo anchor("claim/claim_detail/".$value['id'], "View"); ?></td>

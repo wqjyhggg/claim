@@ -788,7 +788,7 @@ $(document).ready(function() {
          $(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").show();
          $(".my_decision").hide();
       } else {
-         if(decision == '<?php echo Claim_model::STATUS_Processed; ?>' || decision == '<?php echo Claim_model::STATUS_exceptional; ?>' || decision == '<?php echo Claim_model::STATUS_Paid; ?>')
+         if(decision == '<?php echo Claim_model::STATUS_Processed; ?>' || decision == '<?php echo Claim_model::STATUS_Exceptional; ?>' || decision == '<?php echo Claim_model::STATUS_Paid; ?>')
             $(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").hide();
          else
             $(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").show();

@@ -119,21 +119,21 @@ class Claim_model extends CI_Model {
 			$where .= " claim.insured_last_name like ". $this->db->escape("%" . $post["lastname"] . "%");
 		}
 		
-		if (!empty($post["claim_date_from"])) {
+		if (!empty($post["created_from"])) {
 			if ($where) $where .= ' AND'; 
-			$where .= " claim.claim_date >= " . $this->db->escape($post["claim_date_from"]);
+			$where .= " claim.created >= " . $this->db->escape($post["created_from"]);
 		}
 			
-		if (!empty($post["claim_date_to"])) {
+		if (!empty($post["created_to"])) {
 			if ($where) $where .= ' AND'; 
-			$where .= " claim.claim_date <= " . $this->db->escape($post["claim_date_to"]);
+			$where .= " claim.created <= " . $this->db->escape($post["created_to"]);
 		}
 		
 		if (!$where) {
 			return array();
 		}
 		
-		$sql  = "SELECT u1.email, concat_ws(' ', u1.first_name, u1.last_name) as claim_examiner, claim.id, claim.policy_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.claim_date, claim.status, sum(expenses_claimed.amount_claimed) as amount_claimed FROM claim";
+		$sql  = "SELECT u1.email, concat_ws(' ', u1.first_name, u1.last_name) as claim_examiner, claim.id, claim.policy_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.created, claim.status, sum(expenses_claimed.amount_claimed) as amount_claimed FROM claim";
 		$sql .= " LEFT JOIN users u1 ON u1.id = claim.assign_to";
 		$sql .= " LEFT JOIN expenses_claimed ON claim.id = expenses_claimed.claim_id";
 		$sql .= " WHERE ". $where;
