@@ -191,7 +191,7 @@ class Expenses_model extends CI_Model {
 		$this->db->select_sum('amt_deductible', 'deductible');
 		$this->db->select_sum('amt_received', 'received');
 		$this->db->select_sum('amt_payable', 'payable');
-		$this->db->select_sum('amt_exempt', 'exempt');
+		$this->db->select_sum('amt_exceptional', 'exceptional');
 		$this->db->where('claim_id', $claim_id);
 		return $this->db->get('expenses_claimed')->row_array();
 	}

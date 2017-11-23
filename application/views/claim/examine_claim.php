@@ -224,8 +224,8 @@
 													<div class='col-sm-12'><input type='number' step='0.01' name='amt_received' value="<?php echo $value['amt_received']; ?>"></div>
 												</div>
 												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Exempted : </label>
-													<div class='col-sm-12'><input type='number' step='0.01' name='amt_exempt' value="<?php echo $value['amt_exempt']; ?>"></div>
+													<label class="col-sm-12">Exceptional : </label>
+													<div class='col-sm-12'><input type='number' step='0.01' name='amt_exceptional' value="<?php echo $value['amt_exceptional']; ?>"></div>
 												</div>
 												<div class="clearfix"></div>
 												
@@ -582,13 +582,13 @@ $(document).ready(function() {
       // enable buttons according to claim Decision
       var decision = "<?php echo @$claim_details['status']; ?>"
       if(decision == ''){
-         $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").show();
+         $(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").show();
          $(".my_decision").hide();
       } else {
-         if(decision == '<?php Claim_model::STATUS_Processed?>' || decision == '<?php Claim_model::STATUS_Exempted?>' || decision == '<?php Claim_model::STATUS_Paid?>')
-            $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").hide();
+         if(decision == '<?php echo Claim_model::STATUS_Processed; ?>' || decision == '<?php echo Claim_model::STATUS_Exceptional; ?>' || decision == '<?php echo Claim_model::STATUS_Paid; ?>')
+            $(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").hide();
          else
-            $(".accept_decision, .deny_decision, .record_exempt, .investigate_pending").show();
+            $(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").show();
 
          $(".my_decision").show().html('<label style="float: left; font-size: 25px;">: '+decision+' </label>');
       }
@@ -982,10 +982,10 @@ $(document).ready(function() {
 		} else {
 			return false;
 		}
-	}).on("click", "input[name='Record Exempt']", function() {
-		if (confirm('Are you sure you want to mark this claim as record exempted?')) {
+	}).on("click", "input[name='Record Exceptional']", function() {
+		if (confirm('Are you sure you want to mark this claim as record Exceptional?')) {
 			$.ajax({
-				url: "<?php echo base_url("claim/status/".Claim_model::STATUS_Exempted) ?>",
+				url: "<?php echo base_url("claim/status/".Claim_model::STATUS_Exceptional) ?>",
 				method: "post",
 				data:{claim_id:<?php echo $claim['id']; ?>},
 				beforeSend: function() {

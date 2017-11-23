@@ -160,7 +160,7 @@ class Api extends CI_Controller {
 				$ncl['deductible'] = isset($amt['deductible']) ? (float)$amt['deductible'] : 0;
 				$ncl['received'] = isset($amt['received']) ? (float)$amt['received'] : 0;
 				$ncl['payable'] = isset($amt['payable']) ? (float)$amt['payable'] : 0;
-				$ncl['exempt'] = isset($amt['exempt']) ? (float)$amt['exempt'] : 0;
+				$ncl['exceptional'] = isset($amt['exceptional']) ? (float)$amt['exceptional'] : 0;
 				$rdata['claims'][] = $ncl;
 			}
 		}

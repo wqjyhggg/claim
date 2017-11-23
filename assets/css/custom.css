@@ -1040,7 +1040,7 @@ ul.notifications{float:right;display:block;margin-bottom:7px;padding:0;width:100
 .fc-state-down,.fc-state-active{color:#333;background:#ccc}
 .dropzone{min-height:300px;border:1px solid #e5e5e5}
 .active-green{background-color:rgba(155, 243, 151, 0.44);}
-.claim_record_exempt{
+.claim_record_exceptional{
 	background-color:rgba(242, 243, 151, 0.44)
 }
 

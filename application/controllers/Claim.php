@@ -1754,7 +1754,7 @@ class Claim extends CI_Controller {
 			case Claim_model::STATUS_Processed :
 			case Claim_model::STATUS_Paid :
 			case Claim_model::STATUS_Closed :
-			case Claim_model::STATUS_Exempted :
+			case Claim_model::STATUS_Exceptional :
 				$data['is_complete'] = 'Y';
 				break;
 		}
@@ -1893,7 +1893,7 @@ class Claim extends CI_Controller {
 					'amt_deductible',
 					'amt_received',
 					'amt_payable',
-					'amt_exempt',
+					'amt_exceptional',
 					'recovery_name',
 					'recovery_amt',
 					'created',
@@ -1913,7 +1913,7 @@ class Claim extends CI_Controller {
 						$item['amt_deductible'],
 						$item['amt_received'],
 						$item['amt_payable'],
-						$item['amt_exempt'],
+						$item['amt_exceptional'],
 						$item['recovery_name'],
 						$item['recovery_amt'],
 						$item['created'],

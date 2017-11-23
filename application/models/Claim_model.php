@@ -15,7 +15,7 @@ class Claim_model extends CI_Model {
 	const STATUS_Closed='Closed';
 	const STATUS_Recovered='Recovered';
 	const STATUS_Appealed='Appealed';
-	const STATUS_Exempted='Exempted';
+	const STATUS_Exceptional='Exceptional';
 	
 	/**
 	 * Generate claim no if there is none
@@ -43,7 +43,7 @@ class Claim_model extends CI_Model {
 				'Closed' => self::STATUS_Closed,
 				'Recovered' => self::STATUS_Recovered,
 				'Appealed' => self::STATUS_Appealed,
-				'Exempted' => self::STATUS_Exempted,
+				'Exceptional' => self::STATUS_Exceptional,
 		);
 		
 		if (empty($need_empty)) unset($arr[0]);
@@ -218,7 +218,7 @@ class Claim_model extends CI_Model {
 		$this->db->select_sum('amt_deductible', 'deductible');
 		$this->db->select_sum('amt_received', 'received');
 		$this->db->select_sum('amt_payable', 'payable');
-		$this->db->select_sum('amt_exempt', 'exempt');
+		$this->db->select_sum('amt_exceptional', 'exceptional');
 		$this->db->where('claim_id', $claim_id);
 		return $this->db->get('expenses_claimed')->row_array();
 	}
