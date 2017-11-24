@@ -108,6 +108,7 @@ class Claim extends CI_Controller {
 			$this->load->model('case_model');
 			$this->load->model('claim_model');
 			$this->load->model('mytask_model');
+			$this->load->model('expenses_model');
 				
 			if ($this->form_validation->run() == TRUE) {
 				// prepare post data array
@@ -358,7 +359,6 @@ class Claim extends CI_Controller {
 				$this->load->model('province_model');
 				$this->load->model('template_model');
 				$this->load->model('product_model');
-				$this->load->model('expenses_model');
 				$this->load->model('word_comments_model');
 				
 				// load dropdowns- countries, province, products data
@@ -879,9 +879,6 @@ class Claim extends CI_Controller {
 								'bank' => $val,
 								'payee_name' => $array['payees']['payee_name'][$key],
 								'account_cheque' => $array['payees']['account_cheque'][$key],
-								'payment' => @$array['payees']['payment'][$key],
-								'payee_currency' => @$array['payees']['payee_currency'][$key],
-								'payee_currency_rate' => @$array['payees']['payee_currency_rate'][$key],
 								'created' => date('Y-m-d H:i:s') 
 						);
 						$this->claim_model->payees_save($payee_data);
@@ -1198,9 +1195,6 @@ class Claim extends CI_Controller {
 								'bank' => $val,
 								'payee_name' => $array['payees']['payee_name'][$key],
 								'account_cheque' => $array['payees']['account_cheque'][$key],
-								'payment' => @$array['payees']['payment'][$key],
-								'payee_currency' => @$array['payees']['payee_currency'][$key],
-								'payee_currency_rate' => @$array['payees']['payee_currency_rate'][$key],
 								'address' => $array['payees']['address'][$key],
 								'created' => date('Y-m-d H:i:s') 
 						);
@@ -1364,7 +1358,7 @@ class Claim extends CI_Controller {
 				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
 				$this->data['products'] = $this->product_model->get_list();
 				// $this->data['payees_list'] = $this->claim_model->search($field_name = "expenses_claimed[payee][]", $selected = $this->input->post($field_name), $key = 'id', $val = 'name');
-				$this->data['payees_list'] = $this->claim_model->payee_search(array("claim_id" => $id));
+				$this->data['payees_list'] = $this->claim_model->payee_format_array($this->claim_model->payee_search(array("claim_id" => $id)));
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
 				
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(1);

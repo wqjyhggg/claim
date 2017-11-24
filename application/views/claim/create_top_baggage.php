@@ -1387,19 +1387,6 @@
       }
    })
 
-
-   // when currency changed in payees section
-   .on("change", 'select[name="payees[payee_currency][]"]', function(){
-      if($(this).val() == 'CAD'){
-         // add currency rate option
-         $(this).parent("td").next("td").children("input").attr("readonly", "readonly").val("");
-      } else {
-         // remove currency rate option
-         $(this).parent("td").next("td").children("input").removeAttr("readonly");
-
-      }
-   })
-
    // once user select pay type
    .on("click", "input[name^=payment_type]", function(){
       var element = $(this).parent("div").parent("div").parent("div");

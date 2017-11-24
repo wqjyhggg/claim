@@ -610,10 +610,11 @@
 										<div class="col-sm-3">
 											<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>
 											<select name="expenses_claimed[payee][]" class="form-control required">
-												<option value="">--Select Payee--</option>
+												<?php foreach ( $payees as $pkey => $payee ) { ?> 
+												<option value="<?php echo $pkey; ?>" <?php echo (($pkey == $value['pay_to']) ? "Selected" : ""); ?>><?php echo $payee['payee_name']; ?></option>
+												<?php } ?>
 											</select>
-											<?php echo form_hidden('expenses_claimed[payee_id][]', $value ['pay_to']); ?>
-											</div>
+										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
 											<?php echo form_dropdown('expenses_claimed[currency][]', $currencies, $value ['currency'], array('class' => 'form-control required')); ?>
@@ -1586,18 +1587,6 @@
          } else {
             return false;
          }
-      }
-   })
-
-   // when currency changed
-   .on("change", 'select[name="payees[payee_currency][]"]', function(){
-      if($(this).val() == 'CAD'){
-         // add currency rate option
-         $(this).parent("td").next("td").children("input").attr("readonly", "readonly").val("");
-      } else {
-         // remove currency rate option
-         $(this).parent("td").next("td").children("input").removeAttr("readonly");
-
       }
    })
 

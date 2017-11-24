@@ -482,11 +482,13 @@ class Emergency_assistance extends CI_Controller {
 				if ($new_case != $case_details) {
 					$notes = '';
 					foreach ($new_case as $key => $val) {
-						if ($val != $case_details[$key]) {
+						if (($val != $case_details[$key]) && !empty($val) && !empty($case_details[$key]) && ($key !== 'last_update')){
 							$notes .= $key . "[" . $case_details[$key] . "][" . $val . "]; ";
 						}
 					}
-					$this->intakeform_model->save($id, $notes, '');
+					if ($notes) {
+						$this->intakeform_model->save($id, $notes, '');
+					}
 				}
 				
 				if ($new_case['case_manager'] && ($case_details['case_manager'] != $new_case['case_manager'])) {

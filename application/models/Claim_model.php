@@ -233,6 +233,20 @@ class Claim_model extends CI_Model {
 		return $this->db->get('payees')->result_array();
 	}
 
+	public function payee_format_array($array) {
+		$rarr = array();
+		foreach ($array as $val) {
+			$key = $val['payment_type'];
+			if ($key == 'cheque') {
+				$key = $key . " : " . $val['payee_name'] . " : " . $val['address'];
+			} else {
+				$key = $key . " : " . $val['payee_name'] . " : " + $val['bank'] . " : " . $val['account_cheque'];
+			}
+			$rarr[$key] = $val;
+		}
+		return $rarr;
+	}
+
 	public function payee_remove_by_claim_id($claim_id) {
 		$this->db->query("DELETE FROM payees WHERE claim_id='" . (int)$claim_id . "'");
 	}

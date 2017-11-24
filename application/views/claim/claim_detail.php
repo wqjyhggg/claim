@@ -368,6 +368,58 @@
 								</div>
 							</div>
 						</div>
+						<h2 class="move_down">
+							Payee Information
+							<?php if($edit): ?>
+							<button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button>
+							<?php endif; ?>
+							<i class="fa fa-angle-down pull-right"></i>
+						</h2>
+						<div class="row" style="display: none">
+							<div class="col-sm-12">
+								<div class="payee-data">
+									<?php if (! empty($payees)) : ?>
+									<?php $i = 0; ?>
+									<?php foreach ( $payees as $key => $value ) : ?>
+									<?php $i ++; ?>
+									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
+										<div class="col-sm-12">
+											<div class="col-sm-2">
+												<?php echo form_radio("payment_type_" . $i, "cheque", ($value ["payment_type"] == 'cheque' ? TRUE : FALSE), array('class' => 'setpremium')); ?>
+												<?php echo form_label('Cheque:', 'Cheque'); ?>
+											</div>
+											<div class="col-sm-2">
+												<?php echo form_radio("payment_type_" . $i, "direct deposit", ($value ["payment_type"] == 'direct deposit' ? TRUE : FALSE), array('class' => 'setpremium')); ?>
+												<?php echo form_label('Direct Deposit', 'Direct Deposit'); ?>
+												<?php echo form_hidden('payees[id][]', $value ['id']); ?>
+											</div>
+										</div>
+										<br />
+										<div class="col-sm-3 wire_transfer_section" <?php echo ($value["payment_type"] <> 'direct deposit'?'style="display:none"':''); ?>>
+											<?php echo form_label('Bank Name:', 'Bank Name', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("payees[bank][]", $value ["bank"], array("class" => "form-control", 'placeholder' => 'Bank Name')); ?>
+										</div>
+										<div class="col-sm-3 cheque_section wire_transfer_section">
+											<?php echo form_label('Payee Name:', 'Payee Name', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("payees[payee_name][]", $value ["payee_name"], array("class" => "form-control required", 'placeholder' => 'Payee Name')); ?>
+										</div>
+										<div class="col-sm-3 wire_transfer_section" <?php echo ($value["payment_type"] <> 'direct deposit'?'style="display:none"':''); ?>>
+											<?php echo form_label('Account#:', 'Account', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("payees[account_cheque][]", $value ["account_cheque"], array("class" => "form-control", 'placeholder' => 'Account#')); ?>
+										</div>
+										<div class="col-sm-3 cheque_section" <?php echo ($value["payment_type"] == 'direct deposit'?'style="display:none"':''); ?>>
+											<?php echo form_label('Address:', 'Address', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("payees[address][]", $value ["address"], array("class" => "form-control " . ($value ["payment_type"] == 'direct deposit' ? '' : 'required'), 'placeholder' => 'Address')); ?>
+										</div>
+										<?php if($edit): ?>
+										<div class="col-sm-3"><label class='col-sm-12'>&nbsp;</label> <i class="col-sm-3 fa fa-trash row-link remove-payee"></i></div>
+										<?php endif;?>
+									</div>
+									<?php endforeach; ?>
+									<?php endif; ?>
+								</div>
+							</div>
+						</div>
 
 						<h2 class="move_down">
 							Expenses Claimed
@@ -437,10 +489,11 @@
 										<div class="col-sm-3">
 											<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>
 											<select name="expenses_claimed[payee][]" class="form-control required">
-												<option value="">--Select Payee--</option>
+												<?php foreach ( $payees as $pkey => $payee ) { ?> 
+												<option value="<?php echo $pkey; ?>" <?php echo (($pkey == $value['pay_to']) ? "Selected" : ""); ?>><?php echo $payee['payee_name']; ?></option>
+												<?php } ?>
 											</select>
-											<?php echo form_hidden('expenses_claimed[payee_id][]', $value ['pay_to']); ?>
-											</div>
+										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
 											<?php echo form_dropdown('expenses_claimed[currency][]', $currencies, $value ['currency'], array('class' => 'form-control required')); ?>
@@ -500,60 +553,6 @@
 						<!-- used to knnow how many forms added in this page -->
 						<!-- end intake forms list  -->
 						<?php endif; ?>
-						<h2 class="move_down">
-							Payee Information
-							<?php if($edit): ?>
-							<button class="btn btn-primary add_payee" name="filter" type="button" value="claim">Add a Payees</button>
-							<?php endif; ?>
-							<i class="fa fa-angle-down pull-right"></i>
-						</h2>
-						<div class="row" style="display: none">
-							<div class="col-sm-12">
-								<div class="payee-data">
-									<?php if (! empty($payees)) : ?>
-									<?php $i = 0; ?>
-									<?php foreach ( $payees as $key => $value ) : ?>
-									<?php $i ++; ?>
-									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
-										<div class="col-sm-12">
-											<div class="col-sm-2">
-												<?php echo form_radio("payment_type_" . $i, "cheque", ($value ["payment_type"] == 'cheque' ? TRUE : FALSE), array('class' => 'setpremium')); ?>
-												<?php echo form_label('Cheque:', 'Cheque'); ?>
-											</div>
-											<div class="col-sm-2">
-												<?php echo form_radio("payment_type_" . $i, "direct deposit", ($value ["payment_type"] == 'direct deposit' ? TRUE : FALSE), array('class' => 'setpremium')); ?>
-												<?php echo form_label('Direct Deposit', 'Direct Deposit'); ?>
-												<?php echo form_hidden('payees[id][]', $value ['id']); ?>
-											</div>
-										</div>
-										<br />
-										<div class="col-sm-3 wire_transfer_section" <?php echo ($value["payment_type"] <> 'direct deposit'?'style="display:none"':''); ?>>
-											<?php echo form_label('Bank Name:', 'Bank Name', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("payees[bank][]", $value ["bank"], array("class" => "form-control", 'placeholder' => 'Bank Name')); ?>
-										</div>
-										<div class="col-sm-3 cheque_section wire_transfer_section">
-											<?php echo form_label('Payee Name:', 'Payee Name', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("payees[payee_name][]", $value ["payee_name"], array("class" => "form-control required", 'placeholder' => 'Payee Name')); ?>
-										</div>
-										<div class="col-sm-3 wire_transfer_section" <?php echo ($value["payment_type"] <> 'direct deposit'?'style="display:none"':''); ?>>
-											<?php echo form_label('Account#:', 'Account', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("payees[account_cheque][]", $value ["account_cheque"], array("class" => "form-control", 'placeholder' => 'Account#')); ?>
-										</div>
-										<div class="col-sm-3 cheque_section" <?php echo ($value["payment_type"] == 'direct deposit'?'style="display:none"':''); ?>>
-											<?php echo form_label('Address:', 'Address', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("payees[address][]", $value ["address"], array("class" => "form-control " . ($value ["payment_type"] == 'direct deposit' ? '' : 'required'), 'placeholder' => 'Address')); ?>
-										</div>
-										<?php if($edit): ?>
-										<div class="col-sm-3"><label class='col-sm-12'>&nbsp;</label> <i class="col-sm-3 fa fa-trash row-link remove-payee"></i></div>
-										<?php endif;?>
-									</div>
-									<?php endforeach; ?>
-									<?php endif; ?>
-								</div>
-							</div>
-						</div>
-
-						<br />
 						<h2 class="move_down">
 							Attached List
 							<?php if($edit): ?>
@@ -947,19 +946,8 @@
 		})
 
 		// get policy data
-		<?php 
-		$policy_info = json_decode($claim_details ['policy_info'], TRUE);
+		<?php $policy_info = json_decode($claim_details ['policy_info'], TRUE); ?>
 		// to add third pary payees on this list.
-		$str = "";
-		if (! empty($payees)) {
-			foreach ( $payees as $key => $value ) {
-				$str .= '<option value="' . $value ['payee_name'] . '">' . $value ['payee_name'] . '</option>';
-			}
-		}
-		if ($str) {
-		?>
-		$("select[name='expenses_claimed[payee][]']").html('<?php echo $str; ?>');
-		<?php } ?>
 
 		// show area once any error occured
 		$(".alert-error").map(function(){
@@ -1467,18 +1455,6 @@
          } else {
             return false;
          }
-      }
-   })
-
-   // when currency changed
-   .on("change", 'select[name="payees[payee_currency][]"]', function(){
-      if($(this).val() == 'CAD'){
-         // add currency rate option
-         $(this).parent("td").next("td").children("input").attr("readonly", "readonly").val("");
-      } else {
-         // remove currency rate option
-         $(this).parent("td").next("td").children("input").removeAttr("readonly");
-
       }
    })
 
