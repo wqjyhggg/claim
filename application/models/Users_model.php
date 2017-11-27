@@ -50,6 +50,9 @@ class Users_model extends CI_Model {
 		$sql = "SELECT SQL_CALC_FOUND_ROWS * FROM users";
 		
 		$where = array();
+		if (isset($data["id"])) {
+			$where[] = "id = '" . (int)$data["id"] . "'";
+		}
 		if (isset($data["active"])) {
 			$where[] = "active = '" . (int)$data["active"] . "'";
 		}
