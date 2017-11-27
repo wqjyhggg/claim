@@ -1650,7 +1650,7 @@ class Emergency_assistance extends CI_Controller {
 		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EAC))) {
 			// redirect them to the home page because they must be an case manager to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
-		} else if (empty($emc) && $this->ion_auth->in_group(array(Users_model::GROUP_EAC))) {
+		} else if (empty($emc) && (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER)))) {
 			// redirect them to the home page because they must be an case manager to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
