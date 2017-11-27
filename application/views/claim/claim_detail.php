@@ -818,9 +818,9 @@
 				<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>
 				<select name="expenses_claimed[payee][]" class="form-control required">
 					<option value="">--Select Payee--</option>
-					<?php foreach ( $payees as $pkey => $payee ) { ?> 
-					<option value="<?php echo $pkey; ?>" <?php echo (($pkey == $value['pay_to']) ? "Selected" : ""); ?>><?php echo $payee['payee_name']; ?></option>
-					<?php } ?>
+						<?php foreach ( $payees as $pkey => $payee ) { ?> 
+						<option value="<?php echo $pkey; ?>"><?php echo $payee['payee_name']; ?></option>
+						<?php } ?>
 				</select>
 			</div>
 			<div class="col-sm-3">
