@@ -493,6 +493,7 @@
 												<option value="<?php echo $pkey; ?>" <?php echo (($pkey == $value['pay_to']) ? "Selected" : ""); ?>><?php echo $payee['payee_name']; ?></option>
 												<?php } ?>
 											</select>
+											<?php echo form_hidden("expenses_claimed[payee_id][]", $value ["pay_to"]); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
