@@ -87,7 +87,8 @@ class Phone extends CI_Controller {
 		
 		echo "<pre>";
 		$req = '/api/subscriptions';
-		$rt = $this->phone_model->sendRequest($req, $data, 'GET');
+		$para = array();
+		$rt = $this->phone_model->sendRequest($req, $para, 'GET');
 		$data = json_decode($rt, true);
 		print_r($data);
 		// Remove if there is any
