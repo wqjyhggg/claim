@@ -7,14 +7,19 @@ if (! defined('BASEPATH')) exit('No direct script access allowed');
  *        
  */
 class Phone_model extends CI_Model {
-	/* test */ 
+	/* test 
 	const PHONE_KEY = '6bd7053312e9927c61ff57dd8202ba6c';
 	const PHONE_URL = 'http://portal.aurat.genvoice.net';
-	/**/
-	/* JF  
+	/* JF */ 
 	const PHONE_KEY = 'a72e4f38c69af9ae20c95e9067099044';
 	const PHONE_URL = 'http://api.jfgroup.genvoice.net';
-	*/
+	/**/
+	
+	const S3_BUCKET = "jfphone";
+	const S3_VERSION = "latest";
+	const S3_REGION = "us-east-1";
+	const S3_KEY = 'AKIAJ7FQ5V6JIR23XSPA';
+	const S3_SECRET = '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';
 	
 	public function sendRequest($req, $data, $method = "POST") {
 		$http_header = array (
@@ -214,4 +219,62 @@ class Phone_model extends CI_Model {
 		return $this->db->query("SELECT FOUND_ROWS() as rows")->row()->rows;
 	}
 	
+	private function connect_s3() {
+		return new Aws\S3\S3Client(array (
+				'version' => self::S3_VERSION,
+				'region' => self::S3_REGION,
+				'credentials' => array (
+						'key' => self::S3_KEY,
+						'secret' => self::S3_SECRET
+				)
+		));
+	}
+	
+	public function update_file_url($url, $newurl) {
+		$this->db->where(array('phonefile' => $url));
+		$total = 0;
+		if ($rt = $this->db->get('ntake_form')->result_array()) {
+			foreach ($rt as $rc) {
+				$this->db->set('phonefile', $newurl);
+				$this->db->where('id', $rc['id']);
+				$this->db->update('ntake_form');
+				$total++;
+			}
+		}
+		return $total;
+	}
+	
+	public function save_s3_file($url, $key) {
+		$s3 = $this->connect_s3();
+		
+		try{
+			$data = file_get_contents($url);
+			
+			$result = $s3->putObject([
+					'Bucket'     => self::S3_BUCKET,
+					'Key'        => $key,
+					'Body'       => $data,
+			]);
+			
+			return true;
+
+		} catch (S3Exception $e) {
+			echo $e->getMessage() . "\n";
+			return false;
+		}
+	}
+
+	public function get_s3_file($key) {
+		$s3 = $this->connect_s3();
+		
+		try{
+			return ($s3->getObject([
+					'Bucket'     => self::S3_BUCKET,
+					'Key'        => $key,
+			]));
+		} catch (S3Exception $e) {
+			echo $e->getMessage() . "\n";
+			return false;
+		}
+	}
 }

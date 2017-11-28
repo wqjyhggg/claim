@@ -47,7 +47,7 @@ class Phone extends CI_Controller {
 		$rt = $this->phone_model->sendRequest($req, $data, 'GET');
 		
 		$data['call_list'] = json_decode($rt, true);
-		// echo "<pre>"; print_r($data['call_list']); die("XX"); //XXXXXXXXXXXXXXXXXXXXXX
+		// echo "<pre>"; print_r($data['call_list']); die("XX");
 		$data['date'] = $date;
 		$data['action_url'] = base_url('phone/search');
 		
@@ -119,6 +119,21 @@ class Phone extends CI_Controller {
 		$data = json_decode($rt, true);
 		print_r($data); 
 		echo "<pre>";
-		die("\nEnd of All"); //XXXXXXXXXXXXXXXXXXXXXX
+		die("\nEnd of All");
+	}
+	
+	public function file($dt, $filename) {
+		if (!$this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		$this->load->model('phone_model');
+		
+		if ($r = $this->phone_model->get_s3_file($dt . "/" . $filename)) {
+			header("Content-Type: {$r['ContentType']}");
+			echo $r['Body'];
+		} else {
+			show_404('No such file', TRUE);
+		}
 	}
 }
