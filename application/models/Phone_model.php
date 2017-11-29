@@ -233,7 +233,7 @@ class Phone_model extends CI_Model {
 	public function update_file_url($url, $newurl) {
 		$this->db->where(array('phonefile' => $url));
 		$total = 0;
-		if ($rt = $this->db->get('ntake_form')->result_array()) {
+		if ($rt = $this->db->get('intake_form')->result_array()) {
 			foreach ($rt as $rc) {
 				$this->db->set('phonefile', $newurl);
 				$this->db->where('id', $rc['id']);
