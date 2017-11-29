@@ -178,7 +178,7 @@ class Phone_model extends CI_Model {
 	}
 	
 	public function getmyurl() {
-		$name = $this->ion_auth->get_user_info('first_name');
+		$name = $this->ion_auth->get_user_info('phone');
 		if ($name) {
 			$sql = "SELECT * FROM phone_records WHERE agent=".$this->db->escape($name)." ORDER BY hangup DESC LIMIT 1";
 			$rc = $this->db->query($sql)->row_array();

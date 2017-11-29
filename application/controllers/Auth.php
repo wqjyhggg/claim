@@ -358,7 +358,7 @@ class Auth extends CI_Controller {
 		}
 		$this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'required|callback_alpha_dash_space');
 		$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required|callback_alpha_dash_space');
-		$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required|numeric|min_length[4]|max_length[15]');
+		$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required|min_length[3]|max_length[15]');
 		$this->form_validation->set_rules('groups[]', 'Member of groups', 'required');
 		if (($post_group = $this->input->post('groups')) && !in_array(Users_model::GROUP_ADMIN, $post_group) && !in_array(Users_model::GROUP_ACCOUNTANT, $post_group)) {
 			$this->form_validation->set_rules('products[]', 'Member of products', 'required');

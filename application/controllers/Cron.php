@@ -38,8 +38,8 @@ class Cron extends CI_Controller {
 			if ($this->phone_model->save_s3_file($call['recording_url'], $date."/".$filename)) {
 				echo "Save file : " . $date. "/" . $filename . "\n";
 				// Update local file name if is has
-				if ($this->phone_model->update_file_url($call['recording_url'], base_url($date."/".$filename))) {
-					echo "Update database : " . base_url($date."/".$filename) . "\n";
+				if ($this->phone_model->update_file_url($call['recording_url'], base_url("phone/file/".$date."/".$filename))) {
+					echo "Update database : " . base_url("phone/file/".$date."/".$filename) . "\n";
 				}
 			}
 		}
