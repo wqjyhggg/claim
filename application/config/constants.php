@@ -97,7 +97,8 @@ defined('SITE_TITLE')      			OR define('SITE_TITLE', "JF Group");
 defined('GOOGLE_MAP_KEY')      		OR define('GOOGLE_MAP_KEY', "AIzaSyAz-m6t7vffNM8kt1VeKfi15fAMmmHXa5A");
 defined('NEAREST_PROVIDERS_RANGE')  OR define('NEAREST_PROVIDERS_RANGE', 60); /*in miles*/
 
-defined('API_URL')      			OR define('API_URL', "http://jfinsurance.auroraeducationonline.info/api/");
+#defined('API_URL')      			OR define('API_URL', "http://jfinsurance.auroraeducationonline.info/api/");
+defined('API_URL')      			OR define('API_URL', "https://www.jfgroup.ca/api/");
 defined('API_USER')     			OR define('API_USER', "test");
 defined('API_PASSWORD')				OR define('API_PASSWORD', "test1117");
 defined('API_KEY')					OR define('API_KEY', "bw3mLCG8N5PU3aGm");
