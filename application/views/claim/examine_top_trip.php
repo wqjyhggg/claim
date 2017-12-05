@@ -379,7 +379,7 @@
 							<table class="table table-hover table-bordered" style='overflow: hidden; margin-right: 26px; padding-right: 26px;'>
 								<thead>
 									<tr>
-										<th>No</th>
+										<th><?php echo form_checkbox("selectall", 1); ?></th>
 										<th>Claim Item No</th>
 										<th>Invoice No</th>
 										<th>Service Date</th>
@@ -394,13 +394,12 @@
 								</thead>
 								<tbody>
 								<?php
-									$i = 1;
 									foreach ( $items as $key => $value ) {
 									$total_payable += (float)$value['amt_payable'];
 									$total_this_payable += (float)$value['amt_payable'];
 								?>
-									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>">
-										<td><?php echo $i++; ?></td>
+									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable='<?php echo $value['amt_payable'] ?>' item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_comment='<?php echo nl2br($value['comment']) ?>'>
+										<td><?php echo form_checkbox("items", $value['id'], FALSE); ?></td>
 										<td><?php echo $value['claim_item_no']; ?></td>
 										<td><?php echo $value['invoice']; ?></td>
 										<td><?php echo $value['date_of_service']; ?></td>
@@ -524,22 +523,25 @@
 
 					<div class="row actions" style="margin-top: 20px;">
 						<div class="row">
-							<div class="col-sm-3">
+							<div class="col-sm-2">
 								<?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
+							</div>
+							<div class="col-sm-2">
+								<?php echo anchor("claim/claim_detail/".$claim['id'], "Edit Detail", array("class"=>'btn btn-primary')); ?>
 							</div>
 							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER))) { ?>
 							<?php if (($claim['status'] != Claim_model::STATUS_Processed) && ($claim['status'] != Claim_model::STATUS_Pending) && ($claim['status'] != Claim_model::STATUS_Paid) && ($claim['status'] != Claim_model::STATUS_Closed)) { ?>
-							<div class="col-sm-3 investigate_pending">
+							<div class="col-sm-2 investigate_pending">
 								<input class="btn btn-primary" name="Investigate Pending" value="Investigate Pending" type="button">
 							</div>
 	                     	<?php } ?>
 							<?php if (($claim['status'] != Claim_model::STATUS_Processed) && ($claim['status'] != Claim_model::STATUS_Paid) && ($claim['status'] != Claim_model::STATUS_Closed)) { ?>
-							<div class="col-sm-3 accept_decision">
+							<div class="col-sm-2 accept_decision">
 								<input class="btn btn-primary" name="Accept" value="Investigate Finished" type="button">
 							</div>
 							<?php } ?>
 							<?php if (0) { ?>
-							<div class="col-sm-3 deny_decision">
+							<div class="col-sm-2 deny_decision">
 								<input class="btn btn-primary" name="Deny" value="Deny" type="button">
 								<div class="col-sm-12 deny_reasons" style="display: none">
 									<?php
@@ -550,9 +552,9 @@
 								</div>
 							</div>
 							<?php } ?>
-							<!-- div class="col-sm-2">
+							<div class="col-sm-2">
 								<input class="btn btn-primary email_print" data-toggle="modal" name="Email" value="Email/Print" type="button" data-target="#print_template">
-							</div -->
+							</div>
 							<?php } ?>
 						</div>
 					</div>
@@ -684,9 +686,27 @@
 							<div class="col-sm-12 doc-desc">
 								<?php
 									// find and replace text
-									$find = array ('{otc_logo}', '{otc_logo_big}', '{current_date}');
-									$replace = array (img ( array ('src' => 'assets/img/otc.jpg', 'width' => '130') ), img ( array ('src' => 'assets/img/otc_big.jpg', 'width' => '262') ), date ( "F d, Y" ));
-									echo str_replace ( $find, $replace, $doc ['description'] );
+									$find = array(
+											'{otc_logo}',
+											'{otc_logo_big}',
+											'{current_date}',
+											'{policy_no}',
+											'{case_no}',
+											'{policy_holder}',
+											'{coverage_period}',
+											'{claimexaminer_name}',
+									);
+									$replace = array(
+											img(array('src' => 'assets/img/otc.jpg', 'width' => '130')),
+											img(array('src' => 'assets/img/otc_big.jpg', 'width' => '262')),
+											date("F d, Y"),
+											$policy['policy'],
+											$claim['case_no'],
+											$policy['firstname'] . ' ' . $policy['lastname'],
+											$policy['effective_date'] . ' - ' . $policy['expiry_date'],
+											$claim['assign_to_name'],
+									);
+									echo str_replace($find, $replace, $doc['description']);
 								?>
 							</div>
 						</div>
@@ -805,60 +825,86 @@ $(document).ready(function() {
 		})
 	});
 
-      var amt_payable = 0;
-      // enable buttons according to claim Decision
-      var decision = "<?php echo @$claim_details['status']; ?>"
-      if(decision == ''){
-         $(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").show();
-         $(".my_decision").hide();
-      } else {
-         if(decision == '<?php echo Claim_model::STATUS_Processed; ?>' || decision == '<?php echo Claim_model::STATUS_Exceptional; ?>' || decision == '<?php echo Claim_model::STATUS_Paid; ?>')
-            $(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").hide();
-         else
-            $(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").show();
+	var decision = "<?php echo @$claim_details['status']; ?>";
+	if (decision == '') {
+		$(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").show();
+	} else {
+		if (decision == '<?php echo Claim_model::STATUS_Processed; ?>' || decision == '<?php echo Claim_model::STATUS_Exceptional; ?>' || decision == '<?php echo Claim_model::STATUS_Paid; ?>') {
+			$(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").hide();
+		} else {
+			$(".accept_decision, .deny_decision, .record_exceptional, .investigate_pending").show();
+		}
+	}
 
-         $(".my_decision").show().html('<label style="float: left; font-size: 25px;">: '+decision+' </label>');
-      }
+	$(".datepicker").datepicker({
+		startDate: '-105y',
+		endDate: '+2y',
+	});
+})
+.on("click", "input[name=selectall]", function() {
+	if ($(this).is(":checked")) {
+		$("input[name=items]").prop("checked", true);
+	} else {
+		$("input[name=items]").prop("checked", false);
+	}
+	// $("input[name=case]:disabled").prop("checked", false);
+})
+.on("click", "input[name=items], input[name=selectall]", function(e) {
+	e.stopPropagation();
 
-      $("tr[alt=<?php echo $id; ?>]").addClass('active-green');
-      $(".datepicker").datepicker({
-           startDate: '-105y',
-           endDate: '+2y',
-       });
-   })
-   .on("click",".more_filters", function(){
-      $(".more_items").toggle();
-   })
+	var total_amount_claimed = 0;
+	var total_amt_deductible = 0;
+	var total_amt_payable = 0;
+	// var length = $("input[name=items]:checked").length;
+	var html  = '<table style="margin-bottom: 14px;" width="100%" border="1">';
+	html += '  <thead>';
+	html += '    <tr>';
+	html += '      <th>Service Description</th>';
+	html += '      <th>Date of Service</th>';
+	html += '      <th>Claim Amount</th>';
+	html += '      <th>Deductible Amount</th>';
+	html += '      <th>Payable Amount</th>';
+	html += '      <th>Comment</th>';
+	html += '    </tr>';
+	html += '  </thead>';
+	html += '  <tbody>';
 
-   // fuzzy search
-   .on("click", ".autocomplete_field", function() {
-      $(".autocomplete_field").autocomplete({
-        serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
-        minLength: 2,
-        dataType: "json",
-      });
-    })
-   .on("click", ".add_new_expenses", function(){
-      var html = $(".base-row").html();
-      $(".expenses-list").append(html);
-   })
-   .on("click", ".remove_claim", function(){
-      $(this).parent("td").parent("tr").remove();
-   })
+	$("input[name=items]:checked").each(function () {
+		var ptr = $(this).closest('tr');
+		var service_description = ptr.attr('item_service_description');
+		var date_of_service = ptr.attr('item_date_of_service');
+		var amount_claimed = ptr.attr('item_amount_claimed');
+		var amt_deductible = ptr.attr('item_amt_deductible');
+		var amt_payable = ptr.attr('item_amt_payable');
+		var comment =  ptr.attr('item_comment');
 
-   .on("click", ".add_payee", function(){
-      var html = $(".payee-buffer").html();
-      $(".payee-data").append(html);
-   })
-   .on("click", ".remove-payee", function(){
-      $(this).parent("td").parent("tr").remove();
-   })
+		total_amount_claimed += parseFloat(amount_claimed);
+		total_amt_deductible += parseFloat(amt_deductible);
+		total_amt_payable += parseFloat(amt_payable);
+			
+		html += '  <tr>';
+		html += '      <td>' + service_description.substring(0,100) + '</td>';
+		html += '      <td>' + date_of_service + '</td>';
+		html += '      <td>$' + amount_claimed + '</td>';
+		html += '      <td>$' + amt_deductible + '</td>';
+		html += '      <td>$' + amt_payable + '</td>';
+		html += '      <td>' + comment + '</td>';
+		html += '  </tr>';
+	});
+	html += '  <tr>';
+	html += '      <td>Total</td>';
+	html += '      <td>&nbsp;</td>';
+	html += '      <td>$' + total_amount_claimed + '</td>';
+	html += '      <td>$' + total_amt_deductible + '</td>';
+	html += '      <td>$' + total_amt_payable + '</td>';
+	html += '      <td>&nbsp;</td>';
+	html += '  </tr>';
+	html += '  </tbody>';
+	html += '</table>';
 
-   // fill autofill on key type
-   .on("keyup", ".company_name input", function(){
-      $(".company_name input").val($(this).val());
-   })
-
+	$(".claim-items").html(html);
+})
+		
    // show email/print function
    .on("click", ".select-doc", function(){
 
@@ -876,33 +922,19 @@ $(document).ready(function() {
       // get selected case details object
       var obj = $(".email_print");
 
-      // get policy info
-      var data = $("input[name=policy_info]").val()?$.parseJSON($("input[name=policy_info]").val()):'';
-
       // parse case data details
       var claim_data = $.parseJSON($(".select_claim.active-green").attr('data'));
 
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
-      str = str.replace(/{insured_name}/gi, claim_data.insured_first_name+' '+claim_data.insured_last_name)
-      .replace(/{claimant_name}/gi, claim_data.insured_first_name+' '+claim_data.insured_last_name)
-      .replace("{insured_address}", claim_data.street_address+' '+claim_data.city+' '+claim_data.province)
-      .replace("{insured_lastname}", claim_data.insured_last_name)
-      .replace("{policy_no}", claim_data.policy_no)
-      .replace("{case_no}", claim_data.case_no)
+      str = str.replace(/{insured_name}/gi, "<?php echo $claim['insured_first_name'] . ' ' . $claim['insured_last_name']; ?>")
+      .replace(/{claimant_name}/gi, "<?php echo $claim['insured_first_name'] . ' ' . $claim['insured_last_name']; ?>")
+      .replace("{insured_address}", "<?php echo $claim['street_address'] . ' ' . $claim['city'] . ' ' . $claim['province']; ?>")
+      .replace("{insured_lastname}", "<?php echo $claim['insured_last_name']; ?>")
       .replace("{policy_coverage_info}", "{policy_coverage_info}")
-      .replace("{casemanager_name}", '<?php echo $this->ion_auth->user()->row()->first_name ?>')
-      .replace("{claimexaminer_name}", claim_data.claimexaminer_name)
       .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')
-
-      .replace("{clinic_name}", claim_data.clinic_name)
-      .replace("{insured_dob}", claim_data.dob)
-
-      .replace("{policy_holder}", claim_data.insured_first_name+' '+claim_data.insured_last_name)
-      if(data)
-         str = str.replace("{coverage_period}", data[0].effective_date+" to "+data[0].expiry_date);
-      else
-        str =  str.replace("{coverage_period}", '');
+      .replace("{clinic_name}", "<?php echo $claim['clinic_name']; ?>")
+      .replace("{insured_dob}", "<?php echo $claim['dob']; ?>")
 
       $(".doc-"+id+" .doc-desc").html(str);
 
@@ -1083,24 +1115,19 @@ $(document).ready(function() {
    })
 
      // once user clicked on same with policy button
-   .on("click", "#mail_address", function(){
-
-      // get local data
-      var data = $.parseJSON($("input[name=policy_info]").val());
-      if($(this).is(":checked"))
-      {
-         // fill all json values to address fields
-         $("input[name=email]").val(data.contact_email);
-         $("input[name=street_no_email]").val(data.street_number);
-         $("input[name=street_name_email]").val(data.street_name);
-         $("input[name=city_email]").val(data.city);
-         $("select[name=province_email]").val(data.province2);
-      }
-      else
-      {
-         $("input[name=street_no_email],input[name=street_name_email],input[name=city_email],select[name=province_email]").val("");
-      }
-   })
+	.on("click", "#mail_address", function() {
+		// get local data
+		if ($(this).is(":checked")) {
+			// fill all json values to address fields
+			$("input[name=email]").val("<?php echo $policy['contact_email']; ?>");
+			$("input[name=street_no_email]").val("<?php echo $policy['street_number']; ?>");
+			$("input[name=street_name_email]").val("<?php echo $policy['street_name']; ?>");
+			$("input[name=city_email]").val("<?php echo $policy['city']; ?>");
+			$("select[name=province_email]").val("<?php echo $policy['province2']; ?>");
+		} else {
+			$("input[name=street_no_email],input[name=street_name_email],input[name=city_email],select[name=province_email]").val("");
+		}
+	})
 
    // once user click over save intake form, we are just hold every value untill case is not submitted
    .on("click", '.save-intakeform', function(){

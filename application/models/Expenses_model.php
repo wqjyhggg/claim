@@ -123,9 +123,14 @@ class Expenses_model extends CI_Model {
 	 *        	search parameter
 	 * @return array result array, maybe null
 	 */
-	public function search($data, $limit=0, $offset=0) {
+	public function search($data, $limit=0, $offset=0, $orderby=array()) {
 		$this->db->select('SQL_CALC_FOUND_ROWS *', false);
 		$this->db->where($data);
+		if ($orderby) {
+			foreach ($orderby as $key => $val) {
+				$this->db->order_by($key, $val);
+			}
+		}
 		if ($offset) {
 			$this->db->limit($limit, $offset);
 		} else if ($limit) {
@@ -145,12 +150,19 @@ class Expenses_model extends CI_Model {
 	 * @return int				inserted array ID
 	 */
 	public function save($data) {
+		if ($data['status'] === self::EXPENSE_STATUS_Paid) {
+			$data['pay_date'] = date("Y-m-d");
+		}
 		if (isset($data['id'])) {
 			// Update
 			$id = $data['id'];
 			unset($data['id']);
 			$cur = $this->get_by_id($id);
-			if ($cur) {
+			if ($cur && ($cur['status'] != self::EXPENSE_STATUS_Paid)) {
+				if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT)) && ($data['status'] == self::EXPENSE_STATUS_Paid)) {
+					// No change if not account
+					return 0;
+				}
 				$this->db->where('id', $id);
 				$this->db->update('expenses_claimed', $data);
 				$this->active_model->log_update('expenses_claimed', $id, $cur, $data, $this->db->last_query());

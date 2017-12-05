@@ -971,7 +971,7 @@ class Claim extends CI_Controller {
 				$this->data['policy'] = $policy_info_arr[0];
 				
 				// get expenses climed items list
-				$this->data['items'] = $this->expenses_model->search(array('claim_id' => $claim['id']));
+				$this->data['items'] = $this->expenses_model->search(array('claim_id' => $claim['id']), 0, 0, array('date_of_service' => 'ASC'));
 				$this->data['payinfo'] = $this->expenses_model->get_policy_payinfo($claim['policy_no']);
 				
 				// get claim items history
@@ -1324,40 +1324,16 @@ class Claim extends CI_Controller {
 				// redirect them to the login page
 				redirect('claim/claim_detail/' . $id);
 			} else {
-				
-				// get expenses climed items list
-				// expenses_claimed
-				// $this->data['expenses'] = $this->expenses_model->search(array('claim_id' => $id));
-				
 				// get claim history
 				$this->data['claim_history'] = $this->expenses_model->expenses_history($id);
 
-				/*
-				$fields = "expenses_claimed.claim_no, expenses_claimed.case_no,expenses_claimed.claim_date,sum(expenses_claimed.amount_claimed) as amount_claimed,sum(expenses_claimed.amount_client_paid) as amount_client_paid,expenses_claimed.currency,expenses_claimed.pay_to";
-				$this->data['claim_history'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields, $conditions = array(
-						'expenses_claimed.claim_id' => $id 
-				), $joins = array(), $order_by = array(), $group_by = array(
-						'expenses_claimed.id' 
-				));
-				*/
-				
-				
 				// load dropdowns- countries, province, products data
-				/*
-				$this->data['country'] = $this->common_model->getcountries($field_name = "country", $selected = $this->common_model->field_val($field_name));
-				$this->data['country2'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->common_model->field_val($field_name));
-				$this->data['province'] = $this->common_model->getprovinces($field_name = "province", $selected = $this->common_model->field_val($field_name));
-				$this->data['province2'] = $this->common_model->getprovinces($field_name = "province_email", $selected = "", $key = "short_code", $value = "name");
-				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE);
-				$this->data['payees_list'] = $this->common_model->get_payees($field_name = "expenses_claimed[payee][]", $selected = $this->input->post($field_name), $key = 'id', $val = 'name');
-				*/
-
 				$this->data['country'] = $this->country_model->get_list(TRUE);
 				$this->data['country2'] = $this->country_model->get_list(FALSE);
 				$this->data['province'] = $this->province_model->get_list_by_country_short($this->input->post('country') ? $this->input->post('country') : 'CA');
 				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
 				$this->data['products'] = $this->product_model->get_list();
-				// $this->data['payees_list'] = $this->claim_model->search($field_name = "expenses_claimed[payee][]", $selected = $this->input->post($field_name), $key = 'id', $val = 'name');
+
 				$this->data['payees_list'] = $this->claim_model->payee_format_array($this->claim_model->payee_search(array("claim_id" => $id)));
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
 				
@@ -2021,9 +1997,10 @@ class Claim extends CI_Controller {
 		
 		$this->load->model('expenses_model');
 
-		$itemArr = explode($items);
+		$itemArr = explode(",", $items);
 		foreach ($itemArr as $item_id) {
 			$item = $this->expenses_model->make_pay($item_id);
+			echo ("make_pay: " . $item_id . "; ");
 		}
 		
 		die("OK");

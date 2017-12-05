@@ -213,7 +213,7 @@ $(document).on("click", "button[name=search_claim]", function(){
 	$.ajax({
 		url: "<?php echo base_url("claim/confirm_payment") ?>" + "/" + items,
 		method: "get",
-		dataType:"json",
+		//dataType:"json",
 		beforeSend: function(){
 			$(".main_container").addClass("csspinner load1");
 		},

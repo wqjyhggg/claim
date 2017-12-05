@@ -677,7 +677,85 @@
 								<div class="expenses-list">
 									<!-- list all expenses items list here -->
 									<?php if (! empty($expenses_claimed)) : ?>
+									<?php $this->load->model('expenses_model'); ?>
 									<?php foreach ( $expenses_claimed as $key => $value ) : ?>
+									<?php  if ($value['status'] === Expenses_model::EXPENSE_STATUS_Paid) { ?>
+									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
+										<div class="col-sm-3">
+											<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
+											<?php echo $value ['invoice']; ?>
+											<?php echo form_hidden("expenses_claimed[invoice][]", $value['invoice']); ?>
+											<?php echo form_hidden('expenses_claimed[id][]', $value['id']); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
+											<?php echo $value['provider_name']; ?>
+											<?php echo form_hidden("expenses_claimed[provider_name][]", $value ['provider_name']); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
+											<?php echo $value['referencing_physician']; ?>
+											<?php echo form_hidden("expenses_claimed[referencing_physician][]", $value ['referencing_physician']); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
+											<?php echo $value['coverage_code']; ?>
+											<?php echo form_hidden("expenses_claimed[coverage_code][]", $value['coverage_code']); ?>
+										</div>
+										<div class="clearfix"></div>
+
+										<div class="col-sm-3">
+											<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
+											<?php echo $value['diagnosis']; ?>
+											<?php echo form_hidden("expenses_claimed[diagnosis][]", $value ['diagnosis']); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
+											<?php echo $value['service_description']; ?>
+											<?php echo form_hidden("expenses_claimed[service_description][]", $value ['service_description']); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
+											<?php echo $value['date_of_service']; ?>
+											<?php echo form_hidden("expenses_claimed[date_of_service][]", $value ['date_of_service']); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Amount Billed:', 'amount_billed', array("class" => 'col-sm-12')); ?>
+											<?php echo $value['amount_billed']; ?>
+											<?php echo form_hidden("expenses_claimed[amount_billed][]", $value ['amount_billed']); ?>
+										</div>
+										<div class="clearfix"></div>
+
+										<div class="col-sm-3">
+											<?php echo form_label('Amount Client Paid:', 'amount_client_paid', array("class" => 'col-sm-12')); ?>
+											<?php echo $value['amount_client_paid']; ?>
+											<?php echo form_hidden("expenses_claimed[amount_client_paid][]", $value ['amount_client_paid']); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
+											<?php echo $value["amount_claimed"]; ?>
+											<?php echo form_hidden("expenses_claimed[amount_claimed][]", $value ["amount_claimed"]); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>
+											<?php echo $value["pay_to"]; ?>
+											<?php echo form_hidden("expenses_claimed[pay_to][]", $value ["pay_to"]); ?>
+											<?php echo form_hidden("expenses_claimed[payee_id][]", $value ["pay_to"]); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
+											<?php echo $value ['currency']; ?>
+											<?php echo form_hidden('expenses_claimed[currency][]', $currencies, $value ['currency']); ?>
+										</div>
+										<div class="clearfix"></div>
+
+										<div class="col-sm-3">
+											<?php echo form_label('Comment:', 'comment', array("class" => 'col-sm-12')); ?>
+											<?php echo $value ['comment']; ?>
+											<?php echo form_hidden("expenses_claimed[comment][]", $value ['comment']); ?>
+										</div>
+									</div>
+									<?php  } else { ?>
 									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
 										<div class="col-sm-3">
 											<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
@@ -753,6 +831,7 @@
 										<div class="col-sm-3 pull-right"><i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i></div>
 										<?php endif; ?>
 									</div>
+									<?php  } ?>
 									<?php endforeach; ?>
 									<?php endif; ?>
 								</div>
