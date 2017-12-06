@@ -1,4 +1,4 @@
-<?php $this->load->model('claim_model'); ?>
+<?php $this->load->model('claim_model'); $this->load->model('expenses_model'); ?>
 <?php $total_payable = 0; $total_this_payable = 0; ?>
 <div>
 	<div class="page-title">
@@ -359,6 +359,7 @@
 										<th>Claim Item No</th>
 										<th>Invoice No</th>
 										<th>Service Date</th>
+										<th>Payee</th>
 										<th>Coverage</th>
 										<th>Diagnosis</th>
 										<th>Amt Billed</th>
@@ -370,6 +371,7 @@
 								</thead>
 								<tbody>
 								<?php
+									$this_deductible = $policy['deductible_amount'] - $payinfo['deductible'];
 									foreach ( $items as $key => $value ) {
 									$total_payable += (float)$value['amt_payable'];
 									$total_this_payable += (float)$value['amt_payable'];
@@ -379,6 +381,7 @@
 										<td><?php echo $value['claim_item_no']; ?></td>
 										<td><?php echo $value['invoice']; ?></td>
 										<td><?php echo $value['date_of_service']; ?></td>
+										<td><?php $payArr= explode(":", $value['pay_to']); echo empty($payArr[1]) ? '' : $payArr[1]; ?></td>
 										<td><?php echo $value['coverage_code']; ?></td>
 										<td><?php echo $value['diagnosis']; ?></td>
 										<td><?php echo $value['amount_billed']?$value['amount_billed']:0; ?></td>
@@ -415,7 +418,7 @@
 
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Deductible : </label>
-													<div class='col-sm-12'><input type='number' step='0.01' name='amt_deductible' value="<?php echo $value['amt_deductible']; ?>"></div>
+													<div class='col-sm-12'><input type='number' step='0.01' name='amt_deductible' value="<?php echo empty($value['amt_deductible']) ? (($this_deductible > $value['amount_claimed']) ? $value['amount_claimed'] : $this_deductible) : $value['amt_deductible']; ?>"></div>
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">New Payable : </label>
@@ -816,6 +819,14 @@ $(document).ready(function() {
 		startDate: '-105y',
 		endDate: '+2y',
 	});
+})
+.on("focusin", "input[name=amt_payable]", function() {
+	var paystatus = $(this).closest("form").find("select[name=status]").val();
+	if (paystatus == '<?php echo Expenses_model::EXPENSE_STATUS_Pending?>') {
+		alert("Don't Change [New Payable] when status is <?php echo Expenses_model::EXPENSE_STATUS_Pending; ?>");
+		$(this).blur();
+		return false;
+	}
 })
 .on("click", "input[name=selectall]", function() {
 	if ($(this).is(":checked")) {
