@@ -1412,6 +1412,11 @@
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+               if (data.plan_list[0].status_id == 6) {
+                   alert("Sorry, Refunded policy can't Create claim.");
+               } else if (data.plan_list[0].status_id == 5) {
+                   alert("Sorry, Canceled policy can't Create claim.");
+               } else {
                $("input[name=product_short]").val(data.plan_list[0].product_short);
 
                $("input[name=insured_first_name]").val(data.plan_list[0].firstname);
@@ -1442,11 +1447,8 @@
                   $("input[name=post_code]").val(data.plan_list[0].postcode);
                   $("input[name=arrival_date_canada]").val(data.plan_list[0].arrival_date);
                }
-
-
-
-            }
-            else{
+               }
+            } else {
                alert("Sorry1, policy information does not exists, please check policy no and try again");
                $("input[name=policy_no]").val('Unknown - ' + $("input[name=policy_no]").val());
 
@@ -1582,6 +1584,11 @@
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+               if (data.plan_list[0].status_id == 6) {
+                   alert("Sorry, Refunded policy <?php echo $this->input->get('policy'); ?> can't Create claim.");
+               } else if (data.plan_list[0].status_id == 5) {
+                   alert("Sorry, Canceled policy <?php echo $this->input->get('policy'); ?> can't Create claim.");
+               } else {
 
                $("input[name=insured_first_name]").val(<?php if ($this->input->get('firstname')) { echo "'".$this->input->get('firstname')."'"; } else { ?>data.plan_list[0].firstname<?php } ?>);
                $("input[name=insured_last_name]").val(<?php if ($this->input->get('lastname')) { echo "'".$this->input->get('lastname')."'"; } else { ?>data.plan_list[0].lastname<?php } ?>);
@@ -1598,8 +1605,8 @@
                $("input[name=arrival_date]").val(data.plan_list[0].arrival_date);
                $("input[name=guardian_name]").val();
                $("input[name=guardian_phone]").val();
-            }
-            else{
+               }
+            } else {
                $(".nav-m22d").removeClass("csspinner load1");
                alert("Sorry2, policy information does not exists, please check policy no and try again");
                $(this).val('Unknown - ' + $(this).val());
@@ -1607,9 +1614,7 @@
             $(".nav-m22d").removeClass("csspinner load1");
          }
       })
-      <?php
-	}
-	?>
+   <?php } ?>
 
 // create input boxes where requirement need
 var $outer = $(".outer-text");
