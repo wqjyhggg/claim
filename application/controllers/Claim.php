@@ -79,9 +79,9 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('employee_name', 'employee name ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('city_town', 'city town ', 'alpha');
 			$this->form_validation->set_rules('employee_telephone', 'employee telephone ', 'numeric');
-			$this->form_validation->set_rules('amount_billed', 'amount billed ', 'numeric');
+			$this->form_validation->set_rules('amount_billed_org', 'amount billed ', 'numeric');
 			$this->form_validation->set_rules('account_cheque', 'account no ', 'numeric');
-			$this->form_validation->set_rules('amount_client_paid', 'amount client paid ', 'numeric');
+			$this->form_validation->set_rules('amount_client_paid_org', 'amount client paid ', 'numeric');
 			$this->form_validation->set_rules('physician_name_canada', 'physician name canada ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('physician_city', 'physician city ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('payee_name', 'payee name ', 'alpha_numeric_spaces');
@@ -94,6 +94,8 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('physician_telephone_canada', 'physician telephone canada ', 'numeric');
 			$this->form_validation->set_rules('physician_alt_telephone', 'physician alt telephone ', 'numeric');
 			$this->form_validation->set_rules('email', 'Email', 'valid_email');
+			
+			// $this->form_validation->set_rules('school_name', 'School Name', 'required');
 			
 			$this->form_validation->set_rules('contact_first_name', 'First Name', 'alpha');
 			$this->form_validation->set_rules('contact_last_name', 'Last Name', 'alpha');
@@ -235,8 +237,12 @@ class Claim extends CI_Controller {
 								'diagnosis' => $array['expenses_claimed']['diagnosis'][$key],
 								'service_description' => $array['expenses_claimed']['service_description'][$key],
 								'date_of_service' => $array['expenses_claimed']['date_of_service'][$key],
-								'amount_billed' => $array['expenses_claimed']['amount_billed'][$key],
-								'amount_client_paid' => $array['expenses_claimed']['amount_client_paid'][$key],
+								'amount_billed_org' => $array['expenses_claimed']['amount_billed_org'][$key],
+								'amount_billed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_billed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
+								'amount_client_paid_org' => $array['expenses_claimed']['amount_client_paid_org'][$key],
+								'amount_client_paid' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_client_paid_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
+								'amount_claimed_org' => $array['expenses_claimed']['amount_claimed_org'][$key],
+								'amount_claimed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_claimed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 								'pay_to' => $array['expenses_claimed']['payee'][$key],
 								'comment' => $array['expenses_claimed']['comment'][$key],
 								'status' => Expenses_model::EXPENSE_STATUS_Pending,
@@ -368,6 +374,7 @@ class Claim extends CI_Controller {
 				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
 				$this->data['products'] = $this->product_model->get_list();
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
+				$this->data['currencies'] = $this->expenses_model->get_currencies();
 				
 				$policy = $this->input->get('policy');
 				$this->data['policy'] = array();
@@ -574,8 +581,12 @@ class Claim extends CI_Controller {
 									'diagnosis' => $array['expenses_claimed']['diagnosis'][$key],
 									'service_description' => $array['expenses_claimed']['service_description'][$key],
 									'date_of_service' => $array['expenses_claimed']['date_of_service'][$key],
-									'amount_billed' => $array['expenses_claimed']['amount_billed'][$key],
-									'amount_client_paid' => $array['expenses_claimed']['amount_client_paid'][$key],
+									'amount_billed_org' => $array['expenses_claimed']['amount_billed_org'][$key],
+									'amount_billed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_billed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
+									'amount_client_paid_org' => $array['expenses_claimed']['amount_client_paid_org'][$key],
+									'amount_client_paid' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_client_paid_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
+									'amount_claimed_org' => $array['expenses_claimed']['amount_claimed_org'][$key],
+									'amount_claimed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_claimed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 									'pay_to' => $array['expenses_claimed']['payee'][$key],
 									'comment' => $array['expenses_claimed']['comment'][$key],
 									'status' => Expenses_model::EXPENSE_STATUS_Pending,
@@ -707,6 +718,7 @@ class Claim extends CI_Controller {
 				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
 				$this->data['products'] = $this->product_model->get_list();
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
+				$this->data['currencies'] = $this->expenses_model->get_currencies();
 	
 				$policy = $this->input->get('policy');
 				if (empty($policy)) {
@@ -1211,12 +1223,12 @@ class Claim extends CI_Controller {
 				
 				// insert expenses_claimed data
 				if (! empty($array['expenses_claimed'])) {
-					$i = count($this->data['expenses_claimed']);
-					foreach ( $array['expenses_claimed']['invoice'] as $key => $val ) {
+					$i = count($array['expenses_claimed']['provider_name']);
+					foreach ( $array['expenses_claimed']['provider_name'] as $key => $val ) {
 						$i ++;
 						$item_data = array(
 								'claim_id' => $record_id,
-								'invoice' => $val,
+								'invoice' => $array['expenses_claimed']['invoice'][$key],
 								'case_no' => $array['case_no'],
 								'claim_no' => $this->data['claim_details']['claim_no'],
 								'claim_item_no' => $this->data['claim_details']['claim_no'] . '_' . $i,
@@ -1226,9 +1238,12 @@ class Claim extends CI_Controller {
 								'diagnosis' => $array['expenses_claimed']['diagnosis'][$key],
 								'service_description' => $array['expenses_claimed']['service_description'][$key],
 								'date_of_service' => $array['expenses_claimed']['date_of_service'][$key],
-								'amount_billed' => $array['expenses_claimed']['amount_billed'][$key],
-								'amount_client_paid' => $array['expenses_claimed']['amount_client_paid'][$key],
-								'amount_claimed' => $array['expenses_claimed']['amount_claimed'][$key],
+								'amount_billed_org' => $array['expenses_claimed']['amount_billed_org'][$key],
+								'amount_billed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_billed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
+								'amount_client_paid_org' => $array['expenses_claimed']['amount_client_paid_org'][$key],
+								'amount_client_paid' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_client_paid_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
+								'amount_claimed_org' => $array['expenses_claimed']['amount_claimed_org'][$key],
+								'amount_claimed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_claimed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 								'pay_to' => $array['expenses_claimed']['payee'][$key],
 								'currency' => $array['expenses_claimed']['currency'][$key],
 								'comment' => $array['expenses_claimed']['comment'][$key],
@@ -1343,14 +1358,55 @@ class Claim extends CI_Controller {
 				$this->data['docs'] = $this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
 				
 				// get all payees infomation
-				$this->data['payees'] = $this->data['payees_list'];
+				if ($this->input->post('payees')) {
+					$arr = $this->input->post('payees');
+					foreach ( $arr['bank'] as $key => $val ) {
+						$this->data['payees'][] = array(
+								'payment_type' => $this->input->post('payment_type_' . ($key + 1)),
+								'id' => $arr['id'][$key],
+								'bank' => $arr['bank'][$key],
+								'payee_name' => $arr['payee_name'][$key],
+								'account_cheque' => $arr['account_cheque'][$key],
+								'address' => $arr['address'][$key],
+						);
+					}
+				} else {
+					$this->data['payees'] = $this->data['payees_list'];
+				}
+
+				if ($this->input->post('expenses_claimed')) {
+					$this->data['expenses_claimed'] = array();
+					$arr = $this->input->post('expenses_claimed');
+					foreach ( $arr['invoice'] as $key => $val ) {
+						$this->data['expenses_claimed'][] = array(
+								'id' => $arr['id'][$key],
+								'invoice' => $arr['invoice'][$key],
+								'provider_name' => $arr['provider_name'][$key],
+								'referencing_physician' => $arr['referencing_physician'][$key],
+								'coverage_code' => $arr['coverage_code'][$key],
+								'diagnosis' => $arr['diagnosis'][$key],
+								'service_description' => $arr['service_description'][$key],
+								'date_of_service' => $arr['date_of_service'][$key],
+								'amount_billed_org' => $arr['amount_billed_org'][$key],
+								'amount_billed' => $this->expenses_model->get_currency_exchange($arr['amount_billed_org'][$key], $arr['currency'][$key], $arr['date_of_service'][$key]),
+								'amount_client_paid_org' => $arr['amount_client_paid_org'][$key],
+								'amount_client_paid' => $this->expenses_model->get_currency_exchange($arr['amount_client_paid_org'][$key], $arr['currency'][$key], $arr['date_of_service'][$key]),
+								'amount_claimed_org' => $arr['amount_claimed_org'][$key],
+								'amount_claimed' => $this->expenses_model->get_currency_exchange($arr['amount_claimed_org'][$key], $arr['currency'][$key], $arr['date_of_service'][$key]),
+								'payee' => $arr['payee'][$key],
+								'pay_to' => $arr['pay_to'][$key],
+								'currency' => $arr['currency'][$key],
+								'comment' => $arr['comment'][$key]
+						);
+					}
+				}
 				
 				// get intake forms
 				$this->data['intake_forms'] = $this->intakeform_model->get_list_by_case_id($id, 'CLAIM');
 				
 				// get all word documents
 				$this->data['word_templates'] = $this->word_comments_model->search(array());
-				$this->data['currencies'] = $this->expenses_model->get_currencies(1);
+				$this->data['currencies'] = $this->expenses_model->get_currencies();
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Claim Details', TRUE);

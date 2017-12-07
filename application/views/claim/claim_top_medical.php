@@ -598,31 +598,34 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Amount Billed:', 'amount_billed', array("class" => 'col-sm-12')); ?>
-											<?php echo $value['amount_billed']; ?>
+											<?php echo $value['amount_billed_org']; ?>
+											<?php echo form_hidden("expenses_claimed[amount_billed_org][]", $value ['amount_billed_org']); ?>
 											<?php echo form_hidden("expenses_claimed[amount_billed][]", $value ['amount_billed']); ?>
 										</div>
 										<div class="clearfix"></div>
 
 										<div class="col-sm-3">
 											<?php echo form_label('Amount Client Paid:', 'amount_client_paid', array("class" => 'col-sm-12')); ?>
-											<?php echo $value['amount_client_paid']; ?>
+											<?php echo $value['amount_client_paid_org']; ?>
+											<?php echo form_hidden("expenses_claimed[amount_client_paid_org][]", $value ['amount_client_paid_org']); ?>
 											<?php echo form_hidden("expenses_claimed[amount_client_paid][]", $value ['amount_client_paid']); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
-											<?php echo $value["amount_claimed"]; ?>
+											<?php echo $value["amount_claimed_org"]; ?>
+											<?php echo form_hidden("expenses_claimed[amount_claimed_org][]", $value ["amount_claimed_org"]); ?>
 											<?php echo form_hidden("expenses_claimed[amount_claimed][]", $value ["amount_claimed"]); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>
 											<?php echo $value["pay_to"]; ?>
 											<?php echo form_hidden("expenses_claimed[pay_to][]", $value ["pay_to"]); ?>
-											<?php echo form_hidden("expenses_claimed[payee_id][]", $value ["pay_to"]); ?>
+											<?php echo form_hidden("expenses_claimed[payee][]", $value ["payee"]); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
 											<?php echo $value ['currency']; ?>
-											<?php echo form_hidden('expenses_claimed[currency][]', $currencies, $value ['currency']); ?>
+											<?php echo form_hidden('expenses_claimed[currency][]', $value ['currency']); ?>
 										</div>
 										<div class="clearfix"></div>
 
@@ -636,7 +639,7 @@
 									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
 										<div class="col-sm-3">
 											<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed[invoice][]", $value ['invoice'], array("class" => "form-control  required")); ?>
+											<?php echo form_input("expenses_claimed[invoice][]", $value ['invoice'], array("class" => "form-control")); ?>
 											<?php echo form_hidden('expenses_claimed[id][]', $value ['id']); ?>
 										</div>
 										<div class="col-sm-3">
@@ -671,19 +674,24 @@
 											<?php echo form_input("expenses_claimed[date_of_service][]", $value ['date_of_service'], array("class" => "form-control  datepicker required")); ?>
 										</div>
 										<div class="col-sm-3">
-											<?php echo form_label('Amount Billed:', 'amount_billed', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed[amount_billed][]", $value ['amount_billed'], array("class" => "form-control required")); ?>
+											<?php echo form_label('Amount Billed:', 'amount_billed_org', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("expenses_claimed[amount_billed_org][]", $value ['amount_billed_org'], array("class" => "form-control required")); ?>
+											<?php echo form_hidden("expenses_claimed[amount_billed][]", $value ['amount_billed']); ?>
+											<?php echo form_error("amount_billed_org"); ?>
 										</div>
 										<div class="clearfix"></div>
 
 										<div class="col-sm-3">
-											<?php echo form_label('Amount Client Paid:', 'amount_client_paid', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed[amount_client_paid][]", $value ['amount_client_paid'], array("class" => "form-control required")); ?>
+											<?php echo form_label('Amount Client Paid:', 'amount_client_paid_org', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("expenses_claimed[amount_client_paid_org][]", $value ['amount_client_paid_org'], array("class" => "form-control required")); ?>
+											<?php echo form_hidden("expenses_claimed[amount_client_paid][]", $value ['amount_client_paid']); ?>
+											<?php echo form_error("amount_client_paid_org"); ?>
 										</div>
 										<div class="col-sm-3">
-											<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed[amount_claimed][]", $value ["amount_claimed"], array("class" => "form-control required")); ?>
-											<?php echo form_error("amount_claimed"); ?>
+											<?php echo form_label('Amount Claimed:', 'amount_claimed_org', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("expenses_claimed[amount_claimed_org][]", $value ["amount_claimed_org"], array("class" => "form-control required")); ?>
+											<?php echo form_hidden("expenses_claimed[amount_claimed][]", $value ["amount_claimed"]); ?>
+											<?php echo form_error("amount_claimed_org"); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>
@@ -692,10 +700,15 @@
 												<option value="<?php echo $pkey; ?>" <?php echo (($pkey == $value['pay_to']) ? "Selected" : ""); ?>><?php echo $payee['payee_name']; ?></option>
 												<?php } ?>
 											</select>
+											<?php echo form_hidden("expenses_claimed[pay_to][]", $value ["pay_to"]); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
-											<?php echo form_dropdown('expenses_claimed[currency][]', $currencies, $value ['currency'], array('class' => 'form-control required')); ?>
+											<select name="expenses_claimed[currency][]" class="form-control">
+												<?php foreach ($currencies as $currency ) { ?>
+												<option value="<?php echo $currency['name']; ?>" <?php echo ($value ['currency'] == $currency['name']) ? 'selected' : ''; ?>><?php echo $currency['name']; ?></option>
+												<?php } ?>
+											</select>
 										</div>
 										<div class="clearfix"></div>
 
@@ -967,7 +980,7 @@
 			style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
 			<div class="col-sm-3">
 				<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class" => "form-control  required")); ?>
+				<?php echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class" => "form-control")); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
@@ -1002,27 +1015,35 @@
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Amount Billed:', 'amount_billed', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[amount_billed][]", $this->input->post("amount_billed"), array("class" => "form-control required")); ?>
+				<?php echo form_input("expenses_claimed[amount_billed_org][]", $this->input->post("amount_billed_org"), array("class" => "form-control required")); ?>
+				<?php echo form_hidden("expenses_claimed[amount_billed][]", $this->input->post("amount_billed")); ?>
 			</div>
 			<div class="clearfix"></div>
 
 			<div class="col-sm-3">
 				<?php echo form_label('Amount Client Paid:', 'amount_client_paid', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class" => "form-control required")); ?>
+				<?php echo form_input("expenses_claimed[amount_client_paid_org][]", $this->input->post("amount_client_paid_org"), array("class" => "form-control required")); ?>
+				<?php echo form_hidden("expenses_claimed[amount_client_paid][]", $this->input->post("amount_client_paid")); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[amount_claimed][]", $this->input->post("amount_claimed"), array("class" => "form-control required")); ?>
+				<?php echo form_input("expenses_claimed[amount_claimed_org][]", $this->input->post("amount_claimed_org"), array("class" => "form-control required")); ?>
+				<?php echo form_hidden("expenses_claimed[amount_claimed][]", $this->input->post("amount_claimed")); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>
 				<select name="expenses_claimed[payee][]" class="form-control required">
 					<option value="">--Select Payee--</option>
 				</select>
+				<?php echo form_hidden("expenses_claimed[pay_to][]", ''); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
-				<?php echo form_dropdown('expenses_claimed[currency][]', $currencies, '', array('class' => 'form-control required')); ?>
+				<select name="expenses_claimed[currency][]" class="form-control">
+					<?php foreach ($currencies as $currency ) { ?>
+					<option value="<?php echo $currency['name']; ?>"><?php echo $currency['name']; ?></option>
+					<?php } ?>
+				</select>
 			</div>
 			<div class="clearfix"></div>
 
@@ -1048,6 +1069,7 @@
 				<div class="col-sm-2">
 					<?php echo form_radio("payment_type", "direct deposit", FALSE, array('class' => 'setpremium')); ?>
 					<?php echo form_label('Direct Deposit', 'Direct Deposit'); ?>
+					<?php echo form_hidden('payees[id][]', ''); ?>
 				</div>
 			</div>
 			<br />
@@ -1586,7 +1608,7 @@
                $(".modal-content").addClass("csspinner load1");
             },
             success: function() {
-               //XXXXXXXXX window.location.reload();
+               window.location.reload();
             }
          })
    })

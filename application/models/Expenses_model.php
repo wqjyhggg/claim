@@ -54,19 +54,27 @@ class Expenses_model extends CI_Model {
 	/**
 	 * 
 	 */
-	public function get_currencies($withempty=FALSE) {
-		$rt =  array(
-				0 => '-- Select Currency --',
-				'CAD' => 'CAD',
-				'USD' => 'USD',
-				'CNY' => 'CNY',
-		);
-		if (!$withempty) {
-			unset($rt[0]);
-		}
-		return $rt;
+	public function get_currencies() {
+		$this->db->where('active', 1);
+		$this->db->order_by('orderby', 'ASC');
+		return $this->db->get('currency')->result_array();
 	}
-	
+
+	public function get_currency_exchange($amount, $currency, $dt) {
+		//$this->db->reset_query();
+		$this->db->where('name', $currency);
+		$this->db->where('dt', $dt);
+		if ($rc = $this->db->get('currency_exchange')->row_array()) {
+			return ($amount * $rc['rate']);
+		}
+		$this->db->where('name', $currency);
+		$this->db->order_by('dt', 'DESC');
+		$this->db->limit(1);
+		if ($rc = $this->db->get('currency_exchange')->row_array()) {
+			return ($amount * $rc['rate']);
+		}
+		return $amount;
+	}
 	/**
 	 * 
 	 */
@@ -150,8 +158,11 @@ class Expenses_model extends CI_Model {
 	 * @return int				inserted array ID
 	 */
 	public function save($data) {
-		if ($data['status'] === self::EXPENSE_STATUS_Paid) {
+		if (isset($data['status']) && ($data['status'] === self::EXPENSE_STATUS_Paid)) {
 			$data['pay_date'] = date("Y-m-d");
+		}
+		if (isset($data['currency']) && empty($data['currency'])) {
+			$data['currency'] = "CAD";
 		}
 		if (isset($data['id'])) {
 			// Update

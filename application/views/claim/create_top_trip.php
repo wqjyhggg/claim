@@ -630,6 +630,50 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="payee-data">
+								<?php $payees = array(); ?>
+								<?php if ($this->input->post('payees')) : ?>
+								<?php     $arr = $this->input->post('payees'); ?>
+								<?php     $i = 0; ?>
+								<?php     foreach ($arr['bank'] as $key => $value ) : ?>
+								<?php         $i++; ?>
+								<?php         if ($this->input->post('payment_type_' . $i) == 'cheque') { ?>
+								<?php             $payees["cheque : " . $arr["payee_name"][$key] . " : " . $arr["address"][$key]] = $arr["payee_name"][$key]; ?>
+								<?php         } else { ?>
+								<?php             $payees["direct deposit : " . $arr["payee_name"][$key] . " : " . $arr["bank"][$key] . " : " . $arr["account_cheque"][$key]] = $arr["payee_name"][$key]; ?>
+								<?php         } ?>
+								<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
+									<div class="col-sm-12">
+										<div class="col-sm-2">
+											<?php echo form_radio("payment_type_" . $i, "cheque", ($this->input->post('payment_type_' . $i) == 'cheque' ? TRUE : FALSE), array('class' => 'setpremium')); ?>
+											<?php echo form_label('Cheque:', 'Cheque'); ?>
+										</div>
+										<div class="col-sm-2">
+											<?php echo form_radio("payment_type_" . $i, "direct deposit", ($this->input->post('payment_type_' . $i) == 'direct deposit' ? TRUE : FALSE), array('class' => 'setpremium')); ?>
+											<?php echo form_label('Direct Deposit', 'Direct Deposit'); ?>
+											<?php echo form_hidden('payees[id][]', 0); ?>
+										</div>
+									</div>
+									<br />
+									<div class="col-sm-3 wire_transfer_section" <?php echo ($this->input->post('payment_type_' . $i) <> 'direct deposit'?'style="display:none"':''); ?>>
+										<?php echo form_label('Bank Name:', 'Bank Name', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("payees[bank][]", $arr["bank"][$key], array("class" => "form-control", 'placeholder' => 'Bank Name')); ?>
+									</div>
+									<div class="col-sm-3 cheque_section wire_transfer_section">
+										<?php echo form_label('Payee Name:', 'Payee Name', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("payees[payee_name][]", $arr["payee_name"][$key], array("class" => "form-control required", 'placeholder' => 'Payee Name')); ?>
+									</div>
+									<div class="col-sm-3 wire_transfer_section" <?php echo ($this->input->post('payment_type_' . $i) <> 'direct deposit'?'style="display:none"':''); ?>>
+										<?php echo form_label('Account#:', 'Account', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("payees[account_cheque][]", $arr["account_cheque"][$key], array("class" => "form-control", 'placeholder' => 'Account#')); ?>
+									</div>
+									<div class="col-sm-3 cheque_section" <?php echo ($this->input->post('payment_type_' . $i) == 'direct deposit'?'style="display:none"':''); ?>>
+										<?php echo form_label('Address:', 'Address', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("payees[address][]", $arr["address"][$key], array("class" => "form-control " . ($this->input->post('payment_type_' . $i) == 'direct deposit' ? '' : 'required'), 'placeholder' => 'Address')); ?>
+									</div>
+									<div class="col-sm-3"><label class='col-sm-12'>&nbsp;</label> <i class="col-sm-3 fa fa-trash row-link remove-payee"></i></div>
+								</div>
+								<?php     endforeach; ?>
+								<?php endif; ?>
 							</div>
 						</div>
 					</div>
@@ -637,7 +681,98 @@
 					<h2 class="move_down">Expenses Claimed <button class="btn btn-primary add_new_expenses" type="button">Add new expenses item</button><i class="fa fa-angle-up pull-right"></i></h2>
 					<div class="row">
 						<div class="col-sm-12">
-							<div class="expenses-list"></div>
+							<div class="expenses-list">
+								<?php if ($this->input->post('expenses_claimed')) : ?>
+								<?php $arr = $this->input->post('expenses_claimed'); ?>
+								<?php foreach($arr['provider_name'] as $key => $value ) : ?>
+								<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
+									<div class="col-sm-3">
+										<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("expenses_claimed[invoice][]", $arr['invoice'][$key], array("class" => "form-control")); ?>
+										<?php echo form_hidden('expenses_claimed[id][]', $arr['id'][$key]); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("expenses_claimed[provider_name][]", $arr['provider_name'][$key], array("class" => "form-control required")); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("expenses_claimed[referencing_physician][]", $arr['referencing_physician'][$key], array("class" => "form-control")); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
+										<select name="expenses_claimed[coverage_code][]" class="form-control required">
+											<option value="0">-- Select Coverage Code --</option>
+											<?php foreach ($expenses_list as $key1 => $val): ?>
+											<option value="<?php echo $key1; ?>" <?php if ($key1 == $arr["coverage_code"][$key]) { echo "selected"; } ?>><?php echo $val; ?></option>
+											<?php endforeach; ?>
+										</select>
+									</div>
+									<div class="clearfix"></div>
+
+									<div class="col-sm-3">
+										<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("expenses_claimed[diagnosis][]", $arr['diagnosis'][$key], array("class" => "form-control autocomplete_field required")); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("expenses_claimed[service_description][]", $arr['service_description'][$key], array("class" => "form-control")); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("expenses_claimed[date_of_service][]", $arr['date_of_service'][$key], array("class" => "form-control  datepicker required")); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Amount Billed:', 'amount_billed_org', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("expenses_claimed[amount_billed_org][]", $arr['amount_billed_org'][$key], array("class" => "form-control required")); ?>
+										<?php echo form_hidden("expenses_claimed[amount_billed][]", $arr['amount_billed'][$key]); ?>
+										<?php echo form_error("amount_billed_org"); ?>
+									</div>
+									<div class="clearfix"></div>
+
+									<div class="col-sm-3">
+										<?php echo form_label('Amount Client Paid:', 'amount_client_paid_org', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("expenses_claimed[amount_client_paid_org][]", $arr['amount_client_paid_org'][$key], array("class" => "form-control required")); ?>
+										<?php echo form_hidden("expenses_claimed[amount_client_paid][]", $arr['amount_client_paid'][$key]); ?>
+										<?php echo form_error("amount_client_paid_org"); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("expenses_claimed[amount_claimed_org][]", $arr["amount_claimed_org"][$key], array("class" => "form-control required")); ?>
+										<?php echo form_hidden("expenses_claimed[amount_claimed][]", $arr["amount_claimed"][$key]); ?>
+										<?php echo form_error("amount_claimed_org"); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>
+										<select name="expenses_claimed[payee][]" class="form-control required">
+											<?php if ($payees) { ?> 
+											<?php foreach ( $payees as $pkey => $payee ) { ?> 
+											<option value="<?php echo $pkey; ?>" <?php echo (($pkey == $arr['payee'][$key]) ? "Selected" : ""); ?>><?php echo $payee; ?></option>
+											<?php } ?>
+											<?php } ?>
+										</select>
+										<?php echo form_hidden("expenses_claimed[pay_to][]", $arr["pay_to"][$key]); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
+										<select name="expenses_claimed[currency][]" class="form-control">
+											<?php foreach ($currencies as $currency ) { ?>
+											<option value="<?php echo $currency['name']; ?>" <?php echo ($arr['currency'][$key] == $currency['name']) ? 'selected' : ''; ?>><?php echo $currency['name']; ?></option>
+											<?php } ?>
+										</select>
+									</div>
+									<div class="clearfix"></div>
+
+									<div class="col-sm-3">
+										<?php echo form_label('Comment:', 'comment', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("expenses_claimed[comment][]", $arr['comment'][$key], array("class" => "form-control")); ?>
+									</div>
+									
+									<div class="col-sm-3 pull-right"><i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i></div>
+								</div>
+								<?php endforeach; ?>
+								<?php endif; ?>
+							</div>
 						</div>
 					</div>
 
@@ -842,61 +977,81 @@
 		<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
 			<div class="col-sm-3">
 				<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class" => "form-control  required")); ?>
+				<?php echo form_input("expenses_claimed[invoice][]", '', array("class" => "form-control")); ?>
+				<?php echo form_hidden('expenses_claimed[id][]', ''); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[provider_name][]", $this->input->post("provider_name"), array("class" => "form-control required alphanum")); ?>
+				<?php echo form_input("expenses_claimed[provider_name][]", '', array("class" => "form-control required alphanum")); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[referencing_physician][]", $this->input->post("referencing_physician"), array("class" => "form-control alphanum")); ?>
+				<?php echo form_input("expenses_claimed[referencing_physician][]", '', array("class" => "form-control alphanum")); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
 				<select name="expenses_claimed[coverage_code][]" class="form-control required">
 					<option value="0">-- Select Coverage Code --</option>
 					<?php foreach ($expenses_list as $key => $val): ?>
-					<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post("coverage_code")) { echo "selected"; } ?>><?php echo $val; ?></option>
+					<option value="<?php echo $key; ?>"><?php echo $val; ?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[diagnosis][]", $this->input->post("diagnosis"), array("class" => "form-control autocomplete_field required")); ?>
+				<?php echo form_input("expenses_claimed[diagnosis][]", '', array("class" => "form-control autocomplete_field required")); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[service_description][]", $this->input->post("service_description"), array("class" => "form-control")); ?>
+				<?php echo form_input("expenses_claimed[service_description][]", '', array("class" => "form-control")); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[date_of_service][]", $this->input->post("date_of_service"), array("class" => "form-control  datepicker required")); ?>
+				<?php echo form_input("expenses_claimed[date_of_service][]", '', array("class" => "form-control  datepicker required")); ?>
 			</div>
 			<div class="col-sm-3">
-				<?php echo form_label('Amount Billed:', 'amount_billed', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[amount_billed][]", $this->input->post("amount_billed"), array("class" => "form-control required")); ?>
-				<?php echo form_error("amount_billed"); ?>
+				<?php echo form_label('Amount Billed:', 'amount_billed_org', array("class" => 'col-sm-12')); ?>
+				<?php echo form_input("expenses_claimed[amount_billed_org][]", '', array("class" => "form-control required")); ?>
+				<?php echo form_hidden("expenses_claimed[amount_billed][]", ''); ?>
+				<?php echo form_error("amount_billed_org"); ?>
 			</div>
 			<div class="col-sm-3">
-				<?php echo form_label('Amount Client Paid:', 'amount_client_paid', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[amount_client_paid][]", $this->input->post("amount_client_paid"), array("class" => "form-control required")); ?>
-				<?php echo form_error("amount_client_paid"); ?>
+				<?php echo form_label('Amount Client Paid:', 'amount_client_paid_org', array("class" => 'col-sm-12')); ?>
+				<?php echo form_input("expenses_claimed[amount_client_paid_org][]", '', array("class" => "form-control required")); ?>
+				<?php echo form_hidden("expenses_claimed[amount_client_paid][]", ''); ?>
+				<?php echo form_error("amount_client_paid_org"); ?>
 			</div>
 			<div class="col-sm-3">
-				<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[amount_claimed][]", $this->input->post("amount_claimed"), array("class" => "form-control required")); ?>
-				<?php echo form_error("amount_claimed"); ?>
+				<?php echo form_label('Amount Claimed:', 'amount_claimed_org', array("class" => 'col-sm-12')); ?>
+				<?php echo form_input("expenses_claimed[amount_claimed_org][]", '', array("class" => "form-control required")); ?>
+				<?php echo form_hidden("expenses_claimed[amount_claimed][]", ''); ?>
+				<?php echo form_error("amount_claimed_org"); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>
 				<select name="expenses_claimed[payee][]" class="form-control required">
 					<option value="">--Select Payee--</option>
+					<?php if ($payees) { ?> 
+					<?php foreach ( $payees as $pkey => $payee ) { ?> 
+					<option value="<?php echo $pkey; ?>" <?php echo (($pkey == $arr['payee'][$key]) ? "Selected" : ""); ?>><?php echo $payee; ?></option>
+					<?php } ?>
+					<?php } ?>
 				</select>
+				<?php echo form_hidden("expenses_claimed[pay_to][]", ''); ?>
 			</div>
 			<div class="col-sm-3">
+				<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
+				<select name="expenses_claimed[currency][]" class="form-control required">
+					<?php foreach ($currencies as $currency ) { ?>
+					<option value="<?php echo $currency['name']; ?>"><?php echo $currency['name']; ?></option>
+					<?php } ?>
+				</select>
+			</div>
+			<div class="clearfix"></div>
+
+			<div class="col-sm-3">
 				<?php echo form_label('Comment:', 'comment', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[comment][]", $this->input->post("comment"), array("class" => "form-control")); ?>
+				<?php echo form_input("expenses_claimed[comment][]", '', array("class" => "form-control")); ?>
 			</div>
 			<div class="col-sm-3">
 				<i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i>
@@ -917,6 +1072,7 @@
 				<div class="col-sm-2">
 					<?php echo form_radio("payment_type", "direct deposit", FALSE, array('class' => 'setpremium')); ?>
 					<?php echo form_label('Direct Deposit', 'Direct Deposit'); ?>
+					<?php echo form_hidden("payees[id][]", ''); ?>
 				</div>
 			</div>
 			<br />
@@ -981,8 +1137,11 @@
       })
 
       // load atleast one claim item form for first use
-      var html = $(".base-row").html();
-      $(".expenses-list").append(html);
+      var curhtml = $.trim($(".expenses-list").html());
+      if (curhtml.length == 0) {
+	      var html = $(".base-row").html();
+	      $(".expenses-list").append(html);
+      }
       $(".autocomplete_field").autocomplete({
         serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
         minLength: 2,
