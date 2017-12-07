@@ -200,8 +200,8 @@ class Auth extends CI_Controller {
 				
 				$this->data ['task_details'] = $task_details;
 
-				$this->data ['priorities'] = $this->mytask_model->get_all_priority();
-				$this->data ['statuses'] = $this->mytask_model->get_all_status();
+				$this->data ['priorities'] = $this->mytask_model->get_priorities();
+				$this->data ['statuses'] = $this->mytask_model->get_status();
 				/*
 				$para = array('groups' => Users_model::GROUP_EAC);
 				$this->data['eacs'] = $this->users_model->search($para);

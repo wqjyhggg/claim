@@ -8,9 +8,6 @@ if (! defined ( 'BASEPATH' ))	exit ( 'No direct script access allowed' );
  */
 	
 class Case_model extends CI_Model {
-	const CASE_PRIORITY_HIGH="High";
-	const CASE_PRIORITY_NORMAL="Normal";
-	
 	const STATUS_CLOSED="C";
 	const STATUS_DEACTIVE="D";
 	const STATUS_ACTIVE="A";
@@ -20,13 +17,6 @@ class Case_model extends CI_Model {
 				self::STATUS_CLOSED => 'Closed',
 				self::STATUS_DEACTIVE => 'Deactive',
 				self::STATUS_ACTIVE => 'Active'
-		);
-	}
-	
-	public function get_priorities() {
-		return array(
-				self::CASE_PRIORITY_NORMAL,
-				self::CASE_PRIORITY_HIGH
 		);
 	}
 	

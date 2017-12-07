@@ -195,13 +195,11 @@
                      <?php else:?>
                         <thead>
                            <tr>
-                              <th>&nbsp;</th>
+                              <th></th>
                               <th>Policy No</th>
-                              <th>ID</th>
                               <th>Name</th>
                               <th>Date of Birth</th>
                               <th>Status</th>
-                              <th>Effect Date</th>
                               <th>Agent</th>
                               <th>Action</th>
                            </tr>
@@ -211,11 +209,9 @@
                            <tr class="view-policy" <?php if (!empty($value['has_claim'])) { ?>style='background-color:#efc7c7' <?php } ?> data='<?php echo json_encode($value); ?>'>
                               <td><?php echo form_checkbox('select_policy', $value['policy']); ?></td>
                               <td><?php echo $value['policy']; ?></td>
-                              <td><?php echo $value['plan_id']; ?></td>
                               <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
                               <td><?php echo $value['birthday']; ?></td>
                               <td><?php echo $policy_status['array'][$value['status_id']]; ?></td>
-                              <td><?php echo $value['effective_date']; ?></td>
                               <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
                               <td><?php echo anchor("emergency_assistance/view_policy/" . $value['policy'], "Open"); ?></td>
                            </tr>

@@ -693,8 +693,6 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['my_user_id'] = $this->ion_auth->get_user_id();
 				$this->data['note_update_url'] = base_url('emergency_assistance/updatenotes');
 				
-				// $this->data['priorities'] = $this->case_model->get_priorities();
-				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Edit Case', TRUE);
 				$this->template->write_view('content', 'emergency_assistance/edit_case', $this->data);
@@ -1003,7 +1001,9 @@ class Emergency_assistance extends CI_Controller {
 			$this->data['create_case_url'] = base_url('emergency_assistance/create_case');
 			
 			$this->load->model('api_model');
-			
+			$this->load->model('case_model');
+			$this->load->model('claim_model');
+				
 			$policies = $this->api_model->get_policy(array(
 					'policy' => $policy 
 			));
@@ -1031,7 +1031,24 @@ class Emergency_assistance extends CI_Controller {
 					}
 				}
 			}
-			
+			$this->data['policy_status'] = $this->api_model->status_list;
+			$this->data['cases'] = $this->case_model->search(array('policy_no' => $this->data['policy']['policy']));
+			foreach ($this->data['cases'] as $k => $v) {
+				$u = $this->users_model->get_by_id($v['assign_to']);
+				if ($u) $this->data['cases'][$k]['assign_to_email'] = $u['email'];
+				else    $this->data['cases'][$k]['assign_to_email'] = '';
+				$u = $this->users_model->get_by_id($v['case_manager']);
+				if ($u) $this->data['cases'][$k]['case_manager_email'] = $u['email'];
+				else    $this->data['cases'][$k]['case_manager_email'] = '';
+			}
+			$this->data['claims'] = $this->claim_model->search(array('policy_no' => $this->data['policy']['policy']));
+			//echo "<pre>"; print_r($this->data['claims']); die("XX"); //XXXXXXXXXXXXXXXX
+			foreach ($this->data['claims'] as $k => $v) {
+				$u = $this->users_model->get_by_id($v['assign_to']);
+				if ($u) $this->data['claims'][$k]['assign_to_email'] = $u['email'];
+				else    $this->data['claims'][$k]['assign_to_email'] = '';
+			}
+				
 			// get countries list
 			$this->data['countries'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->input->get("country2"), $key = "short_code", $value = "name");
 			
@@ -1890,7 +1907,7 @@ class Emergency_assistance extends CI_Controller {
 				$new_task['user_id'] = $employee_id;
 				$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
 				$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
-				$new_task['priority'] = Mytask_model::PRIORITY_NORMAL;
+				$new_task['priority'] = Mytask_model::PRIORITY_LOW;
 				$new_task['status'] = Mytask_model::STATUS_REASSIGNED;
 				$new_task['finished'] = 0;
 				$new_task['notes'] = "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $tasks[0]['notes'];
@@ -1902,7 +1919,7 @@ class Emergency_assistance extends CI_Controller {
 				$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
 				$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
 				$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
-				$new_task['priority'] = Mytask_model::PRIORITY_NORMAL;
+				$new_task['priority'] = Mytask_model::PRIORITY_LOW;
 				$new_task['created_by'] = $this->ion_auth->get_user_id();
 				$new_task['created'] = date("Y-m-d H:i:s");
 				$new_task['user_type'] = Mytask_model::USER_TYPE_EAC;

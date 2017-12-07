@@ -28,6 +28,9 @@
 					<div class="form-group col-sm-3">
 						<label style="text-transform: capitalize;"><span>By Agent: </span><spanclass="agent_firstname"><?php echo (isset($policy['agent_firstname']) ? $policy['agent_firstname'] : ''); ?></span> <span class="agent_lastname"><?php echo (isset($policy['agent_lastname']) ? $policy['agent_lastname'] : ''); ?></span></label>
 					</div>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;"><span>Status: </span><?php echo (isset($policy['status_id']) ? $policy_status[$policy['status_id']]['name'] : ''); ?></span></label>
+					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-12">
@@ -51,6 +54,11 @@
 								<div class="form-group col-sm-3">
 									<label><span>Days : </span></label> <span class="totaldays"><?php echo (isset($policy['totaldays']) ? $policy['totaldays'] : ''); ?></span>
 								</div>
+								<?php if (isset($policy['status_id']) && ($policy['status_id'] == 6)) : ?>
+								<div class="form-group col-sm-3">
+									<label><span>Refund date : </span></label> <span class="refund_date"><?php echo (isset($policy['refund_date']) ? $policy['refund_date'] : ''); ?></span>
+								</div>
+								<?php endif; ?>
 							</div>
 						</fieldset>
 					</div>
@@ -202,6 +210,76 @@
 				<div class="row">
 					<div class="col-sm-12"></div>
 				</div>
+				<?php if(!empty($cases)) : ?>
+				<div class="table-responsive">
+					<table class="table table-hover table-bordered">
+						<thead>
+							<tr>
+								<th>Case Number</th>
+								<th>Create Date</th>
+								<th>Reason</th>
+								<th>Insured Name</th>
+								<th>Follow Up EAC</th>
+								<th>Case Manager</th>
+								<th>Priority</th>
+								<th>Status</th>
+								<th>Last Update</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <?php foreach ($cases as $value): ?>
+                              <tr class="view-policies" data='<?php echo json_encode($value); ?>'>
+                                 <td><?php echo anchor("emergency_assistance/edit_case/".$value['id'], $value['case_no']); ?></td>
+                                 <td><?php echo substr($value['created'], 0, 10); ?></td>
+                                 <td><?php echo $value['reason']; ?></td>
+                                 <td><?php echo $value['insured_firstname'] . " " . $value['insured_lastname']; ?></td>
+                                 <td><?php echo $value['assign_to_email']; ?></td>
+                                 <td><?php echo $value['case_manager_email']; ?></td>
+                                 <td><?php echo $value['priority']; ?></td>
+                                 <td><?php echo ($value['status'] == 'A') ? "Active" : "Inactive"; ?></td>
+                                 <td><?php echo substr($value['last_update'], 0, 10); ?></td>
+                              </tr>
+                           <?php endforeach; ?>
+                        </tbody>
+                  </table>
+               </div>               
+               <?php else:?>
+               <center><?php echo heading("No related case", 4); ?></center>
+               <?php endif;?>
+				<br>
+				<div class="row">
+					<div class="col-sm-12"></div>
+				</div>
+				<?php if(!empty($claims)) : ?>
+				<div class="table-responsive">
+					<table class="table table-hover table-bordered">
+						<thead>
+							<tr>
+								<th>Claim Number</th>
+								<th>Create Date</th>
+								<th>Insured Name</th>
+								<th>Examiner</th>
+								<th>Status</th>
+								<th>Last Update</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <?php foreach ($claims as $value): ?>
+                              <tr class="view-policies" data='<?php echo json_encode($value); ?>'>
+                                 <td><?php echo anchor("claim/claim_detail/".$value['id'], $value['claim_no']); ?></td>
+                                 <td><?php echo substr($value['created'], 0, 10); ?></td>
+                                 <td><?php echo $value['insured_first_name'] . " " . $value['insured_last_name']; ?></td>
+                                 <td><?php echo $value['assign_to_email']; ?></td>
+                                 <td><?php echo $value['status']; ?></td>
+                                 <td><?php echo substr($value['last_update'], 0, 10); ?></td>
+                              </tr>
+                           <?php endforeach; ?>
+                        </tbody>
+                  </table>
+               </div>               
+               <?php else:?>
+               <center><?php echo heading("No related case", 4); ?></center>
+               <?php endif;?>
 			</div>
 		</div>
 	</div>

@@ -21,46 +21,13 @@ class Mytask_model extends CI_Model {
 	const PRIORITY_CRITICAL='Critical';
 	const PRIORITY_HIGH='High';
 	const PRIORITY_MEDIUM='Medium';
-	const PRIORITY_NORMAL='Normal';
+	const PRIORITY_LOW='Low';
 	
 	const STATUS_ASSIGNED='Assigned';
 	const STATUS_REASSIGNED='Reassigned';
 	const STATUS_ONGOING='Ongoing';
 	const STATUS_COMPLETED='Completed';
 	const STATUS_CANCELLED='Cancelled';
-	
-	/**
-	 * Return a list of status
-	 *
-	 * @param integer $id
-	 *        	search parameter
-	 * @return array result array, maybe null
-	 */
-	public function get_all_priority() {
-		return array(
-				self::PRIORITY_CRITICAL,
-				self::PRIORITY_HIGH,
-				self::PRIORITY_MEDIUM,
-				self::PRIORITY_NORMAL,
-		);
-	}
-	
-	/**
-	 * Return a list of status
-	 *
-	 * @param integer $id
-	 *        	search parameter
-	 * @return array result array, maybe null
-	 */
-	public function get_all_status() {
-		return array(
-				self::STATUS_ASSIGNED,
-				self::STATUS_REASSIGNED,
-				self::STATUS_ONGOING,
-				self::STATUS_COMPLETED,
-				self::STATUS_CANCELLED,
-		);
-	}
 	
 	/**
 	 * Return a list of mytask
@@ -105,7 +72,7 @@ class Mytask_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function get_priorities() {
-		return array(self::PRIORITY_CRITICAL, self::PRIORITY_HIGH, self::PRIORITY_MEDIUM, self::PRIORITY_NORMAL);
+		return array(self::PRIORITY_CRITICAL, self::PRIORITY_HIGH, self::PRIORITY_MEDIUM, self::PRIORITY_LOW);
 	}
 	
 	/**

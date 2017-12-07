@@ -790,7 +790,7 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed[service_description][]", $value ['service_description'], array("class" => "form-control")); ?>
+											<?php echo form_input("expenses_claimed[service_description][]", $value ['service_description'], array("class" => "form-control required")); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
@@ -827,7 +827,8 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
-											<select name="expenses_claimed[currency][]" class="form-control">
+											<select name="expenses_claimed[currency][]" class="form-control required">
+												<option value="" <?php echo (empty($value['currency'])) ? 'selected' : ''; ?>>-- Select Currency --</option>
 												<?php foreach ($currencies as $currency ) { ?>
 												<option value="<?php echo $currency['name']; ?>" <?php echo ($value ['currency'] == $currency['name']) ? 'selected' : ''; ?>><?php echo $currency['name']; ?></option>
 												<?php } ?>
@@ -1130,7 +1131,7 @@
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[service_description][]", $this->input->post("service_description"), array("class" => "form-control")); ?>
+				<?php echo form_input("expenses_claimed[service_description][]", $this->input->post("service_description"), array("class" => "form-control required")); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
@@ -1162,7 +1163,8 @@
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
-				<select name="expenses_claimed[currency][]" class="form-control">
+				<select name="expenses_claimed[currency][]" class="form-control required">
+					<option value="">-- Select Currency --</option>
 					<?php foreach ($currencies as $currency ) { ?>
 					<option value="<?php echo $currency['name']; ?>"><?php echo $currency['name']; ?></option>
 					<?php } ?>
