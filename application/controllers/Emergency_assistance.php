@@ -119,8 +119,9 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('insured_firstname', 'Insured First Name', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			
+			$this->form_validation->set_rules('reserve_amount', 'Reserver Amount', 'numeric|required');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
-			
+
 			if ($this->form_validation->run() == TRUE) {
 				// prepare post data array
 				$data = [];
@@ -313,7 +314,8 @@ class Emergency_assistance extends CI_Controller {
 				$case_details['medical_notes'] = '';
 				$case_details['case_manager'] = '';
 				$case_details['priority'] = '';
-
+				$case_details['reserve_amount'] = '';
+				
 				$this->data['policy'] = array();
 				if (empty($case_details['policy_no'])) {
 					$policy = $this->input->get('policy');
@@ -452,9 +454,7 @@ class Emergency_assistance extends CI_Controller {
 			
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 			
-			if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
-				$this->form_validation->set_rules('reserve_amount', 'Create Reservers', 'numeric|required');
-			}
+			$this->form_validation->set_rules('reserve_amount', 'Reserver Amount', 'numeric|required');
 			
 			if ($this->form_validation->run() == TRUE) {
 				if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) {

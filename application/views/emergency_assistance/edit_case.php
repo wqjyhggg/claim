@@ -407,18 +407,14 @@
 							</select>
 							<?php echo form_error("priority"); ?>
 						</div>
-						<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) { ?>
 						<div class="form-group col-sm-12">
 							<h4>Reservers C$ </h4>
-							<?php echo form_label('Create Reservers:', 'reserve_amount', array("class"=>'col-sm-12')); ?>
+							<?php echo form_label('Reserver Amount:', 'reserve_amount', array("class"=>'col-sm-12')); ?>
 							<div class="form-group col-sm-4">
-								<?php echo form_input("reserve_amount", $case_details["reserve_amount"], array("class"=>"form-control", 'placeholder'=>'Create Reservers')); ?>
+								<?php echo form_input("reserve_amount", $case_details["reserve_amount"], array("class"=>"form-control", 'placeholder'=>'Reserver Amount')); ?>
 								<?php echo form_error("reserve_amount"); ?>
 							</div>
 						</div>
-						<?php } else { ?>
-						<input type='hidden' name='reserve_amount' value='<?php echo $case_details['reserve_amount']; ?>'>
-						<?php } ?>
 						<?php if (! $this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
 						<div class="col-sm-12">
 							<label class="col-sm-12">&nbsp;</label>

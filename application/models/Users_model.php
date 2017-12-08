@@ -185,6 +185,9 @@ class Users_model extends CI_Model {
 	}
 
 	public function verify_users_product($product_short, $user_id=0) {
+		if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+			return TRUE;
+		}
 		if (empty($user_id)) {
 			$user_id = $this->ion_auth->get_user_id();
 		}

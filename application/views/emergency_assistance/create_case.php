@@ -404,7 +404,15 @@
 							</select>
 							<?php echo form_error("priority"); ?>
 						</div>
-						<div class="col-sm-4">
+						<div class="form-group col-sm-12">
+							<h4>Reservers C$ </h4>
+							<?php echo form_label('Reserver Amount:', 'reserve_amount', array("class"=>'col-sm-12')); ?>
+							<div class="form-group col-sm-4">
+								<?php echo form_input("reserve_amount", $case_details["reserve_amount"], array("class"=>"form-control", 'placeholder'=>'Reserver Amount')); ?>
+								<?php echo form_error("reserve_amount"); ?>
+							</div>
+						</div>
+						<div class="col-sm-12">
 							<label class="col-sm-12">&nbsp;</label>
 							<button class="btn btn-primary">Save</button>
 							<!-- button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create Note</button -->
