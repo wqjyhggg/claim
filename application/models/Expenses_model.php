@@ -181,6 +181,10 @@ class Expenses_model extends CI_Model {
 			}
 			return 0;
 		} else {
+			if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT)) && ($data['status'] == self::EXPENSE_STATUS_Paid)) {
+				// No change if not account
+				return 0;
+			}
 			// insert
 			$data['created_by'] = $this->ion_auth->get_user_id();
 			$this->db->insert('expenses_claimed', $data);
