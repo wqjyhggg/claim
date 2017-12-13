@@ -1051,7 +1051,7 @@ class Claim extends CI_Controller {
 				$this->data['word_templates'] = $this->word_comments_model->search(array()); // $this->common_model->select($record = "list", $typecast = "array", $table = "word_comments", $fields);
 				
 				// get status
-				$this->data['examine_status'] = $this->expenses_model->get_status();
+				$this->data['examine_status'] = $this->expenses_model->get_status(1);
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Examine Claim', TRUE);

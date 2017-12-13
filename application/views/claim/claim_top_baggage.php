@@ -856,7 +856,7 @@
 								<?php echo anchor('claim/examine_claim/'.$claim_details['id'], 'Examine', array('class'=>'btn btn-primary'))?>
 							</div>
 							<?php } ?>
-							<?php if (!$this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
+							<?php if (0 && !$this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
 							<div class="col-sm-2">
 								<input class="btn btn-primary email_print" data-toggle="modal" name="Email" value="Email/Print" type="button" data-target="#print_template">
 							</div>

@@ -78,16 +78,15 @@ class Expenses_model extends CI_Model {
 	/**
 	 * 
 	 */
-	public function get_status($withempty=TRUE) {
+	public function get_status($nopaid=FALSE) {
 		$rt =  array(
-				0 => '-- Select Status --',
 				'Pending' => self::EXPENSE_STATUS_Pending,
 				'Approved' => self::EXPENSE_STATUS_Approved,
 				'Declined' => self::EXPENSE_STATUS_Declined,
 				'Paid' => self::EXPENSE_STATUS_Paid,
 		);
-		if (!$withempty) {
-			unset($rt[0]);
+		if ($nopaid) {
+			unset($rt['Paid']);
 		}
 		return $rt;
 	}

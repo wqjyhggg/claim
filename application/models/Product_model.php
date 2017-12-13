@@ -23,8 +23,8 @@ class Product_model extends CI_Model {
 			$rArr[0] = '-- Select Product--';
 		}
 		foreach ($rt as $rc) {
-			// $rArr[$rc['product_short']] = $rc['full_name'];
-			$rArr[$rc['product_short']] = $rc['product_short'];
+			$rArr[$rc['product_short']] = $rc['full_name'];
+			//$rArr[$rc['product_short']] = $rc['product_short'];
 		}
 		return $rArr;
 	}

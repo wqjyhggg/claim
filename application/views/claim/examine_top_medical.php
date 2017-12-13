@@ -376,7 +376,7 @@
 									$total_payable += (float)$value['amt_payable'];
 									$total_this_payable += (float)$value['amt_payable'];
 								?>
-									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable='<?php echo $value['amt_payable'] ?>' item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_comment='<?php echo nl2br($value['comment']) ?>'>
+									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable='<?php echo $value['amt_payable'] ?>' item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to='<?php echo nl2br($value['pay_to']) ?>' item_comment='<?php echo nl2br($value['comment']) ?>'>
 										<td><?php echo form_checkbox("items", $value['id'], FALSE); ?></td>
 										<td><?php echo $value['claim_item_no']; ?></td>
 										<td><?php echo $value['invoice']; ?></td>
@@ -442,10 +442,22 @@
 													<label class="col-sm-12">Last Update : </label>
 													<div class='col-sm-12'><?php echo $value['last_update']; ?></div>
 												</div>
+												<?php if ($value['status'] != Expenses_model::EXPENSE_STATUS_Paid) { ?>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Status : </label>
 													<div class='col-sm-12'><?php echo form_dropdown ( "status", $examine_status, $value['status'], array () ); ?></div>
 												</div>
+												<?php } else { ?>
+												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Status : </label>
+													<div class='col-sm-12'><?php echo $value['status']; ?></div>
+													<?php echo form_hidden("status", $value['status']); ?>
+												</div>
+												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Paid Date : </label>
+													<div class='col-sm-12'><?php echo $value['pay_date']; ?></div>
+												</div>
+												<?php } ?>
 												<div class="clearfix"></div>
 												
 												<div class="form-group col-sm-3">
@@ -467,9 +479,11 @@
 														</select>
 													</div>
 												</div>
+												<?php if ($value['status'] != Expenses_model::EXPENSE_STATUS_Paid) { ?>
 												<div class="form-group col-sm-3">
 													<div class='col-sm-12'><?php echo form_submit("Save", "Save", 'class="btn btn-primary"'); ?></div>
 												</div>
+												<?php } ?>
 											<?php echo form_close(); ?>
 											</div>
 										</td>
@@ -506,7 +520,7 @@
 								<?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
 							</div>
 							<div class="col-sm-2">
-								<?php echo anchor("claim/claim_detail/".$claim['id'], "Edit Detail", array("class"=>'btn btn-primary')); ?>
+								<?php echo anchor("claim/claim_detail/".$claim['id'], "Edit Claim", array("class"=>'btn btn-primary')); ?>
 							</div>
 							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER))) { ?>
 							<?php if (($claim['status'] != Claim_model::STATUS_Processed) && ($claim['status'] != Claim_model::STATUS_Pending) && ($claim['status'] != Claim_model::STATUS_Paid) && ($claim['status'] != Claim_model::STATUS_Closed)) { ?>
@@ -710,7 +724,7 @@
 		<select name="product_short" class="form-control">
 			<option value="">--Select Product--</option>
 			<?php foreach ($products as $key => $val): ?>
-			<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post("product_short")) { echo "selected"; } ?>><?php echo $val; ?></option>
+			<option value="<?php echo $val; ?>" <?php if ($key == $policy["product_short"]) { echo "selected"; } ?>><?php echo $val; ?></option>
 			<?php endforeach; ?>
 		</select>
 	</div>
@@ -842,6 +856,7 @@ $(document).ready(function() {
 	var total_amount_claimed = 0;
 	var total_amt_deductible = 0;
 	var total_amt_payable = 0;
+	var payto_address = true;
 	// var length = $("input[name=items]:checked").length;
 	var html  = '<table style="margin-bottom: 14px;" width="100%" border="1">';
 	html += '  <thead>';
@@ -864,6 +879,19 @@ $(document).ready(function() {
 		var amt_deductible = ptr.attr('item_amt_deductible');
 		var amt_payable = ptr.attr('item_amt_payable');
 		var comment =  ptr.attr('item_comment');
+		var pay_to =  ptr.attr('item_pay_to');
+		if (payto_address) {
+			payto_address = false;
+			payArr = pay_to.split(":");
+			paytype = payArr[0].trim();
+			if (paytype == 'cheque') {
+				$(".doc-desc").each(function () {
+					var str = $(this).html();
+					str = str.replace("{payto_address}", payArr[2]);
+					$(this).html(str);
+				});
+			}
+		}
 
 		total_amount_claimed += parseFloat(amount_claimed);
 		total_amt_deductible += parseFloat(amt_deductible);
