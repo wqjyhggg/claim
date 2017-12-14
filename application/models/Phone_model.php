@@ -115,7 +115,7 @@ class Phone_model extends CI_Model {
 		$json = json_decode($data, true);
 		if (empty($json['id'])) return NULL;
 		$para['id'] = $json['id'];
-		if (empty($json['event']) || ($json['event'] != 'EnterQueue')) return NULL;
+		if (empty($json['event']) || ($json['event'] != 'Ringing')) return NULL;
 		
 		$event_time = $json['event_time'];
 		if (is_numeric($event_time)) {
