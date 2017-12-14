@@ -47,7 +47,7 @@ class Phone extends CI_Controller {
 		$rt = $this->phone_model->sendRequest($req, $data, 'GET');
 		
 		$data['call_list'] = json_decode($rt, true);
-		// echo "<pre>"; print_r($data['call_list']); die("XX");
+		echo "<pre>"; print_r($data['call_list']); die("XX");
 		$data['date'] = $date;
 		$data['action_url'] = base_url('phone/search');
 		
@@ -76,6 +76,20 @@ class Phone extends CI_Controller {
 		
 		$this->load->model('phone_model');
 		$this->phone_model->save_callback_answer($json);
+	}
+	
+	public function enterqueue() {
+		$json = file_get_contents("php://input");
+		
+		$this->load->model('phone_model');
+		$this->phone_model->save_callback_enterqueue($json);
+	}
+	
+	public function ringing() {
+		$json = file_get_contents("php://input");
+		
+		$this->load->model('phone_model');
+		$this->phone_model->save_callback_ringing($json);
 	}
 	
 	public function sub() {
@@ -113,6 +127,16 @@ class Phone extends CI_Controller {
 		$rt = $this->phone_model->sendRequest($req, $para);
 		print_r($rt);
 
+		$req = '/api/subscription';
+		$para = array('url' => base_url('phone/enterqueue'), 'event' => 'EnterQueue');
+		$rt = $this->phone_model->sendRequest($req, $para);
+		print_r($rt); 
+
+		$req = '/api/subscription';
+		$para = array('url' => base_url('phone/ringing'), 'event' => 'Ringing');
+		$rt = $this->phone_model->sendRequest($req, $para);
+		print_r($rt);
+
 		// Get current all setted event
 		$req = '/api/subscriptions';
 		$para = array();
@@ -121,6 +145,25 @@ class Phone extends CI_Controller {
 		print_r($data); 
 		echo "<pre>";
 		die("\nEnd of All");
+	}
+	
+	public function agent() {
+		/*
+		if (!$this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		*/
+		$this->load->model('phone_model');
+		
+		/*
+		$req = 'api/agent/test1/status';
+		$para = array('login' => false);
+		$rt = $this->phone_model->sendRequest($req, $para);
+		$data = json_decode($rt, true);
+		//print_r($rt);
+		print_r($data);
+		*/
 	}
 	
 	public function file($dt, $filename) {

@@ -7,10 +7,10 @@ if (! defined('BASEPATH')) exit('No direct script access allowed');
  *        
  */
 class Phone_model extends CI_Model {
-	/* test 
+	/* test */
 	const PHONE_KEY = '6bd7053312e9927c61ff57dd8202ba6c';
 	const PHONE_URL = 'http://portal.aurat.genvoice.net';
-	/* JF */ 
+	/* JF 
 	const PHONE_KEY = 'a72e4f38c69af9ae20c95e9067099044';
 	const PHONE_URL = 'http://api.jfgroup.genvoice.net';
 	/**/
@@ -46,6 +46,7 @@ class Phone_model extends CI_Model {
 		}
 		
 		$response = curl_exec($curl);
+		// print_r(curl_getinfo($curl));
 		curl_close($curl);
 		return $response;
 	}
@@ -53,6 +54,24 @@ class Phone_model extends CI_Model {
 	public function get_by_id($id) {
 		$this->db->where('id', $id);
 		return $this->db->get('phone_call')->row_array();
+	}
+
+	public function set_phone_login($phoneid, $status) {
+		$req = "/api/agent/".$phoneid."/status";
+		$para = array('login' => $status);
+		$rt = $this->sendRequest($req, $para, 'PUT');
+		$data = json_decode($rt, true);
+	}
+
+	public function get_phone_login($phoneid) {
+		$req = "/api/agent/".$phoneid."/status";
+		$para = array('login' => $status);
+		$rt = $this->sendRequest($req, $para, 'PUT');
+		$data = json_decode($rt, true);
+		if (isset($data['logged_in'])) {
+			return $data['logged_in'];
+		}
+		return false;
 	}
 
 	public function save($data) {
@@ -76,6 +95,69 @@ class Phone_model extends CI_Model {
 			$this->active_model->log_new('phone_call', $id, $data, $sql);
 			return $id;
 		}
+	}
+
+	public function save_callback_ringing($data) {
+		/* {
+		    "account": "demo",
+		    "agent": "rcp1",
+		    "caller_id_name": "Demo",
+		    "caller_id_number": "16471230000",
+		    "destination_number": "16471234567",
+		    "event": "Ringing",
+		    "event_time": "2017-03-23T21:50:20Z",
+		    "id": "c6537a05-71ea-4572-8bb1-790518268fdf",
+		    "queue": "receptionists",
+		    "start_time": "2017-03-23T21:50:21Z"
+		} */
+		$this->save(array('data' => $data));
+		$para = array();
+		$json = json_decode($data, true);
+		if (empty($json['id'])) return NULL;
+		$para['id'] = $json['id'];
+		if (empty($json['event']) || ($json['event'] != 'EnterQueue')) return NULL;
+		
+		$event_time = $json['event_time'];
+		if (is_numeric($event_time)) {
+			$tm = $event_time / 1000;
+		} else {
+			$tm = strtotime($event_time);
+		}
+		$para['event_time'] = date('Y-m-d H:i:s', $tm);
+		$sql = "INSERT into phone_records (phone_id, direction, caller_id_number, queue, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape('inbound').", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['queue']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE queue=".$this->db->escape($json['queue']).", event_tm=".$this->db->escape(date("Y-m-d H:i:s", $tm));
+		$this->db->query($sql);
+		return $this->db->insert_id();
+	}
+
+	public function save_callback_enterqueue($data) {
+		/* {
+		    "account": "demo",
+		    "caller_id_name": "Demo",
+		    "caller_id_number": "16471230000",
+		    "destination_number": "16471234567",
+		    "event": "EnterQueue",
+		    "event_time": "2017-03-23T21:47:07Z",
+		    "id": "4b847e58-2324-4f1c-8385-754769c46b1c",
+		    "queue": "receptionists",
+		    "start_time": "2017-03-23T21:47:07Z"
+		} */
+		$this->save(array('data' => $data));
+		$para = array();
+		$json = json_decode($data, true);
+		if (empty($json['id'])) return NULL;
+		$para['id'] = $json['id'];
+		if (empty($json['event']) || ($json['event'] != 'EnterQueue')) return NULL;
+		
+		$event_time = $json['event_time'];
+		if (is_numeric($event_time)) {
+			$tm = $event_time / 1000;
+		} else {
+			$tm = strtotime($event_time);
+		}
+		$para['event_time'] = date('Y-m-d H:i:s', $tm);
+		$sql = "INSERT into phone_records (phone_id, direction, caller_id_number, queue, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape('inbound').", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['queue']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE queue=".$this->db->escape($json['queue']).", event_tm=".$this->db->escape(date("Y-m-d H:i:s", $tm));
+		$this->db->query($sql);
+		return $this->db->insert_id();
 	}
 
 	public function save_callback_newcall($data) {
