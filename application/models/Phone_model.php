@@ -124,7 +124,7 @@ class Phone_model extends CI_Model {
 			$tm = strtotime($event_time);
 		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "INSERT into phone_records (phone_id, direction, caller_id_number, queue, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape('inbound').", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['queue']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE queue=".$this->db->escape($json['queue']).", event_tm=".$this->db->escape(date("Y-m-d H:i:s", $tm));
+		$sql = "INSERT into phone_ring (phone_id, caller_id_number, agent, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['agent']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).")";
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
@@ -254,7 +254,13 @@ class Phone_model extends CI_Model {
 			$tm = strtotime($event_time);
 		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "INSERT into phone_records (phone_id, direction, agent, caller_id_number, newcall, answer, hangup) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['direction']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($json['start_time']))).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($json['start_time']))).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE hangup=".$this->db->escape(date("Y-m-d H:i:s", $tm)).", agent=".$this->db->escape($json['agent']);
+		$id = isset($json['id']) ? $json['id'] : '';
+		$direction = isset($json['direction']) ? $json['direction'] : '';
+		$agent = isset($json['agent']) ? $json['agent'] : '';
+		$caller_id_number = isset($json['caller_id_number']) ? $json['caller_id_number'] : '';
+		$start_time = isset($json['start_time']) ? $json['start_time'] : '';
+
+		$sql = "INSERT into phone_records (phone_id, direction, agent, caller_id_number, newcall, answer, hangup) values (".$this->db->escape($id).", ".$this->db->escape($direction).", ".$this->db->escape($agent).", ".$this->db->escape($caller_id_number).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($start_time))).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($start_time))).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE hangup=".$this->db->escape(date("Y-m-d H:i:s", $tm)).", agent=".$this->db->escape($agent);
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
