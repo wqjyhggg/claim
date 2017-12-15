@@ -342,6 +342,9 @@ class Auth extends CI_Controller {
 		
 		$currentGroups = $this->users_model->get_users_groups($id);
 		$currentProducts = $this->users_model->get_users_products($id);
+
+		if (!$currentGroups) $currentGroups = array();
+		if (!$currentProducts) $currentProducts = array();
 		
 		if ($user) {
 			$this->data ['pagetitle'] = $this->lang->line('edit_user_heading');

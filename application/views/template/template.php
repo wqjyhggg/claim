@@ -52,6 +52,20 @@
                         <div class="navbar nav_title" style="border: 0;">
                            <a class="site_title"><i class="fa fa-user"></i> <span><?php echo $this->ion_auth->user()->row()->first_name." ".$this->ion_auth->user()->row()->last_name ?></span></a>
                         </div>
+                        <?php $this->load->model('phone_model'); ?>
+                        <?php if ($phoneid = $this->users_model->get_user_phoneid()) { ?>
+                        <div class="navbar site_title" id="phone_opt_div" style="border: 0;">
+                           <i class="fa fa-phone"></i>
+                           	<span id="phone_login" style="display:none">
+                           		<button type="button" class="btn btn-info btn-xs phonelogin">Online</button>&nbsp;
+                           	</span>
+                           	<span id="phone_logout" style="display:none">
+                           		<button type="button" class="btn btn-info btn-xs phonelogout">Leave</button>
+                           		<button type="button" class="btn btn-info btn-xs phonebreak">Break</button>
+                           		<button type="button" class="btn btn-info btn-xs phonewaiting">Pause</button>
+                           	</span>
+                        </div>
+                        <?php } ?>
                         <div class="clearfix"></div>
                         <!-- sidebar menu -->
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
@@ -112,10 +126,6 @@
             $('html, body').animate({scrollTop : 0},800);
             return false;
          });
-
-         $(document).on("submit", "form", function(){
-            // $("input[type=submit], button").attr('disabled', 'disabled');
-         })
 
          // get provinces list
          $(document).on("change", "select[name=country]", function(){

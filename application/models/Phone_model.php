@@ -20,6 +20,11 @@ class Phone_model extends CI_Model {
 	const S3_REGION = "us-east-1";
 	const S3_KEY = 'AKIAJ7FQ5V6JIR23XSPA';
 	const S3_SECRET = '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';
+
+	const PHONE_OPT_LOGIN = 'Login';
+	const PHONE_OPT_LOGOUT = 'Logout';
+	const PHONE_OPT_BREAK = 'Break';
+	const PHONE_OPT_PAUSE = 'Pause';
 	
 	public function sendRequest($req, $data, $method = "POST") {
 		$http_header = array (
@@ -56,6 +61,13 @@ class Phone_model extends CI_Model {
 		return $this->db->get('phone_call')->row_array();
 	}
 
+	public function insert_action($agent, $status) {
+		$data['agent'] = $agent;
+		$data['user_id'] = $this->ion_auth->get_user_id();
+		$data['active'] = $status;
+		$this->db->insert('phone_action', $data);
+	}
+
 	public function set_phone_login($phoneid, $status) {
 		$req = "/api/agent/".$phoneid."/status";
 		$para = array('login' => $status);
@@ -63,11 +75,36 @@ class Phone_model extends CI_Model {
 		$data = json_decode($rt, true);
 	}
 
+	public function do_phone_opt($status) {
+		$phoneid = $this->users_model->get_user_phoneid();
+		if ($phoneid) {
+			switch ($status) {
+				case self::PHONE_OPT_LOGIN:
+					$this->insert_action($phoneid, $status);
+					$this->phone_model->set_phone_login($phoneid, true);
+					return 'OK';
+					break;
+				case self::PHONE_OPT_BREAK:
+				case self::PHONE_OPT_LOGOUT:
+				case self::PHONE_OPT_PAUSE:
+					$this->insert_action($phoneid, $status);
+					$this->phone_model->set_phone_login($phoneid, false);
+					return 'OK';
+					break;
+			}
+		}
+		return "NO";
+	}
+	
+	
 	public function get_phone_login($phoneid) {
+		$phoneid = $this->users_model->get_user_phoneid();
 		$req = "/api/agent/".$phoneid."/status";
-		$para = array('login' => $status);
-		$rt = $this->sendRequest($req, $para, 'PUT');
+		
+		$para = array();
+		$rt = $this->sendRequest($req, $para, 'GET');
 		$data = json_decode($rt, true);
+
 		if (isset($data['logged_in'])) {
 			return $data['logged_in'];
 		}

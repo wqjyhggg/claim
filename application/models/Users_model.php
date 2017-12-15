@@ -201,6 +201,16 @@ class Users_model extends CI_Model {
 		}
 	}
 	
+	public function get_user_phoneid() {
+		$user_id = $this->ion_auth->get_user_id();
+		$this->db->where('id', $user_id);
+		$user = $this->db->get('users')->row_array();
+		if ($user && !empty($user['phone'])) {
+			return $user['phone'];
+		}
+		return FALSE;
+	}
+	
 	public function get_users_products($user_id) {
 		$this->db->where('id', $user_id);
 		$user = $this->db->get('users')->row_array();
