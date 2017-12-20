@@ -31,12 +31,13 @@ class Intakeform_model extends CI_Model {
 	 * @param array $para     	parameter
 	 * @return int				inserted array ID
 	 */
-	public function save($case_id, $notes, $docs, $phonefile='', $followup=0) {
+	public function save($case_id, $notes, $docs, $phonefile='', $followup=0, $type='CASE') {
 		$data = array(
 				'case_id' => $case_id,
 				'created_by' => $this->ion_auth->get_user_id(),
 				'notes' => $notes,
 				'phonefile' => $phonefile,
+				'type' => $type,
 				'created' => date("Y-m-d H:i:s"),
 				'docs' => $docs
 		);
@@ -46,6 +47,7 @@ class Intakeform_model extends CI_Model {
 		
 		// insert
 		$this->db->insert('intake_form', $data);
+		
 		$sql = $this->db->last_query();
 		$id = $this->db->insert_id();
 		$this->active_model->log_new('intake_form', $id, $data, $sql);

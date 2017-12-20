@@ -26,8 +26,18 @@
 							</select>
 						</div>
 					</div>
+					<div class="form-group col-sm-3 pull-right">
+						<form action="<?php echo $upload_url; ?>" method="POST" enctype="multipart/form-data">
+							<div class="form-group col-sm-10">
+								<input type="file" name="schedule">
+							</div>
+							<div class="form-group col-sm-2">
+								<input type="submit" value="Update" style="background-color: #1f3f20; color:#fff;">
+							</div>
+						</form>
+					</div>
 
-					<a href="javascript:void(0)" class="btn btn-primary pull-right auto-schedule"><i class="fa fa-clock-o"></i> Auto Schedule Whole EACs</a>
+					<!-- a href="javascript:void(0)" class="btn btn-primary pull-right auto-schedule"><i class="fa fa-clock-o"></i> Auto Schedule Whole EACs</a -->
 					<a href="javascript:void(0)" data-toggle="modal" data-target="#clear_schedule_template" class="btn btn-primary pull-right"><i class="fa fa-trash"></i>Clear Schedule</a>
 					<?php } ?>
 

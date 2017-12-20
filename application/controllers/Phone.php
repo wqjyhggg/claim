@@ -87,7 +87,7 @@ class Phone extends CI_Controller {
 	
 	public function ringing() {
 		$json = file_get_contents("php://input");
-		$json = '{"account":"aurat","agent":"test2","caller_id_name":"QINGJIAN WU","caller_id_number":"4167106618","destination_number":"19054756656","direction":"inbound","event":"Ringing","event_time":"2017-12-14T22:43:22Z","id":"d223c930-aefd-487a-a4ed-0864ecd5d8e9","queue":"jf","start_time":"2017-12-14T22:43:17Z"}';
+
 		$this->load->model('phone_model');
 		$this->phone_model->save_callback_ringing($json);
 	}

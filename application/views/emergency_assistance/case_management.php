@@ -17,7 +17,7 @@
 			</div>
 			<div class="x_content">
 				<!-- search case filter start -->
-				<?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>
+				<?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get', 'id'=>'case_management_search')); ?>
 				<div class="row">
 					<div class="form-group col-sm-3">
 						<?php echo form_input("case_no", $this->input->get("case_no"), array ("class" => "form-control", 'placeholder' => 'Case No')); ?>
@@ -51,6 +51,7 @@
 							<?php endforeach; ?>
 						</select>
 					</div>
+					<?php if (0) { ?>
 					<div class="form-group col-sm-3">
 						<select name="assigned_status" class="form-control">
 							<option value="">-- Select Assigned Status --</option>
@@ -58,6 +59,8 @@
 							<option value="unassigned" <?php if ('unassigned' == $this->input->get("assigned_status")) { echo "selected"; } ?>>Unassigned</option>
 						</select>
 					</div>
+					<?php } ?>
+					<div class="clearfix"></div>
 					<div class="form-group col-sm-3">
 						<?php echo form_label('My Task:', 'case_manager', array ("class" => 'col-sm-4')); ?>
 						<div class="form-group col-sm-8">
@@ -94,17 +97,17 @@
 								<tr>
 									<th><?php echo form_checkbox("selectall", 1); ?></th>
 									<th>Case number</th>
-									<th>Create Date</th>
+									<th><a href='<?php echo $created_sort_url; ?>'>Create Date</a></th>
 									<th>Place</th>
 									<th>Reason</th>
 									<th>Policy Number</th>
 									<th>Insured Name</th>
 									<th>DOB</th>
-									<th>Follow Up EAC</th>
-									<th>Case Manager</th>
-									<th>Priority</th>
+									<th>Initiator</th>
+									<th>Current Case Manager</th>
+									<th><a href='<?php echo $priority_sort_url; ?>'>Priority</a></th>
 									<th>Status</th>
-									<th>Last Update</th>
+									<th><a href='<?php echo $last_update_sort_url; ?>'>Last Update</a></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -119,7 +122,7 @@
 									<td><?php echo $value['policy_no']; ?></td>
 									<td><?php echo $value['insured_firstname'] . " " . $value['insured_lastname']; ?></td>
 									<td><?php echo ($value['dob']<>'N/A')?date('d/m/Y', strtotime($value['dob'])):'N/A'; ?></td>
-									<td><?php echo $value['assign_to_name']; ?></td>
+									<td><?php echo $value['initiator']; ?></td>
 									<td><?php echo $value['case_manager_name']; ?></td>
 									<td><?php echo $value['priority']; ?></td>
 									<td><?php echo @$case_status[$value['status']]; ?></td>
@@ -133,19 +136,19 @@
 					<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_EAC))) { ?>
 					<div class="row form-group">
 						<div class="col-sm-12">
+							<?php if (0) { ?>
 							<div class="col-sm-2">
 								<button class="btn btn-primary show_button auto_assign" disabled>Auto Assign CM</button>
 							</div>
 							<div class="col-sm-2">
-								<div class="col-sm-12">
-									<button class="btn btn-primary show_button assign_to" disabled>Transfer CM <i class="fa fa-angle-double-right"></i></button>
-								</div>
-								<div class="col-sm-12">
-									<button class="btn btn-primary show_button follow_up" data-toggle="modal" data-target="#follow_reason" disabled>EAC Follow Up <i class="fa fa-angle-double-right"></i></button>
-								</div>
+								<button class="btn btn-primary show_button follow_up" data-toggle="modal" data-target="#follow_reason" disabled>EAC Follow Up <i class="fa fa-angle-double-right"></i></button>
 							</div>
-							<div class="col-sm-8 employees-section" style="display: none">
-								<div class="col-sm-4">
+							<?php } ?>
+							<div class="col-sm-2">
+								<button class="btn btn-primary show_button assign_to" disabled>Transfer CM <i class="fa fa-angle-double-right"></i></button>
+							</div>
+							<div class="col-sm-6 employees-section" style="display: none">
+								<div class="col-sm-6">
 									<select name="case_manager" class="form-control">
 										<option value=""> -- Select Manager -- </option>
 										<?php foreach ($managers as $rc) :?>
@@ -159,26 +162,22 @@
 							</div>
 						</div>
 
+						<?php if (0) { ?>
 						<div class="col-sm-12 form-group">
 							<div class="col-sm-2">
 								<button class="btn btn-primary show_button view_edit editable" disabled>View/Edit Case</button>
 							</div>
-
 							<div class="col-sm-2">
-								<div class="col-sm-12">
-									<button class="btn btn-primary show_button mark_inactive editable" disabled>Set Inactive</button>
-								</div>
+								<button class="btn btn-primary show_button mark_inactive editable" disabled>Set Deactivate</button>
 							</div>
 							<div class="col-sm-2">
-								<div class="col-sm-12">
-									<button class="btn btn-primary show_button mark_close editable" disabled>Set Close</button>
-								</div>
+								<button class="btn btn-primary show_button mark_close editable" disabled>Set Close</button>
 							</div>
-
 							<div class="col-sm-2">
 								<button class="btn btn-primary show_button email_print editable" data-toggle="modal" data-target="#print_template" disabled>Email/Print</button>
 							</div>
 						</div>
+						<?php } ?>
 					</div>
 					<?php } ?>
 					<?php else:?>
@@ -432,53 +431,52 @@ $(document).ready(function() {
       }
       $(".employees-section").hide();
    }
-}).on("click", ".assign_to", function(){                                               // on clicked assign to button
+}).on("click", ".assign_to", function() {
+	// on clicked assign to button
+	$(".employees-section, .save_assign").show();
+}).on("click", ".follow_up", function() {
+	// clicking on follow_up button
+	// open popup screen why need to follow up this case and assign to emc user
+	$(".employees-section").hide();
+	$(".save_assign").hide();
+}).on("click", ".view_edit", function() {
+	// once manager click on "View/     Edit"case button
+	var id = $("input[name=case]:checked").val();
+	window.location = "<?php echo base_url("emergency_assistance/edit_case") ?>/"+id+"?ref=manage";
+}).on("change", "select", function() {
+	// set validation on emc select list
+	var val = $(this).val();
+	$("select").val("");
+	$(this).val(val);
+	employee_id = val;		// set selected employee
+}).on("change", "#case_manager", function() {
+	$('#case_management_search').submit();
+}).on("click", ".save_assign", function() {
+	// clicking on save assign button
+	// check if employee selected or not
+	if (!$("select[name=case_manager]").val()) {
+		alert("Please select case manager first.");
+		return false;
+	}
 
-   $(".employees-section, .save_assign").show();
-
-}).on("click", ".follow_up", function(){                                               // clicking on follow_up button
-
-   // open popup screen why need to follow up this case and assign to emc user
-   $(".employees-section").hide();
-   $(".save_assign").hide();
-}).on("click", ".view_edit", function(){                                               // once manager click on "View/     Edit"case button
-
-   var id = $("input[name=case]:checked").val();
-   window.location = "<?php echo base_url("emergency_assistance/edit_case") ?>/"+id+"?ref=manage";
-}).on("change", "select", function(){                                                  // set validation on emc select list
-
-   var val = $(this).val();
-   $("select").val("");
-   $(this).val(val);
-   employee_id = val;                                                                  // set selected employee
-}).on("click", ".save_assign", function(){                                             // clicking on save assign button
-
-   // check if employee selected or not
-   if(!$("select[name=case_manager]").val())
-   {
-      alert("Please select case manager first.");
-      return false;
-   }
-
-   // assign emc user to selected cases
-   var cases = [];
-   $("input[name=case]:checked").each(function(){
-      cases.push($(this).val());
-   })
-   var cases = cases.join(",");
-
-   // assign cases to emc manager here
-   $.ajax({
-      url: "<?php echo base_url("emergency_assistance/assign_cases/manually") ?>",
-      method: "post",
-      data:{cases:cases, employee_id: employee_id},
-      beforeSend: function(){
-         $(".right_col").addClass("csspinner load1");
-      },
-      success: function() {
-         window.location.reload();
-      }
-   })
+	// assign emc user to selected cases
+	var cases = [];
+	$("input[name=case]:checked").each(function() {
+		cases.push($(this).val());
+	})
+	var cases = cases.join(",");
+	// assign cases to emc manager here
+	$.ajax({
+		url: "<?php echo base_url("emergency_assistance/assign_cases/manually") ?>",
+		method: "post",
+		data:{cases:cases, employee_id: employee_id},
+		beforeSend: function() {
+			$(".right_col").addClass("csspinner load1");
+		},
+		success: function() {
+			window.location.reload();
+		}
+	})
 })
 
 // clicking on follow button
@@ -522,87 +520,82 @@ $(document).ready(function() {
 })
 
 // clicking on mark as inactive button
-.on("click", ".mark_inactive", function(){
+.on("click", ".mark_inactive", function() {
+	if (!confirm('Are you sure you want to mark deactivate selected cases?')) {
+		return false;
+	}
 
-   if(!confirm('Are you sure you want to mark inactive selected cases?'))
-      return false;
-
-   // selected cases
-   var cases = [];
-   $("input[name=case]:checked").each(function(){
-      cases.push($(this).val());
-   })
-   var cases = cases.join(",");
-
-   // assign cases to emc manager here
-   $.ajax({
-      url: "<?php echo base_url("emergency_assistance/updatestatus/D") ?>",
-      method: "post",
-      data:{cases:cases, employee_id: employee_id},
-      beforeSend: function(){
-         $(".right_col").addClass("csspinner load1");
-      },
-      success: function() {
-         window.location.reload();
-      }
-   })
+	// selected cases
+	var cases = [];
+	$("input[name=case]:checked").each(function() {
+		cases.push($(this).val());
+	})
+	var cases = cases.join(",");
+	// assign cases to emc manager here
+	$.ajax({
+		url: "<?php echo base_url("emergency_assistance/updatestatus/D") ?>",
+		method: "post",
+		data:{cases:cases, employee_id: employee_id},
+		beforeSend: function() {
+			$(".right_col").addClass("csspinner load1");
+		},
+		success: function() {
+			window.location.reload();
+		}
+	})
 })
 
 // clicking on mark as close button
-.on("click", ".mark_close", function(){
+.on("click", ".mark_close", function() {
+	if (!confirm('Are you sure you want to close selected cases?')) {
+		return false;
+	}
 
-   if(!confirm('Are you sure you want to close selected cases?'))
-      return false;
-
-   // selected cases
-   var cases = [];
-   $("input[name=case]:checked").each(function(){
-      cases.push($(this).val());
-   })
-   var cases = cases.join(",");
-
-   // assign cases to emc manager here
-   $.ajax({
-      url: "<?php echo base_url("emergency_assistance/updatestatus/C") ?>",
-      method: "post",
-      data:{cases:cases, employee_id: employee_id},
-      beforeSend: function(){
-         $(".right_col").addClass("csspinner load1");
-      },
-      success: function() {
-         window.location.reload();
-      }
-   })
+	// selected cases
+	var cases = [];
+	$("input[name=case]:checked").each(function() {
+		cases.push($(this).val());
+	})
+	var cases = cases.join(",");
+	// assign cases to emc manager here
+	$.ajax({
+		url: "<?php echo base_url("emergency_assistance/updatestatus/C") ?>",
+		method: "post",
+		data:{cases:cases, employee_id: employee_id},
+		beforeSend: function() {
+			$(".right_col").addClass("csspinner load1");
+		},
+		success: function() {
+			window.location.reload();
+		}
+	})
 })
 
 // clicking on save assign button
-.on("click", ".auto_assign", function(){
-
-   // assign emc user to selected cases
-   var cases = [];
-   $("input[name=case]:checked").each(function(){
-      cases.push($(this).val());
-   })
-   var cases = cases.join(",");
-
-   // return confirm yes/no before go further
-   if(confirm("Are you sure you want to assign case automatically?"))
-   {
-      // assign cases to emc manager here
-      $.ajax({
-         url: "<?php echo base_url("emergency_assistance/assign_cases/automatic") ?>",
-         method: "post",
-         data:{cases:cases, employee_id: employee_id},
-         beforeSend: function(){
-            $(".right_col").addClass("csspinner load1");
-         },
-         success: function() {
-            window.location.reload();
-         }
-      })
-   }
-   else
-      return false;
+.on("click", ".auto_assign", function() {
+	// assign emc user to selected cases
+	var cases = [];
+	$("input[name=case]:checked").each(function() {
+		cases.push($(this).val());
+	})
+	var cases = cases.join(",");
+	// return confirm yes/no before go further
+	if (confirm("Are you sure you want to assign case automatically?")) {
+		// assign cases to emc manager here
+		$.ajax({
+			url: "<?php echo base_url("emergency_assistance/assign_cases/automatic") ?>",
+			method: "post",
+			data:{cases:cases, employee_id: employee_id},
+			beforeSend: function() {
+				$(".right_col").addClass("csspinner load1");
+			},
+			success: function() {
+				window.location.reload();
+			}
+		})
+	} else {
+		return false;
+	}
 })
 
 .on("click", ".select-doc", function(){                                              // show email/print function

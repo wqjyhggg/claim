@@ -227,7 +227,7 @@
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Discharge Date:', 'discharge_date', array("class"=>'col-sm-12'));   ?>
 							<div class="input-group date">
-								<?php echo form_input("discharge_date", $case_details["discharge_date"], array("class" => "form-control datepicker", 'placeholder' => 'Discharge Date')); ?>
+								<?php echo form_input("discharge_date", $case_details["discharge_date"], array("class" => "form-control datepicker_discharge", 'placeholder' => 'Discharge Date')); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 							<?php echo form_error("discharge_date"); ?>
@@ -375,11 +375,13 @@
 							<?php echo form_checkbox("third_party_recovery", "Y", $case_details["third_party_recovery"], array('style' => 'margin-left: 12px;')); ?>
 							<?php echo form_error("third_party_recovery"); ?>
 						</div>
+						<?php if (0) { ?>
 						<div class="form-group col-sm-12">
 							<?php echo form_label('Medical Notes:', 'medical_notes', array("class" => 'col-sm-12')); ?>
 							<?php echo form_textarea("medical_notes", $case_details["medical_notes"], array("class" => "form-control", 'placeholder' => 'Medical Notes', 'style' => 'height:87px')); ?>
 							<?php echo form_error("medical_notes"); ?>
 						</div>
+						<?php } ?>
 					</div>
 
 					<h4>Assign Case Manager</h4>
@@ -519,15 +521,17 @@ function page_info_adjust() {
 }
 
 $(document).ready(function() {
-      $(".datepicker").datepicker({
-           startDate: '-117y',
-           endDate: '+0y',
-       });
+	$(".datepicker").datepicker({
+		startDate: '-117y',
+		endDate: '+0y',
+	});
+	$(".datepicker_discharge").datepicker({
+		startDate: '-117y',
+	});
 
-      $("select[name=reason]").change(page_info_adjust);
-
-      page_info_adjust();
-   })
+	$("select[name=reason]").change(page_info_adjust);
+	page_info_adjust();
+})
 
    // once user click over save intake form, we are just hold every value untill case is not submitted
    $(document).on("click", '.save-intakeform', function(){

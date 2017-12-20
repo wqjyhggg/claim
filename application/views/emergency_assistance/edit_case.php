@@ -223,7 +223,7 @@
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Discharge Date:', 'discharge_date', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
-								<?php echo form_input("discharge_date", $case_details["discharge_date"], array("class"=>"form-control datepicker", 'placeholder'=>'Discharge Date')); ?>
+								<?php echo form_input("discharge_date", $case_details["discharge_date"], array("class"=>"form-control datepicker_discharge", 'placeholder'=>'Discharge Date')); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 							<?php echo form_error("discharge_date"); ?>
@@ -371,11 +371,13 @@
 							<?php echo form_checkbox("third_party_recovery", "Y", ($case_details["third_party_recovery"] == 'Y'?TRUE:FALSE), array('style'=>'margin-left: 12px;')); ?>
 							<?php echo form_error("third_party_recovery"); ?>
 						</div>
+						<?php if (0) { ?>
 						<div class="form-group col-sm-12">
 							<?php echo form_label('Medical Notes:', 'medical_notes', array("class"=>'col-sm-12')); ?>
 							<?php echo form_textarea("medical_notes", $case_details["medical_notes"], array("class"=>"form-control", 'placeholder'=>'Medical Notes', 'style'=>'height:87px')); ?>
 							<?php echo form_error("medical_notes"); ?>
 						</div>
+						<?php } ?>
 					</div>
 					<h4>Case Manager</h4>
 					<div class="row">
@@ -430,7 +432,7 @@
 							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>
 							<button type="button" class="btn btn-primary follow_up" data-toggle="modal" data-target="#follow_reason">Follow Up <i class="fa fa-angle-double-right"></i></button>
 							<?php if($case_details['status'] == 'A') { ?>
-							<button type="button" class="btn btn-primary mark_inactive">Inactive</button>
+							<button type="button" class="btn btn-primary mark_inactive">Deactivate</button>
 							<?php } else { ?>
 							<button type="button" class="btn btn-primary mark_active">Activate</button>
 							<?php } ?>
@@ -451,16 +453,16 @@
 					<?php if(!empty($intake_forms)) { ?>
 					<h4 class="modal-title intake-heading" <?php if(empty($intake_forms)) { ?> style="display: none" <?php } ?>>Notes</h4>
 					<div class="row intake-forms-list col-sm-12">
-						<?php $i = 0; $last_form = sizeof($intake_forms); ?>
+						<?php $i = 0; /* $last_form = sizeof($intake_forms); */ ?>
 						<?php foreach ($intake_forms as $key => $value) { ?>
-                        <?php $i++; $last = false; if ($i == $last_form) { $last = true; } ?>
+                        <?php $i++; $last = true; /* $last = false; if ($i == $last_form) { $last = true; } */ ?>
                         <div class="col-sm-12 intake-forms">
 							<div class="col-sm-2">
 								<div class="col-sm-12"><?php echo $i." : " . $value['created'] ?></div>
 								<div class="col-sm-12"><?php echo "Created by : " . $value['username'] ?></div>
 								<?php if ($value['followup']) { echo '<div class="col-sm-12">Follow up by: ' . $value['followup'] ."</div>"; } ?>
 							</div>
-							<?php $note_tm = strtotime($value['created']) + (10 * 60) - time(); ?>
+							<?php $note_tm = strtotime($value['created']) + $note_delay - time(); ?>
 							<?php if (($my_user_id == $value['created_by']) && $last && ($note_tm > 0)) { ?>
 							<div class="col-sm-10">
 								<div class="col-sm-12">
@@ -639,16 +641,16 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Follow up case</h4>
+				<h4 class="modal-title">Follow up</h4>
 			</div>
 			<?php echo form_open_multipart("emergency_assistance/follow_up_cases", array("id"=>'follow_up_cases')); ?>
 			<div class="modal-body">
 				<div class="row">
 					<div class="col-sm-12">
 						<div>
-							<?php echo form_label('Please Enter The Reason:', 'notes', array("class"=>'col-sm-12')); ?>
+							<?php echo form_label('Please Enter Note:', 'notes', array("class"=>'col-sm-12')); ?>
 							<div class="col-sm-12">
-								<?php echo form_textarea("notes", "", array("class"=>"form-control col-sm-6 form-group required", 'placeholder'=>'Please Enter The Reason')); ?>
+								<?php echo form_textarea("notes", "", array("class"=>"form-control col-sm-6 form-group required", 'placeholder'=>'Please Enter Note')); ?>
 							</div>
 							<div class="col-sm-12 follow-section">
 								<select name="assign_to_follow" class="form-control">
@@ -666,10 +668,37 @@
 								</div>
 							</div>
 							<div class="form-group col-sm-6">
-								<?php echo form_label('Due Time:', 'due_time', array("class" => 'col-sm-12')); ?>
+								<?php echo form_label('Due Time (hour):', 'due_time', array("class" => 'col-sm-12')); ?>
+								<?php $due_time = $this->input->post("due_time") ? $this->input->post("due_time") : date("H") . ":00:00"; ?>
 								<div class="input-group time">
-								<?php echo form_input(array("name" => "due_time", "type" => "time"), $this->input->post("due_time") ? $this->input->post("due_time") : date("H:i"), array("class" => "form-control datepicker_time", 'placeholder' => 'Due Time')); ?>
-								<span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+									<select name="due_time" class="form-control">
+										<option value="00:00:00" <?php if ($due_time == '00:00:00') { echo "selected"; } ?>>12 AM ( 0 )</option>
+										<option value="01:00:00" <?php if ($due_time == '01:00:00') { echo "selected"; } ?>>1 AM ( 1 )</option>
+										<option value="02:00:00" <?php if ($due_time == '02:00:00') { echo "selected"; } ?>>2 AM ( 2 )</option>
+										<option value="03:00:00" <?php if ($due_time == '03:00:00') { echo "selected"; } ?>>3 AM ( 3 )</option>
+										<option value="04:00:00" <?php if ($due_time == '04:00:00') { echo "selected"; } ?>>4 AM ( 4 )</option>
+										<option value="05:00:00" <?php if ($due_time == '05:00:00') { echo "selected"; } ?>>5 AM ( 5 )</option>
+										<option value="06:00:00" <?php if ($due_time == '06:00:00') { echo "selected"; } ?>>6 AM ( 6 )</option>
+										<option value="07:00:00" <?php if ($due_time == '07:00:00') { echo "selected"; } ?>>7 AM ( 7 )</option>
+										<option value="08:00:00" <?php if ($due_time == '08:00:00') { echo "selected"; } ?>>8 AM ( 8 )</option>
+										<option value="09:00:00" <?php if ($due_time == '09:00:00') { echo "selected"; } ?>>9 AM ( 9 )</option>
+										<option value="10:00:00" <?php if ($due_time == '10:00:00') { echo "selected"; } ?>>10 AM ( 10 )</option>
+										<option value="11:00:00" <?php if ($due_time == '11:00:00') { echo "selected"; } ?>>11 AM ( 11 )</option>
+										<option value="12:00:00" <?php if ($due_time == '12:00:00') { echo "selected"; } ?>>12 PM ( 12 )</option>
+										<option value="13:00:00" <?php if ($due_time == '13:00:00') { echo "selected"; } ?>>1 PM ( 13 )</option>
+										<option value="14:00:00" <?php if ($due_time == '14:00:00') { echo "selected"; } ?>>2 PM ( 14 )</option>
+										<option value="15:00:00" <?php if ($due_time == '15:00:00') { echo "selected"; } ?>>3 PM ( 15 )</option>
+										<option value="16:00:00" <?php if ($due_time == '16:00:00') { echo "selected"; } ?>>4 PM ( 16 )</option>
+										<option value="17:00:00" <?php if ($due_time == '17:00:00') { echo "selected"; } ?>>5 PM ( 17 )</option>
+										<option value="18:00:00" <?php if ($due_time == '18:00:00') { echo "selected"; } ?>>6 PM ( 18 )</option>
+										<option value="19:00:00" <?php if ($due_time == '19:00:00') { echo "selected"; } ?>>7 PM ( 19 )</option>
+										<option value="20:00:00" <?php if ($due_time == '20:00:00') { echo "selected"; } ?>>8 PM ( 20 )</option>
+										<option value="21:00:00" <?php if ($due_time == '21:00:00') { echo "selected"; } ?>>9 PM ( 21 )</option>
+										<option value="22:00:00" <?php if ($due_time == '22:00:00') { echo "selected"; } ?>>10 PM ( 22 )</option>
+										<option value="23:00:00" <?php if ($due_time == '23:00:00') { echo "selected"; } ?>>11 PM ( 23 )</option>
+									</select>
+								<?php /* echo form_input(array("name" => "due_time", "type" => "time"), $this->input->post("due_time") ? $this->input->post("due_time") : date("H:i"), array("class" => "form-control datepicker_time", 'placeholder' => 'Due Time')); */ ?>
+								<!-- span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span -->
 								</div>
 							</div>
 						</div>
@@ -762,25 +791,28 @@ function page_info_adjust() {
 	}
 }
 
-   var employee_id = '<?php echo isset($case_details['assign_to']) ? (int)$case_details['assign_to'] : 0; ?>';
-   
-   $(document).ready(function() {
-      $("#create_intakeform").validate();
+var employee_id = '<?php echo isset($case_details['assign_to']) ? (int)$case_details['assign_to'] : 0; ?>';
 
-      $(".datepicker_due").datepicker({
-          startDate: '-0y',
-          endDate: '+1m',
-      });
+$(document).ready(function() {
+	$("#create_intakeform").validate();
 
-      $(".datepicker").datepicker({
-           startDate: '-117y',
-           endDate: '+0y',
-       });
+	$(".datepicker_due").datepicker({
+		startDate: '-0y',
+		endDate: '+1m',
+	});
 
-      $("select[name=reason]").change(page_info_adjust);
+	$(".datepicker").datepicker({
+		startDate: '-117y',
+		endDate: '+0y',
+	});
 
-      page_info_adjust();
-   })
+	$(".datepicker_discharge").datepicker({
+		startDate: '-117y',
+	});
+
+	$("select[name=reason]").change(page_info_adjust);
+	page_info_adjust();
+})
 
 	.on("click", ".getmyphonefile", function() {
 		$.ajax({
@@ -902,7 +934,7 @@ function page_info_adjust() {
    // clicking on save assign button
    .on("click", ".mark_inactive", function(){
 
-      if(!confirm("Are you sure you want to inactive case?"))
+      if(!confirm("Are you sure you want to Deactivate case?"))
          return false;
 
       // selected cases 

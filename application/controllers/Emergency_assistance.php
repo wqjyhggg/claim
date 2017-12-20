@@ -8,7 +8,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Emergency_assistance extends CI_Controller {
 	private $limit = 10;
-	private $notes_dealy = 600;	// seconds
+	private $notes_dealy = 900;	// seconds
 	
 	public function __construct() {
 		parent::__construct();
@@ -83,6 +83,14 @@ class Emergency_assistance extends CI_Controller {
 		}
 	}
 	
+	function positive_number($num) {
+		if ($num > 0) {
+			return TRUE;
+		}
+		$this->form_validation->set_message('positive_number', 'The %s field must great than 0');
+		return FALSE;
+	}
+	
 	// redirect if needed, otherwise display the create case page
 	public function create_case($id = 0) {
 		if (!$this->ion_auth->logged_in()) {
@@ -111,7 +119,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
 			$this->form_validation->set_rules('post_code', 'Postal Code', 'required|trim|max_length[9]|min_length[5]');
 			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
+			// $this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('relations', 'Relations', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 			$this->form_validation->set_rules('incident_date', 'Incident Date', 'required');
@@ -119,7 +127,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('insured_firstname', 'Insured First Name', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			
-			$this->form_validation->set_rules('reserve_amount', 'Reserver Amount', 'numeric|required');
+			$this->form_validation->set_rules('reserve_amount', 'Reserver Amount', 'numeric|required|callback_positive_number');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
 			if ($this->form_validation->run() == TRUE) {
@@ -139,6 +147,10 @@ class Emergency_assistance extends CI_Controller {
 				}
 				$data['created'] = date('Y-m-d H:i:s');
 				$data['created_by'] = $this->ion_auth->get_user_id();
+				if (empty($data['case_manager'])) {
+					$data['case_manager'] = $this->mytask_model->get_auto_assign_manager_id();
+				
+				}
 				if (empty($data['assign_to'])) {
 					$data['assign_to'] = $data['case_manager'];
 				}
@@ -454,7 +466,7 @@ class Emergency_assistance extends CI_Controller {
 			
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 			
-			$this->form_validation->set_rules('reserve_amount', 'Reserver Amount', 'numeric|required');
+			$this->form_validation->set_rules('reserve_amount', 'Reserver Amount', 'numeric|required|callback_positive_number');
 			
 			if ($this->form_validation->run() == TRUE) {
 				if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) {
@@ -487,7 +499,7 @@ class Emergency_assistance extends CI_Controller {
 						}
 					}
 					if ($notes) {
-						$this->intakeform_model->save($id, $notes, '');
+						$this->intakeform_model->save($id, $notes, '', '', 0, Mytask_model::TASK_TYPE_CASE_CHANGE);
 					}
 				}
 				
@@ -735,17 +747,6 @@ class Emergency_assistance extends CI_Controller {
 			$limit = $this->limit;
 			$offset = $this->uri->segment(3);
 			
-			$joins[] = array(
-					'table' => 'users u1',
-					'on' => 'u1.id = case.assign_to',
-					'type' => 'LEFT' 
-			);
-			$joins[] = array(
-					'table' => 'users u2',
-					'on' => 'u2.id = case.case_manager',
-					'type' => 'LEFT' 
-			);
-			
 			// prepare conditions
 			$conditions = array();
 			if ($this->input->get("case_no")) {
@@ -784,17 +785,35 @@ class Emergency_assistance extends CI_Controller {
 				$conditions['case.case_manager'] = trim($this->input->get("case_manager"));
 			}
 			
+			$sorting = array();
+			$sortingstr = '';
+			if (!empty($conditions)) {
+				$sortingstr = '&'.build_query($conditions);
+			}
+			if ($this->input->get("created_sort")) {
+				$sorting['case.created'] = trim($this->input->get("created_sort"));
+				$this->data['created_sort_url'] = base_url('emergency_assistance/case_management') . "?created_sort=" . (($sorting['case.created'] == 'ASC') ? "DESC" : "ASC") . $sortingstr;
+			} else {
+				$this->data['created_sort_url'] = base_url('emergency_assistance/case_management') . "?created_sort=ASC" . $sortingstr;
+			}
+			if ($this->input->get("last_update_sort")) {
+				$sorting['case.last_update'] = trim($this->input->get("last_update_sort"));
+				$this->data['last_update_sort_url'] = base_url('emergency_assistance/case_management') . "?last_update_sort=" . (($sorting['case.last_update'] == 'ASC') ? "DESC" : "ASC") . $sortingstr;
+			} else {
+				$this->data['last_update_sort_url'] = base_url('emergency_assistance/case_management') . "?last_update_sort=ASC" . $sortingstr;
+			}
+			if ($this->input->get("priority_sort")) {
+				$sorting['case.priority'] = trim($this->input->get("priority_sort"));
+				$this->data['priority_sort_url'] = base_url('emergency_assistance/case_management') . "?priority_sort=" . (($sorting['case.priority'] == 'ASC') ? "DESC" : "ASC") . $sortingstr;
+			} else {
+				$this->data['priority_sort_url'] = base_url('emergency_assistance/case_management') . "?priority_sort=ASC" . $sortingstr;
+			}
+
 			$limit = $this->limit;
 			$offset = $this->uri->segment(3);
-			$cases = $this->case_model->search($conditions, $limit, $offset);
+			$cases = $this->case_model->search($conditions, $limit, $offset, $sorting);
 			$total = $this->case_model->last_rows();
 					
-			/*
-			print_r($cases); //XXXXXXXXXXXXXXXx
-			die("XXX"); //XXXXXXXXXXXX
-			$fields = "case.insured_address, case.last_update, concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, case.insured_lastname, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id, case.status, case.policy_info";
-			$results = $this->common_model->select($record = "paginate", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array(), $having = "", $limit, $offset);
-			*/
 			if ($cases) {
 				foreach ($cases as $key => $case) {
 					$case_manager = '';
@@ -806,7 +825,7 @@ class Emergency_assistance extends CI_Controller {
 					} else {
 						$cases[$key]['case_manager_name'] = 'N/A';
 					}
-
+					/*
 					$assign_to = '';
 					if ($case['assign_to']) {
 						$assign_to = $this->users_model->get_by_id($case['assign_to']);
@@ -815,6 +834,16 @@ class Emergency_assistance extends CI_Controller {
 						$cases[$key]['assign_to_name'] = $assign_to['email'];
 					} else {
 						$cases[$key]['assign_to_name'] = 'N/A';
+					}
+					*/
+					$initiator = '';
+					if ($case['created_by']) {
+						$initiator = $this->users_model->get_by_id($case['created_by']);
+					}
+					if ($initiator) {
+						$cases[$key]['initiator'] = $initiator['email'];
+					} else {
+						$cases[$key]['initiator'] = 'N/A';
 					}
 				}
 			}
@@ -1612,7 +1641,7 @@ class Emergency_assistance extends CI_Controller {
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EAC))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EAC, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
 			// redirect them to the home page because they must be an case manager to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
@@ -1634,6 +1663,7 @@ class Emergency_assistance extends CI_Controller {
 			// get countries list
 			$this->data['countries'] = $this->country_model->get_list(FALSE);
 			$this->data['eacs'] = $this->users_model->search(array('groups' => Users_model::GROUP_EAC, 'active' => 1));
+			$this->data['upload_url'] = base_url("emergency_assistance/uploadschedule");
 			/*
 			$this->data['countries'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->input->get("country2"), $key = "short_code", $value = "name");
 			$this->data['eacmanagers'] = $this->common_model->getrusers($field_name = "emc", $this->data['emc'], $group = array(
@@ -1645,6 +1675,75 @@ class Emergency_assistance extends CI_Controller {
 			$this->template->write_view('content', 'emergency_assistance/schedule', $this->data);
 			$this->template->render();
 		}
+	}
+
+	/**
+	 * schedule calendar for ajax request and in schedule page
+	 *
+	 * @param $year String
+	 * @param $month array
+	 * @param $type return
+	 *        	- for return data/output - echo response for ajax complete
+	 * @param $emc int
+	 *        	- show events and calender for specific emc user
+	 */
+	public function uploadschedule() {
+		if (! $this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) {
+			// redirect them to the home page because they must be an claim manager or claim examiner to view this
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		} else {
+			$this->load->model('schedule_model');
+			
+			$uf = array_shift($_FILES);
+			$name = $uf['name'];
+			$type = $uf['type'];
+			$tmp_name = $uf['tmp_name'];
+			$size = $uf['size'];
+			$fileinfo = pathinfo($name);
+			if (!empty($uf['error'])) {
+				$this->session->set_flashdata('error', "Something went wrong, please check your file.");
+			} else if (!in_array($fileinfo ['extension'], array(/*'xlsx',*/'csv'))) {
+				$this->session->set_flashdata('error', "Unknown file type, must be csv.");
+			} else {
+				if (($handle = fopen($tmp_name, "r")) !== FALSE) {
+					$i = 0;
+					while (($data = fgetcsv($handle, 10000)) !== FALSE) {
+						$i++;
+						$user_id = $data[0];
+						$user = $this->users_model->get_by_id($user_id);
+						if (!$user || (strpos($user['groups'], Users_model::GROUP_EAC) <= 0)) {
+							$this->session->set_flashdata('error', "File data error at line " . $i . ", user isn't EAC.");
+							redirect('emergency_assistance/schedule', 'refresh');
+						}
+						$dt = trim($data[1]);
+						$tmStr = trim($data[2]);
+						if (($tmStr != Schedule_model::SHIFT_2PM_STR) && ($tmStr != Schedule_model::SHIFT_2PM_STR) && ($tmStr != Schedule_model::SHIFT_2PM_STR)) {
+							$shour = $this->schedule_model->get_shift_shour($tmStr);
+							$para = array();
+							$para['employee_id'] = (int)$user_id;
+							$para['schedule'] = $tmStr;
+							$para['date'] = $dt;
+							$para['created_by'] = $this->ion_auth->get_user_id();
+							$para['start_tm'] = $dt . " " . $shour . ":00:00";
+							$para['shour'] = $shour;
+							$para['hours'] = $this->schedule_model->get_shift_long($tmStr);
+							$this->schedule_model->save($para);
+						} else {
+							$this->session->set_flashdata('error', "File data error at line " . $i . ".");
+							redirect('emergency_assistance/schedule', 'refresh');
+						}
+					}
+					fclose($handle);
+				} else {
+					$this->session->set_flashdata('error', "Can't opne upload file.");
+				}
+				$this->session->set_flashdata('success', "File data update successed");
+			}
+		}
+		redirect('emergency_assistance/schedule', 'refresh');
 	}
 	
 	/**
@@ -1786,6 +1885,8 @@ class Emergency_assistance extends CI_Controller {
 			foreach ( $cases as $key => $value ) {
 				$data = array("case_manager" => $employee_id, "id" => $value);
 				$this->case_model->save($data);
+				
+				$case_details = $this->case_model->get_by_id($value);
 
 				// check task, if already exists
 				$task_details = $this->mytask_model->search(array('item_id' => $value,  'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE, 'user_type' => Mytask_model::USER_TYPE_MANAGER));
@@ -1797,6 +1898,7 @@ class Emergency_assistance extends CI_Controller {
 							'user_id' => $employee_id,
 							'due_date' => $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400),
 							'due_time' => $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400),
+							'priority' => $case_details['priority'],
 							'finished' => 0,
 							'status' => Mytask_model::STATUS_REASSIGNED,
 							'notes' => "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'],
@@ -1821,10 +1923,8 @@ class Emergency_assistance extends CI_Controller {
 					$this->mytask_model->save("mytask", $task_data);
 				}
 			}
-		} 		
-
-		// assign cases with emc which have minimum cases one by one ascending order
-		else if ($type == 'automatic') {
+		} else if ($type == 'automatic') {
+			// assign cases with emc which have minimum cases one by one ascending order
 			// asigning process
 			foreach ( $cases as $key => $value ) {
 				$employee_id = $this->mytask_model->get_auto_assign_manager_id();
@@ -1836,6 +1936,8 @@ class Emergency_assistance extends CI_Controller {
 				$data = array("case_manager" => $employee_id, "id" => $value);
 				$this->case_model->save($data);
 			
+				$case_details = $this->case_model->get_by_id($value);
+				
 				// check task, if already exists
 				$task_details = $this->mytask_model->search(array('item_id' => $value,  'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE, 'user_type' => Mytask_model::USER_TYPE_MANAGER));
 				
@@ -1846,6 +1948,7 @@ class Emergency_assistance extends CI_Controller {
 							'user_id' => $employee_id,
 							'due_date' => $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400),
 							'due_time' => $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400),
+							'priority' => $case_details['priority'],
 							'finished' => 0,
 							'status' => Mytask_model::STATUS_REASSIGNED,
 							'notes' => "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'],
@@ -1897,7 +2000,9 @@ class Emergency_assistance extends CI_Controller {
 					
 			// save record in intake form as notes
 			$this->case_model->save(array("assign_to" => $employee_id, "id" => $value));
-			
+
+			$case_details = $this->case_model->get_by_id($value);
+
 			$tasks = $this->mytask_model->search(array('item_id' => $value, 'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE, 'user_type' => Mytask_model::USER_TYPE_EAC));
 			// assign eac
 			$new_task = array();
@@ -1907,7 +2012,7 @@ class Emergency_assistance extends CI_Controller {
 				$new_task['user_id'] = $employee_id;
 				$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
 				$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
-				$new_task['priority'] = Mytask_model::PRIORITY_LOW;
+				$new_task['priority'] = $case_details['priority'];
 				$new_task['status'] = Mytask_model::STATUS_REASSIGNED;
 				$new_task['finished'] = 0;
 				$new_task['notes'] = "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $tasks[0]['notes'];
@@ -1919,7 +2024,7 @@ class Emergency_assistance extends CI_Controller {
 				$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
 				$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
 				$new_task['type'] = Mytask_model::TASK_TYPE_CASE;
-				$new_task['priority'] = Mytask_model::PRIORITY_LOW;
+				$new_task['priority'] = $case_details['priority'];
 				$new_task['created_by'] = $this->ion_auth->get_user_id();
 				$new_task['created'] = date("Y-m-d H:i:s");
 				$new_task['user_type'] = Mytask_model::USER_TYPE_EAC;
@@ -1939,37 +2044,86 @@ class Emergency_assistance extends CI_Controller {
 		$cases = $this->input->post("cases");
 		$cases = explode(",", $cases);
 		
-		// mark deactivate process
-		foreach ( $cases as $key => $value ) {
-			$this->common_model->update("case", array(
-					"status" => $status 
-			), array(
-					"id" => $value 
-			));
-		}
-		if ($status == 'D')
-			$this->session->set_flashdata('success', "Cases inactive successfully.");
-		else
-			$this->session->set_flashdata('success', "Cases closed successfully.");
+		$this->load->model('mytask_model');
+		$this->load->model('intakeform_model');
+		$this->load->model('case_model');
 		
+		$employee_id = $this->ion_auth->get_user_id();
+		
+		// mark deactivate process
+		foreach($cases as $key => $value) {
+			// save values to intake database
+			if ($status == 'D') {
+				$iid = $this->intakeform_model->save($value, "Deactivate By user id " . $employee_id, '', '', $employee_id, Mytask_model::TASK_TYPE_CASE_CHANGE);
+			} else {
+				$iid = $this->intakeform_model->save($value, "Closed By user id " . $employee_id, '', '', $employee_id, Mytask_model::TASK_TYPE_CASE_CHANGE);
+			}
+
+			// save record in intake form as notes
+			$this->case_model->save(array("status" => $status, "id" => $value));
+
+			$case_details = $this->case_model->get_by_id($value);
+
+			$tasks = $this->mytask_model->search(array('item_id' => $value, 'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE));
+			foreach($tasks as $task) {
+				if ($status == 'D') {
+					$task['notes'] = "Deactivate By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'];
+				} else {
+					$task['notes'] = "Closed By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'];
+					$task['finished'] = 1;
+				}
+				$task['status'] = Mytask_model::STATUS_COMPLETED;
+				$taks_id = $this->mytask_model->save($task);
+			}
+		}
+		if ($status == 'D') {
+			$this->session->set_flashdata('success', "Cases Deactivate successfully.");
+		} else {
+			$this->session->set_flashdata('success', "Cases Closed successfully.");
+		}
+
 		echo TRUE;
 	}
 	
 	// mark inactive case for ajax request
 	public function update_case_status($status = 'D') {
 		$cases = $this->input->post("cases");
+
+		$this->load->model('mytask_model');
+		$this->load->model('intakeform_model');
+		$this->load->model('case_model');
 		
-		// mark deactivate process
-		$this->common_model->update("case", array(
-				"status" => $status 
-		), array(
-				"id" => $cases 
-		));
+		$employee_id = $this->ion_auth->get_user_id();
+
+		if ($status == 'A') {
+			$iid = $this->intakeform_model->save($value, "Active By user id " . $employee_id, '', '', $employee_id, Mytask_model::TASK_TYPE_CASE_CHANGE);
+		} else {
+			$iid = $this->intakeform_model->save($value, "Deactivate By user id " . $employee_id, '', '', $employee_id, Mytask_model::TASK_TYPE_CASE_CHANGE);
+		}
 		
-		if ($status == 'A')
-			$this->session->set_flashdata('success', "Case active successfully.");
-		else
-			$this->session->set_flashdata('success', "Case inactive successfully.");
+		// save record in intake form as notes
+		$this->case_model->save(array("status" => $status, "id" => $cases));
+		
+		$case_details = $this->case_model->get_by_id($cases);
+		
+		$tasks = $this->mytask_model->search(array('item_id' => $value, 'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE));
+		foreach($tasks as $task) {
+			if ($status == 'A') {
+				$task['notes'] = "Active By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'];
+				$task['finished'] = 0;
+			} else {
+				$task['notes'] = "Deactivate By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'];
+				$task['finished'] = 1;
+			}
+			$task['status'] = Mytask_model::STATUS_COMPLETED;
+			$taks_id = $this->mytask_model->save($task);
+		}
+		
+		if ($status == 'A') {
+			$this->session->set_flashdata('success', "Case Active successfully.");
+		} else {
+			$this->session->set_flashdata('success', "Case Deactivate successfully.");
+		}
 		
 		echo TRUE;
 	}

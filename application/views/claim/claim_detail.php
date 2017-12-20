@@ -583,8 +583,8 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
+											<?php if (empty($arr['currency'][$key])) { $arr['currency'][$key] = 'CAD'; } ?>
 											<select name="expenses_claimed[currency][]" class="form-control required">
-												<option value="" <?php echo (empty($value['currency'])) ? 'selected' : ''; ?>>-- Select Currency --</option>
 												<?php foreach ($currencies as $currency ) { ?>
 												<option value="<?php echo $currency['name']; ?>" <?php echo ($value ['currency'] == $currency['name']) ? 'selected' : ''; ?>><?php echo $currency['name']; ?></option>
 												<?php } ?>
@@ -923,9 +923,8 @@
 			<div class="col-sm-3">
 				<?php echo form_label('currency:', 'currency', array("class" => 'col-sm-12')); ?>
 				<select name="expenses_claimed[currency][]" class="form-control required">
-					<option value="">-- Select Currency --</option>
 					<?php foreach ($currencies as $currency ) { ?>
-					<option value="<?php echo $currency['name']; ?>"><?php echo $currency['name']; ?></option>
+					<option value="<?php echo $currency['name']; ?>" <?php if ($currency['name'] == 'CAD') { echo "selected"; } ?>><?php echo $currency['name']; ?></option>
 					<?php } ?>
 				</select>
 			</div>

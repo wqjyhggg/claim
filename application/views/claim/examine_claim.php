@@ -664,7 +664,7 @@ $(document).ready(function() {
 	html += '      <th>Service Description</th>';
 	html += '      <th>Date of Service</th>';
 	html += '      <th>Claim Amount</th>';
-	html += '      <th>Deductible Amount</th>';
+	// html += '      <th>Deductible Amount</th>';
 	html += '      <th>Payable Amount</th>';
 	html += '      <th>Comment</th>';
 	html += '    </tr>';
@@ -701,7 +701,7 @@ $(document).ready(function() {
 		html += '      <td>' + service_description.substring(0,100) + '</td>';
 		html += '      <td>' + date_of_service + '</td>';
 		html += '      <td>$' + amount_claimed + '</td>';
-		html += '      <td>$' + amt_deductible + '</td>';
+		// html += '      <td>$' + amt_deductible + '</td>';
 		html += '      <td>$' + amt_payable + '</td>';
 		html += '      <td>' + comment + '</td>';
 		html += '  </tr>';
@@ -709,9 +709,9 @@ $(document).ready(function() {
 	html += '  <tr>';
 	html += '      <td>Total</td>';
 	html += '      <td>&nbsp;</td>';
-	html += '      <td>$' + total_amount_claimed + '</td>';
-	html += '      <td>$' + total_amt_deductible + '</td>';
-	html += '      <td>$' + total_amt_payable + '</td>';
+	html += '      <td>$' + parseFloat(total_amount_claimed).toFixed(2) + '</td>';
+	// html += '      <td>$' + parseFloat(total_amt_deductible).toFixed(2) + '</td>';
+	html += '      <td>$' + parseFloat(total_amt_payable).toFixed(2) + '</td>';
 	html += '      <td>&nbsp;</td>';
 	html += '  </tr>';
 	html += '  </tbody>';

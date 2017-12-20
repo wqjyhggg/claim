@@ -162,7 +162,7 @@ class Case_model extends CI_Model {
 	 *        	search parameter
 	 * @return array result array, maybe null
 	 */
-	public function search($data, $count=-1, $limit=-1) {
+	public function search($data, $count=-1, $limit=-1, $sortby=array()) {
 		$products = FALSE;
 		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
 			$products = $this->ion_auth->get_users_products();
@@ -170,6 +170,9 @@ class Case_model extends CI_Model {
 		
 		$this->db->select('SQL_CALC_FOUND_ROWS *', FALSE);
 		$this->db->where($data);
+		foreach ($sortby as $key => $val) {
+			$this->db->order_by($key, $val);
+		}
 		if ($products !== FALSE) {
 			if (empty($products)) {
 				return array();

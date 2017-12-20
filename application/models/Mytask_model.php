@@ -10,6 +10,7 @@ if (! defined ( 'BASEPATH' )) exit ( 'No direct script access allowed' );
 class Mytask_model extends CI_Model {
 	const TASK_TYPE_CASE='CASE';
 	const TASK_TYPE_CLAIM='CLAIM';
+	const TASK_TYPE_CASE_CHANGE='CASE_CHANGE';
 
 	const CATEGORY_ASSISTANCE='Assistance';
 	const CATEGORY_CLAIMS='Claims';
