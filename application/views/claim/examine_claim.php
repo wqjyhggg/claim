@@ -173,7 +173,7 @@
 									$total_payable += (float)$value['amt_payable'];
 									$total_this_payable += (float)$value['amt_payable'];
 								?>
-									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable='<?php echo $value['amt_payable'] ?>' item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to='<?php echo nl2br($value['pay_to']) ?>' item_comment='<?php echo nl2br($value['comment']) ?>'>
+									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_coverage_code="<?php echo nl2br($value['coverage_code']) ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable='<?php echo $value['amt_payable'] ?>' item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to='<?php echo nl2br($value['pay_to']) ?>' item_comment='<?php echo nl2br($value['comment']) ?>'>
 										<td><?php echo form_checkbox("items", $value['id'], FALSE); ?></td>
 										<td><?php echo $value['claim_item_no']; ?></td>
 										<td><?php echo $value['invoice']; ?></td>
@@ -470,9 +470,9 @@
 					<div class="form-group col-sm-12 docfiles">
 						<?php foreach($docs as $doc): ?>
 						<div class="col-sm-12 doc-description doc-<?php echo $doc['id'] ?>" style="display: none">
-							<div class="col-sm-12 doc_title">
+							<!-- div class="col-sm-12 doc_title">
                         		<?php echo heading($doc['name']); ?>
-							</div>
+							</div -->
 							<div class="col-sm-12 doc-desc">
 								<?php
 									// find and replace text
@@ -661,7 +661,7 @@ $(document).ready(function() {
 	var html  = '<table style="margin-bottom: 14px;" width="100%" border="1">';
 	html += '  <thead>';
 	html += '    <tr>';
-	html += '      <th>Service Description</th>';
+	html += '      <th>Coverage Code</th>';
 	html += '      <th>Date of Service</th>';
 	html += '      <th>Claim Amount</th>';
 	// html += '      <th>Deductible Amount</th>';
@@ -673,6 +673,7 @@ $(document).ready(function() {
 
 	$("input[name=items]:checked").each(function () {
 		var ptr = $(this).closest('tr');
+		var coverage_code = ptr.attr('item_coverage_code');
 		var service_description = ptr.attr('item_service_description');
 		var date_of_service = ptr.attr('item_date_of_service');
 		var amount_claimed = ptr.attr('item_amount_claimed');
@@ -687,7 +688,15 @@ $(document).ready(function() {
 			if (paytype == 'cheque') {
 				$(".doc-desc").each(function () {
 					var str = $(this).html();
+					str = str.replace("{payto_name}", payArr[1]);
 					str = str.replace("{payto_address}", payArr[2]);
+					$(this).html(str);
+				});
+			} else {
+				$(".doc-desc").each(function () {
+					var str = $(this).html();
+					str = str.replace("{payto_name}", '');
+					str = str.replace("{payto_address}", '');
 					$(this).html(str);
 				});
 			}
@@ -698,7 +707,8 @@ $(document).ready(function() {
 		total_amt_payable += parseFloat(amt_payable);
 			
 		html += '  <tr>';
-		html += '      <td>' + service_description.substring(0,100) + '</td>';
+		html += '      <td>' + coverage_code + '</td>';
+		// html += '      <td>' + service_description.substring(0,100) + '</td>';
 		html += '      <td>' + date_of_service + '</td>';
 		html += '      <td>$' + amount_claimed + '</td>';
 		// html += '      <td>$' + amt_deductible + '</td>';
