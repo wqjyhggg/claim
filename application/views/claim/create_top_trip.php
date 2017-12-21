@@ -678,7 +678,7 @@
 						</div>
 					</div>
 
-					<h2 class="move_down">Expenses Claimed <button class="btn btn-primary add_new_expenses" type="button">Add new expenses item</button><i class="fa fa-angle-up pull-right"></i></h2>
+					<h2 class="move_down">Expenses Claimed<i class="fa fa-angle-up pull-right"></i></h2>
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="expenses-list">
@@ -774,6 +774,7 @@
 								<?php endforeach; ?>
 								<?php endif; ?>
 							</div>
+							<button class="btn btn-primary add_new_expenses" type="button">Add new expenses item</button><br />
 						</div>
 					</div>
 

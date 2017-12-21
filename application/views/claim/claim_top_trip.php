@@ -667,9 +667,6 @@
 
 						<h2 class="move_down">
 							Expenses Claimed
-							<?php if($edit): ?>
-							<button class="btn btn-primary add_new_expenses" type="button">Add new expenses item</button>
-							<?php endif; ?>
 							<i class="fa fa-angle-down pull-right"></i>
 						</h2>
 						<div class="row" style="display: none">
@@ -850,6 +847,9 @@
 									<?php endif; ?>
 								</div>
 							</div>
+							<?php if($edit): ?>
+							<button class="btn btn-primary add_new_expenses" type="button">Add new expenses item</button><br />
+							<?php endif; ?>
 						</div>
 						
 						<?php if(!empty($intake_forms)): ?>

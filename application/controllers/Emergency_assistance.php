@@ -116,8 +116,8 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('reason', 'Reason', 'required');
 			$this->form_validation->set_rules('first_name', 'First Name', 'required|callback_alpha_dash_space');
 			$this->form_validation->set_rules('last_name', 'Last Name', 'callback_alpha_dash_space');
-			$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
-			$this->form_validation->set_rules('post_code', 'Postal Code', 'required|trim|max_length[9]|min_length[5]');
+			$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|min_length[4]|max_length[15]');
+			$this->form_validation->set_rules('post_code', 'Postal Code', 'required|trim|max_length[15]|min_length[4]');
 			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			// $this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('relations', 'Relations', 'required');
@@ -454,7 +454,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 			$this->form_validation->set_rules('first_name', 'First Name', 'required|callback_alpha_dash_space');
 			$this->form_validation->set_rules('last_name', 'Last Name', 'callback_alpha_dash_space');
-			$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
+			$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|min_length[4]|max_length[15]');
 			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('relations', 'Relations', 'required');
@@ -955,10 +955,10 @@ class Emergency_assistance extends CI_Controller {
 			redirect('auth/login', 'refresh');
 		} else {
 			// validate form input
-			$this->form_validation->set_rules('institution_phone', 'School Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
-			$this->form_validation->set_rules('phone1', 'Phone1', 'required|trim|numeric|min_length[9]|max_length[15]');
-			$this->form_validation->set_rules('phone2', 'Phone2', 'trim|numeric|min_length[9]|max_length[15]');
-			$this->form_validation->set_rules('contact_phone', 'Contact Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
+			$this->form_validation->set_rules('institution_phone', 'School Phone', 'required|trim|min_length[9]|max_length[15]');
+			$this->form_validation->set_rules('phone1', 'Phone1', 'required|trim|min_length[9]|max_length[15]');
+			$this->form_validation->set_rules('phone2', 'Phone2', 'trim|min_length[9]|max_length[15]');
+			$this->form_validation->set_rules('contact_phone', 'Contact Phone', 'required|trim|min_length[9]|max_length[15]');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required|alpha_numeric');
 			
 			$this->form_validation->set_rules('product', 'Select Product', 'required');
@@ -1102,7 +1102,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('postcode', 'Postcode', 'required');
 			$this->form_validation->set_rules('discount', 'Discount', 'required|numeric');
 			$this->form_validation->set_rules('contact_person', 'Contact Person', 'required');
-			$this->form_validation->set_rules('phone_no', 'Phone', 'required|trim|numeric|min_length[9]|max_length[15]');
+			$this->form_validation->set_rules('phone_no', 'Phone', 'required|trim|min_length[9]|max_length[15]');
 			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 			$this->form_validation->set_rules('ppo_codes', 'PPO Codes', 'required');
 			$this->form_validation->set_rules('services', 'Services', 'required');
