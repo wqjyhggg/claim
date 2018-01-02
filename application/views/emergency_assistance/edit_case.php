@@ -213,9 +213,9 @@
 					<div class="row inpationdocinfo">
 						<label class="form-group col-sm-12">Inpatient Info</label>
 						<div class="form-group col-sm-4">
-							<?php echo form_label('Addmission Date:', 'addmission_date', array("class"=>'col-sm-12')); ?>
+							<?php echo form_label('Admission Date:', 'addmission_date', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
-								<?php echo form_input("addmission_date", $case_details["addmission_date"], array("class"=>"form-control datepicker", 'placeholder'=>'Addmission Date')); ?>
+								<?php echo form_input("addmission_date", $case_details["addmission_date"], array("class"=>"form-control datepicker_discharge", 'placeholder'=>'Admission Date')); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 							<?php echo form_error("addmission_date"); ?>

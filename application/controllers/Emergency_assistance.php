@@ -788,7 +788,7 @@ class Emergency_assistance extends CI_Controller {
 			$sorting = array();
 			$sortingstr = '';
 			if (!empty($conditions)) {
-				$sortingstr = '&'.build_query($conditions);
+				$sortingstr = '&'.http_build_query($conditions);
 			}
 			if ($this->input->get("created_sort")) {
 				$sorting['case.created'] = trim($this->input->get("created_sort"));

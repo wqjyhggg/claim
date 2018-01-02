@@ -675,10 +675,10 @@
 									</div>
 									<div class="clearfix"></div>
 
-									<div class="col-sm-3">
+									<!-- div class="col-sm-3">
 										<?php echo form_label('Comment:', 'comment', array("class" => 'col-sm-12')); ?>
 										<?php echo form_input("expenses_claimed[comment][]", $arr['comment'][$key], array("class" => "form-control")); ?>
-									</div>
+									</div -->
 									
 									<div class="col-sm-3 pull-right"><i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i></div>
 								</div>
@@ -962,11 +962,11 @@
 			</div>
 			<div class="clearfix"></div>
 
-			<div class="col-sm-3">
+			<!-- div class="col-sm-3">
 				<?php echo form_label('Comment:', 'comment', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[comment][]", '', array("class" => "form-control")); ?>
-			</div>
-			<div class="col-sm-3">
+			</div -->
+			<div class="col-sm-3 pull-right">
 				<i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i>
 			</div>
 		</div>

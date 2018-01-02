@@ -667,11 +667,11 @@
 										</div>
 										<div class="clearfix"></div>
 
-										<div class="col-sm-3">
+										<!-- div class="col-sm-3">
 											<?php echo form_label('Comment:', 'comment', array("class" => 'col-sm-12')); ?>
 											<?php echo $value ['comment']; ?>
 											<?php echo form_hidden("expenses_claimed[comment][]", $value ['comment']); ?>
-										</div>
+										</div -->
 									</div>
 									<?php  } else { ?>
 									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
@@ -751,10 +751,10 @@
 										</div>
 										<div class="clearfix"></div>
 
-										<div class="col-sm-3">
+										<!-- div class="col-sm-3">
 											<?php echo form_label('Comment:', 'comment', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed[comment][]", $value ['comment'], array("class" => "form-control")); ?>
-										</div>
+										</div -->
 										
 										<?php if($edit): ?>
 										<div class="col-sm-3 pull-right"><i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i></div>
@@ -1089,10 +1089,10 @@
 			</div>
 			<div class="clearfix"></div>
 
-			<div class="col-sm-3">
+			<!-- div class="col-sm-3">
 				<?php echo form_label('Comment:', 'comment', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[comment][]", $this->input->post("comment"), array("class" => "form-control")); ?>
-			</div>
+			</div -->
 
 			<div class="col-sm-3 pull-right">
 				<i class="fa fa-trash row-link remove_claim" style="padding-top: 33px;"></i>
@@ -1236,11 +1236,20 @@
       .on("keyup", ".company_name input", function(){
          $(".company_name input").val($(this).val());
       })
+      
+      $("select[name='expenses_claimed[payee][]']").change(function(){
+         $(this).next('input').val($(this).val());
+      })
+      
       // select default payee
       $("input[name='expenses_claimed[payee_id][]']").map(function(){
          $(this).prev('select').val($(this).val());
       })
 
+      $("input[name='expenses_claimed[pay_to][]']").map(function(){
+         $(this).prev('select').val($(this).val());
+      })
+      
       $(".datepicker").datepicker({
            startDate: '-105y',
            endDate: '+2y',
@@ -1352,6 +1361,10 @@
          $(this).prev('select').val($(this).val());
       })
 
+      $("input[name='expenses_claimed[pay_to][]']").map(function(){
+         $(this).prev('select').val($(this).val());
+      })
+      
       // remap payment_type names to avoide errors
       $count = 0;
       $(".payee-data .row").map(function(){
@@ -1770,6 +1783,10 @@
          $(this).prev('select').val($(this).val());
       })
 
+      $("input[name='expenses_claimed[pay_to][]']").map(function(){
+          $(this).prev('select').val($(this).val());
+       })
+       
    })
 
    // to check unique payee name
@@ -1794,6 +1811,10 @@
          $(this).prev('select').val($(this).val());
       })
 
+      $("input[name='expenses_claimed[pay_to][]']").map(function(){
+          $(this).prev('select').val($(this).val());
+       })
+       
    })
 
 

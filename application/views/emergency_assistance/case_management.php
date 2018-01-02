@@ -103,7 +103,7 @@
 									<th>Policy Number</th>
 									<th>Insured Name</th>
 									<th>DOB</th>
-									<th>Initiator</th>
+									<th>Created By</th>
 									<th>Current Case Manager</th>
 									<th><a href='<?php echo $priority_sort_url; ?>'>Priority</a></th>
 									<th>Status</th>

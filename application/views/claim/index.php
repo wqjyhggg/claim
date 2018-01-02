@@ -258,7 +258,7 @@
 									<td><?php echo $value['gender']; ?></td>
 									<td><?php echo $value['dob']; ?></td>
 									<td><?php echo $value['created']; ?></td>
-									<td><?php echo $value['amount_claimed'] ?></td>
+									<td><?php echo number_format($value['amount_claimed'], 2); ?></td>
 									<td><?php echo $value['email']; ?></td>
 									<td><?php echo anchor("claim/claim_detail/".$value['id'], "View"); ?></td>
 								</tr>
