@@ -223,6 +223,8 @@ class Case_model extends CI_Model {
 		if (isset($indata['medical_notes'])) $data['medical_notes'] = $indata['medical_notes'];
 		if (isset($indata['policy_no'])) $data['policy_no'] = $indata['policy_no'];
 		if (isset($indata['product_short'])) $data['product_short'] = $indata['product_short'];
+		if (isset($indata['totaldays'])) $data['totaldays'] = $indata['totaldays'];
+		if (isset($indata['agent_id'])) $data['agent_id'] = $indata['agent_id'];
 		if (isset($indata['policy_info'])) $data['policy_info'] = $indata['policy_info'];
 		if (isset($indata['departure_date'])) $data['departure_date'] = $indata['departure_date'];
 		if (isset($indata['insured_firstname'])) $data['insured_firstname'] = $indata['insured_firstname'];
@@ -284,5 +286,34 @@ class Case_model extends CI_Model {
 		$id = $this->db->insert_id();
 		$this->active_model->log_new('case', $id, $data, $sql);
 		return $id;
+	}
+	
+	public function get_report($data) {
+		if (empty($data['start_dt']) || empty($data['end_dt'])) {
+			return array();
+		}
+		$s_tm = strtotime($data['start_dt']);
+		$e_tm = strtotime($data['end_dt']);
+		if ($s_tm > $e_tm) {
+			return array();
+		}
+
+		$st = new DateTime($data['start_dt']);
+		$et = new DateTime($data['end_dt']);
+		$interval = new DateInterval('P1M');
+		
+		$ststr = $st->format("Y-m-01 00:00:00");
+		$edstr = $et->format("Y-m-t 23:59:59");
+		
+		$sql  = "SELECT case_no as claim_no, '' as invoice, '' as provider_name, first_name, last_name, policy_no, LEFT(created, 10) as date_of_service, totaldays, '' as pay_date, 'P' as status, created, IF(DATEDIFF(NOW(),last_update)>90,0,reserve_amount) as amount_billed, 0 as amt_payable, IF(DATEDIFF(NOW(),last_update)>90,0,reserve_amount) as reserve_amount, 0 as recovery_amt FROM `case`";
+		$sql .= " WHERE status='".self::STATUS_ACTIVE."' AND claim_no='' AND created>='".$ststr."' AND created<='".$edstr."'";
+		if (!empty($data['product_short'])) {
+			$sql .= " AND product_short=".$this->db->escape($data['product_short']);
+		}
+		if (!empty($data['agent_id'])) {
+			$sql .= " AND agent_id='". (int)$data['agent_id']."'";
+		}
+		$sql .= " ORDER BY claim_no";
+		return $this->db->query($sql)->result_array();
 	}
 }

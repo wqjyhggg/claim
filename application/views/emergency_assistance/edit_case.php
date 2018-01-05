@@ -35,6 +35,8 @@
 							<?php echo form_error("policy_no"); ?>
 							<?php echo form_hidden('policy_info', $case_details['policy_info']); ?>
 							<input type='hidden' name='product_short' value='<?php echo $case_details["product_short"]; ?>'>
+							<input type='hidden' name='totaldays' value='<?php echo $case_details["totaldays"]; ?>'>
+							<input type='hidden' name='agent_id' value='<?php echo $case_details["agent_id"]; ?>'>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Insured Name:', 'insured_name', array("class"=>'col-sm-12')); ?>
@@ -1145,6 +1147,45 @@ $(document).ready(function() {
       var val = $(this).val();
       // set selected employee
       employee_id = val;
+   })
+
+   // get  policy information here
+   .on("change", "input[name=policy_no]", function(){
+      $.ajax({
+         url: "<?php echo base_url("emergency_assistance/get_policy_info"); ?>",
+         method:"get",
+         data:{policy:$(this).val()},
+         dataType: "json",
+         beforeSend: function(){
+            $(".nav-m22d").addClass("csspinner load1");
+         },
+         success: function(data){
+            if(typeof data.plan_list != "undefined" && data.plan_list.length) {
+               localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
+               $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+               
+               $("input[name=product_short]").val((data.plan_list[0].product_short));
+               $("input[name=totaldays]").val((data.plan_list[0].totaldays));
+               $("input[name=agent_id]").val((data.plan_list[0].agent_id));
+
+               $("input[name=insured_firstname]").val((data.plan_list[0].firstname));
+               $("input[name=insured_lastname]").val((data.plan_list[0].lastname));
+               $("textarea[name=insured_address]").val(data.plan_list[0].street_number+" "+data.plan_list[0].street_name);
+               $("input[name=dob]").val((data.plan_list[0].birthday));  
+
+               $("input[name=street_no]").val((data.plan_list[0].street_number));
+               $("input[name=street_name]").val((data.plan_list[0].street_name));
+               $("input[name=city]").val((data.plan_list[0].city));
+               $("input[name=province]").val((data.plan_list[0].province2));
+               $("input[name=country]").val((data.plan_list[0].country2));
+               $("input[name=post_code]").val((data.plan_list[0].postcode));
+            } else {
+               alert("Sorry, policy information does not exists, please check policy no and try again");               
+               $("input[name=policy_no]").val('Unknown - ' + $("input[name=policy_no]").val());
+            }
+            $(".nav-m22d").removeClass("csspinner load1");
+         }
+      })
    })
 
 

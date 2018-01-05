@@ -181,13 +181,13 @@ class Expenses_model extends CI_Model {
 		$edstr = $et->format("Y-m-t 23:59:59");
 		
 		if (empty($policy_sum['policies'])) {	
-			$expensessql = "SELECT LEFT(date_of_service, 7) as m, SUM(amount_claimed) as billed, SUM(amt_payable) as paid, SUM(recovery_amt) as recovery FROM expenses_claimed WHERE status='".self::EXPENSE_STATUS_Paid."' AND date_of_service>='".$ststr."' AND date_of_service<='".$edstr."' GROUP BY m";
+			$expensessql = "SELECT LEFT(date_of_service, 7) as m, SUM(amount_claimed) as billed, SUM(amt_payable) as paid, SUM(IF(DATEDIFF(NOW(),last_update)>30,0,recovery_amt)) as recovery FROM expenses_claimed WHERE status='".self::EXPENSE_STATUS_Paid."' AND date_of_service>='".$ststr."' AND date_of_service<='".$edstr."' GROUP BY m";
 		} else {
 			$policy_str = '';
 			foreach ($policy_sum['policies'] as $policy) {
 				$policy_str .= $this->db->escape($policy) . ",";
 			}
-			$expensessql  = "SELECT LEFT(e.date_of_service, 7) as m, SUM(e.amount_claimed) as billed, SUM(e.amt_payable) as paid, SUM(e.recovery_amt) as recovery FROM expenses_claimed e";
+			$expensessql  = "SELECT LEFT(e.date_of_service, 7) as m, SUM(e.amount_claimed) as billed, SUM(e.amt_payable) as paid, SUM(IF(DATEDIFF(NOW(),e.last_update)>30,0,e.recovery_amt)) as recovery FROM expenses_claimed e";
 			if ($policy_str) {
 				$policy_str = substr($policy_str, 0, -1);
 				$expensessql .= " LEFT JOIN claim c ON (e.claim_id=c.id AND c.policy_no IN (".$policy_str."))";
@@ -315,5 +315,41 @@ class Expenses_model extends CI_Model {
 				}
 			}
 		}
+	}
+	
+	public function get_report($data) {
+		$this->load->model('claim_model');
+		
+		if (empty($data['start_dt']) || empty($data['end_dt'])) {
+			return array();
+		}
+		$s_tm = strtotime($data['start_dt']);
+		$e_tm = strtotime($data['end_dt']);
+		if ($s_tm > $e_tm) {
+			return array();
+		}
+
+		$st = new DateTime($data['start_dt']);
+		$et = new DateTime($data['end_dt']);
+		$interval = new DateInterval('P1M');
+		
+		$ststr = $st->format("Y-m-01 00:00:00");
+		$edstr = $et->format("Y-m-t 23:59:59");
+		
+		$sql  = "SELECT e.claim_no, e.invoice, e.provider_name, c.insured_first_name as first_name, c.insured_last_name as last_name, c.policy_no, e.date_of_service, c.totaldays, e.pay_date, IF(e.status='".self::EXPENSE_STATUS_Paid."','F','P') as status, e.created, e.amount_billed, e.amt_payable, e.amount_billed as reserve_amount, e.recovery_amt FROM expenses_claimed e";
+		$sql .= " RIGHT JOIN claim c ON (e.claim_id=c.id)";
+		$sql .= " WHERE e.status != '".self::EXPENSE_STATUS_Declined."' AND e.date_of_service>='".$ststr."' AND e.date_of_service<='".$edstr."'";
+		if (!empty($data['status'])) {
+			$sql .= " AND c.status=".$this->db->escape($data['status']);
+		}
+		if (!empty($data['product_short'])) {
+			$sql .= " AND c.product_short=".$this->db->escape($data['product_short']);
+		}
+		if (!empty($data['agent_id'])) {
+			$sql .= " AND c.agent_id='". (int)$data['agent_id']."'";
+		}
+		$sql .= " ORDER BY e.claim_no";
+		
+		return $this->db->query($sql)->result_array();
 	}
 }

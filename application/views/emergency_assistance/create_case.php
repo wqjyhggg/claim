@@ -25,6 +25,8 @@
 						<?php echo form_error("policy_no"); ?>
 						<?php echo form_hidden("policy_info"); ?>
 						<input type='hidden' name='product_short' value='<?php echo $case_details["product_short"]; ?>'>
+						<input type='hidden' name='totaldays' value='<?php echo $case_details["totaldays"]; ?>'>
+						<input type='hidden' name='agent_id' value='<?php echo $case_details["agent_id"]; ?>'>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Insured Name:', 'insured_name', array("class" => 'col-sm-12')); ?>
@@ -621,6 +623,9 @@ $(document).ready(function() {
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
                
                $("input[name=product_short]").val((data.plan_list[0].product_short));
+               $("input[name=totaldays]").val((data.plan_list[0].totaldays));
+               $("input[name=agent_id]").val((data.plan_list[0].agent_id));
+
                $("input[name=insured_firstname]").val((data.plan_list[0].firstname));
                $("input[name=insured_lastname]").val((data.plan_list[0].lastname));
                $("textarea[name=insured_address]").val(data.plan_list[0].street_number+" "+data.plan_list[0].street_name);
@@ -718,6 +723,10 @@ $(document).ready(function() {
             if(typeof data.plan_list != "undefined" && data.plan_list.length)
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
+               $("input[name=product_short]").val((data.plan_list[0].product_short));
+               $("input[name=totaldays]").val((data.plan_list[0].totaldays));
+               $("input[name=agent_id]").val((data.plan_list[0].agent_id));
+
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
 
                $("input[name=insured_firstname]").val(<?php if ($this->input->get('firstname')) { echo "'".$this->input->get('firstname')."'"; } else { ?>(data.plan_list[0].firstname)<?php } ?>);

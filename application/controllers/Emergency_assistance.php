@@ -279,6 +279,8 @@ class Emergency_assistance extends CI_Controller {
 			} else {
 				$case_details = array();
 				$case_details['policy_no'] = '';
+				$case_details['totaldays'] = '';
+				$case_details['agent_id'] = '';
 				$case_details['product_short'] = '';
 				$case_details['insured_firstname'] = '';
 				$case_details['insured_lastname'] = '';
