@@ -54,6 +54,7 @@
 							<?php echo form_error("policy_no"); ?>
 							<?php echo form_hidden("policy_info", $this->input->post("policy_info")); ?>
 							<input type='hidden' name='product_short' value='<?php echo ($this->input->post("product_short") ? $this->input->post("product_short") : $this->input->get("product_short")); ?>'>
+							<input type='hidden' name='agent_id' value='<?php echo ($this->input->post("agent_id") ? $this->input->post("agent_id") : $this->input->get("agent_id")); ?>'>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Case #:', 'case_no', array("class" => 'col-sm-12')); ?>
@@ -1306,6 +1307,7 @@
                    alert("Sorry, Canceled policy can't Create claim.");
                } else {
                $("input[name=product_short]").val(data.plan_list[0].product_short);
+               $("input[name=agent_id]").val(data.plan_list[0].agent_id);
 
                $("input[name=insured_first_name]").val(data.plan_list[0].firstname);
                $("input[name=insured_last_name]").val(data.plan_list[0].lastname);
@@ -1342,7 +1344,8 @@
 
                $("input[name=policy_info]").val('');
                $("input[name=product_short]").val('');
-               
+               $("input[name=agent_id]").val('');
+                             
                // reset all fields
                $("input[name=insured_first_name]").val('');
                $("input[name=insured_last_name]").val('');
@@ -1481,6 +1484,7 @@
                    alert("Sorry, Canceled policy <?php echo $this->input->get('policy'); ?> can't Create claim.");
                } else {
                $("input[name=product_short]").val(data.plan_list[0].product_short);
+               $("input[name=agent_id]").val(data.plan_list[0].agent_id);
 
                $("input[name=insured_first_name]").val(<?php if ($this->input->get('firstname')) { echo "'".$this->input->get('firstname')."'"; } else { ?>data.plan_list[0].firstname<?php } ?>);
                $("input[name=insured_last_name]").val(<?php if ($this->input->get('lastname')) { echo "'".$this->input->get('lastname')."'"; } else { ?>data.plan_list[0].lastname<?php } ?>);

@@ -51,6 +51,15 @@ class Claim_model extends CI_Model {
 	}
 	
 	/**
+	 * Get Agent ids
+	 * 
+	 * @return array
+	 */
+	public function get_agents_list($need_empty=0) {
+		return $this->db->query("SELECT DISTINCT agent_id FROM claim ORDER BY agent_id")->result_array();
+	}
+	
+	/**
 	 * Return a Claim Record
 	 *
 	 * @param int $id
@@ -150,18 +159,28 @@ class Claim_model extends CI_Model {
 	 *        	search parameter
 	 * @return array result array, maybe null
 	 */
-	public function search($data) {
+	public function search($data, $count=-1, $limit=-1, $sortby=array()) {
 		$products = FALSE;
 		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
 			$products = $this->ion_auth->get_users_products();
 		}
 		$this->db->select('SQL_CALC_FOUND_ROWS *', FALSE);
 		$this->db->where($data);
+		foreach ($sortby as $key => $val) {
+			$this->db->order_by($key, $val);
+		}
 		if ($products !== FALSE) {
 			if (empty($products)) {
 				return array();
 			}
 			$this->db->where_in('product_short', $products);
+		}
+		if ($count >= 0) {
+			if ($limit < 0) {
+				$this->db->limit($count);
+			} else {
+				$this->db->limit($count, $limit);
+			}
 		}
 		return $this->db->get('claim')->result_array();
 	}

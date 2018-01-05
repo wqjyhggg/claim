@@ -81,14 +81,14 @@ class Phone_model extends CI_Model {
 			switch ($status) {
 				case self::PHONE_OPT_LOGIN:
 					$this->insert_action($phoneid, $status);
-					$this->phone_model->set_phone_login($phoneid, true);
+					$this->set_phone_login($phoneid, true);
 					return 'OK';
 					break;
 				case self::PHONE_OPT_BREAK:
 				case self::PHONE_OPT_LOGOUT:
 				case self::PHONE_OPT_PAUSE:
 					$this->insert_action($phoneid, $status);
-					$this->phone_model->set_phone_login($phoneid, false);
+					$this->set_phone_login($phoneid, false);
 					return 'OK';
 					break;
 			}

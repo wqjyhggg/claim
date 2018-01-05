@@ -61,6 +61,7 @@
 								<?php echo form_input("policy_no", $claim_details["policy_no"], array("class" => "form-control required", 'placeholder' => 'Policy#', 'disabled' => 'disabled')); ?>
 								<?php echo form_error("policy_no"); ?>
 								<input type='hidden' name='product_short' value='<?php echo $claim_details["product_short"]; ?>'>
+								<input type='hidden' name='agent_id' value='<?php echo $claim_details["agent_id"]; ?>'>
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Case #:', 'case_no', array("class" => 'col-sm-12')); ?>

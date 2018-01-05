@@ -151,6 +151,73 @@ class Expenses_model extends CI_Model {
 	}
 	
 	/**
+	 * Return a list of Expenses
+	 *
+	 * @param array $data
+	 *        	search parameter
+	 * @return array result array, maybe null
+	 */
+	public function summary($data) {
+		if (empty($data['start_dt']) || empty($data['end_dt'])) {
+			return array();
+		}
+		$s_tm = strtotime($data['start_dt']);
+		$e_tm = strtotime($data['end_dt']);
+		if ($s_tm > $e_tm) {
+			return array();
+		}
+
+		$this->load->model('api_model');
+		$policy_sum = $this->api_model->get_policy_month_summary($data);
+		if (empty($policy_sum)) {
+			return array();
+		}
+		
+		$st = new DateTime($data['start_dt']);
+		$et = new DateTime($data['end_dt']);
+		$interval = new DateInterval('P1M');
+		
+		$ststr = $st->format("Y-m-01 00:00:00");
+		$edstr = $et->format("Y-m-t 23:59:59");
+		
+		if (empty($policy_sum['policies'])) {	
+			$expensessql = "SELECT LEFT(date_of_service, 7) as m, SUM(amount_claimed) as billed, SUM(amt_payable) as paid, SUM(recovery_amt) as recovery FROM expenses_claimed WHERE status='".self::EXPENSE_STATUS_Paid."' AND date_of_service>='".$ststr."' AND date_of_service<='".$edstr."' GROUP BY m";
+		} else {
+			$policy_str = '';
+			foreach ($policy_sum['policies'] as $policy) {
+				$policy_str .= $this->db->escape($policy) . ",";
+			}
+			$expensessql  = "SELECT LEFT(e.date_of_service, 7) as m, SUM(e.amount_claimed) as billed, SUM(e.amt_payable) as paid, SUM(e.recovery_amt) as recovery FROM expenses_claimed e";
+			if ($policy_str) {
+				$policy_str = substr($policy_str, 0, -1);
+				$expensessql .= " LEFT JOIN claim c ON (e.claim_id=c.id AND c.policy_no IN (".$policy_str."))";
+			}
+			$expensessql .= " WHERE e.status='".self::EXPENSE_STATUS_Paid."' AND e.date_of_service>='".$ststr."' AND e.date_of_service<='".$edstr."' GROUP BY m";
+		}
+		$rt = array();
+		
+		while ($st <= $et) {
+			$monthstr = $st->format("Y-m");
+			$st->add($interval);
+
+			$rt[$monthstr] = array('writen' => 0, 'earned' => 0, 'billed' => 0, 'paid' => 0, 'recovery' => 0);
+
+			if (isset($policy_sum['summary'][$monthstr])) {
+				$rt[$monthstr]['writen'] = $policy_sum['summary'][$monthstr]['writen'];
+				$rt[$monthstr]['earned'] = $policy_sum['summary'][$monthstr]['earned'];
+			}
+		}
+		
+		$expenses = $this->db->query($expensessql)->result_array();
+		foreach ($expenses as $rc) {
+			$rt[$rc['m']]['billed'] = $rc['billed'];
+			$rt[$rc['m']]['paid'] = $rc['paid'];
+			$rt[$rc['m']]['recovery'] = $rc['recovery'];
+		}
+		return $rt;
+	}
+	
+	/**
 	 * Save or Update a Claim
 	 *
 	 * @param array $para     	parameter

@@ -87,7 +87,7 @@
 							<tbody>
 								<?php foreach ( $records as $key => $value ) { ?>
 								<tr>
-									<td><?php echo $value['claim_no'] ? anchor('claim/claim_detail/'.$value['id'], $value['claim_no'], array('title'=>'Details')) : ''; ?></td>
+									<td><?php echo $value['claim_no'] ? anchor('claim/claim_detail/'.$value['claim_id'], $value['claim_no'], array('title'=>'Details')) : ''; ?></td>
 									<td><?php echo $value['claim_item_no']; ?></td>
 									<td><?php echo $statuses[$value['status']]; ?></td>
 									<td><?php echo $value['last_update']; ?></td>

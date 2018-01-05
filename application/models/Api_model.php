@@ -88,6 +88,57 @@ class Api_model extends CI_Model {
 	}
 	
 	/**
+	 * Return a list of policy status
+	 *
+	 * @param array $data
+	 *        	search parameter
+	 * @return array result array, maybe null
+	 */
+	public function get_policy_month_summary($data) {
+		// prepare post data
+		$data ['key'] = API_KEY;
+		$post_data = http_build_query($data);
+		
+		// get list of policy status here
+		$url = API_URL . "claim_summary";
+		$curl = curl_init ();
+		
+		// Post Data
+		curl_setopt ( $curl, CURLOPT_POST, 1 );
+		curl_setopt ( $curl, CURLOPT_POSTFIELDS, $post_data );
+		
+		// Optional Authentication:
+		if (API_USER and API_PASSWORD) {
+			curl_setopt ( $curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
+			curl_setopt ( $curl, CURLOPT_USERPWD, API_USER . ":" . API_PASSWORD );
+		}
+		
+		curl_setopt ( $curl, CURLOPT_URL, $url );
+		curl_setopt ( $curl, CURLOPT_RETURNTRANSFER, 1 );
+		curl_setopt ( $curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false );
+		curl_setopt ( $curl, CURLOPT_DNS_CACHE_TIMEOUT, 2 );
+		curl_setopt ( $curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+		
+		$result = curl_exec ( $curl );
+		
+		if($errno = curl_errno($curl)) {
+			$error_message = curl_strerror($errno);
+			echo "cURL error ({$errno}):\n {$error_message}";
+		}
+		
+		curl_close ( $curl );
+		$rt = json_decode ( $result, TRUE );
+		// echo "<pre>"; print_r($data); echo("<br>"); print_r($url); echo("<br>"); print_r($result); die("<br>Resutl");
+		$this->status_list = isset($rt['status_list']) ? $rt['status_list'] : array();
+		$this->success = isset($rt['success']) ? $rt['success'] : 'Failed to Connect';
+		$this->errormsg = isset($rt['errormsg']) ? $rt['errormsg'] : '';
+		if (isset($rt['success']) && isset($rt['data'])) {
+			return $rt['data'];
+		}
+		return array ();
+	}
+	
+	/**
 	 * Return a list of products which policy system have
 	 * 
 	 * @return array 	production list
