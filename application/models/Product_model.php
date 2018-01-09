@@ -28,4 +28,12 @@ class Product_model extends CI_Model {
 		}
 		return $rArr;
 	}
+	
+	public function get_full_name($product_short) {
+		$this->db->where('product_short', $product_short);
+		if ($rt = $this->db->get('product')->row_array()) {
+			return ($rt['full_name']);
+		}
+		return '';
+	}
 }

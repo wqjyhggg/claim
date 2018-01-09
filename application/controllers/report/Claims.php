@@ -113,7 +113,6 @@ class Claims extends CI_Controller {
 			$records = array();
 			if ($para['scope'] != 'Case') {
 				$records = $this->expenses_model->get_report($para);
-				//echo "<pre>"; echo $this->db->last_query()."\n"; print_r($this->data['records']); die("\nXXXXXXXXXXXXXXXXX");
 			}
 			if ($para['scope'] != 'Claim') {
 				$cases = $this->case_model->get_report($para);
