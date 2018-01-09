@@ -58,7 +58,7 @@
 									<td><?php echo empty($claim['policy_info']) ? '' : ($claim['policy_info']['isfamilyplan'] == 0) ? 'Individual' : (($claim['policy_info']['isfamilyplan'] == 1) ? 'Family' : 'Group'); ?></td>
 								</tr>
 								<tr>
-									<td width='50%'><b>Date of Application / issue : (if applicable)</b></td>
+									<td width='50%'><b>Date of Application / Issue : (if applicable)</b></td>
 									<td><?php echo empty($claim['policy_info']) ? '' : $claim['policy_info']['apply_date']; ?></td>
 								</tr>
 								<tr>
@@ -98,7 +98,7 @@
 									<?php } ?>
 								</tr>
 								<tr>
-									<td width='50%'><b>Late Notification of Claim :</b></td>
+									<td width='50%'><b>Late Notification of Claim (if applicable):</b></td>
 									<?php if (! $ispdf) { ?>
 									<td><input name='late_notification' value='' class="form-control"></td>
 									<?php } else { ?>
@@ -173,6 +173,85 @@
 						</div>
 						<br />
 
+						<div class="form-group col-sm-12">
+							<label for="details_noted" class="col-sm-12"><b>CONCLUSION :</b></label>
+						</div>
+						<br />
+
+						<div class="form-group col-sm-12">
+							<label for="details_noted" class="col-sm-12"><b>Eligibility for the policy / coverage :</b></label>
+							<br />
+							Not applicable<br /><br />
+							Or<br /><br />
+							Based on the medical information received, the claimant/insured appears to meet the eligibility criteria. This is further supported by the response from the LMO to the eligibility questionnaire, where he/she has answered “No” to all questions. LMO has also indicated that insured did have a complete medical check-up within the 24 months from application date, further specifying the date of the examination as ___________.<br /><br />
+							Or<br /><br />
+							Based on the medical information received, the claimant/insured DOES NOT appear to meet the eligibility criteria.<br /><br />
+							Reason:<br /><br /> 
+							Or<br /><br />
+							Further clarity/information is needed (specifying reason etc.)<br /><br />
+						</div>
+						<br />
+
+						<div class="form-group col-sm-12">
+							<label for="details_noted" class="col-sm-12"><b>Medical Disclosure (per questionnaire) :</b></label>
+							<br />
+							Not applicable<br /><br />
+							Or<br /><br />
+							Based on the medical information received, the claimant/insured appears to have disclosed his/her medical conditions appropriately.<br /><br />
+							Or<br /><br />
+							Based on the medical information received, the claimant/insured appears to have failed to disclose his/her medical conditions appropriately on the declaration questionnaire.<br /><br />
+							Elaborate on reason:<br /><br /> 
+							Or<br /><br />
+							Further clarity/information is needed (specifying reason etc.)<br /><br />
+						</div>
+						<br />
+
+						<div class="form-group col-sm-12">
+							<label for="details_noted" class="col-sm-12"><b>Pre-existing condition :</b></label>
+							<br />
+							Not applicable<br /><br />
+							Or<br /><br />
+							Based on the medical information received, the cause for claim DOES NOT appear to be related to a pre-existing medical condition<br /><br />
+							Or<br /><br />
+							does appear to be related to a pre-existing condition that was stable/unstable in the pre-existing condition period of _________ days before the effective/departure date. <br />
+							Elaborate on reason:<br /><br />
+						</div>
+						<br />
+
+						<div class="form-group col-sm-12">
+							<label for="details_noted" class="col-sm-12"><b>Exclusions :</b></label>
+							<br />
+							Not applicable<br /><br />
+							Or<br /><br />
+							The below exclusion appears to apply to this claim because _____________________________________________________________ (you would provide an elaborate reasoning here).<br /><br />
+						</div>
+						<br />
+
+						<div class="form-group col-sm-12">
+							<label for="details_noted" class="col-sm-12"><b>Additional comments (if any) :</b></label>
+							<br />
+							Here you may comment on whether the treatment sought/rendered was elective Vs emergent. This may be more relevant for claims that were not actively managed by WTP and were rather notified after-the-fact.<br /><br />
+						</div>
+						<br />
+
+						<div class="form-group col-sm-12">
+							<label for="details_noted" class="col-sm-12"><b>Policy terms and conditions herewith considered :</b></label>
+							<br />
+							Here you can copy the policy wordings that may apply in support of a denial. For example: definition of pre-existing condition, definition of emergency, any particular exclusion such as those related to alcohol etc.<br /><br />
+						</div>
+						<br />
+
+						<div class="form-group col-sm-12">
+							Print your name here:<br /><br /><br /><br />
+							(Medical Reviewer)<br /><br /><br /><br />
+						</div>
+						<br />
+
+						<div class="form-group col-sm-12">
+							<label for="details_noted" class="col-sm-12"><b>Date :</b></label>
+							<br />
+							<?php echo date("Y-m-d"); ?>
+						</div>
 						<?php if (! $ispdf) { ?>
 						<div class="form-group col-sm-12">
 							<button class="btn btn-primary pull-right" name="export" value="2">Export</button>
