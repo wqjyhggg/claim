@@ -5,7 +5,7 @@ defined ( 'BASEPATH' ) or exit ( 'No direct script access allowed' );
 /**
  * Description of user
  *
- * @author Bhawani
+ * @author Jack
  */
 class Api extends CI_Controller {
 	public $api;

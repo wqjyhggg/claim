@@ -1,11 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/**
- * Description of user
- *
- * @author Bhawani
- */
 class Cases extends CI_Controller {
 	// set private properties here
 	private $limit = 17; // no of records per page

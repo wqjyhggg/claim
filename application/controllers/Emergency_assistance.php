@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Description of user
  *
- * @author Bhawani
+ * @author Jack
  */
 class Emergency_assistance extends CI_Controller {
 	private $limit = 10;

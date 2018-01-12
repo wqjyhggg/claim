@@ -703,7 +703,6 @@ class CI_Pagination {
 	/**
 	 * Add a sort link
 	 *
-	 * @author	bhawani shankar
 	 * @param	string	$name
 	 * @return	string
 	 */

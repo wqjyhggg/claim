@@ -5,7 +5,7 @@ defined ( 'BASEPATH' ) or exit ( 'No direct script access allowed' );
 /**
  * Description of user
  *
- * @author Bhawani
+ * @author Jack
  */
 class Myphone extends CI_Controller {
 	public function index() {

@@ -61,11 +61,42 @@ class Phone_model extends CI_Model {
 		return $this->db->get('phone_call')->row_array();
 	}
 
+	public function agent_logout($agent) {
+		// Force finish unlogout user
+		$this->db->set('etm', 'NOW()', FALSE);
+		$this->db->set('slength', 'TIME_TO_SEC(TIMEDIFF(NOW(), stm))', FALSE);
+		$this->db->set('active', self::PHONE_OPT_LOGOUT);
+		$this->db->where('agent', $agent);
+		$this->db->where('active', self::PHONE_OPT_LOGIN);
+		$this->db->update('phone_action');
+	}
+
 	public function insert_action($agent, $status) {
+		$this->agent_logout($agent);
+		
 		$data['agent'] = $agent;
-		$data['user_id'] = $this->ion_auth->get_user_id();
 		$data['active'] = $status;
+		$data['user_id'] = $this->ion_auth->get_user_id();
 		$this->db->insert('phone_action', $data);
+	}
+
+	public function update_action($agent, $status) {
+		// Force finish unlogout user
+		$this->db->set('etm', 'NOW()', FALSE);
+		$this->db->set('slength', 'TIME_TO_SEC(TIMEDIFF(NOW(), stm))', FALSE);
+		$this->db->set('active', $status);
+		$this->db->where('agent', $agent);
+		$this->db->where('user_id', $this->ion_auth->get_user_id());
+		$this->db->where('active', self::PHONE_OPT_LOGIN);
+		$this->db->update('phone_action');
+	}
+
+	public function get_active_user_id($agent) {
+		$sql = "SELECT * FROM phone_action WHERE agent=" . $this->db->escape($agent) . " AND active='".self::PHONE_OPT_LOGIN."' ORDER BY id DESC LIMIT 1";
+		if ($rt = $this->db->query($sql)) {
+			return $rt['user_id'];
+		}
+		return 0;
 	}
 
 	public function set_phone_login($phoneid, $status) {
@@ -87,7 +118,7 @@ class Phone_model extends CI_Model {
 				case self::PHONE_OPT_BREAK:
 				case self::PHONE_OPT_LOGOUT:
 				case self::PHONE_OPT_PAUSE:
-					$this->insert_action($phoneid, $status);
+					$this->update_action($phoneid, $status);
 					$this->set_phone_login($phoneid, false);
 					return 'OK';
 					break;
@@ -106,6 +137,14 @@ class Phone_model extends CI_Model {
 		$data = json_decode($rt, true);
 
 		if (isset($data['logged_in'])) {
+			// Phone is in queue, check and close if last login agent is different
+			$sql = "SELECT * FROM phone_action WHERE agent=" . $this->db->escape($phoneid) . " AND active='".self::PHONE_OPT_LOGIN."' AND user_id!='".(int)$this->ion_auth->get_user_id()."'";
+			$rt = $this->db->query($sql)->row_array();
+			if ($rt) {
+				// There is someone login already, so show user isn't login 
+				return false;
+			}
+			
 			return $data['logged_in'];
 		}
 		return false;
@@ -160,8 +199,12 @@ class Phone_model extends CI_Model {
 		} else {
 			$tm = strtotime($event_time);
 		}
+		$user_id = 0;
+		if (!empty($json['agent'])) {
+			$user_id = $this->get_active_user_id($json['agent']);
+		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "INSERT into phone_ring (phone_id, caller_id_number, agent, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['agent']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).")";
+		$sql = "INSERT into phone_ring (phone_id, caller_id_number, agent, user_id, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['agent']).", '".(int)$user_id."', ".$this->db->escape(date("Y-m-d H:i:s", $tm)).")";
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
@@ -256,8 +299,12 @@ class Phone_model extends CI_Model {
 		} else {
 			$tm = strtotime($event_time);
 		}
+		$user_id = 0;
+		if (!empty($json['agent'])) {
+			$user_id = $this->get_active_user_id($json['agent']);
+		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "INSERT into phone_records (phone_id, direction, agent, caller_id_number, newcall, answer) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['direction']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($json['start_time']))).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE answer=".$this->db->escape(date("Y-m-d H:i:s", $tm)).", agent=".$this->db->escape($json['agent']);
+		$sql = "INSERT into phone_records (phone_id, direction, agent, user_id, caller_id_number, newcall, answer) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['direction']).", ".$this->db->escape($json['agent']).", '".(int)$user_id."', ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($json['start_time']))).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE answer=".$this->db->escape(date("Y-m-d H:i:s", $tm)).", user_id='".(int)$user_id."', agent=".$this->db->escape($json['agent']);
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
@@ -296,8 +343,12 @@ class Phone_model extends CI_Model {
 		$agent = isset($json['agent']) ? $json['agent'] : '';
 		$caller_id_number = isset($json['caller_id_number']) ? $json['caller_id_number'] : '';
 		$start_time = isset($json['start_time']) ? $json['start_time'] : '';
-
-		$sql = "INSERT into phone_records (phone_id, direction, agent, caller_id_number, newcall, answer, hangup) values (".$this->db->escape($id).", ".$this->db->escape($direction).", ".$this->db->escape($agent).", ".$this->db->escape($caller_id_number).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($start_time))).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($start_time))).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE hangup=".$this->db->escape(date("Y-m-d H:i:s", $tm)).", agent=".$this->db->escape($agent);
+		$user_id = 0;
+		if (!empty($json['agent'])) {
+			$user_id = $this->get_active_user_id($json['agent']);
+		}
+		
+		$sql = "INSERT into phone_records (phone_id, direction, agent, user_id, caller_id_number, newcall, answer, hangup) values (".$this->db->escape($id).", ".$this->db->escape($direction).", ".$this->db->escape($agent).", '".(int)$user_id."', ".$this->db->escape($caller_id_number).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($start_time))).", ".$this->db->escape(date("Y-m-d H:i:s", strtotime($start_time))).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE hangup=".$this->db->escape(date("Y-m-d H:i:s", $tm)).", user_id='".(int)$user_id."', agent=".$this->db->escape($agent);
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
@@ -401,5 +452,65 @@ class Phone_model extends CI_Model {
 			echo $e->getMessage() . "\n";
 			return false;
 		}
+	}
+	
+	public function get_queue_list() {
+		$sql = "SELECT DISTINCT queue FROM phone_records ORDER by queue ASC";
+		return $this->db->query($sql)->result_array();
+	}
+	
+	public function get_time_index($type, $start_dt, $end_dt) {
+		$s_tm = strtotime($start_dt);
+		$e_tm = strtotime($end_dt);
+		if ($s_tm > $e_tm) {
+			return array();
+		}
+		
+		$st = new DateTime($start_dt);
+		$et = new DateTime($end_dt);
+		switch ($type) {
+			case 'month': $interval = new DateInterval('P1M'); $dtformat="Y-m"; break;
+			case 'day': $interval = new DateInterval('P1D'); $dtformat="Y-m-d"; break;
+			default: return array();
+		}
+		
+		$rt = array();
+		while ($st <= $et) {
+			$rt[] = $st->format($dtformat);
+			$st->add($interval);
+		}
+		return $rt;
+	}
+	
+	public function phone_report($data) {
+		if (empty($data['start_dt']) || empty($data['end_dt']) || empty($data['queue'])) {
+			return array();
+		}
+		
+		$ans = array();
+		$start_tm = $data['start_dt']." 00:00:00";
+		$end_tm = $data['end_dt']." 23:59:59";
+		
+		$sql = "SELECT LEFT(newcall, 10) as dt, COUNT(*) as answers FROM phone_records WHERE queue=".$this->db->escape($data['queue'])." AND direction='inbound' AND newcall>=".$this->db->escape($start_tm)." AND newcall<=".$this->db->escape($end_tm)." GROUP BY dt";
+		$ans['in'] = $this->db->query($sql)->result_array();
+		
+		$sql = "SELECT LEFT(stm, 10) as dt, SUM(slength) as total_pause FROM phone_action WHERE active='".self::PHONE_OPT_PAUSE."' AND stm>=".$this->db->escape($start_tm)." AND stm<=".$this->db->escape($end_tm)." GROUP BY dt";
+		$ans['acw'] = $this->db->query($sql)->result_array();
+		
+		$sql = "SELECT LEFT(newcall, 10) as dt, COUNT(*) as abandoned, AVG(TIME_TO_SEC(TIMEDIFF(hangup, newcall))) as avg_abandoned FROM phone_records WHERE queue=".$this->db->escape($data['queue'])." AND direction='inbound' AND answer<newcall AND newcall>=".$this->db->escape($start_tm)." AND newcall<=".$this->db->escape($end_tm)." GROUP BY dt";
+		$ans['abandoned'] = $this->db->query($sql)->result_array();
+		
+		$sql = "SELECT LEFT(newcall, 10) as dt, MAX(TIMEDIFF(answer, newcall)) as max_waiting, AVG(TIME_TO_SEC(TIMEDIFF(answer, newcall))) as avg_waiting, AVG(TIME_TO_SEC(TIMEDIFF(hangup, answer))) as avg_talk, SUM(TIME_TO_SEC(TIMEDIFF(hangup, answer))) as total_talk FROM phone_records WHERE queue=".$this->db->escape($data['queue'])." AND direction='inbound' AND answer>newcall AND newcall>=".$this->db->escape($start_tm)." AND newcall<=".$this->db->escape($end_tm)." GROUP BY dt";
+		$ans['answer'] = $this->db->query($sql)->result_array();
+		
+		return $ans;
+	}
+	
+	public function second_to_time($seconds) {
+		$str = '';
+		$hours = (int) ($seconds / 3600);
+		$minutes = (int) (($seconds % 3600) / 60);
+		$seconds = (int) ($seconds % 60);
+		return $hours . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
 	}
 }
