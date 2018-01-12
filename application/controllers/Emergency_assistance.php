@@ -1589,6 +1589,7 @@ class Emergency_assistance extends CI_Controller {
 		
 		// select post request
 		$employee_id = $this->input->post("employee_id");
+		$sphone = $this->input->post("sphone");
 		$shift = $this->input->post("schedule");
 		$manager_id = $this->ion_auth->get_user_id();
 		
@@ -1607,7 +1608,8 @@ class Emergency_assistance extends CI_Controller {
 							'shour' => $shour,
 							'hours' => $hours 
 					);
-					$this->schedule_model->save($data);
+					if ($sphone) $data['sphone'] = $sphone;
+ 					$this->schedule_model->save($data);
 				}
 			}
 		} else {
@@ -1623,6 +1625,7 @@ class Emergency_assistance extends CI_Controller {
 						'shour' => $shour,
 						'hours' => $hours 
 				);
+				if ($sphone) $data['sphone'] = $sphone;
 				$this->schedule_model->save($data);
 			}
 		}
@@ -1722,12 +1725,14 @@ class Emergency_assistance extends CI_Controller {
 						}
 						$dt = trim($data[1]);
 						$tmStr = trim($data[2]);
-						if (($tmStr != Schedule_model::SHIFT_2PM_STR) && ($tmStr != Schedule_model::SHIFT_2PM_STR) && ($tmStr != Schedule_model::SHIFT_2PM_STR)) {
+						$sphone = trim($data[3]);
+						if (($tmStr == Schedule_model::SHIFT_8AM_STR) || ($tmStr == Schedule_model::SHIFT_2PM_STR) || ($tmStr == Schedule_model::SHIFT_8PM_STR)) {
 							$shour = $this->schedule_model->get_shift_shour($tmStr);
 							$para = array();
 							$para['employee_id'] = (int)$user_id;
 							$para['schedule'] = $tmStr;
 							$para['date'] = $dt;
+							$para['sphone'] = $sphone;
 							$para['created_by'] = $this->ion_auth->get_user_id();
 							$para['start_tm'] = $dt . " " . $shour . ":00:00";
 							$para['shour'] = $shour;

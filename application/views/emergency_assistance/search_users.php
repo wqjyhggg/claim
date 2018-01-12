@@ -4,9 +4,9 @@
 		<thead>
 			<tr>
 				<th>ID</th>
-				<th>First Name</th>
-				<th>Last Name</th>
+				<th>Name</th>
 				<th>Email Address</th>
+				<th>Phone</th>
 				<th>Shift</th>
 			</tr>
 		</thead>
@@ -14,9 +14,9 @@
 			<?php foreach ($users as $user):?>
 			<tr>
 				<td><?php echo $user['id'];?></td>
-				<td><?php echo htmlspecialchars($user['first_name'],ENT_QUOTES,'UTF-8');?></td>
-				<td><?php echo htmlspecialchars($user['last_name'],ENT_QUOTES,'UTF-8');?></td>
+				<td><?php echo htmlspecialchars($user['first_name'] . " " . $user['last_name'],ENT_QUOTES,'UTF-8');?></td>
 				<td><?php echo htmlspecialchars($user['email'],ENT_QUOTES,'UTF-8');?></td>
+				<td><?php echo form_input("sphone", $user["sphone"], array("class" => "form-control select_schedule", 'alt' => $user ['id'])); ?></td>
 				<td>
 					<div class="form-group col-sm-12">
 						<div class="form-group col-sm-9">

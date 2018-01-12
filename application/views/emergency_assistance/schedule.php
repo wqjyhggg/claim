@@ -62,7 +62,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Create Schedule</h4>
+				<h4 class="modal-title">Update Schedule</h4>
 			</div>
 			<div class="modal-body">
 				<?php if(!$emc): ?>
@@ -233,16 +233,18 @@ $(document).on("click", ".day_header", function(){
 // save schedule of employees
 $(document).on("change", ".select_schedule", function() {
 	// show trash button
-	if($(this).val()) {
+	if ($(this).val()) {
 		$(this).parent("div").parent("div").children(".col-sm-2").show();
 	} else {
 		$(this).parent("div").parent("div").children(".col-sm-2").hide();
 	}
 
-	var schedule = $(this).val();
+	var schedule = $(this).closest("tr").find("select[name=status]").val();
+	var sphone = $(this).closest("tr").find("input[name=sphone]").val();
+	
 	var employee_id = $(this).attr("alt");
 	var url = "<?php echo base_url("emergency_assistance/save_schedule/$year/$month"); ?>/" + date + '/' + type + '/' + day;
-	var data = {employee_id:employee_id, schedule: schedule};
+	var data = {employee_id:employee_id, sphone: sphone, schedule: schedule};
 	$.ajax({
 		url:url,
 		method: "post",
@@ -356,9 +358,6 @@ $(document).on("click", ".fa.fa-trash.row-link", function() {
 
 // put different-2 colors according to time schedule
 .ready(function() {
-    <?php if (!$this->ion_auth->is_casemamager() and !$this->ion_auth->is_admin()):?>
-      $("td").removeAttr('data-toggle');
-    <?php endif; ?>
     load_colors();
   })
 
