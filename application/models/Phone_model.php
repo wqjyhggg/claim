@@ -92,7 +92,7 @@ class Phone_model extends CI_Model {
 	}
 
 	public function get_active_user_id($agent) {
-		$sql = "SELECT * FROM phone_action WHERE agent=" . $this->db->escape($agent) . " AND active='".self::PHONE_OPT_LOGIN."' ORDER BY id DESC LIMIT 1";
+		$sql = "SELECT * FROM phone_action WHERE agent=" . $this->db->escape($agent) . " AND active='".self::PHONE_OPT_LOGIN."' ORDER BY phone_action_id DESC LIMIT 1";
 		if ($rt = $this->db->query($sql)) {
 			return $rt['user_id'];
 		}
@@ -513,4 +513,5 @@ class Phone_model extends CI_Model {
 		$seconds = (int) ($seconds % 60);
 		return $hours . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
 	}
+	
 }
