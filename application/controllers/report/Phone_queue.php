@@ -78,9 +78,12 @@ class Phone_queue extends CI_Controller {
 			fputcsv($output, array('Time Scope :', $para['start_dt'] . " to " . $para['end_dt']));
 			fputcsv($output, array(''));
 			fputcsv($output, array('Period', 'Total Waiting Time'));
-			foreach ($arr as $key => $value) { 
+			$tt = 0;
+			foreach ($arr as $key => $value) {
+				$tt += $value;
 				fputcsv($output, array($key, $value));
 			}
+			fputcsv($output, array('Total', $tt));
 		}
 	}
 }

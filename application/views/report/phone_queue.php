@@ -65,12 +65,18 @@
 									<td><b>Period</b></td>
 									<td><b>Total Calls</b></td>
 								</tr>
+								<?php $tt = 0; ?>
 								<?php foreach($records as $key => $value ) { ?>
+								<?php $tt += $value; ?>
 								<tr>
 									<td><b><?php echo $key; ?> :</b></td>
 									<td><?php echo $value; ?></td>
 								</tr>
 								<?php } ?>
+								<tr>
+									<td><b>Total :</b></td>
+									<td><?php echo $tt; ?></td>
+								</tr>
 							</table>
 						</div>
 					</div>

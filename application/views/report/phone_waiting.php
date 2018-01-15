@@ -65,12 +65,18 @@
 									<td><b>Period</b></td>
 									<td><b>Total Waiting Time</b></td>
 								</tr>
+								<?php $tt = 0; ?>
 								<?php foreach($records as $key => $value ) { ?>
+								<?php $tt += $value; ?>
 								<tr>
 									<td><b><?php echo $key; ?> :</b></td>
 									<td><?php echo $this->phone_model->second_to_time($value); ?></td>
 								</tr>
 								<?php } ?>
+								<tr>
+									<td><b>Total :</b></td>
+									<td><?php echo $this->phone_model->second_to_time($tt); ?></td>
+								</tr>
 							</table>
 						</div>
 					</div>
