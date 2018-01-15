@@ -53,6 +53,10 @@
 					<div class="table-responsive">
 						<div class="col-sm-6">
 							<table class="table">
+								<tr>
+									<td><b>Period</b></td>
+									<td><b>Total Waiting Time</b></td>
+								</tr>
 								<?php foreach($records as $key => $value ) { ?>
 								<tr>
 									<td><b><?php echo $key; ?> :</b></td>

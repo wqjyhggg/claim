@@ -553,10 +553,11 @@ class Phone_model extends CI_Model {
 			$st->add($interval);
 			$etm = $st->format("Y-m-d H:i:s");
 			
-			$sql = "SELECT SUM(TIME_TO_SEC(TIMEDIFF(answer, newcall))) as waiting FROM phone_records WHERE queue=".$this->db->escape($data['queue'])." AND direction='inbound' AND answer<newcall AND newcall>=".$this->db->escape($stm)." AND newcall<".$this->db->escape($etm);
+			$sql = "SELECT SUM(TIME_TO_SEC(TIMEDIFF(answer, newcall))) as waiting FROM phone_records WHERE queue=".$this->db->escape($data['queue'])." AND direction='inbound' AND answer>newcall AND newcall>=".$this->db->escape($stm)." AND newcall<".$this->db->escape($etm);
+					
 			$rt[$key] = 0;
 			if ($rc = $this->db->query($sql)->row_array()) {
-				$rt[$key] = $rc['waiting'];
+				$rt[$key] = (int)$rc['waiting'];
 			}
 		}
 		return $rt;
