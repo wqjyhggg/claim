@@ -514,4 +514,51 @@ class Phone_model extends CI_Model {
 		return $hours . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
 	}
 	
+	public function get_phone_user_list() {
+		$sql = "SELECT * FROM users WHERE id IN (SELECT DISTINCT user_id FROM phone_agent)";
+		return $this->db->query($sql)->result_array();
+	}
+	
+	public function agent_activity($data) {
+		if (empty($data['start_dt']) || empty($data['end_dt'])) {
+			return array();
+		}
+
+		$sql = "SELECT SUM(pa.pause) as pause, SUM(pa.break) as break, SUM(pa.incall) as incall, SUM(pa.outcall) as outcall, SUM(pa.waiting) as waiting, u.* FROM phone_agent pa JOIN users u ON (pa.user_id=u.id) WHERE";
+		if (!empty($data['user_id'])) {
+			$sql .= " pa.user_id='".(int)$data['user_id']."' AND";
+		}
+		$sql .= " dt>=".$this->db->escape($data['start_dt'])." AND dt<=".$this->db->escape($data['end_dt'])." GROUP BY pa.user_id ORDER BY pa.user_id";
+		return $this->db->query($sql)->result_array();
+	}
+	
+	public function phone_waiting($data) {
+		if (empty($data['start_dt']) || empty($data['end_dt']) || empty($data['queue'])) {
+			return array();
+		}
+		
+		$st = new DateTime($data['start_dt'] . " 00:00:00");
+		$et = new DateTime($data['end_dt'] . " 23:59:59");
+		
+		if ($st > $et) {
+			return array();
+		}
+		
+		$interval = new DateInterval('PT30M');
+		
+		$rt = array();
+		while ($st <= $et) {
+			$key = $st->format("Y-m-d H:i");
+			$stm = $st->format("Y-m-d H:i:s");
+			$st->add($interval);
+			$etm = $st->format("Y-m-d H:i:s");
+			
+			$sql = "SELECT SUM(TIME_TO_SEC(TIMEDIFF(answer, newcall))) as waiting FROM phone_records WHERE queue=".$this->db->escape($data['queue'])." AND direction='inbound' AND answer<newcall AND newcall>=".$this->db->escape($stm)." AND newcall<".$this->db->escape($etm);
+			$rt[$key] = 0;
+			if ($rc = $this->db->query($sql)->row_array()) {
+				$rt[$key] = $rc['waiting'];
+			}
+		}
+		return $rt;
+	}
 }

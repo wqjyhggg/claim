@@ -85,7 +85,7 @@ class Cron extends CI_Controller {
 	}
 	/*
 	 * Hourly job to calculate stuff active
-	 * 0 * * * * (/usr/bin/php /var/claim/index.php cron save_to_s3) >> /home/ubuntu/s3.log 2>&1
+	 * 0 * * * * (/usr/bin/php /var/claim/index.php cron phone_agent) >> /home/ubuntu/s3.log 2>&1
 	 */
 	public function phone_agent() {
 		$this->valid();
