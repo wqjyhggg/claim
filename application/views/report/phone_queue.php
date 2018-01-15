@@ -2,7 +2,7 @@
 <div>
 	<div class="page-title">
 		<div class="title_left">
-			<h3>Phone Waiting Report</h3>
+			<h3>Phone Queue Report</h3>
 		</div>
 	</div>
 	<div class="clearfix"></div>
@@ -63,12 +63,12 @@
 								</tr>
 								<tr>
 									<td><b>Period</b></td>
-									<td><b>Total Waiting Time</b></td>
+									<td><b>Total Calls</b></td>
 								</tr>
 								<?php foreach($records as $key => $value ) { ?>
 								<tr>
 									<td><b><?php echo $key; ?> :</b></td>
-									<td><?php echo $this->phone_model->second_to_time($value); ?></td>
+									<td><?php echo $value; ?></td>
 								</tr>
 								<?php } ?>
 							</table>

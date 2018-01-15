@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Phone_waiting extends CI_Controller {
+class Phone_queue extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		
@@ -33,14 +33,14 @@ class Phone_waiting extends CI_Controller {
 				$para['end_dt'] = date("Y-m-d", time() - (365 * 86400));
 			}
 
-			$this->data['records'] = $this->phone_model->phone_waiting($para);
+			$this->data['records'] = $this->phone_model->phone_queue($para);
 			$this->data['queue_list'] = $this->phone_model->get_queue_list();
 
-			$this->data['export_url'] = site_url('report/phone_waiting/export');
+			$this->data['export_url'] = site_url('report/phone_queue/export');
 			if (count($this->input->get()) > 0)	$this->data['export_url'] .= '?' . http_build_query($this->input->get(), '', "&");
 
 			$this->template->write('title', SITE_TITLE . ' - Phone Report', TRUE);
-			$this->template->write_view('content', 'report/phone_waiting', $this->data);
+			$this->template->write_view('content', 'report/phone_queue', $this->data);
 			$this->template->render();
 		}
 	}
@@ -65,7 +65,7 @@ class Phone_waiting extends CI_Controller {
 				$para['end_dt'] = date("Y-m-d", time() - (365 * 86400));
 			}
 
-			$records = $this->phone_model->phone_waiting($para);
+			$records = $this->phone_model->phone_queue($para);
 			
 			header('Content-Type: text/csv; charset=utf-8');
 			header('Content-Disposition: attachment; filename=Claim_summary.csv');
@@ -75,12 +75,11 @@ class Phone_waiting extends CI_Controller {
 				
 			// output the column headings
 
-			fputcsv($output, array('Queue :', $para['queue']));
 			fputcsv($output, array('Time Scope :', $para['start_dt'] . " to " . $para['end_dt']));
 			fputcsv($output, array(''));
 			fputcsv($output, array('Period', 'Total Waiting Time'));
 			foreach ($arr as $key => $value) { 
-				fputcsv($output, array($key, $this->phone_model->second_to_time($value)));
+				fputcsv($output, array($key, $value));
 			}
 		}
 	}

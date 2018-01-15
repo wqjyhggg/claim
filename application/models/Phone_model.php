@@ -562,4 +562,35 @@ class Phone_model extends CI_Model {
 		}
 		return $rt;
 	}
+	
+	public function phone_queue($data) {
+		if (empty($data['start_dt']) || empty($data['end_dt']) || empty($data['queue'])) {
+			return array();
+		}
+		
+		$st = new DateTime($data['start_dt'] . " 00:00:00");
+		$et = new DateTime($data['end_dt'] . " 23:59:59");
+		
+		if ($st > $et) {
+			return array();
+		}
+		
+		$interval = new DateInterval('PT30M');
+		
+		$rt = array();
+		while ($st <= $et) {
+			$key = $st->format("Y-m-d H:i");
+			$stm = $st->format("Y-m-d H:i:s");
+			$st->add($interval);
+			$etm = $st->format("Y-m-d H:i:s");
+			
+			$sql = "SELECT count(*) as cnt FROM phone_records WHERE queue=".$this->db->escape($data['queue'])." AND direction='inbound' AND answer>newcall AND newcall>=".$this->db->escape($stm)." AND newcall<".$this->db->escape($etm);
+
+			$rt[$key] = 0;
+			if ($rc = $this->db->query($sql)->row_array()) {
+				$rt[$key] = (int)$rc['cnt'];
+			}
+		}
+		return $rt;
+	}
 }
