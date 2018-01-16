@@ -531,6 +531,29 @@ class Phone_model extends CI_Model {
 		return $ans;
 	}
 	
+	public function phone_abandon($data) {
+		if (empty($data['start_dt']) || empty($data['end_dt']) || empty($data['queue'])) {
+			return array();
+		}
+		
+		$ans = array();
+		$start_tm = $data['start_dt']." 00:00:00";
+		$end_tm = $data['end_dt']." 23:59:59";
+		
+		$sql = "SELECT LEFT(newcall, 10) as dt, COUNT(*) as calls,
+				SUM(case when answer>newcall then 1 else 0 end) as answers,
+				SUM(case when answer<newcall then 1 else 0 end) as abandons,
+				SUM(case when ((answer<newcall) and (TIME_TO_SEC(TIMEDIFF(hangup, newcall)) < 10))  then 1 else 0 end) as less10,
+				SUM(case when ((answer<newcall) and (TIME_TO_SEC(TIMEDIFF(hangup, newcall)) < 20))  then 1 else 0 end) as less20,
+				SUM(case when ((answer<newcall) and (TIME_TO_SEC(TIMEDIFF(hangup, newcall)) < 30))  then 1 else 0 end) as less30,
+				SUM(case when ((answer<newcall) and (TIME_TO_SEC(TIMEDIFF(hangup, newcall)) < 40))  then 1 else 0 end) as less40,
+				SUM(case when ((answer<newcall) and (TIME_TO_SEC(TIMEDIFF(hangup, newcall)) < 50))  then 1 else 0 end) as less50,
+				SUM(case when answer>newcall then TIME_TO_SEC(TIMEDIFF(answer, newcall)) else 0 end) as total_answer,
+				SUM(case when answer<newcall then TIME_TO_SEC(TIMEDIFF(hangup, newcall)) else 0 end) as total_abandons
+				FROM phone_records WHERE queue=".$this->db->escape($data['queue'])." AND direction='inbound' AND newcall>=".$this->db->escape($start_tm)." AND newcall<=".$this->db->escape($end_tm)." GROUP BY dt";
+		return $this->db->query($sql)->result_array();
+	}
+	
 	public function second_to_time($seconds) {
 		$str = '';
 		$hours = (int) ($seconds / 3600);
