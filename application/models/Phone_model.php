@@ -506,6 +506,31 @@ class Phone_model extends CI_Model {
 		return $ans;
 	}
 	
+	public function agent_performance($data) {
+		if (empty($data['start_dt']) || empty($data['end_dt']) || empty($data['queue'])) {
+			return array();
+		}
+
+		$usersql = '';
+		if (!empty($data['user_id'])) {
+			$usersql = " AND user_id='" . (int)$data['user_id'] . "'";
+		}
+		$ans = array();
+		$start_tm = $data['start_dt']." 00:00:00";
+		$end_tm = $data['end_dt']." 23:59:59";
+		
+		$sql = "SELECT user_id, SUM(slength) as total_pause FROM phone_action WHERE active='".self::PHONE_OPT_PAUSE."'".$usersql." AND stm>=".$this->db->escape($start_tm)." AND stm<=".$this->db->escape($end_tm)." GROUP BY user_id";
+		$ans['acw'] = $this->db->query($sql)->result_array();
+		
+		$sql = "SELECT user_id, COUNT(*) as calls, AVG(TIME_TO_SEC(TIMEDIFF(hangup, answer))) as avg_talk, SUM(TIME_TO_SEC(TIMEDIFF(hangup, answer))) as total_talk, AVG(TIME_TO_SEC(TIMEDIFF(answer, newcall))) as avg_waiting FROM phone_records WHERE queue=".$this->db->escape($data['queue'])." AND direction='inbound' AND answer>newcall".$usersql." AND newcall>=".$this->db->escape($start_tm)." AND newcall<=".$this->db->escape($end_tm)." GROUP BY user_id";
+		$ans['answer'] = $this->db->query($sql)->result_array();
+		
+		$sql = "SELECT user_id, COUNT(*) as calls, AVG(TIME_TO_SEC(TIMEDIFF(hangup, answer))) as avg_talk, SUM(TIME_TO_SEC(TIMEDIFF(hangup, answer))) as total_talk FROM phone_records WHERE queue=".$this->db->escape($data['queue'])." AND direction='outbound' AND answer>newcall".$usersql." AND newcall>=".$this->db->escape($start_tm)." AND newcall<=".$this->db->escape($end_tm)." GROUP BY user_id";
+		$ans['callout'] = $this->db->query($sql)->result_array();
+		
+		return $ans;
+	}
+	
 	public function second_to_time($seconds) {
 		$str = '';
 		$hours = (int) ($seconds / 3600);
