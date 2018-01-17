@@ -1016,7 +1016,8 @@ class Claim extends CI_Controller {
 				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
 				$this->data['products'] = $this->product_model->get_list();
 				$this->data['payees'] = $this->claim_model->payee_search(array("claim_id" => $id));
-				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
+				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code2();
+				
 				$this->data['reasons'] = $this->reasons_model->get_list();
 				
 				// get all documents for sending email/print.

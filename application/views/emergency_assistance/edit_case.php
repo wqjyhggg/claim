@@ -425,11 +425,11 @@
 							<button class="btn btn-primary">Save</button>
 							<button type="button" class="btn btn-primary create_intake_form" data-toggle="modal" data-target="#create_intake_form"><i class="fa fa-plus-circle"></i> Create Note</button>
 							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_EAC))) { ?>
-							<?php echo anchor("auth/mytasks", "No Change", array("class"=>'btn btn-info')); ?>
+							<?php echo anchor("auth/mytasks", "Cancel", array("class"=>'btn btn-info')); ?>
 							<?php } else if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
-							<?php echo anchor("emergency_assistance/case_management", "No Change", array("class"=>'btn btn-info')); ?>
+							<?php echo anchor("emergency_assistance/case_management", "Cancel", array("class"=>'btn btn-info')); ?>
 							<?php } else { ?>
-							<?php echo anchor("emergency_assistance", "No Change", array("class"=>'btn btn-info')); ?>
+							<?php echo anchor("emergency_assistance", "Cancel", array("class"=>'btn btn-info')); ?>
 							<?php } ?>
 							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) { ?>
 							<button type="button" class="btn btn-primary follow_up" data-toggle="modal" data-target="#follow_reason">Follow Up <i class="fa fa-angle-double-right"></i></button>

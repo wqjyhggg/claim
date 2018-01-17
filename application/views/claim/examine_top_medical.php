@@ -702,7 +702,7 @@
 											$claim['case_no'],
 											$policy['firstname'] . ' ' . $policy['lastname'],
 											$policy['effective_date'] . ' - ' . $policy['expiry_date'],
-											$claim['assign_to_name'],
+											$this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name,
 									);
 									echo str_replace($find, $replace, $doc['description']);
 								?>

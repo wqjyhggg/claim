@@ -1233,7 +1233,7 @@
       .replace("{case_no}", $("input[name=case_no]").val())
       .replace("{policy_coverage_info}", "{policy_coverage_info}")
       .replace("{casemanager_name}", '<?php echo $this->ion_auth->user()->row()->first_name ?>')
-      .replace("{claimexaminer_name}", '')
+      .replace("{claimexaminer_name}", '<?php echo $this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name; ?>')
       .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')
 
       .replace("{clinic_name}", $("input[name=clinic_name]").val())

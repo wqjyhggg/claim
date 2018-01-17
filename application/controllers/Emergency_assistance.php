@@ -154,6 +154,7 @@ class Emergency_assistance extends CI_Controller {
 				if (empty($data['assign_to'])) {
 					$data['assign_to'] = $data['case_manager'];
 				}
+				$data['init_manager'] = $data['case_manager'];
 				
 				$this->load->model('master_model');
 				$data['id'] = $this->master_model->get_id('case'); // Get new id
@@ -839,8 +840,8 @@ class Emergency_assistance extends CI_Controller {
 					}
 					*/
 					$initiator = '';
-					if ($case['created_by']) {
-						$initiator = $this->users_model->get_by_id($case['created_by']);
+					if ($case['init_manager']) {
+						$initiator = $this->users_model->get_by_id($case['init_manager']);
 					}
 					if ($initiator) {
 						$cases[$key]['initiator'] = $initiator['email'];

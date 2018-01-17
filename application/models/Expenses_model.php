@@ -51,6 +51,41 @@ class Expenses_model extends CI_Model {
 		);
 	}
 	
+	public function get_coverage_code2() {
+		return array(
+				'V01B' => 'MedicalAppliances',
+				'V02AE' => 'EmergencyVisit',
+				'V02AO' => 'Others',
+				'V02AS' => 'SpecialistVisit',
+				'V02B' => 'DiagnoisticServices',
+				'V02BB' => 'BloodTest',
+				'V02BC' => 'CTScans',
+				'V02BM' => 'MRI',
+				'V02BO' => 'Others',
+				'V02BT' => 'Ultrasound',
+				'V02BU' => 'UrineTest',
+				'V02BX' => 'X-Ray',
+				'V02C' => 'ParamedicalServices',
+				'V02D' => 'Acupuncture',
+				'V02E' => 'Osteopath',
+				'V02F' => 'Physiotherapy',
+				'V02G' => 'Chiropractor',
+				'V02H' => 'Chiropodist',
+				'V02J' => 'Podiatrist',
+				'V04A' => 'Ambulance',
+				'V06' => 'AccidentalDental',
+				'V06B' => 'ReliefofDentalPain',
+				'V07' => 'PrescriptionDrugs',
+				'V08A' => 'ReturnofRemains',
+				'V08B' => 'Cremation/Burial',
+				'V12' => 'AirFlightAccident',
+				'V13' => 'PrivateDutyNursing',
+				'V01' => 'Hospitalization',
+				'V02A' => 'Medical Services',
+				'V01A' => 'Out-PatientTreatment',
+		);
+	}
+	
 	/**
 	 * 
 	 */
