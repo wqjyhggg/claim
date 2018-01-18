@@ -277,7 +277,7 @@
 										<?php echo form_radio("travel_insurance_coverage_guardians", "N", $this->input->post("travel_insurance_coverage_guardians"), array('class' => 'setpremium')); ?>  No
 									</div>
 
-									<div class="col-sm-12">If yes, provide details of other insurance company coverage below. If no, confirm by checking the box below.</div>
+									<div class="col-sm-12">If yes, provide details of other insurance company coverage below.</div>
 								</div>
 								<div class="col-sm-3">
 									<?php echo form_label('Full Name:', 'full_name', array("class" => 'col-sm-12')); ?>
@@ -335,15 +335,6 @@
 									<?php echo form_input("date_first_physician", $this->input->post("date_first_physician"), array("class" => "form-control dob", 'placeholder' => 'Date you first saw physician for this condition')); ?>
 								</div>
 								<div class="col-sm-12" style="margin-top: 20px">
-									<div class="col-sm-7">Do you, your spouse or your parents/guardians have any other medical or travel insurance coverage?</div>
-									<div class="col-sm-1">
-										<?php echo form_radio("travel_insurance_coverage", "Y", $this->input->post("travel_insurance_coverage"), array('class' => 'setpremium')); ?>  Yes
-									</div>
-									<div class="col-sm-1">
-										<?php echo form_radio("travel_insurance_coverage", "N", $this->input->post("travel_insurance_coverage"), array('class' => 'setpremium')); ?>  No
-									</div>
-
-									<div class="col-sm-12" style="margin-bottom: 10px">If yes, provide details of other insurance company coverage below. If no, confirm by checking the box below.</div>
 									<div class="form-group col-sm-12">
 										<div class="col-sm-3">
 											<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_1', array("class"=>'col-sm-12'));   ?>
