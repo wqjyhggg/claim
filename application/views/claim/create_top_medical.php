@@ -457,52 +457,51 @@
 									<?php echo form_input("date_first_physician", $this->input->post("date_first_physician"), array("class" => "form-control dob", 'placeholder' => 'Date you first saw physician for this condition')); ?>
 								</div>
 								<div class="col-sm-12" style="margin-top: 20px">
-									<div class="col-sm-7">Do you, your spouse or your parents/guardians have any other medical or travel insurance coverage?</div>
+									<div class="col-sm-7">Have you ever been treated for this or a similar condition before?</div>
 									<div class="col-sm-1">
-										<?php echo form_radio("travel_insurance_coverage", "Y", $this->input->post("travel_insurance_coverage"), array('class' => 'setpremium')); ?>  Yes
+										<?php echo form_radio("treatment_before", "Y", $this->input->post("treatment_before"), array('class' => 'setpremium')); ?>  Yes
 									</div>
 									<div class="col-sm-1">
-										<?php echo form_radio("travel_insurance_coverage", "N", $this->input->post("travel_insurance_coverage"), array('class' => 'setpremium')); ?>  No
+										<?php echo form_radio("treatment_before", "N", $this->input->post("treatment_before"), array('class' => 'setpremium')); ?>  No
 									</div>
-
-									<div class="col-sm-12" style="margin-bottom: 10px">If yes, provide details of other insurance company coverage below. If no, confirm by checking the box below.</div>
+									<div class="col-sm-12">If you answered “yes”, provide all dates of treatment and list all medications taken before the effective date of the current policy:</div>
 									<div class="form-group col-sm-12">
 										<div class="col-sm-3">
 											<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_1', array("class"=>'col-sm-12'));   ?>
 											<div class="input-group date">
-												<?php echo form_input("medication_date_1", $this->input->post("medication_date_1"), array("class" => "form-control datepicker travel_insurance_coverage", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
+												<?php echo form_input("medication_date_1", $this->input->post("medication_date_1"), array("class" => "form-control datepicker", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 											</div>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Medication:', 'medication_1', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("medication_1", $this->input->post("medication_1"), array("class" => "form-control travel_insurance_coverage", 'placeholder' => 'Medication')); ?>
+											<?php echo form_input("medication_1", $this->input->post("medication_1"), array("class" => "form-control", 'placeholder' => 'Medication')); ?>
 										</div>
 									</div>
 									<div class="form-group col-sm-12">
 										<div class="col-sm-3">
-											<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_2', array("class"=>'col-sm-12 travel_insurance_coverage'));   ?>
+											<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_2', array("class"=>'col-sm-12'));   ?>
 											<div class="input-group date">
-												<?php echo form_input("medication_date_2", $this->input->post("medication_date_2"), array("class" => "form-control datepicker travel_insurance_coverage", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
+												<?php echo form_input("medication_date_2", $this->input->post("medication_date_2"), array("class" => "form-control datepicker", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 											</div>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Medication:', 'medication_2', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("medication_2", $this->input->post("medication_2"), array("class" => "form-control travel_insurance_coverage", 'placeholder' => 'Medication')); ?>
+											<?php echo form_input("medication_2", $this->input->post("medication_2"), array("class" => "form-control", 'placeholder' => 'Medication')); ?>
 										</div>
 									</div>
 									<div class="form-group col-sm-12">
 										<div class="col-sm-3">
 											<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_3', array("class"=>'col-sm-12'));   ?>
 											<div class="input-group date">
-												<?php echo form_input("medication_date_3", $this->input->post("medication_date_3"), array("class" => "form-control datepicker travel_insurance_coverage", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
+												<?php echo form_input("medication_date_3", $this->input->post("medication_date_3"), array("class" => "form-control datepicker", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 											</div>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Medication:', 'medication_3', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("medication_3", $this->input->post("medication_3"), array("class" => "form-control travel_insurance_coverage", 'placeholder' => 'Medication')); ?>
+											<?php echo form_input("medication_3", $this->input->post("medication_3"), array("class" => "form-control", 'placeholder' => 'Medication')); ?>
 										</div>
 									</div>
 								</div>
@@ -1006,15 +1005,6 @@
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
    $(document).ready(function() {
-      // enable disable travel_insurance_coverage
-      $("input[name=travel_insurance_coverage]").click(function(){
-         if($(this).val() == 'Y'){
-            $(".travel_insurance_coverage").removeAttr('disabled');
-         } else{            
-            $(".travel_insurance_coverage").attr('disabled', 'disabled');
-         }
-      })
-
       // show area once any error occured
       $(".alert-error").map(function(){
          if($(this).text()){

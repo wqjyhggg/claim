@@ -315,9 +315,7 @@
 									<label>Date you first saw physician for this condition : </label><?php echo $claim["date_first_physician"]; ?>
 								</div>
 								<div class="col-sm-12" style="margin-top: 20px">
-									<label>Do you, your spouse or your parents/guardians have any other medical or travel insurance coverage ? </label><?php echo ($claim["travel_insurance_coverage"]=='Y') ? "Yes" : "No"; ?>
-									<div class="col-sm-12">Do you, your spouse or your parents/guardians have any other medical or travel insurance coverage?</div>
-									<div class="col-sm-12" style="margin-bottom: 10px">If yes, provide details of other insurance company coverage below. If no, confirm by checking the box below.</div>
+									<label>Have you ever been treated for this or a similar condition before ?</label><?php echo ($claim["treatment_before"]=='Y') ? "Yes" : "No"; ?>
 									<div class="form-group col-sm-12">
 										<div class="col-sm-3">
 											<label>Date : </label><?php echo $claim["medication_date_1"]; ?>
