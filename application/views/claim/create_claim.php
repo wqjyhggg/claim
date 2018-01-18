@@ -337,9 +337,9 @@
 								<div class="col-sm-12" style="margin-top: 20px">
 									<div class="form-group col-sm-12">
 										<div class="col-sm-3">
-											<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_1', array("class"=>'col-sm-12'));   ?>
+											<?php echo form_label('Date:', 'medication_date_1', array("class"=>'col-sm-12'));   ?>
 											<div class="input-group date">
-												<?php echo form_input("medication_date_1", $this->input->post("medication_date_1"), array("class" => "form-control datepicker travel_insurance_coverage", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
+												<?php echo form_input("medication_date_1", $this->input->post("medication_date_1"), array("class" => "form-control datepicker travel_insurance_coverage", 'placeholder' => 'Date')); ?>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 											</div>
 										</div>
@@ -352,7 +352,7 @@
 										<div class="col-sm-3">
 											<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_2', array("class"=>'col-sm-12 travel_insurance_coverage'));   ?>
 											<div class="input-group date">
-												<?php echo form_input("medication_date_2", $this->input->post("medication_date_2"), array("class" => "form-control datepicker travel_insurance_coverage", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
+												<?php echo form_input("medication_date_2", $this->input->post("medication_date_2"), array("class" => "form-control datepicker travel_insurance_coverage", 'placeholder' => 'Date')); ?>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 											</div>
 										</div>
@@ -365,7 +365,7 @@
 										<div class="col-sm-3">
 											<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_3', array("class"=>'col-sm-12'));   ?>
 											<div class="input-group date">
-												<?php echo form_input("medication_date_3", $this->input->post("medication_date_3"), array("class" => "form-control datepicker travel_insurance_coverage", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
+												<?php echo form_input("medication_date_3", $this->input->post("medication_date_3"), array("class" => "form-control datepicker travel_insurance_coverage", 'placeholder' => 'Date')); ?>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 											</div>
 										</div>
