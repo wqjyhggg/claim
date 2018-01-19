@@ -290,6 +290,7 @@
 								<option value="Tour Guide" <?php if ('Tour Guide' == $this->input->post("exinfo[loss_report_to")) { echo "selected"; } ?>>Tour Guide</option>
 								<option value="Hotel" <?php if ('Hotel' == $this->input->post("exinfo[loss_report_to")) { echo "selected"; } ?>>Hotel</option>
 								<option value="Police" <?php if ('Police' == $this->input->post("exinfo[loss_report_to")) { echo "selected"; } ?>>Police</option>
+								<option value="Other" <?php if ('Other' == $exinfo["loss_report_to"]) { echo "selected"; } ?>>Other</option>
 							</select>
 						</div>
 						<div class="form-group col-sm-3">

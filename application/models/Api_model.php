@@ -11,6 +11,9 @@ if (! defined ( 'BASEPATH' ))	exit ( 'No direct script access allowed' );
  */
 
 class Api_model extends CI_Model {
+	const STATUS_OK="OK";
+	const STATUS_ERROR="ERROR";
+	
 	public $status_list;
 	public $success;
 	public $errormsg;
@@ -194,7 +197,7 @@ class Api_model extends CI_Model {
 	 * @return string
 	 */
 	function get_token($ap_id) {
-		return md5 ( $ap_id . rand ( 100000, 999999 ) );
+		return md5($ap_id . rand(100000, 999999));
 	}
 	
 	/**
@@ -204,26 +207,31 @@ class Api_model extends CI_Model {
 	 */
 	function update($para) {
 		$data = array ();
-		if (isset ( $para ['ap_id'] ))	$data ['ap_id'] = $this->db->escape ( $para ['ap_id'] );
-		if (isset ( $para ['token'] ))	$data ['token'] = $this->db->escape ( $para ['token'] );
-		if (isset ( $para ['policy'] ))	$data ['policy'] = $this->db->escape ( $para ['policy'] );
-		if (isset ( $para ['ip'] ))		$data ['ip'] = $this->db->escape ( $para ['ip'] );
+		if (isset( $para['ap_id'] ))	$data['ap_id'] = $this->db->escape( $para ['ap_id'] );
+		if (isset( $para['token'] ))	$data['token'] = $this->db->escape( $para ['token'] );
+		if (isset( $para['policy'] ))	$data['policy'] = $this->db->escape( $para ['policy'] );
+		if (isset( $para['ip'] ))		$data['ip'] = $this->db->escape( $para ['ip'] );
 		
-		if (empty ( $data ))
+		if (empty( $data )) {
 			return; // There is not data
+		}
+
 		$data1 = $data;
-		if (empty ( $data1 ))
+		if (empty ( $data1 )) {
 			return; // There is not data
+		}
 		
-		unset ( $data1 ['ap_id'] );
-		if (isset ( $para ['last_tm'] ))
-			$data1 ['last_tm'] = $this->db->escape ( $para ['last_tm'] );
+		unset($data1['ap_id']);
+		if (isset( $para ['last_tm'] )) {
+			$data1['last_tm'] = $this->db->escape( $para ['last_tm'] );
+		}
 		$updatestr = "";
-		foreach ( $data1 as $k => $v )
+		foreach ( $data1 as $k => $v ) {
 			$updatestr .= $k . "=" . $v . ",";
-		$updatestr = substr ( $updatestr, 0, - 1 );
+		}
+		$updatestr = substr($updatestr, 0, -1);
 		
-		$sql = "INSERT INTO api_login (" . join ( ",", array_keys ( $data ) ) . ") values (" . join ( ",", array_values ( $data ) ) . ") ON DUPLICATE KEY UPDATE " . $updatestr;
+		$sql = "INSERT INTO api_login (" . join(",", array_keys($data)) . ") values (" . join(",", array_values($data)) . ") ON DUPLICATE KEY UPDATE " . $updatestr;
 		$this->db->query ( $sql );
 	}
 	
@@ -233,15 +241,24 @@ class Api_model extends CI_Model {
 	 * @return void
 	 */
 	function check($para) {
-		if (! isset ( $para ['ap_id'] ))
+		if (! isset( $para ['ap_id'] )) {
 			return array ();
-		if (! isset ( $para ['token'] ))
+		}
+		if (! isset( $para ['token'] )) {
 			return array ();
+		}
 		
-		$this->db->where ( 'ap_id', $para ['ap_id'] );
-		$this->db->where ( 'token', $para ['token'] );
+		$this->db->where('ap_id', $para ['ap_id']);
+		$this->db->where('token', $para ['token']);
 		
-		return $this->db->get ( 'api_login' )->row_array ();
+		$rt = $this->db->get('api_login')->row_array();
+
+		$this->db->set('last_tm', 'NOW()', TRUE);
+		$this->db->where('ap_id', $para ['ap_id']);
+		$this->db->where('token', $para ['token']);
+		$this->db->update('api_login');
+		
+		return $rt;
 	}
 	
 	/**

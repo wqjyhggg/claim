@@ -210,7 +210,7 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<div class="input-group date">
-									<?php echo form_input("exinfo[injury_date]", isset($exinfo["injury_date"]) ? $exinfo["injury_date"] : '', array("class" => "form-control datepicker")); ?>
+									<?php echo form_input("exinfo[injury1_date]", isset($exinfo["injury1_date"]) ? $exinfo["injury1_date"] : '', array("class" => "form-control datepicker")); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
@@ -249,7 +249,7 @@
 								If loss is due to death, please provide details: 
 							</div>
 							<div class="form-group col-sm-9">
-								<?php echo form_input("exinfo[injury_describe]", isset($exinfo["injury_describe"]) ? $exinfo["injury_describe"] : '', array("class" => "form-control")); ?>
+								<?php echo form_input("exinfo[death_describe]", isset($exinfo["death_describe"]) ? $exinfo["death_describe"] : '', array("class" => "form-control")); ?>
 							</div>
 							<div class="form-group col-sm-3">
 								Date of death: 
@@ -414,10 +414,10 @@
 						<div class="row" style="display: none">
 							<div class="col-sm-5">Do you have credit card insurance coverage?</div>
 							<div class="col-sm-1">
-								<?php echo form_radio("exinfo['credit_card_insurance']", "Y", isset($exinfo['credit_card_insurance']) ? $exinfo['credit_card_insurance'] : '', array('class' => 'setpremium'));?> Yes
+								<?php echo form_radio("exinfo[credit_card_insurance]", "Y", isset($exinfo['credit_card_insurance']) ? $exinfo['credit_card_insurance'] : '', array('class' => 'setpremium'));?> Yes
 							</div>
 							<div class="col-sm-1">
-								<?php echo form_radio("exinfo['credit_card_insurance']", "N", isset($exinfo['credit_card_insurance']) ? $exinfo['credit_card_insurance'] : '', array('class' => 'setpremium'));?> No
+								<?php echo form_radio("exinfo[credit_card_insurance]", "N", isset($exinfo['credit_card_insurance']) ? $exinfo['credit_card_insurance'] : '', array('class' => 'setpremium'));?> No
 							</div>
 							<div class="col-sm-5">If ‘Yes’, please provide the following information</div>
 							<div class="clearfix"></div>

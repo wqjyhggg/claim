@@ -20,40 +20,49 @@ class Api extends CI_Controller {
 		$this->load->model('api_model');
 
 		$data['ap_id'] = $this->input->post('ap_id');
-		$data['token'] = $this->input->post('token');
 		$data['policy'] = $this->input->post('policy');
 		$data['birthday'] = $this->input->post('birthday');
 		$data['ip'] = $this->input->server('REMOTE_ADDR');
-		$rdata = array('status' => 'OK', 'message' => 'Success', 'token' => '');
+		$rdata = array('status' => Api_model::STATUS_OK, 'message' => 'Success', 'token' => '');
 		if (empty($data['ap_id'])) {
-			$rdata['status'] = 'ERROR';
+			$rdata['status'] = Api_model::STATUS_ERROR;
 			$rdata['message'] = 'Invilad ID';
-		} else if (!empty($data['token'])) {
-			$rdata['status'] = 'WARNING';
-			$rdata['message'] = 'Login Already ?';
 		} else if (empty($data['birthday']) || !preg_match('/^[1-2][0-9]{3}-[01][0-9]-[0123][0-9]$/',$data['birthday'])) {
-			$rdata['status'] = 'ERROR';
+			$rdata['status'] = Api_model::STATUS_ERROR;
 			$rdata['message'] = 'Unknown Birth Day';
 		} else if (empty($data['policy'])) {
-			$rdata['status'] = 'ERROR';
+			$rdata['status'] = Api_model::STATUS_ERROR;
 			$rdata['message'] = 'Invilad Parameter';
 		}
 
 		$policy = array();
-		if ($rdata['status'] == 'OK') {
+		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$policies = $this->api_model->get_policy(array('policy' => $data['policy']));
 			if (empty($policies)) {
-				$rdata['status'] = 'ERROR';
+				$rdata['status'] = Api_model::STATUS_ERROR;
 				$rdata['message'] = 'Invilad Policy';
-			} else if ($policies[0]['birthday'] != $data['birthday']) {
-				$rdata['status'] = 'ERROR';
-				$rdata['message'] = 'No Matched Policy';
 			} else {
-				$rdata['policy'] = $policies[0];
+				$hasbirthday = 0;
+				if ($policies[0]['birthday'] == $data['birthday']) {
+					$hasbirthday = 1;
+				} else if ($policies[0]['isfamilyplan']) {
+					foreach ($policies[0]['isfamilyplan'] as $p) {
+						if ($p['birthday'] == $data['birthday']) {
+							$hasbirthday = 1;
+							break;
+						}
+					}
+				}
+				if ($hasbirthday) {
+					$rdata['policy'] = $policies[0];
+				} else {
+					$rdata['status'] = Api_model::STATUS_ERROR;
+					$rdata['message'] = 'No Matched Policy';
+				}
 			}
 		}
 
-		if ($rdata['status'] == 'OK') {
+		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$rdata['token'] = $this->api_model->get_token($data['ap_id']);
 			$data['token'] = $rdata['token'];
 			$this->api_model->update($data);
@@ -69,31 +78,32 @@ class Api extends CI_Controller {
 		$data['ap_id'] = $this->input->post('ap_id');
 		$data['token'] = $this->input->post('token');
 		$data['ip'] = $this->input->server('REMOTE_ADDR');
-		$rdata = array('status' => 'OK', 'message' => 'Success');
+		$rdata = array('status' => Api_model::STATUS_OK, 'message' => 'Success');
 		if (empty($data['ap_id'])) {
-			$rdata['status'] = 'ERROR';
+			$rdata['status'] = Api_model::STATUS_ERROR;
 			$rdata['message'] = 'Invilad ID';
 		} else if (empty($data['token'])) {
-			$rdata['status'] = 'WARNING';
+			$rdata['status'] = Api_model::STATUS_ERROR;
 			$rdata['message'] = 'Invilad Parameter';
 		} else {
 			$data['last_tm'] = date('c');
 			$this->api = $this->api_model->check_last($data);
 			if (empty($this->api)) {
-				$rdata['status'] = 'ERROR';
+				$rdata['status'] = Api_model::STATUS_ERROR;
 				$rdata['message'] = 'Unknown ID';
 			}
 		}
 		return $rdata;
 	}
 	
+	/*
 	public function policy() {
 		$rdata = $this->conn_verify();
-		if ($rdata['status'] == 'OK') {
+		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$policy = array();
 			$policies = $this->api_model->get_policy(array('policy' => $this->api['policy']));
 			if (empty($policies)) {
-				$rdata['status'] = 'ERROR';
+				$rdata['status'] = Api_model::STATUS_ERROR;
 				$rdata['message'] = 'No Policy Information';
 			} else {
 				$rdata['policy'] = $policies[0];
@@ -106,7 +116,7 @@ class Api extends CI_Controller {
 
 	public function cases() {
 		$rdata = $this->conn_verify();
-		if ($rdata['status'] == 'OK') {
+		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('case_model');
 			$cases = $this->case_model->search(array('policy_no' => $this->api['policy'], 'claim_no' => '', 'status' => 'A'));
 			$rdata['cases'] = array();
@@ -129,24 +139,24 @@ class Api extends CI_Controller {
 		header('Content-Type: application/json');
 		echo json_encode($rdata);
 	}
-	
+	*/
 	public function claims() {
 		$rdata = $this->conn_verify();
-		if ($rdata['status'] == 'OK') {
+		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('claim_model');
-			$cases = $this->claim_model->search(array('policy_no' => $this->api['policy']/*, 'is_complete' => 'Y'*/));
+			$claims = $this->claim_model->search(array('policy_no' => $this->api['policy']/*, 'is_complete' => 'Y'*/));
 			$rdata['claims'] = array();
-			foreach ($cases as $cl) {
+			foreach ($claims as $cl) {
 				$ncl = array();
 				$ncl['id'] = $cl['id'];
 				$ncl['claim_no'] = $cl['claim_no'];
-				$ncl['claim_date'] = $cl['claim_date'];
+				$ncl['status'] = $cl['status'];
+				$ncl['claim_date'] = $cl['apply_date'];
 				$ncl['insured_first_name'] = $cl['insured_first_name'];
 				$ncl['insured_last_name'] = $cl['insured_last_name'];
 				$ncl['dob'] = $cl['dob'];
 				$ncl['policy_no'] = $cl['policy_no'];
 				$ncl['product_short'] = $cl['product_short'];
-				$ncl['case_no'] = $cl['case_no'];
 				$ncl['physician_name'] = $cl['physician_name'];
 				$ncl['clinic_name'] = $cl['clinic_name'];
 				$ncl['physician_name_canada'] = $cl['physician_name_canada'];
@@ -168,10 +178,10 @@ class Api extends CI_Controller {
 		header('Content-Type: application/json');
 		echo json_encode($rdata);
 	}
-	
+
 	public function apply() {
 		$rdata = $this->conn_verify();
-		if ($rdata['status'] == 'OK') {
+		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('claim_model');
 			$data = array();
 			$error = array();
@@ -248,7 +258,7 @@ class Api extends CI_Controller {
 			$data['medical_description'] = $this->input->post('medical_description');
 			$data['date_symptoms'] = $this->input->post('date_symptoms');
 			$data['date_first_physician'] = $this->input->post('date_first_physician');
-			$data['travel_insurance_coverage'] = $this->input->post('travel_insurance_coverage');
+			$data['treatment_before'] = $this->input->post('treatment_before');
 			$data['medication_date_1'] = $this->input->post('medication_date_1');
 			$data['medication_1'] = $this->input->post('medication_1');
 			$data['medication_date_2'] = $this->input->post('medication_date_2');
@@ -458,12 +468,12 @@ class Api extends CI_Controller {
 					$rdata['claim_no'] = $claim_no;
 					$rdata['id'] = $id;
 				} else {
-					$rdata['status'] = 'ERROR';
+					$rdata['status'] = Api_model::STATUS_ERROR;
 					$rdata['message'] = 'Can not creae your claim, please try it later';
 				}
 			} else {
 				$rdata['error'] = $error;
-				$rdata['status'] = 'ERROR';
+				$rdata['status'] = Api_model::STATUS_ERROR;
 				$rdata['message'] = 'Something wrong with data';
 			}
 		}
@@ -474,7 +484,7 @@ class Api extends CI_Controller {
 
 	public function diagnosis_suggest() {
 		$rdata = $this->conn_verify();
-		if ($rdata['status'] == 'OK') {
+		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('diagnosis_model');
 			$rdata['suggestions'] = $this->diagnosis_model->search_description($this->input->post("query"));
 		}
