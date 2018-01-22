@@ -183,6 +183,9 @@ class Api extends CI_Controller {
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('claim_model');
+			$this->load->model('mytask_model');
+			$this->load->model('master_model');
+			
 			$data = array();
 			$error = array();
 			
@@ -206,8 +209,10 @@ class Api extends CI_Controller {
 			
 			$data['policy_no'] = $this->api['policy'];
 			$data['product_short'] = $this->api['product_short'];
-			$data['policy_info'] = $this->input->post('policy_info');
-			$data['case_no'] = $this->input->post('case_no');
+			$data['agent_id'] = $this->api['agent_id'];
+			$data['totaldays'] = $this->api['totaldays'];
+			$data['policy_info'] = '';
+			$data['case_no'] = '';
 			$data['school_name'] = $this->input->post('school_name');
 			$data['group_id'] = $this->input->post('group_id');
 			$data['apply_date'] = $this->input->post('apply_date');
@@ -232,7 +237,7 @@ class Api extends CI_Controller {
 			$data['physician_name'] = $this->input->post('physician_name');
 			$data['clinic_name'] = $this->input->post('clinic_name');
 			$data['physician_street_address'] = $this->input->post('physician_street_address');
-			if (empty($data['post_code'])) {
+			if (empty($data['physician_street_address'])) {
 				$error['physician_street_address'] = 'Required';
 			}
 			$data['physician_city'] = $this->input->post('physician_city');
@@ -268,187 +273,109 @@ class Api extends CI_Controller {
 			
 			$data['created'] = date('c');
 			$data['created_by'] = 0;
-			$data['status'] = 'processing';
+			$data['status'] = Claim_model::STATUS_Processing;
+			$data['assign_to'] = $this->mytask_model->get_auto_assign_examiner_id();
 			
 			if (empty($error)) {
-				$id = $this->claim_model->save($data);
-				if ($id) {
-					$claim_no = $this->claim_model->generate_claim_no($id);
-					$data = array('id' => $id, 'claim_no' => $claim_no);
-					if (empty($this->input->post('case_no'))) {
-						$this->load->model('case_model');
-						$case = $this->case_model->search(array('case_no' => $this->input->post('case_no')));
-						if ($case) {
-							$this->case_model->save(array('id' => $case['id'], 'claim_no' => $claim_no));
-						}
-					}
-					
-					// upload claim pdf files to server
-					$files = @$_FILES['files_multi'];
-					if (!empty($files)) {
-						// create directory to copy/shift files
-						@mkdir(UPLOADFULLPATH . 'claim_files/'.$id, 0777);
-							
-						$file_names = [];
-						// load upload class
-						$config['upload_path'] = UPLOADFULLPATH . '/claim_files/'.$id;
-						$config['allowed_types'] = '*';
-						$config['overwrite'] = FALSE;
-						$this->load->library('upload', $config);
+				$id = data['id'] = $this->master_model->get_id(Master_model::TYPE_CLAIM);
+				$data['claim_no'] = $this->master_model->get_number_str($data['id']);
+				$claim_no = $this->claim_model->generate_claim_no($id);
+				
+				// upload claim pdf files to server
+				$files = @$_FILES['files_multi'];
+				if (!empty($files)) {
+					// create directory to copy/shift files
+					@mkdir(UPLOADFULLPATH . 'claim_files/'.$id, 0777);
 						
-						// initialize upload config
-						$this->upload->initialize($config);
-						
-						foreach ($files['name'] as $key => $value) {
-							if($files['name'][$key]) {
-								$_FILES['userfile']['name'] = $files['name'][$key];
-				                $_FILES['userfile']['type'] = $files['type'][$key];
-				                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
-				                $_FILES['userfile']['error'] = $files['error'][$key];
-				                $_FILES['userfile']['size'] = $files['size'][$key];
-								
-								// upload file to server
-								$this->upload->do_upload();
-								$file_data = $this->upload->data();
-								$file_names[] = $file_data['file_name'];
-							}
-						}
-	
-						$data['files'] = implode(",", $file_names);
-					}
-	
-					// insert payee information
-					$payees = $this->input->post('payees');
-					if (!empty($payees)) {
-						foreach ($payees['bank'] as $key => $val) {
-							$payee_data = array(
-								'payment_type'=>$this->input->post('payment_type_'.($key+1)),
-								'claim_id'=>$id,
-								'bank'=>$val,
-								'payee_name'=>$payees['payee_name'][$key],
-								'account_cheque'=>$payees['account_cheque'][$key],
-								'address'=>$payees['address'][$key],
-								'created'=>date('c')
-								);
-							$this->claim_model->payees_save($payee_data);
-						}
-					}
-	
-					// insert expenses_claimed data
-					$expenses_claimed = $this->input->post('expenses_claimed');
-					if (!empty($expenses_claimed)) {	
-						$i = 0;
-						foreach ($expenses_claimed['invoice'] as $key => $val) {
-							$i++;
-							$expenses__data = array(
-								'claim_id'=>$id,
-								'cellular'=>$array['cellular'],
-								'invoice'=>$val,
-								'claim_no'=>$claim_no,
-								'claim_item_no'=>$claim_no.'_'.$i,
-								'case_no'=>$array['case_no'],
-								'provider_name'=>$expenses_claimed['provider_name'][$key],
-								'referencing_physician'=>$expenses_claimed['referencing_physician'][$key],
-								'coverage_code'=>$expenses_claimed['coverage_code'][$key],
-								'diagnosis'=>$expenses_claimed['diagnosis'][$key],
-								'service_description'=>$expenses_claimed['service_description'][$key],
-								'date_of_service'=>$expenses_claimed['date_of_service'][$key],
-								'amount_billed'=>$expenses_claimed['amount_billed'][$key],
-								'amount_client_paid'=>$expenses_claimed['amount_client_paid'][$key],
-								'pay_to'=>$expenses_claimed['payee'][$key],
-								'comment'=>$expenses_claimed['comment'][$key],
-								'created'=>date('Y-m-d H:i:s')
-								);
-							$this->claim_model->expenses_save($expenses__data);
-						}
-					}
-	
-	
-					/* what is intake form ???? XXXXXXXXXXXXXXXXX
-					// insert intake forms if exists
-					$no_of_form = $array['no_of_form'];
-	
+					$file_names = [];
 					// load upload class
-					$config['upload_path'] = UPLOADFULLPATH . 'intake_forms/';
+					$config['upload_path'] = UPLOADFULLPATH . '/claim_files/'.$id;
 					$config['allowed_types'] = '*';
 					$config['overwrite'] = FALSE;
 					$this->load->library('upload', $config);
-	
+					
 					// initialize upload config
 					$this->upload->initialize($config);
-					if($no_of_form)
-					{
-						// add intake form batch
-						for($i = 1; $i <= $no_of_form; $i++)
-						{
-							// initialize file names array
-							$file_names = [];
-	
-							// upload files to server
-							$files = @$_FILES['files_'.$i];
-							if(!empty($files))
-							{	foreach ($files['name'] as $key => $value) 
-								{	
-									if($files['name'][$key])
-									{
-										$_FILES['userfile']['name'] = $files['name'][$key];
-						                $_FILES['userfile']['type'] = $files['type'][$key];
-						                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
-						                $_FILES['userfile']['error'] = $files['error'][$key];
-						                $_FILES['userfile']['size'] = $files['size'][$key];
-										
-										$field_name = 'userfile';
-	
-										// upload file to server
-										$this->upload->do_upload();
-										$file_data = $this->upload->data();
-										$file_names[] = $file_data['file_name'];
-									}
-								}
-							}
-	
-							// generate data array
-							$data_intake = array(
-								'case_id' => $record_id,
-								'created_by' => $this->ion_auth->user()->row()->id,
-								'notes' => $array['notes_'.$i],
-								'created' => date("Y-m-d H:i:s"),
-								'docs' => implode(",", $file_names),
-								'type'=>'CLAIM'
-								);
-	
-							// if file is getting from email/print function
-							if(@$array['file_pdf_'.$i])
-							{
-								$data_intake['docs'] = $array['file_pdf_'.$i];
-							}
-	
-							// save values to database
-							$intake_form_id = $this->common_model->save("intake_form", $data_intake);
-	
-							// create directory to identify intake files
-							@mkdir(UPLOADFULLPATH . 'intake_forms/'.$intake_form_id, 0777);
-	
-							// if file is getting from email/print function
-							if(@$array['file_pdf_'.$i])
-							{
-								$fname = $array['file_pdf_'.$i];
-								copy(UPLOADFULLPATH . "temp/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
-								unlink(UPLOADFULLPATH . "$fname");
-							}
-							// move all files to that directory
-							if(!empty($file_names))
-								foreach ($file_names as $fname)
-								{
-									copy(UPLOADFULLPATH . "intake_forms/$fname", UPLOADFULLPATH . "intake_forms/$intake_form_id/$fname");
-									unlink(UPLOADFULLPATH . "intake_forms/$fname");
-								}
+					
+					foreach ($files['name'] as $key => $value) {
+						if($files['name'][$key]) {
+							$_FILES['userfile']['name'] = $files['name'][$key];
+			                $_FILES['userfile']['type'] = $files['type'][$key];
+			                $_FILES['userfile']['tmp_name'] = $files['tmp_name'][$key];
+			                $_FILES['userfile']['error'] = $files['error'][$key];
+			                $_FILES['userfile']['size'] = $files['size'][$key];
+							
+							// upload file to server
+							$this->upload->do_upload();
+							$file_data = $this->upload->data();
+							$file_names[] = $file_data['file_name'];
 						}
 					}
-					*/
-							
-					$this->claim_model->save($data);
+
+					$data['files'] = implode(",", $file_names);
+				}
 	
+				// insert payee information
+				$payees = $this->input->post('payees');
+				$payee_str = '';
+				if (!empty($payees)) {
+					foreach ($payees['payee_name'] as $key => $name) {
+						$payee_data = array(
+							'payment_type'=>$this->input->post('payment_type'),
+							'claim_id'=>$id,
+							'bank'=> isset($payees['bank'][$key]) ? $payees['bank'][$key] : '',
+							'payee_name'=> isset($payees['payee_name'][$key]) ? $payees['payee_name'][$key] : '',
+							'account_cheque'=> isset($payees['account_cheque'][$key]) ? $payees['account_cheque'][$key] : '',
+							'address'=> isset($payees['address'][$key]) ? $payees['address'][$key] : '',
+							'created'=>date('c')
+							);
+						$this->claim_model->payees_save($payee_data);
+						if ($payee_data['payment_type'] == 'cheque') {
+							$payee_str = "cheque : ".$payee_data['payee_name']." : ".$payee_data['address'];
+						} else {
+							$payee_str = "direct deposit : ".$payee_data['payee_name']." : ".$payee_data['bank']." : ".$payee_data['account_cheque'];
+						}
+					}
+				}
+				
+				
+				// insert expenses_claimed data
+				$expenses_claimed = $this->input->post('expenses_claimed');
+				if (!empty($expenses_claimed)) {	
+					$i = 0;
+					foreach ($expenses_claimed['invoice'] as $key => $val) {
+						$i++;
+						$expenses__data = array(
+								'claim_id'=>$id,
+								'cellular' => '',
+								'invoice'=>$val,
+								'claim_no' => $claim_no,
+								'claim_item_no' => $claim_no . '_' . $i,
+								'case_no' => '',
+								'provider_name'=> isset($expenses_claimed['provider_name'][$key]) ? $expenses_claimed['provider_name'][$key] : '',
+								'referencing_physician'=> isset($expenses_claimed['referencing_physician'][$key]) ? $expenses_claimed['referencing_physician'][$key] : '',
+								'coverage_code'=> isset($expenses_claimed['coverage_code'][$key]) ? $expenses_claimed['coverage_code'][$key] : '',
+								'diagnosis'=> isset($expenses_claimed['diagnosis'][$key]) ? $expenses_claimed['diagnosis'][$key] : '',
+								'service_description'=> isset($expenses_claimed['service_description'][$key]) ? $expenses_claimed['service_description'][$key] : '',
+								'date_of_service'=> isset($expenses_claimed['date_of_service'][$key]) ? $expenses_claimed['date_of_service'][$key] : '',
+								'amount_billed_org'=> isset($expenses_claimed['amount_billed_org'][$key]) ? $expenses_claimed['amount_billed_org'][$key] : '',
+								'amount_client_paid_org'=> isset($expenses_claimed['amount_client_paid_org'][$key]) ? $expenses_claimed['amount_client_paid_org'][$key] : '',
+								'amount_claimed_org'=> isset($expenses_claimed['amount_claimed_org'][$key]) ? $expenses_claimed['amount_claimed_org'][$key] : '',
+								'currency'=> isset($expenses_claimed['currency'][$key]) ? $expenses_claimed['currency'][$key] : 'CAD',
+								'comment'=> isset($expenses_claimed['comment'][$key]) ? $expenses_claimed['comment'][$key] : '',
+								'pay_to'=>$payee_str,
+								'status' => Expenses_model::EXPENSE_STATUS_Pending,
+								'created_by' => 0,
+								'created' => date('Y-m-d H:i:s'));
+								
+						$expenses__data['amount_billed'] = $this->expenses_model->get_currency_exchange($expenses__data['amount_billed_org'][$key], $expenses__data['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]);
+						$expenses__data['amount_claimed'] = $this->expenses_model->get_currency_exchange($expenses__data['amount_claimed_org'][$key], $expenses__data['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]);
+						$this->claim_model->expenses_save($expenses__data);
+					}
+				}
+
+				$id = $this->claim_model->save($data);
+				if ($id) {
 					// settings for my task section for case manager
 					$this->load->model('mytask_model');
 					$task_data = array(
