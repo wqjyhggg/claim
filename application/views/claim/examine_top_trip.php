@@ -716,6 +716,8 @@
 											'{case_no}',
 											'{policy_holder}',
 											'{coverage_period}',
+											'{casemanager_name}',
+											'{claimexaminer_email}',
 											'{claimexaminer_name}',
 									);
 									$replace = array(
@@ -725,7 +727,9 @@
 											$policy['policy'],
 											$claim['case_no'],
 											$policy['firstname'] . ' ' . $policy['lastname'],
-											$policy['effective_date'] . ' - ' . $policy['expiry_date'],
+											$policy['effective_date'] . ' to ' . $policy['expiry_date'],
+											$claim['assign_to_name'],
+											$this->ion_auth->user()->row()->email,
 											$this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name,
 									);
 									echo str_replace($find, $replace, $doc['description']);
