@@ -1,4 +1,6 @@
 <?php
+use function GuzzleHttp\json_decode;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Claim_review extends CI_Controller {
@@ -72,6 +74,9 @@ class Claim_review extends CI_Controller {
 				$this->data['claim']['product_full_name'] = $this->product_model->get_full_name($claim['product_short']);
 				if ($policies = $this->api_model->get_policy(array('policy' => $claim['policy_no']))) {
 					$this->data['claim']['policy_info'] = $policies[0];
+				}
+				if (is_string($this->data['claim']['policy_info'])) {
+					$this->data['claim']['policy_info'] = json_decode($this->data['claim']['policy_info'], TRUE);
 				}
 				if ($expenses = $this->expenses_model->search(array('claim_id' => $claim['id']))) {
 					$this->data['claim']['expense'] = $expenses[0];

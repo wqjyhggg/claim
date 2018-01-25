@@ -438,8 +438,13 @@
 													<div class='col-sm-12'><input type='text' name='reason_other' value="<?php echo $value['reason_other']; ?>"></div>
 												</div>
 												<div class="clearfix"></div>
+												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Notes : </label>
+													<div class='col-sm-12'><input type='text' name='comment' value="<?php echo $value['comment']; ?>"></div>
+												</div>
 												<?php if ($value['status'] != Expenses_model::EXPENSE_STATUS_Paid) { ?>
 												<div class="form-group col-sm-3 pull-right">
+													<label class="col-sm-12">&nbsp;</label>
 													<div class='col-sm-12'><?php echo form_submit("Save", "Save", 'class="btn btn-primary"'); ?></div>
 												</div>
 												<?php } ?>

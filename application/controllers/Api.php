@@ -208,10 +208,16 @@ class Api extends CI_Controller {
 			}
 			
 			$data['policy_no'] = $this->api['policy'];
+			$policies = $this->api_model->get_policy(array('policy' => $data['policy_no']));
+			if (empty($policies)) {
+				$error['policy_no'] = 'Invalid Policy';
+			} else {
+				$data['policy_info'] = $policies[0];
+			}
+						
 			$data['product_short'] = $this->api['product_short'];
 			$data['agent_id'] = $this->api['agent_id'];
 			$data['totaldays'] = $this->api['totaldays'];
-			$data['policy_info'] = '';
 			$data['case_no'] = '';
 			$data['school_name'] = $this->input->post('school_name');
 			$data['group_id'] = $this->input->post('group_id');
