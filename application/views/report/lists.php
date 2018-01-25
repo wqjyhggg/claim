@@ -12,6 +12,7 @@
 				<div class="x_content">
 					<div class="table-responsive">
 						<ul>
+							<li style='line-height: 2em;'><?php echo anchor("report/phonestatus", ' Phone Status</a>', array("class"=>'leftmeun h4', 'target' => 'phonestatus')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/cases", ' Case Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 						</ul>
 						<ul>

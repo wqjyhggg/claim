@@ -7,6 +7,7 @@ $(document).ready(function(){
 			success: function(data) {
 				if (data.status='OK') {
 					$('#phone_logout').show();
+					$('#phone_queue_div').show();
 					$('#phone_login').hide();
 				}
 			}
@@ -21,6 +22,7 @@ $(document).ready(function(){
 			success: function(data) {
 				if (data.status='OK') {
 					$('#phone_logout').hide();
+					$('#phone_queue_div').hide();
 					$('#phone_login').show();
 				}
 			}
@@ -35,6 +37,7 @@ $(document).ready(function(){
 			success: function(data) {
 				if (data.status='OK') {
 					$('#phone_logout').hide();
+					$('#phone_queue_div').hide();
 					$('#phone_login').show();
 				}
 			}
@@ -49,7 +52,23 @@ $(document).ready(function(){
 			success: function(data) {
 				if (data.status='OK') {
 					$('#phone_logout').hide();
+					$('#phone_queue_div').hide();
 					$('#phone_login').show();
+				}
+			}
+		})
+	});
+
+	$('.phonequeue').click(function () {
+		$.ajax({
+			url: "/myphone/queue",
+			method: "get",
+			datatype: 'json',
+			success: function(data) {
+				if (data.status='OK') {
+					$('#curr_queue').html(data.queue);
+				} else {
+					$('#curr_queue').html('');
 				}
 			}
 		})
@@ -62,11 +81,14 @@ $(document).ready(function(){
 		success: function(data) {
 			if (data.login == 'OK') {
 				$('#phone_logout').show();
+				$('#phone_queue_div').show();
 				$('#phone_login').hide();
 			} else if (data.login == 'Unknown') {
 				$('#phone_opt_div').hide();
+				$('#phone_queue_div').hide();
 			} else {
 				$('#phone_logout').hide();
+				$('#phone_queue_div').hide();
 				$('#phone_login').show();
 			}
 		}

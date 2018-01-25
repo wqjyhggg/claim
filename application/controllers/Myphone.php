@@ -85,4 +85,19 @@ class Myphone extends CI_Controller {
 		header('Content-Type: application/json');
 		die(json_encode($res));
 	}
+	
+	public function queue() {
+		if (!$this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+
+		$this->load->model('phone_model');
+		$phoneid = $this->users_model->get_user_phoneid();
+		$res ['queue'] = $this->phone_model->get_current_queue($phoneid);
+		$res ['status'] = 'OK';
+		
+		header('Content-Type: application/json');
+		die(json_encode($res));
+	}
 }

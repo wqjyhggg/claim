@@ -56,14 +56,17 @@
                         <?php if ($phoneid = $this->users_model->get_user_phoneid()) { ?>
                         <div class="navbar site_title" id="phone_opt_div" style="border: 0;">
                            <i class="fa fa-phone"></i>
-                           	<span id="phone_login" style="display:none">
+                           	<span id="phone_login" style="display:none;">
                            		<button type="button" class="btn btn-info btn-xs phonelogin">Online</button>&nbsp;
                            	</span>
-                           	<span id="phone_logout" style="display:none">
+                           	<span id="phone_logout" style="display:none;">
                            		<button type="button" class="btn btn-info btn-xs phonelogout">Leave</button>
                            		<button type="button" class="btn btn-info btn-xs phonebreak">Break</button>
                            		<button type="button" class="btn btn-info btn-xs phonewaiting">Pause</button>
                            	</span>
+                        </div>
+                        <div class="navbar site_title" id="phone_queue_div" style="border: 0; display:none;">
+                       		<button type="button" class="btn btn-info btn-xs phonequeue">Get Queue</button> <span id='curr_queue'></span>
                         </div>
                         <?php } ?>
                         <div class="clearfix"></div>
@@ -180,7 +183,7 @@
                }
             })
 
-          }, 10000);         
+          }, 60000);         
       })
          
       </script>

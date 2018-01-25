@@ -26,6 +26,11 @@ class Phone_model extends CI_Model {
 	const PHONE_OPT_BREAK = 'Break';
 	const PHONE_OPT_PAUSE = 'Pause';
 	
+	const PHONE_STATUS_OFFLINE = 'Offline';
+	const PHONE_STATUS_ONLINE = 'Online';
+	const PHONE_STATUS_RING = 'Ring';
+	const PHONE_STATUS_TALKING = 'Talking';
+	
 	public function sendRequest($req, $data, $method = "POST") {
 		$http_header = array (
 				'x-app-key:' . self::PHONE_KEY ,
@@ -150,6 +155,55 @@ class Phone_model extends CI_Model {
 		return false;
 	}
 
+	public function get_current_queue($phoneid) {
+		$sql = "SELECT * FROM phone_ring WHERE agent=".$this->db->escape($phoneid)." AND TIME_TO_SEC(TIMEDIFF(now(), event_tm))<120 ORDER BY event_tm DESC limit 1";
+		if ($rc = $this->db->query($sql)->row_array()) {
+			$phone_id = $rc['phone_id'];
+			$sql = "SELECT * FROM phone_ring WHERE phone_id=".$this->db->escape($phone_id)." ORDER BY event_tm DESC limit 1";
+			if ($rc1 = $this->db->query($sql)->row_array()) {
+				if ($rc1['agent'] == $rc['agent']) {
+					$sql = "SELECT * FROM phone_records WHERE phone_id=".$this->db->escape($phone_id)." AND newcall>answer ORDER BY newcall DESC limit 1";
+					if ($rc2 = $this->db->query($sql)->row_array()) {
+						$r = $rc['queue'];
+					}
+				}
+			}
+		}
+		return '';
+	}
+
+	public function get_current_status($phoneid) {
+		$req = "/api/agent/".$phoneid."/status";
+		
+		$para = array();
+		$rt = $this->sendRequest($req, $para, 'GET');
+		$data = json_decode($rt, true);
+
+		if (isset($data['logged_in'])) {
+			$r = self::PHONE_STATUS_ONLINE;
+			$sql = "SELECT * FROM phone_records WHERE agent=".$this->db->escape($phoneid)." AND hangup<answer AND newcall<answer ORDER BY newcall DESC limit 1";
+			if ($rc = $this->db->query($sql)->row_array()) {
+				$r = self::PHONE_STATUS_TALKING;
+			} else {
+				$sql = "SELECT * FROM phone_ring WHERE agent=".$this->db->escape($phoneid)." AND TIME_TO_SEC(TIMEDIFF(now(), event_tm))<120 ORDER BY event_tm DESC limit 1";
+				if ($rc = $this->db->query($sql)->row_array()) {
+					$phone_id = $rc['phone_id'];
+					$sql = "SELECT * FROM phone_ring WHERE phone_id=".$this->db->escape($phone_id)." ORDER BY event_tm DESC limit 1";
+					if ($rc1 = $this->db->query($sql)->row_array()) {
+						if ($rc1['agent'] == $rc['agent']) {
+							$sql = "SELECT * FROM phone_records WHERE phone_id=".$this->db->escape($phone_id)." AND newcall>answer ORDER BY newcall DESC limit 1";
+							if ($rc2 = $this->db->query($sql)->row_array()) {
+								$r = self::PHONE_STATUS_RING;
+							}
+						}
+					}
+				}
+			}
+			return $r;
+		}
+		return self::PHONE_STATUS_OFFLINE;
+	}
+
 	public function save($data) {
 		if (isset($data['id'])) {
 			// Update
@@ -204,7 +258,7 @@ class Phone_model extends CI_Model {
 			$user_id = $this->get_active_user_id($json['agent']);
 		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "INSERT into phone_ring (phone_id, caller_id_number, agent, user_id, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['agent']).", '".(int)$user_id."', ".$this->db->escape(date("Y-m-d H:i:s", $tm)).")";
+		$sql = "INSERT into phone_ring (phone_id, caller_id_number, agent, queue, user_id, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['queue']).", '".(int)$user_id."', ".$this->db->escape(date("Y-m-d H:i:s", $tm)).")";
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
