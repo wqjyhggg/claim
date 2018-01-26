@@ -315,7 +315,7 @@
 										<th>Service Date</th>
 										<th>Payee</th>
 										<th>Coverage</th>
-										<th>Diagnosis</th>
+										<!-- th>Diagnosis</th -->
 										<th>Amt Billed</th>
 										<th>Amt Claimed</th>
 										<th>Amt Payable</th>
@@ -337,7 +337,7 @@
 										<td><?php echo $value['date_of_service']; ?></td>
 										<td><?php $payArr= explode(":", $value['pay_to']); echo empty($payArr[1]) ? '' : $payArr[1]; ?></td>
 										<td><?php echo $expenses_list[$value['coverage_code']]; ?></td>
-										<td><?php echo $value['diagnosis']; ?></td>
+										<!-- td><?php echo $value['diagnosis']; ?></td -->
 										<td><?php echo $value['amount_billed']?$value['amount_billed']:0; ?></td>
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
@@ -529,7 +529,7 @@
 										<th>Service</th>
 										<th>Service Date</th>
 										<th>Coverage</th>
-										<th>Diagnosis</th>
+										<!-- th>Diagnosis</th -->
 										<th>Amt Claimed</th>
 										<th>Amt Payable</th>
 										<th>Amt Deductible</th>
@@ -551,7 +551,7 @@
 										<td><?php echo $value['service_description']; ?></td>
 										<td><?php echo $value['date_of_service']; ?></td>
 										<td><?php echo $expenses_list[$value['coverage_code']]; ?></td>
-										<td><?php echo $value['diagnosis']; ?></td>
+										<!-- td><?php echo $value['diagnosis']; ?></td -->
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
 										<td><?php echo $value['amt_deductible']?$value['amt_deductible']:0; ?></td>

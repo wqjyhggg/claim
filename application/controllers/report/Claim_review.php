@@ -78,9 +78,11 @@ class Claim_review extends CI_Controller {
 				if (is_string($this->data['claim']['policy_info'])) {
 					$this->data['claim']['policy_info'] = json_decode($this->data['claim']['policy_info'], TRUE);
 				}
+				/*
 				if ($expenses = $this->expenses_model->search(array('claim_id' => $claim['id']))) {
 					$this->data['claim']['expense'] = $expenses[0];
 				}
+				*/
 				$this->data['claim']['expenses_summary'] = $this->expenses_model->expenses_summary($claim['id']);
 				
 				$this->template->write_view('content', 'report/claim_review', $this->data);
@@ -132,9 +134,11 @@ class Claim_review extends CI_Controller {
 			if ($policies = $this->api_model->get_policy(array('policy' => $claim['policy_no']))) {
 				$this->data['claim']['policy_info'] = $policies[0];
 			}
+			/*
 			if ($expenses = $this->expenses_model->search(array('claim_id' => $claim['id']))) {
 				$this->data['claim']['expense'] = $expenses[0];
 			}
+			*/
 			$this->data['claim']['expenses_summary'] = $this->expenses_model->expenses_summary($claim['id']);
 			
 			$html = $this->load->view('report/claim_review', $this->data, true);

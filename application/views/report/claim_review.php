@@ -83,7 +83,7 @@
 								</tr>
 								<tr>
 									<td width='50%'><b>Cause for Claim / Diagnosis :</b></td>
-									<td><?php echo empty($claim['expense']) ? '' : $claim['expense']['diagnosis']; ?></td>
+									<td><?php echo $claim['diagnosis']; ?></td>
 								</tr>
 								<tr>
 									<td width='50%'><b>Reserve Amount :</b></td>

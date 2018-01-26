@@ -467,6 +467,10 @@
 						<div class="row" style="display: none">
 							<div class="col-sm-12">
 								<div class="row">
+									<div class="col-sm-12">
+										<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("diagnosis", $claim_details["diagnosis"], array("class" => "form-control", 'placeholder' => 'Diagnosis')); ?>
+									</div>
 									<div class="form-group col-sm-12">
 										<?php echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class" => 'col-sm-12')); ?>
 										<?php echo form_textarea("medical_description", $claim_details["medical_description"], array("class" => "form-control", 'placeholder' => 'Brief description of your sickness or injury')); ?>
@@ -621,11 +625,11 @@
 										</div>
 										<div class="clearfix"></div>
 
-										<div class="col-sm-3">
+										<!-- div class="col-sm-3">
 											<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
 											<?php echo $value['diagnosis']; ?>
 											<?php echo form_hidden("expenses_claimed[diagnosis][]", $value ['diagnosis']); ?>
-										</div>
+										</div -->
 										<div class="col-sm-3">
 											<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
 											<?php echo $value['service_description']; ?>
@@ -701,10 +705,10 @@
 										</div>
 										<div class="clearfix"></div>
 
-										<div class="col-sm-3">
+										<!-- div class="col-sm-3">
 											<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed[diagnosis][]", $value ['diagnosis'], array("class" => "form-control autocomplete_field required")); ?>
-										</div>
+										</div -->
 										<div class="col-sm-3">
 											<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed[service_description][]", $value ['service_description'], array("class" => "form-control required")); ?>
@@ -1045,10 +1049,10 @@
 			</div>
 			<div class="clearfix"></div>
 
-			<div class="col-sm-3">
+			<!-- div class="col-sm-3">
 				<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[diagnosis][]", $this->input->post("diagnosis"), array("class" => "form-control autocomplete_field required")); ?>
-			</div>
+			</div -->
 			<div class="col-sm-3">
 				<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[service_description][]", $this->input->post("service_description"), array("class" => "form-control required")); ?>
@@ -1261,23 +1265,23 @@
    })
 
    // fuzzy search
-   .on("click", ".autocomplete_field", function() {
-      $(".autocomplete_field").autocomplete({
-        serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
-        minLength: 2,
-        dataType: "json",
-      });
-    })
+   //.on("click", ".autocomplete_field", function() {
+   //   $(".autocomplete_field").autocomplete({
+   //     serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
+   //     minLength: 2,
+   //     dataType: "json",
+   //   });
+   // })
 
    // once user clicked over add new expenses button
    .on("click", ".add_new_expenses", function(e){
       var html = $(".base-row").html();
       $(".expenses-list").append(html);
-      $(".autocomplete_field").autocomplete({
-        serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
-        minLength: 2,
-        dataType: "json",
-      });
+      //$(".autocomplete_field").autocomplete({
+      //  serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
+      //  minLength: 2,
+      //  dataType: "json",
+      //});
       $(".datepicker").datepicker({
            startDate: '-105y',
            endDate: '+2y',

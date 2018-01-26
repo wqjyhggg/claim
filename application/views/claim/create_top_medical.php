@@ -444,6 +444,10 @@
 					<div class="row" style="display: none">
 						<div class="col-sm-12">
 							<div class="row">
+								<div class="col-sm-12">
+									<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
+									<?php echo form_input("diagnosis", $this->input->post("diagnosis"), array("class" => "form-control", 'placeholder' => 'Diagnosis')); ?>
+								</div>
 								<div class="form-group col-sm-12">
 									<?php echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class" => 'col-sm-12')); ?>
 									<?php echo form_textarea("medical_description", $this->input->post("medical_description"), array("class" => "form-control", 'placeholder' => 'Brief description of your sickness or injury')); ?>
@@ -594,10 +598,10 @@
 									</div>
 									<div class="clearfix"></div>
 
-									<div class="col-sm-3">
+									<!-- div class="col-sm-3">
 										<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
 										<?php echo form_input("expenses_claimed[diagnosis][]", $arr['diagnosis'][$key], array("class" => "form-control autocomplete_field required")); ?>
-									</div>
+									</div -->
 									<div class="col-sm-3">
 										<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
 										<?php echo form_input("expenses_claimed[service_description][]", $arr['service_description'][$key], array("class" => "form-control required")); ?>
@@ -883,10 +887,10 @@
 					<?php endforeach; ?>
 				</select>
 			</div>
-			<div class="col-sm-3">
+			<!-- div class="col-sm-3">
 				<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[diagnosis][]", '', array("class" => "form-control autocomplete_field required")); ?>
-			</div>
+			</div -->
 			<div class="col-sm-3">
 				<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[service_description][]", '', array("class" => "form-control required")); ?>
@@ -1019,11 +1023,11 @@
 	      var html = $(".base-row").html();
 	      $(".expenses-list").append(html);
       }
-      $(".autocomplete_field").autocomplete({
-        serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
-        minLength: 2,
-        dataType: "json",
-      });
+      //$(".autocomplete_field").autocomplete({
+      //  serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
+      //  minLength: 2,
+      //  dataType: "json",
+      //});
       $(".dob").datepicker({
         startDate: '-105y',
         endDate: '0',
@@ -1042,22 +1046,22 @@
    })
 
    // fuzzy search
-   .on("click", ".autocomplete_field", function() {
-      $(".autocomplete_field").autocomplete({
-        serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
-        minLength: 2,
-        dataType: "json",
-      });
-    })
+   //.on("click", ".autocomplete_field", function() {
+   //   $(".autocomplete_field").autocomplete({
+   //     serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
+   //     minLength: 2,
+   //     dataType: "json",
+   //   });
+   // })
 
    .on("click", ".add_new_expenses", function(e){
       var html = $(".base-row").html();
       $(".expenses-list").append(html);
-      $(".autocomplete_field").autocomplete({
-        serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
-        minLength: 2,
-        dataType: "json",
-      });
+      //$(".autocomplete_field").autocomplete({
+      //  serviceUrl: "<?php echo base_url()."claim/search_diagnosis/description"; ?>" ,
+      //  minLength: 2,
+      //  dataType: "json",
+      //});
       $(".datepicker").datepicker({
            startDate: '-105y',
            endDate: '+2y',

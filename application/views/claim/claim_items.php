@@ -7,7 +7,7 @@
          <th>Invoice No</th>
          <th>Service Date</th>
          <th>Coverage</th>
-         <th>Diagnosis</th>
+         <!-- th>Diagnosis</th -->
          <th>Amt Claimed</th>
          <th>Amt Payable</th>
          <th>Amt Deductible</th>  
@@ -29,7 +29,7 @@
                <td><?php echo $value['invoice'] ?></td>
                <td><?php echo $value['date_of_service'] ?></td>
                <td><?php echo $value['coverage_code'] ?></td>
-               <td><?php echo $value['diagnosis'] ?></td>
+               <!-- td><?php echo $value['diagnosis'] ?></td -->
                <td><?php echo $value['amount_claimed'] ?></td>
                <td><?php echo $value['amt_payable'] ?></td>
                <td><?php echo $value['amt_deductible'] ?></td>

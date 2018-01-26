@@ -11,7 +11,7 @@ if(!empty($claims)):?>
                <th>Invoice No.</th>
                <th>Service Date</th>
                <th>Coverage</th>
-               <th>Diagnosis</th>
+               <!-- th>Diagnosis</th -->
                <th>Amt Claimed</th>
                <th>Amt Payable</th>
                <th>Amt Deductible</th>
@@ -27,7 +27,7 @@ if(!empty($claims)):?>
                   <td><?php echo $val['invoice'] ?></td>
                   <td><?php echo $val['date_of_service'] ?></td>
                   <td><?php echo $val['coverage_code'] ?></td>
-                  <td><?php echo $val['diagnosis'] ?></td>
+                  <!-- td><?php echo $val['diagnosis'] ?></td -->
                   <td><?php echo $val['amount_claimed'] ?></td>
                   <td><?php echo $val['amt_payable'] ?></td>
                   <td><?php echo $val['amt_deductible'] ?></td>
