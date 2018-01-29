@@ -19,12 +19,12 @@ class Api extends CI_Controller {
 	public function login() {
 		$this->load->model('api_model');
 
-		$data['ap_id'] = $this->input->post('ap_id');
+		$data['api_id'] = $this->input->post('api_id');
 		$data['policy'] = $this->input->post('policy');
 		$data['birthday'] = $this->input->post('birthday');
 		$data['ip'] = $this->input->server('REMOTE_ADDR');
 		$rdata = array('status' => Api_model::STATUS_OK, 'message' => 'Success', 'token' => '');
-		if (empty($data['ap_id'])) {
+		if (empty($data['api_id'])) {
 			$rdata['status'] = Api_model::STATUS_ERROR;
 			$rdata['message'] = 'Invilad ID';
 		} else if (empty($data['birthday']) || !preg_match('/^[1-2][0-9]{3}-[01][0-9]-[0123][0-9]$/',$data['birthday'])) {
@@ -46,7 +46,7 @@ class Api extends CI_Controller {
 				if ($policies[0]['birthday'] == $data['birthday']) {
 					$hasbirthday = 1;
 				} else if ($policies[0]['isfamilyplan']) {
-					foreach ($policies[0]['isfamilyplan'] as $p) {
+					foreach ($policies[0]['family'] as $p) {
 						if ($p['birthday'] == $data['birthday']) {
 							$hasbirthday = 1;
 							break;
@@ -63,7 +63,7 @@ class Api extends CI_Controller {
 		}
 
 		if ($rdata['status'] == Api_model::STATUS_OK) {
-			$rdata['token'] = $this->api_model->get_token($data['ap_id']);
+			$rdata['token'] = $this->api_model->get_token($data['api_id']);
 			$data['token'] = $rdata['token'];
 			$this->api_model->update($data);
 		}
@@ -75,11 +75,11 @@ class Api extends CI_Controller {
 	private function conn_verify() {
 		$this->load->model('api_model');
 
-		$data['ap_id'] = $this->input->post('ap_id');
+		$data['api_id'] = $this->input->post('api_id');
 		$data['token'] = $this->input->post('token');
 		$data['ip'] = $this->input->server('REMOTE_ADDR');
 		$rdata = array('status' => Api_model::STATUS_OK, 'message' => 'Success');
-		if (empty($data['ap_id'])) {
+		if (empty($data['api_id'])) {
 			$rdata['status'] = Api_model::STATUS_ERROR;
 			$rdata['message'] = 'Invilad ID';
 		} else if (empty($data['token'])) {
@@ -185,6 +185,7 @@ class Api extends CI_Controller {
 			$this->load->model('claim_model');
 			$this->load->model('mytask_model');
 			$this->load->model('master_model');
+			$this->load->model('expenses_model');
 			
 			$data = array();
 			$error = array();
@@ -215,9 +216,9 @@ class Api extends CI_Controller {
 				$data['policy_info'] = $policies[0];
 			}
 						
-			$data['product_short'] = $this->api['product_short'];
-			$data['agent_id'] = $this->api['agent_id'];
-			$data['totaldays'] = $this->api['totaldays'];
+			$data['product_short'] = $this->input->post('product_short');
+			$data['agent_id'] = $this->input->post('agent_id');
+			$data['totaldays'] = $this->input->post('totaldays');
 			$data['case_no'] = '';
 			$data['school_name'] = $this->input->post('school_name');
 			$data['group_id'] = $this->input->post('group_id');
@@ -374,12 +375,15 @@ class Api extends CI_Controller {
 								'created_by' => 0,
 								'created' => date('Y-m-d H:i:s'));
 								
-						$expenses__data['amount_billed'] = $this->expenses_model->get_currency_exchange($expenses__data['amount_billed_org'][$key], $expenses__data['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]);
-						$expenses__data['amount_claimed'] = $this->expenses_model->get_currency_exchange($expenses__data['amount_claimed_org'][$key], $expenses__data['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]);
-						$this->claim_model->expenses_save($expenses__data);
+						$expenses__data['amount_billed'] = $this->expenses_model->get_currency_exchange($expenses__data['amount_billed_org'][$key], $expenses__data['currency'][$key], $expenses_claimed['date_of_service'][$key]);
+						$expenses__data['amount_claimed'] = $this->expenses_model->get_currency_exchange($expenses__data['amount_claimed_org'][$key], $expenses__data['currency'][$key], $expenses_claimed['date_of_service'][$key]);
+						$this->expenses_model->save($expenses__data);
 					}
 				}
 
+				if (is_array($data['policy_info'])) {
+					$data['policy_info'] = json_encode($data['policy_info']);
+				}
 				$id = $this->claim_model->save($data);
 				if ($id) {
 					// settings for my task section for case manager

@@ -253,7 +253,7 @@ class Mytask_model extends CI_Model {
 	}
 	
 	function get_auto_assign_examiner_id() {
-		$sql = "SELECT u.id, (SELECT count(c.assign_to) FROM `claim` c WHERE c.status IN ('".Claim_model::STATUS_Appealed."','".Claim_model::STATUS_Processing."','".Claim_model::STATUS_Pending."') AND c.case_manager=u.id) as cnt FROM users u WHERE u.active='1' AND groups LIKE '%".Users_model::GROUP_EXAMINER."%' ORDER BY cnt ASC, u.id ASC";
+		$sql = "SELECT u.id, (SELECT count(c.assign_to) FROM `claim` c WHERE c.status IN ('".Claim_model::STATUS_Appealed."','".Claim_model::STATUS_Processing."','".Claim_model::STATUS_Pending."') AND c.assign_to=u.id) as cnt FROM users u WHERE u.active='1' AND groups LIKE '%".Users_model::GROUP_EXAMINER."%' ORDER BY cnt ASC, u.id ASC";
 		$rt = $this->db->query($sql);
 		$rc = $rt->row_array();
 		if ($rc) {

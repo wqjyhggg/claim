@@ -23,7 +23,7 @@ class Master_model extends CI_Model {
 	}
 
 	public function get_number_str($id) {
-		$no = str_pad($data['id'], 7, 0, STR_PAD_LEFT);
+		$no = str_pad($id, 7, 0, STR_PAD_LEFT);
 		return $no;
 	}
 }
