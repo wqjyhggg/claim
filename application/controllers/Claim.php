@@ -1408,7 +1408,11 @@ class Claim extends CI_Controller {
 				// get all word documents
 				$this->data['word_templates'] = $this->word_comments_model->search(array());
 				$this->data['currencies'] = $this->expenses_model->get_currencies();
-				
+				$this->data['examiner_email'] = '';
+				if ($examiner = $this->users_model->get_by_id($this->data['claim_details']['assign_to'])) {
+					$this->data['examiner_email'] = $examiner['email'];
+				}
+
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Claim Details', TRUE);
 				switch ($this->data['claim_details']['exinfo_type']) {

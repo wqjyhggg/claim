@@ -243,6 +243,7 @@
 									<th>Birth Date</th>
 									<th>Claim Date</th>
 									<th>Claim Amount</th>
+									<th>Status</th>
 									<th>Assign To</th>
 									<th>Action</th>
 								</tr>
@@ -259,6 +260,7 @@
 									<td><?php echo $value['dob']; ?></td>
 									<td><?php echo $value['created']; ?></td>
 									<td><?php echo number_format($value['amount_claimed'], 2); ?></td>
+									<td><?php echo $value['status']; ?></td>
 									<td><?php echo $value['email']; ?></td>
 									<td><?php echo anchor("claim/claim_detail/".$value['id'], "View"); ?></td>
 								</tr>

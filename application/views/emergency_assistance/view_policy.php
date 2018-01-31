@@ -138,7 +138,9 @@
 								</div>
 								<div class="form-group col-sm-3">
 									<span class="creates">
-										<!-- a href="<?php echo $val['create_claim_url']; ?>" class="btn btn-primary">New Claim</a -->
+										<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) { ?>
+										<a href="<?php echo $val['create_claim_url']; ?>" class="btn btn-primary">New Claim</a>
+										<?php } ?>
 										<a href="<?php echo $val['create_case_url']; ?>" class="btn btn-primary">New Case</a>
 									</span>
 								</div>

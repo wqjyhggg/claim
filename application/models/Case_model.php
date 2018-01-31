@@ -281,7 +281,7 @@ class Case_model extends CI_Model {
 			$this->load->model('master_model');
 			$data['id'] = $this->master_model->get_id('case');
 		}
-		
+		$data['init_reserve_amount'] = $data['reserve_amount'];
 		$this->db->insert('case', $data);
 		$sql = $this->db->last_query();
 		$id = $this->db->insert_id();

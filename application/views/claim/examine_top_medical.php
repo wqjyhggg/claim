@@ -374,7 +374,7 @@
 									$total_payable += (float)$value['amt_payable'];
 									$total_this_payable += (float)$value['amt_payable'];
 								?>
-									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_coverage_code="<?php echo nl2br($value['coverage_code']) ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable='<?php echo $value['amt_payable'] ?>' item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to='<?php echo nl2br($value['pay_to']) ?>' item_comment='<?php echo nl2br($value['comment']) ?>'>
+									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_coverage_code="<?php echo nl2br($expenses_list[$value['coverage_code']]) ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable='<?php echo $value['amt_payable'] ?>' item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to='<?php echo nl2br($value['pay_to']) ?>' item_comment='<?php echo nl2br($value['comment']) ?>'>
 										<td><?php echo form_checkbox("items", $value['id'], FALSE); ?></td>
 										<td><?php echo $value['invoice']; ?></td>
 										<td><?php echo $value['service_description']; ?></td>
@@ -899,7 +899,7 @@ $(document).ready(function() {
 	html += '      <th>Claim Amount</th>';
 	// html += '      <th>Deductible Amount</th>';
 	html += '      <th>Payable Amount</th>';
-	// html += '      <th>Comment</th>';
+	html += '      <th>Claim Note</th>';
 	html += '    </tr>';
 	html += '  </thead>';
 	html += '  <tbody>';
@@ -946,7 +946,7 @@ $(document).ready(function() {
 		html += '      <td>$' + amount_claimed + '</td>';
 		// html += '      <td>$' + amt_deductible + '</td>';
 		html += '      <td>$' + amt_payable + '</td>';
-		// html += '      <td>' + comment + '</td>';
+		html += '      <td>' + comment + '</td>';
 		html += '  </tr>';
 	});
 	html += '  <tr>';
@@ -955,7 +955,7 @@ $(document).ready(function() {
 	html += '      <td>$' + total_amount_claimed + '</td>';
 	// html += '      <td>$' + total_amt_deductible + '</td>';
 	html += '      <td>$' + total_amt_payable + '</td>';
-	// html += '      <td>&nbsp;</td>';
+	html += '      <td>&nbsp;</td>';
 	html += '  </tr>';
 	html += '  </tbody>';
 	html += '</table>';

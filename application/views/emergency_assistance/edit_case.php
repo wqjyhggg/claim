@@ -412,11 +412,14 @@
 							<?php echo form_error("priority"); ?>
 						</div>
 						<div class="form-group col-sm-12">
-							<h4>Reservers C$ </h4>
-							<?php echo form_label('Reserver Amount:', 'reserve_amount', array("class"=>'col-sm-12')); ?>
+							<h4>Reserve C$ </h4>
+							<?php echo form_label('Reserve Amount:', 'reserve_amount', array("class"=>'col-sm-12')); ?>
 							<div class="form-group col-sm-4">
-								<?php echo form_input("reserve_amount", $case_details["reserve_amount"], array("class"=>"form-control", 'placeholder'=>'Reserver Amount')); ?>
+								<?php echo form_input("reserve_amount", $case_details["reserve_amount"], array("class"=>"form-control", 'placeholder'=>'Reserve Amount')); ?>
 								<?php echo form_error("reserve_amount"); ?>
+							</div>
+							<div class="form-group col-sm-4">
+								Init Reserve Amount : <?php echo $case_details["init_reserve_amount"]; ?>
 							</div>
 						</div>
 						<?php if (! $this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>

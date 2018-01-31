@@ -48,6 +48,16 @@ class Expenses_model extends CI_Model {
 				'V01' => 'V01 - Hospitalization',
 				'V02A' => 'V02A - Medical Services',
 				'V01A' => 'V01A - Out-PatientTreatment',
+				'V0JF1' => 'V0JF1 - Trip interruption',
+				'V0JF2' => 'V0JF2 - Trip cancellation',
+				'V0JF3' => 'V0JF3 - Meal',
+				'V0JF4' => 'V0JF4 - Hotel',
+				'V0JF5' => 'V0JF5 - Transportation',
+				'V0JF6' => 'V0JF6 - Internet',
+				'V0JF7' => 'V0JF7 - Phone',
+				'V0JF8' => 'V0JF8 - Baggage lost',
+				'V0JF9' => 'V0JF9 - Baggage damaged',
+				'V0JFA' => 'V0JFA - Air ticket',
 		);
 	}
 	
@@ -83,6 +93,16 @@ class Expenses_model extends CI_Model {
 				'V01' => 'Hospitalization',
 				'V02A' => 'Medical Services',
 				'V01A' => 'Out-PatientTreatment',
+				'V0JF1' => 'Trip interruption',
+				'V0JF2' => 'Trip cancellation',
+				'V0JF3' => 'Meal',
+				'V0JF4' => 'Hotel',
+				'V0JF5' => 'Transportation',
+				'V0JF6' => 'Internet',
+				'V0JF7' => 'Phone',
+				'V0JF8' => 'Baggage lost',
+				'V0JF9' => 'Baggage damaged',
+				'V0JFA' => 'Air ticket',
 		);
 	}
 	

@@ -127,7 +127,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('insured_firstname', 'Insured First Name', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			
-			$this->form_validation->set_rules('reserve_amount', 'Reserver Amount', 'numeric|required|callback_positive_number');
+			$this->form_validation->set_rules('reserve_amount', 'Reserve Amount', 'numeric|required|callback_positive_number');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 
 			if ($this->form_validation->run() == TRUE) {
@@ -469,7 +469,7 @@ class Emergency_assistance extends CI_Controller {
 			
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
 			
-			$this->form_validation->set_rules('reserve_amount', 'Reserver Amount', 'numeric|required|callback_positive_number');
+			$this->form_validation->set_rules('reserve_amount', 'Reserve Amount', 'numeric|required|callback_positive_number');
 			
 			if ($this->form_validation->run() == TRUE) {
 				if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) {

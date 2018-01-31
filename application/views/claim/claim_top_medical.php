@@ -534,7 +534,7 @@
 											<?php echo form_input("payees[account_cheque][]", $value ["account_cheque"], array("class" => "form-control", 'placeholder' => 'Account#')); ?>
 										</div>
 										<div class="col-sm-3 cheque_section" <?php echo ($value["payment_type"] == 'direct deposit'?'style="display:none"':''); ?>>
-											<?php echo form_label('Address:', 'Address', array("class" => 'col-sm-12')); ?>
+											<label for="Address" class="col-sm-12">Address: &nbsp;&nbsp;<span class='payee_policy_addr'><i class="fa fa-copy"></i> use policy address</span></label>
 											<?php echo form_input("payees[address][]", $value ["address"], array("class" => "form-control " . ($value ["payment_type"] == 'direct deposit' ? '' : 'required'), 'placeholder' => 'Address')); ?>
 										</div>
 										<?php if($edit): ?>
@@ -802,6 +802,10 @@
 							<div class="col-sm-3">
 								<?php echo form_label('Status:', 'status', array("class" => 'col-sm-12')); ?>
 								<?php echo form_dropdown("status", $status_list, $claim_details["status"], array("class" => 'form-control')); ?>
+							</div>
+							<div class="col-sm-3">
+								<?php echo form_label('Examiner:', 'assign_to', array("class" => 'col-sm-12')); ?>
+								<?php echo $examiner_email; ?>
 							</div>
 						</div>
 					</div>
@@ -1092,7 +1096,7 @@
 				<?php echo form_input("payees[account_cheque][]", $this->input->post("account_cheque"), array("class" => "form-control", 'placeholder' => 'Account#')); ?>
 			</div>
 			<div class="col-sm-3 cheque_section">
-				<?php echo form_label('Address:', 'Address', array("class" => 'col-sm-12')); ?>
+				<label for="Address" class="col-sm-12">Address: &nbsp;&nbsp;<span class='payee_policy_addr'><i class="fa fa-copy"></i> use policy address</span></label>
 				<?php echo form_input("payees[address][]", $this->input->post("address"), array("class" => "form-control", 'placeholder' => 'Address')); ?>
 			</div>
 			<div class="col-sm-3">
@@ -1283,6 +1287,11 @@
       $(this).next('i').removeClass('fa-angle-down').addClass('fa-angle-up');
       e.stopPropagation()
    })
+	.on("click", ".payee_policy_addr", function() {
+		var addr = $(this).closest("div").find("input[name='payees[address][]']");
+		var data = $.parseJSON(localStorage.getItem("policy_data"));
+		addr.val(data[0].street_number+" "+data[0].street_name + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+	})
 
    .on("click", ".remove-payee", function(){
 

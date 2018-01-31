@@ -127,7 +127,7 @@
 		<div class="form-group col-sm-12"><?php echo $case_details['priority']; ?></div>
 	</div>
 	<div class="form-group col-sm-12">
-		<h4>Reservers C$</h4>
+		<h4>Reserve C$</h4>
 		<?php echo form_label('Reserve Amount:', 'reserve_amount', array("class"=>'col-sm-12'));   ?>
 		<div class="form-group col-sm-4"><?php echo "$" . ($case_details ['reserve_amount'] ? $case_details ['reserve_amount'] : 0); ?></div>
 	</div>
