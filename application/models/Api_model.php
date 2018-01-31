@@ -193,11 +193,11 @@ class Api_model extends CI_Model {
 	/**
 	 * Gerenate
 	 *
-	 * @param string $ap_id        	
+	 * @param string $api_id        	
 	 * @return string
 	 */
-	function get_token($ap_id) {
-		return md5($ap_id . rand(100000, 999999));
+	function get_token($api_id) {
+		return md5($api_id . rand(100000, 999999));
 	}
 	
 	/**
@@ -207,7 +207,7 @@ class Api_model extends CI_Model {
 	 */
 	function update($para) {
 		$data = array ();
-		if (isset( $para['ap_id'] ))	$data['ap_id'] = $this->db->escape( $para ['ap_id'] );
+		if (isset( $para['api_id'] ))	$data['api_id'] = $this->db->escape( $para ['api_id'] );
 		if (isset( $para['token'] ))	$data['token'] = $this->db->escape( $para ['token'] );
 		if (isset( $para['policy'] ))	$data['policy'] = $this->db->escape( $para ['policy'] );
 		if (isset( $para['ip'] ))		$data['ip'] = $this->db->escape( $para ['ip'] );
@@ -221,7 +221,7 @@ class Api_model extends CI_Model {
 			return; // There is not data
 		}
 		
-		unset($data1['ap_id']);
+		unset($data1['api_id']);
 		if (isset( $para ['last_tm'] )) {
 			$data1['last_tm'] = $this->db->escape( $para ['last_tm'] );
 		}
@@ -241,20 +241,20 @@ class Api_model extends CI_Model {
 	 * @return void
 	 */
 	function check($para) {
-		if (! isset( $para ['ap_id'] )) {
+		if (! isset( $para ['api_id'] )) {
 			return array ();
 		}
 		if (! isset( $para ['token'] )) {
 			return array ();
 		}
 		
-		$this->db->where('ap_id', $para ['ap_id']);
+		$this->db->where('api_id', $para ['api_id']);
 		$this->db->where('token', $para ['token']);
 		
 		$rt = $this->db->get('api_login')->row_array();
 
 		$this->db->set('last_tm', 'NOW()', TRUE);
-		$this->db->where('ap_id', $para ['ap_id']);
+		$this->db->where('api_id', $para ['api_id']);
 		$this->db->where('token', $para ['token']);
 		$this->db->update('api_login');
 		

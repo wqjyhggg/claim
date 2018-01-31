@@ -308,6 +308,7 @@ class Expenses_model extends CI_Model {
 			}
 			// insert
 			$data['created_by'] = $this->ion_auth->get_user_id();
+			if (empty($data['created_by'])) $data['created_by'] = 0;
 			$this->db->insert('expenses_claimed', $data);
 			$sql = $this->db->last_query();
 			$id = $this->db->insert_id();

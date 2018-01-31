@@ -162,7 +162,9 @@ class Claim_model extends CI_Model {
 	public function search($data, $count=-1, $limit=-1, $sortby=array()) {
 		$products = FALSE;
 		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
-			$products = $this->ion_auth->get_users_products();
+			if ($this->ion_auth->get_user_id()) {
+				$products = $this->ion_auth->get_users_products();
+			}
 		}
 		$this->db->select('SQL_CALC_FOUND_ROWS *', FALSE);
 		$this->db->where($data);
