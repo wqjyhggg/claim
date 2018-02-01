@@ -31,6 +31,9 @@ class Phone_model extends CI_Model {
 	const PHONE_STATUS_RING = 'Ring';
 	const PHONE_STATUS_TALKING = 'Talking';
 	
+	public $portt = 8080;
+	const SERVER_STR = 'phoneQ';
+	
 	public function sendRequest($req, $data, $method = "POST") {
 		$http_header = array (
 				'x-app-key:' . self::PHONE_KEY ,
@@ -258,9 +261,16 @@ class Phone_model extends CI_Model {
 			$user_id = $this->get_active_user_id($json['agent']);
 		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
+		$sql = "SELECT * FROM phone_ring WHERE phone_id=".$this->db->escape($json['id'])." ORDER event_tm DESC LIMIT 1";
+		$lastRing = $this->db->query($sql)->row_array();
 		$sql = "INSERT into phone_ring (phone_id, caller_id_number, agent, queue, user_id, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['queue']).", '".(int)$user_id."', ".$this->db->escape(date("Y-m-d H:i:s", $tm)).")";
 		$this->db->query($sql);
-		return $this->db->insert_id();
+		$id = $this->db->insert_id();
+		if ($lastRing) {
+			$this->sendRingQueue($lastRing['agent'], '-'); // Remove last phone Quese display
+		}
+		$this->sendRingQueue($json['agent'], $json['queue']); // phone Quese display
+		return $id;
 	}
 
 	public function save_callback_enterqueue($data) {
@@ -716,5 +726,35 @@ class Phone_model extends CI_Model {
 			}
 		}
 		return $rt;
+	}
+	
+	public function testsocket() {
+		$errno = $errstr = '';
+		
+		$fp = @fsockopen('127.0.0.1', $this->portt, $errno, $errstr, 1);
+		if (! $fp) {
+			return false;
+		} else {
+			fclose($fp);
+			return true;
+		}
+	}
+	
+	public function sendRingQueue($phonenumber, $queue) {
+		if (!$this->testsocket()) {
+			return FALSE;
+		}
+		$url = 'http://127.0.0.1/' . self::SERVER_STR . '/' . $phonenumber . ":" . $queue;
+		
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, $http_header);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		
+		$response = curl_exec($curl);
+		// print_r(curl_getinfo($curl));
+		curl_close($curl);
+		return $response;
 	}
 }

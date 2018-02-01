@@ -42,6 +42,8 @@ class Myphone extends CI_Controller {
 
 		$this->load->model('phone_model');
 		$res ['status'] = $this->phone_model->do_phone_opt(Phone_model::PHONE_OPT_LOGIN);
+		$user = $this->users_model->get_by_id($this->ion_auth->get_user_id());
+		$res ['phone'] = $user['phone'];
 		
 		header('Content-Type: application/json');
 		die(json_encode($res));
@@ -96,6 +98,8 @@ class Myphone extends CI_Controller {
 		$phoneid = $this->users_model->get_user_phoneid();
 		$res ['queue'] = $this->phone_model->get_current_queue($phoneid);
 		$res ['status'] = 'OK';
+		$user = $this->users_model->get_by_id($this->ion_auth->get_user_id());
+		$res ['phone'] = $user['phone'];
 		
 		header('Content-Type: application/json');
 		die(json_encode($res));
