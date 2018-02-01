@@ -1247,7 +1247,7 @@ class Claim extends CI_Controller {
 								'amount_claimed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_claimed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 								'pay_to' => $array['expenses_claimed']['payee'][$key],
 								'currency' => $array['expenses_claimed']['currency'][$key],
-								'comment' => $array['expenses_claimed']['comment'][$key],
+								//'comment' => $array['expenses_claimed']['comment'][$key],
 								'created_by' => $this->ion_auth->get_user_id(),
 								'created' => date('Y-m-d H:i:s') 
 						);
