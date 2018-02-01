@@ -1,5 +1,6 @@
-#!/usr/bin/env php
 <?php
+// 1 * * * * (cd /var/claim/webscoket; /usr/bin/php phonewebsock.php) >> /home/ubuntu/ws_server 2>&1
+
 require_once ('./websockets.php');
 $portt = 8080;
 class phonewebsock extends WebSocketServer {
