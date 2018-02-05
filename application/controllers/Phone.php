@@ -207,4 +207,27 @@ class Phone extends CI_Controller {
 			show_404('No such file', TRUE);
 		}
 	}
+	
+	public function test($key, $idx) {
+		if ($key != 'jf180205') {
+			show_404('Fail tot test', TRUE);
+		}
+		$this->load->model('phone_model');
+		if ($rc = $this->phone_model->get_by_id($idx)) {
+			$data = json_decode($rc['data'], TRUE);
+			if ($data && is_array($data)) {
+				$func = '';
+				switch ($data['event']) {
+					case 'NewCall': $func = 'save_callback_newcall'; break;
+					case 'Ringing': $func = 'save_callback_ringing'; break;
+					case 'Answer': $func = 'save_callback_answer'; break;
+					case 'Hangup': $func = 'save_callback_hangup'; break;
+				}
+				if ($func) {
+					$this->phone_model->{$func}($rc['data'], TRUE);
+				}
+			}
+		}
+		echo "Test OK";
+	}
 }

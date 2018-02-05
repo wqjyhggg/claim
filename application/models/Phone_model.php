@@ -230,7 +230,7 @@ class Phone_model extends CI_Model {
 		}
 	}
 
-	public function save_callback_ringing($data) {
+	public function save_callback_ringing($data, $isdebug=FALSE) {
 		/* {
 		    "account": "demo",
 		    "agent": "rcp1",
@@ -243,7 +243,9 @@ class Phone_model extends CI_Model {
 		    "queue": "receptionists",
 		    "start_time": "2017-03-23T21:50:21Z"
 		} */
-		$this->save(array('data' => $data));
+		if (!$isdebug) {
+			$this->save(array('data' => $data));
+		}
 		$para = array();
 		$json = json_decode($data, true);
 		if (empty($json['id'])) return NULL;
@@ -273,7 +275,7 @@ class Phone_model extends CI_Model {
 		return $id;
 	}
 
-	public function save_callback_enterqueue($data) {
+	public function save_callback_enterqueue($data, $isdebug=FALSE) {
 		/* {
 		    "account": "demo",
 		    "caller_id_name": "Demo",
@@ -285,7 +287,9 @@ class Phone_model extends CI_Model {
 		    "queue": "receptionists",
 		    "start_time": "2017-03-23T21:47:07Z"
 		} */
-		$this->save(array('data' => $data));
+		if (!$isdebug) {
+			$this->save(array('data' => $data));
+		}
 		$para = array();
 		$json = json_decode($data, true);
 		if (empty($json['id'])) return NULL;
@@ -304,7 +308,7 @@ class Phone_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
-	public function save_callback_newcall($data) {
+	public function save_callback_newcall($data, $isdebug=FALSE) {
 		/* {
 			"account":"aurat",
 			"caller_id_name":"4167106618",
@@ -317,7 +321,9 @@ class Phone_model extends CI_Model {
 			"id":"33340e2e-a4da-4f59-85e4-55e3f4b0f66c",
 			"start_time":1511205004437}
 		} */
-		$this->save(array('data' => $data));
+		if (!$isdebug) {
+			$this->save(array('data' => $data));
+		}
 		$para = array();
 		$json = json_decode($data, true);
 		if (empty($json['id'])) return NULL;
@@ -336,7 +342,7 @@ class Phone_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
-	public function save_callback_answer($data) {
+	public function save_callback_answer($data, $isdebug=FALSE) {
 		/* {
 			"account":"aurat",
 			"agent":"test1",
@@ -350,7 +356,9 @@ class Phone_model extends CI_Model {
 			"queue":"jf",
 			"start_time":"2017-11-20T19:10:04Z"
 		} */
-		$this->save(array('data' => $data));
+		if (!$isdebug) {
+			$this->save(array('data' => $data));
+		}
 		$para = array();
 		$json = json_decode($data, true);
 		if (empty($json['id'])) return NULL;
@@ -373,7 +381,7 @@ class Phone_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
-	public function save_callback_hangup($data) {
+	public function save_callback_hangup($data, $isdebug=FALSE) {
 		/* {
 			"account":"aurat",
 			"agent":"test1",
@@ -388,7 +396,9 @@ class Phone_model extends CI_Model {
 			"queue":"jf",
 			"start_time":"2017-11-20T19:10:04Z"
 		} */
-		$this->save(array('data' => $data));
+		if (!$isdebug) {
+			$this->save(array('data' => $data));
+		}
 		$para = array();
 		$json = json_decode($data, true);
 		if (empty($json['id'])) return NULL;
