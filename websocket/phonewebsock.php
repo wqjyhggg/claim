@@ -8,33 +8,6 @@ class phonewebsock extends WebSocketServer {
 	public $debug = 0;
 	
 	protected function process($user, $message) {
-		if ($user->requestedResource == WebSocketUser::SERVER_STR) {
-			$msgs = preg_split("/:/", trim($message));
-			if ($this->debug) {
-				echo $message . "\n";
-			}
-			if (is_array($msgs) && (sizeof($msgs) == 2)) {
-				// This is good message
-				foreach ( $this->users as $u ) {
-					if ($user->requestedResource == $msgs[0]) {
-						if ($this->debug) {
-							echo "S1:" . $msgs [2] . "\n";
-						}
-						$this->send($u, $msgs [2]);
-						break;
-					}
-				}
-				$this->send($user, self::MSG_OK);
-				break;
-			}
-		}
-		if ($this->debug) {
-			// print_r($this->users);
-			foreach ( $this->users as $u ) {
-				echo $u->id . "\n";
-				echo $u->requestedResource . "\n";
-			}
-		}
 	}
 	protected function connected($user) {
 		// Do nothing: This is just an echo server, there's no need to track the user.
@@ -45,6 +18,44 @@ class phonewebsock extends WebSocketServer {
 		// Do nothing: This is where cleanup would go, in case the user had any sort of
 		// open files or other objects associated with them. This runs after the socket
 		// has been closed, so there is no need to clean up the socket itself here.
+	}
+	protected function processget($user, $message) {
+		$msgs = preg_split("#/#", trim($message));
+		print_r($msgs);
+		if (is_array($msgs) && ($msgs[0] == WebSocketUser::SERVER_STR)) {
+			if ($this->debug) {
+				echo $message . "\n";
+			}
+			if (is_array($msgs) && (sizeof($msgs) == 3)) {
+				// This is good message
+				foreach ( $this->users as $u ) {
+					if ($this->debug) {
+						echo "S1:" . $u->requestedResource . "\n";
+					}
+					if ($u->requestedResource == $msgs[1]) {
+						if ($this->debug) {
+							echo "S2:" . $msgs [2] . "\n";
+						}
+						$this->send($u, $msgs [2]);
+						break;
+					}
+				}
+				$this->send($user, self::MSG_OK);
+			} else {
+				print_r($msgs);
+				echo "Error server message: " . $message . "\n";
+			}
+		}
+		if ($this->debug) {
+			// print_r($this->users);
+			echo "Total Users: " . sizeof($this->users) . "\n";
+			/*
+			foreach ( $this->users as $u ) {
+				echo $u->id . "\n";
+				echo $u->requestedResource . "\n";
+			}
+			*/
+		}
 	}
 }
 

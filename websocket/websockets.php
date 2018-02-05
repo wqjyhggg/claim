@@ -24,6 +24,8 @@ abstract class WebSocketServer {
 	}
 	
 	abstract protected function process($user, $message); // Called immediately when the data is recieved.
+
+	abstract protected function processget($user, $message); // Called immediately when the data is recieved.
 	
 	abstract protected function connected($user); // Called after the handshake response is sent to the client.
 	
@@ -187,6 +189,7 @@ abstract class WebSocketServer {
 		}
 		if (isset($headers ['get'])) {
 			$user->requestedResource = substr($headers ['get'], 1);
+			$this->processget($user, $user->requestedResource);
 		} else {
 			// todo: fail the connection
 			$handshakeResponse = "HTTP/1.1 405 Method Not Allowed\r\n\r\n";

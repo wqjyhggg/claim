@@ -270,12 +270,12 @@ class Phone_model extends CI_Model {
 		$lastRing = $this->db->query($sql)->row_array();
 		$sql = "INSERT into phone_ring (phone_id, caller_id_number, agent, queue, user_id, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['queue']).", '".(int)$user_id."', ".$this->db->escape(date("Y-m-d H:i:s", $tm)).")";
 		$this->db->query($sql);
-		$id = $this->db->insert_id();
+		// $id = $this->db->insert_id();
 		if ($lastRing) {
 			$this->sendRingQueue($lastRing['agent'], '-'); // Remove last phone Quese display
 		}
-		$res = $this->sendRingQueue($json['agent'], $json['queue']); // phone Quese display
-		return $id;
+		$this->sendRingQueue($json['agent'], $json['queue']); // phone Quese display
+		return TRUE;
 	}
 
 	public function save_callback_enterqueue($data, $isdebug=FALSE) {
@@ -754,21 +754,15 @@ class Phone_model extends CI_Model {
 	}
 	
 	public function sendRingQueue($phonenumber, $queue) {
-		if (!$this->testsocket()) {
-			return FALSE;
+		$fp = @fsockopen('127.0.0.1', $this->portt, $errno, $errstr, 1);
+		if (! $fp) {
+			return false;
 		}
-		$url = 'http://127.0.0.1/' . self::SERVER_STR . '/' . $phonenumber . ":" . $queue;
 		
-		$curl = curl_init();
-		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_PORT, 8080);
-		//curl_setopt($curl, CURLOPT_HTTPHEADER, $http_header);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		$out = "GET /" . self::SERVER_STR . "/" . $phonenumber . "/" . $queue . " HTTP/1.1\r\n";
+		$out .= "Host: 127.0.0.1\r\n\r\n";
 		
-		$response = curl_exec($curl);
-		// print_r(curl_getinfo($curl));
-		curl_close($curl);
-		return $response;
+		fwrite($fp, $out);
+		fclose($fp);
 	}
 }
