@@ -21,7 +21,7 @@ class phonewebsock extends WebSocketServer {
 	}
 	protected function processget($user, $message) {
 		$msgs = preg_split("#/#", trim($message));
-		print_r($msgs);
+
 		if (is_array($msgs) && ($msgs[0] == WebSocketUser::SERVER_STR)) {
 			if ($this->debug) {
 				echo $message . "\n";
