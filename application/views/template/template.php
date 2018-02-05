@@ -66,7 +66,7 @@
                            	</span>
                         </div>
                         <div class="navbar site_title" id="phone_queue_div" style="border: 0; display:none;">
-                       		<button type="button" class="btn btn-info btn-xs phonequeue">Get Queue</button> <span id='curr_queue'></span>
+                       		<button type="button" class="btn btn-info btn-xs phonequeue">Get Queue</button> <span id='curr_queue' style='color:#3010d0; background-color:#508090;'></span>
                         </div>
                         <?php } ?>
                         <div class="clearfix"></div>

@@ -101,7 +101,7 @@ class Phone_model extends CI_Model {
 
 	public function get_active_user_id($agent) {
 		$sql = "SELECT * FROM phone_action WHERE agent=" . $this->db->escape($agent) . " AND active='".self::PHONE_OPT_LOGIN."' ORDER BY phone_action_id DESC LIMIT 1";
-		if ($rt = $this->db->query($sql)) {
+		if ($rt = $this->db->query($sql)->row_array()) {
 			return $rt['user_id'];
 		}
 		return 0;
@@ -159,15 +159,16 @@ class Phone_model extends CI_Model {
 	}
 
 	public function get_current_queue($phoneid) {
-		$sql = "SELECT * FROM phone_ring WHERE agent=".$this->db->escape($phoneid)." AND TIME_TO_SEC(TIMEDIFF(now(), event_tm))<120 ORDER BY event_tm DESC limit 1";
+		//$sql = "SELECT * FROM phone_ring WHERE agent=".$this->db->escape($phoneid)." AND TIME_TO_SEC(TIMEDIFF(now(), event_tm))<120 ORDER BY event_tm DESC limit 1";
+		$sql = "SELECT * FROM phone_ring WHERE agent=".$this->db->escape($phoneid)." ORDER BY event_tm DESC limit 1";
 		if ($rc = $this->db->query($sql)->row_array()) {
 			$phone_id = $rc['phone_id'];
 			$sql = "SELECT * FROM phone_ring WHERE phone_id=".$this->db->escape($phone_id)." ORDER BY event_tm DESC limit 1";
 			if ($rc1 = $this->db->query($sql)->row_array()) {
 				if ($rc1['agent'] == $rc['agent']) {
-					$sql = "SELECT * FROM phone_records WHERE phone_id=".$this->db->escape($phone_id)." AND newcall>answer ORDER BY newcall DESC limit 1";
+					$sql = "SELECT * FROM phone_records WHERE phone_id=".$this->db->escape($phone_id)." AND newcall>hangup ORDER BY newcall DESC limit 1";
 					if ($rc2 = $this->db->query($sql)->row_array()) {
-						$r = $rc['queue'];
+						return $rc['queue'];
 					}
 				}
 			}
@@ -188,7 +189,8 @@ class Phone_model extends CI_Model {
 			if ($rc = $this->db->query($sql)->row_array()) {
 				$r = self::PHONE_STATUS_TALKING;
 			} else {
-				$sql = "SELECT * FROM phone_ring WHERE agent=".$this->db->escape($phoneid)." AND TIME_TO_SEC(TIMEDIFF(now(), event_tm))<120 ORDER BY event_tm DESC limit 1";
+				//$sql = "SELECT * FROM phone_ring WHERE agent=".$this->db->escape($phoneid)." AND TIME_TO_SEC(TIMEDIFF(now(), event_tm))<120 ORDER BY event_tm DESC limit 1";
+				$sql = "SELECT * FROM phone_ring WHERE agent=".$this->db->escape($phoneid)." ORDER BY event_tm DESC limit 1";
 				if ($rc = $this->db->query($sql)->row_array()) {
 					$phone_id = $rc['phone_id'];
 					$sql = "SELECT * FROM phone_ring WHERE phone_id=".$this->db->escape($phone_id)." ORDER BY event_tm DESC limit 1";
@@ -249,6 +251,7 @@ class Phone_model extends CI_Model {
 		$para = array();
 		$json = json_decode($data, true);
 		if (empty($json['id'])) return NULL;
+
 		$para['id'] = $json['id'];
 		if (empty($json['event']) || ($json['event'] != 'Ringing')) return NULL;
 		
@@ -263,7 +266,7 @@ class Phone_model extends CI_Model {
 			$user_id = $this->get_active_user_id($json['agent']);
 		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "SELECT * FROM phone_ring WHERE phone_id=".$this->db->escape($json['id'])." ORDER event_tm DESC LIMIT 1";
+		$sql = "SELECT * FROM phone_ring WHERE phone_id=".$this->db->escape($json['id'])." ORDER BY event_tm DESC LIMIT 1";
 		$lastRing = $this->db->query($sql)->row_array();
 		$sql = "INSERT into phone_ring (phone_id, caller_id_number, agent, queue, user_id, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['queue']).", '".(int)$user_id."', ".$this->db->escape(date("Y-m-d H:i:s", $tm)).")";
 		$this->db->query($sql);
@@ -271,7 +274,7 @@ class Phone_model extends CI_Model {
 		if ($lastRing) {
 			$this->sendRingQueue($lastRing['agent'], '-'); // Remove last phone Quese display
 		}
-		$this->sendRingQueue($json['agent'], $json['queue']); // phone Quese display
+		$res = $this->sendRingQueue($json['agent'], $json['queue']); // phone Quese display
 		return $id;
 	}
 
@@ -758,7 +761,8 @@ class Phone_model extends CI_Model {
 		
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, $http_header);
+		curl_setopt($curl, CURLOPT_PORT, 8080);
+		//curl_setopt($curl, CURLOPT_HTTPHEADER, $http_header);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 		
