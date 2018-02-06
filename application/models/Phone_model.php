@@ -250,7 +250,7 @@ class Phone_model extends CI_Model {
 		}
 		$para = array();
 		$json = json_decode($data, true);
-		if (empty($json['id'])) return NULL;
+		if (empty($json['id']) || ($json["direction"] != "inbound")) return NULL;
 
 		$para['id'] = $json['id'];
 		if (empty($json['event']) || ($json['event'] != 'Ringing')) return NULL;
