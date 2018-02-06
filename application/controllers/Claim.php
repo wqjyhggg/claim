@@ -77,7 +77,7 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('province', 'province ', 'alpha');
 			$this->form_validation->set_rules('full_name', 'full name ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('employee_name', 'employee name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('city_town', 'city town ', 'alpha');
+			$this->form_validation->set_rules('city_town', 'city town ', 'alpha_numeric_spaces');
 			//$this->form_validation->set_rules('employee_telephone', 'employee telephone ', 'numeric');
 			$this->form_validation->set_rules('amount_billed_org', 'amount billed ', 'numeric');
 			$this->form_validation->set_rules('account_cheque', 'account no ', 'numeric');
@@ -419,7 +419,7 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('province', 'province ', 'alpha');
 			$this->form_validation->set_rules('full_name', 'full name ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('employee_name', 'employee name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('city_town', 'city town ', 'alpha');
+			$this->form_validation->set_rules('city_town', 'city town ', 'alpha_numeric_spaces');
 			//$this->form_validation->set_rules('employee_telephone', 'employee telephone ', 'numeric');
 			$this->form_validation->set_rules('amount_billed', 'amount billed ', 'numeric');
 			$this->form_validation->set_rules('account_cheque', 'account no ', 'numeric');

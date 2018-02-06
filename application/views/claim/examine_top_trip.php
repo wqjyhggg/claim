@@ -345,7 +345,7 @@
 						<div class="clearfix"></div>
 	
 						<div class="form-group col-sm-3">
-							<label>Status : </label><?php echo $claim['status']; ?>
+							<label>Decision : </label><?php echo $claim['status']; ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<label>Decision : </label>
@@ -390,6 +390,7 @@
 										<th>Amt Claimed</th>
 										<th>Amt Payable</th>
 										<th>Amt Received</th>
+										<th>Decision</th>
 										<!-- th>Comment</th -->
 									</tr>
 								</thead>
@@ -412,6 +413,7 @@
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
 										<td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
+										<td><?php echo $value['status'] ?></td>
 										<!-- td><?php echo $value['comment'] ?></td -->
 									</tr>
 									<tr class='claim_items_form trinputform' id='item_form_<?php echo $value['id']; ?>'>
@@ -468,12 +470,12 @@
 												</div>
 												<?php if ($value['status'] != Expenses_model::EXPENSE_STATUS_Paid) { ?>
 												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Status : </label>
+													<label class="col-sm-12">Decision : </label>
 													<div class='col-sm-12'><?php echo form_dropdown ( "status", $examine_status, $value['status'], array () ); ?></div>
 												</div>
 												<?php } else { ?>
 												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Status : </label>
+													<label class="col-sm-12">Decision : </label>
 													<div class='col-sm-12'><?php echo $value['status']; ?></div>
 													<?php echo form_hidden("status", $value['status']); ?>
 												</div>
@@ -969,18 +971,18 @@ $(document).ready(function() {
 		html += '      <td>' + coverage_code + '</td>';
 		// html += '      <td>' + service_description.substring(0,100) + '</td>';
 		html += '      <td>' + date_of_service + '</td>';
-		html += '      <td>$' + amount_claimed + '</td>';
+		html += '      <td>$' + parseFloat(amount_claimed).toFixed(2) + '</td>';
 		// html += '      <td>$' + amt_deductible + '</td>';
-		html += '      <td>$' + amt_payable + '</td>';
+		html += '      <td>$' + parseFloat(amt_payable).toFixed(2) + '</td>';
 		html += '      <td>' + comment + '</td>';
 		html += '  </tr>';
 	});
 	html += '  <tr>';
 	html += '      <td>Total</td>';
 	html += '      <td>&nbsp;</td>';
-	html += '      <td>$' + total_amount_claimed + '</td>';
+	html += '      <td>$' + parseFloat(total_amount_claimed).toFixed(2) + '</td>';
 	// html += '      <td>$' + total_amt_deductible + '</td>';
-	html += '      <td>$' + total_amt_payable + '</td>';
+	html += '      <td>$' + parseFloat(total_amt_payable).toFixed(2) + '</td>';
 	html += '      <td>&nbsp;</td>';
 	html += '  </tr>';
 	html += '  </tbody>';

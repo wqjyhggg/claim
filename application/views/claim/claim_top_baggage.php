@@ -1208,19 +1208,7 @@
 <script>
 	$(document).ready(function() {
 		// get policy data
-		<?php 
-		$policy_info = json_decode($claim_details ['policy_info'], TRUE);
-		// to add third pary payees on this list.
-		$str = "";
-		if (! empty($payees)) {
-			foreach ( $payees as $key => $value ) {
-				$str .= '<option value="' . $value ['payee_name'] . '">' . $value ['payee_name'] . '</option>';
-			}
-		}
-		if ($str) {
-		?>
-		$("select[name='expenses_claimed[payee][]']").html('<?php echo $str; ?>');
-		<?php } ?>
+		<?php $policy_info = json_decode($claim_details ['policy_info'], TRUE); ?>
 
 		// show area once any error occured
 		$(".alert-error").map(function(){

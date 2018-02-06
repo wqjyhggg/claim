@@ -283,12 +283,17 @@
 										<?php echo form_label('City/Town:', 'city_town', array("class" => 'col-sm-12')); ?>
 										<?php echo form_input("city_town", $claim_details["city_town"], array("class" => "form-control", 'placeholder' => 'City/Town')); ?>
 									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Post Code:', 'employee_post_code', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("employee_post_code", $claim_details["employee_post_code"], array("class" => "form-control", 'placeholder' => 'Post Code')); ?>
+										<?php echo form_error("employee_post_code"); ?>
+									</div>
 									<div class="form-group col-sm-3">
 										<?php echo form_label('Country:', 'country2', array("class" => 'col-sm-12')); ?>
 										<select name="country2" class="form-control">
 											<option value=""> -- Select Country -- </option>
 											<?php foreach ($country2 as $key => $val):?>
-											<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post('country2')) { echo "selected"; } ?>><?php echo $val; ?></option>
+											<option value="<?php echo $key; ?>" <?php if ($key == $claim_details['country2']) { echo "selected"; } ?>><?php echo $val; ?></option>
 											<?php endforeach; ?>
 											<option value=""> N/A </option>
 										</select>

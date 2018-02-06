@@ -300,6 +300,11 @@
 								</div>
 								<div class="clearfix"></div>
 								
+								<div class="col-sm-3">
+									<?php echo form_label('Post Code:', 'employee_post_code', array("class" => 'col-sm-12')); ?>
+									<?php echo form_input("employee_post_code", $this->input->post("employee_post_code"), array("class" => "form-control", 'placeholder' => 'Post Code')); ?>
+									<?php echo form_error("employee_post_code"); ?>
+								</div>
 								<div class="form-group col-sm-3">
 									<?php echo form_label('Country:', 'country2', array("class" => 'col-sm-12')); ?>
 									<select name="country2" class="form-control">
