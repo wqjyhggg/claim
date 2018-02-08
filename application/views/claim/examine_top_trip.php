@@ -1008,9 +1008,6 @@ $(document).ready(function() {
       // get selected case details object
       var obj = $(".email_print");
 
-      // parse case data details
-      var claim_data = $.parseJSON($(".select_claim.active-green").attr('data'));
-
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
       str = str.replace(/{insured_name}/gi, "<?php echo $claim['insured_first_name'] . ' ' . $claim['insured_last_name']; ?>")
