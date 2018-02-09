@@ -375,8 +375,8 @@ class Api extends CI_Controller {
 								'created_by' => 0,
 								'created' => date('Y-m-d H:i:s'));
 								
-						$expenses__data['amount_billed'] = $this->expenses_model->get_currency_exchange($expenses__data['amount_billed_org'][$key], $expenses__data['currency'][$key], $expenses_claimed['date_of_service'][$key]);
-						$expenses__data['amount_claimed'] = $this->expenses_model->get_currency_exchange($expenses__data['amount_claimed_org'][$key], $expenses__data['currency'][$key], $expenses_claimed['date_of_service'][$key]);
+						$expenses__data['amount_billed'] = $this->expenses_model->get_currency_exchange($expenses__data['amount_billed_org'], $expenses__data['currency'], $expenses_claimed['date_of_service'][$key]);
+						$expenses__data['amount_claimed'] = $this->expenses_model->get_currency_exchange($expenses__data['amount_claimed_org'], $expenses__data['currency'], $expenses_claimed['date_of_service'][$key]);
 						$this->expenses_model->save($expenses__data);
 					}
 				}
