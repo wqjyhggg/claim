@@ -16,7 +16,7 @@
 							<li style='line-height: 2em;'><?php echo anchor("report/cases", ' Case Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 						</ul>
 						<ul>
-							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN))) { ?>
+							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) { ?>
 							<li style='line-height: 2em;'><?php echo anchor("report/claim_summary", ' Claim Summary Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/claims", ' Case & CLaim Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/exceptionals", ' CLaim Exceptional Report</a>', array("class"=>'leftmeun h4')) ?> </li>
