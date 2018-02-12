@@ -373,7 +373,7 @@ class Expenses_model extends CI_Model {
 		}
 	}
 	
-	public function get_report($data) {
+	public function get_report($data, $nozero='') {
 		$this->load->model('claim_model');
 		
 		if (empty($data['start_dt']) || empty($data['end_dt'])) {
@@ -403,6 +403,9 @@ class Expenses_model extends CI_Model {
 		}
 		if (!empty($data['agent_id'])) {
 			$sql .= " AND c.agent_id='". (int)$data['agent_id']."'";
+		}
+		if (!empty($nozero)) {
+			$sql .= " AND " . $nozero . "!='0'";
 		}
 		$sql .= " ORDER BY e.claim_no";
 		

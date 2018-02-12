@@ -1053,6 +1053,7 @@ class Claim extends CI_Controller {
 				
 				// get status
 				$this->data['examine_status'] = $this->expenses_model->get_status(1);
+				$this->data['status_list'] = $this->claim_model->get_claim_status_list(1);
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Examine Claim', TRUE);
@@ -1533,7 +1534,9 @@ class Claim extends CI_Controller {
 	
 	// for ajax request
 	public function save_item() {
-		
+		if (! $this->ion_auth->logged_in()) {
+			die("0");
+		}
 		// generate data array
 		$data = $this->input->post();
 		// unset($data['id']);
@@ -1551,6 +1554,19 @@ class Claim extends CI_Controller {
 		$this->load->model('expenses_model');
 		
 		$this->expenses_model->save($data);
+		echo TRUE;
+	}
+
+	public function savenotes($id) {
+		if (! $this->ion_auth->logged_in()) {
+			die("0");
+		}
+		$data['id'] = $id;
+		$data['notes'] = $this->input->post('notes');
+
+		$this->load->model('claim_model');
+	
+		$this->claim_model->save($data);
 		echo TRUE;
 	}
 	

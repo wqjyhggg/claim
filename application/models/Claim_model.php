@@ -40,10 +40,10 @@ class Claim_model extends CI_Model {
 				'Pending' => self::STATUS_Pending,
 				'Processed' => self::STATUS_Processed,
 				'Paid' => self::STATUS_Paid,
-				'Closed' => self::STATUS_Closed,
-				'Recovered' => self::STATUS_Recovered,
+//				'Closed' => self::STATUS_Closed,
+//				'Recovered' => self::STATUS_Recovered,
 				'Appealed' => self::STATUS_Appealed,
-				'Exceptional' => self::STATUS_Exceptional,
+//				'Exceptional' => self::STATUS_Exceptional,
 		);
 		
 		if (empty($need_empty)) unset($arr[0]);

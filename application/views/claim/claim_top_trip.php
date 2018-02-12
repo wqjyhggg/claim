@@ -923,8 +923,8 @@
 						<br />
 						<div class="row">
 							<div class="col-sm-3">
-								<?php echo form_label('Status:', 'status', array("class" => 'col-sm-12')); ?>
-								<?php echo form_dropdown("status", $status_list, $claim_details["status"], array("class" => 'form-control')); ?>
+								<?php echo form_label('Processing Status:', 'status', array("class" => 'col-sm-12')); ?>
+								<?php echo !empty($status_list[$claim_details["status"]]) ? $status_list[$claim_details["status"]] : 'N / A'; /* echo form_dropdown("status", $status_list, $claim_details["status"], array("class" => 'form-control')); */?>
 							</div>
 							<div class="col-sm-3">
 								<?php echo form_label('Examiner:', 'assign_to', array("class" => 'col-sm-12')); ?>

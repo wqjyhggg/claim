@@ -19,6 +19,8 @@
 							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN))) { ?>
 							<li style='line-height: 2em;'><?php echo anchor("report/claim_summary", ' Claim Summary Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/claims", ' Case & CLaim Report</a>', array("class"=>'leftmeun h4')) ?> </li>
+							<li style='line-height: 2em;'><?php echo anchor("report/exceptionals", ' CLaim Exceptional Report</a>', array("class"=>'leftmeun h4')) ?> </li>
+							<li style='line-height: 2em;'><?php echo anchor("report/recoveries", ' Recovery Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<?php if (0) { ?>
 							<li style='line-height: 2em;'><?php echo anchor("report/receivables", ' Receivable Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/payables", ' Payable Report</a>', array("class"=>'leftmeun h4')) ?> </li>

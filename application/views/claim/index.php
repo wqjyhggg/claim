@@ -244,7 +244,7 @@
 									<th>Claim Date</th>
 									<th>Claim Amount</th>
 									<th>Diagnosis</th>
-									<th>Status</th>
+									<th>Processing Status</th>
 									<th>Assign To</th>
 									<th>Action</th>
 								</tr>
