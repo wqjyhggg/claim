@@ -401,7 +401,7 @@
 									$total_payable += (float)$value['amt_payable'];
 									$total_this_payable += (float)$value['amt_payable'];
 								?>
-									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_coverage_code="<?php echo nl2br($expenses_list[$value['coverage_code']]) ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable='<?php echo $value['amt_payable'] ?>' item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to='<?php echo nl2br($value['pay_to']) ?>' item_comment='<?php echo nl2br(($value['reason']=='Other') ? $value['reason'] : $value['reason_other']) ?>'>
+									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_coverage_code="<?php echo nl2br($expenses_list[$value['coverage_code']]) ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable='<?php echo $value['amt_payable'] ?>' item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to='<?php echo nl2br($value['pay_to']) ?>' item_comment='<?php echo nl2br(($value['reason']!='Other') ? $value['reason'] : $value['reason_other']) ?>'>
 										<td><?php echo form_checkbox("items", $value['id'], FALSE); ?></td>
 										<td><?php echo $value['invoice']; ?></td>
 										<td><?php echo $value['service_description']; ?></td>
@@ -510,10 +510,10 @@
 													<div class='col-sm-12'><input type='text' name='reason_other' value="<?php echo $value['reason_other']; ?>"></div>
 												</div>
 												<div class="clearfix"></div>
-												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Explanation :  : </label>
+												<!-- div class="form-group col-sm-3">
+													<label class="col-sm-12">Explanation : </label>
 													<div class='col-sm-12'><input type='text' name='comment' value="<?php echo $value['comment']; ?>"></div>
-												</div>
+												</div -->
 												<?php if ($value['status'] != Expenses_model::EXPENSE_STATUS_Paid) { ?>
 												<div class="form-group col-sm-3 pull-right">
 													<label class="col-sm-12">&nbsp;</label>
@@ -534,11 +534,11 @@
 					<div class="row actions" style="margin-top: 20px;">
 						<div class="col-sm-6">
 							<?php echo form_label('Notes :', 'notes', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("notes", $claim_details['notes'], array("id" => "notes", "class" => "form-control")); ?>
+							<?php echo form_textarea ( "notes", $claim_details["notes"], array ("class" => "form-control", "id" => "notes", 'placeholder' => 'Notes', 'style' => "height:100px") ); ?>
 						</div>
 						<div class="col-sm-6">
 							<label class="col-sm-12">&nbsp;</label>
-							<input class="btn btn-primary" name="save" value="Save Notes" type="button" id="save_notes">
+							<input class="btn btn-primary" name="save" value="Save Notes" type="button" id="">
 						</div>
 					</div>
 					<hr />
@@ -562,9 +562,13 @@
 
 					<div class="row actions" style="margin-top: 20px;">
 						<div class="row">
-							<div class="col-sm-3">
+							<div class="col-sm-2">
 								<?php echo form_label('Processing Status:', 'status', array("class" => 'col-sm-12')); ?>
 								<?php echo form_dropdown("status", $status_list, $claim_details["status"], array("class" => 'form-control change_claim_status')); ?>
+							</div>
+							<div class="col-sm-2">
+								<?php echo form_label('Claim Status:', 'status2', array("class" => 'col-sm-12')); ?>
+								<?php echo form_dropdown("status2", array('Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed'), $claim_details["status2"], array("class" => 'form-control change_claim_status')); ?>
 							</div>
 							<div class="col-sm-2">
 								<label class="col-sm-12">&nbsp;</label>
@@ -1306,7 +1310,7 @@ $(document).ready(function() {
       }
    })
 
-	.on("click", "#save_notes", function() {
+	.on("click", "#", function() {
 		$.ajax({
 			url: "<?php echo base_url("claim/savenotes/".$claim['id']); ?>",
 			method: "post",
@@ -1322,6 +1326,23 @@ $(document).ready(function() {
 		if (confirm('Are you sure you want to change claim processing status ?')) {
 			$.ajax({
 				url: "<?php echo base_url("claim/status/"); ?>"  + $(this).val(),
+				method: "post",
+				data:{claim_id:<?php echo $claim['id']; ?>},
+				beforeSend: function(){
+					$(".modal-content, .main_container").addClass("csspinner load1");
+				},
+				success: function() {
+					window.location.reload();
+				}
+			})
+		} else {
+			$(this).val(old_status);
+			return false;
+		}
+	}).on("change", ".change_claim_status2", function() {
+		if (confirm('Are you sure you want to change claim processing status ?')) {
+			$.ajax({
+				url: "<?php echo base_url("claim/status2/"); ?>"  + $(this).val(),
 				method: "post",
 				data:{claim_id:<?php echo $claim['id']; ?>},
 				beforeSend: function(){

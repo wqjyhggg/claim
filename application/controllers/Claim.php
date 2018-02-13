@@ -1812,6 +1812,26 @@ class Claim extends CI_Controller {
 		echo TRUE;
 	}
 	
+	public function status2($type = "") {
+		if (! $this->ion_auth->logged_in()) {
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		}
+		$this->load->model('claim_model');
+		
+		$claim_id = $this->input->post("claim_id");
+		
+		$data = array(
+				"id" => $claim_id,
+				'status2' => $type 
+		);
+		
+		$this->claim_model->save($data);
+		// send success message
+		$this->session->set_flashdata('success', "Claim successfully changed status to " . $type);
+		
+		echo TRUE;
+	}
+	
 	// redirect if needed, otherwise display the my tasks list
 	public function payments() {
 		if (! $this->ion_auth->logged_in()) {
