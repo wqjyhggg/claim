@@ -199,7 +199,7 @@ class Phone_model extends CI_Model {
 					$sql = "SELECT * FROM phone_ring WHERE phone_id=".$this->db->escape($phone_id)." ORDER BY event_tm DESC limit 1";
 					if ($rc1 = $this->db->query($sql)->row_array()) {
 						if ($rc1['agent'] == $rc['agent']) {
-							$sql = "SELECT * FROM phone_records WHERE phone_id=".$this->db->escape($phone_id)." AND newcall>answer ORDER BY newcall DESC limit 1";
+							$sql = "SELECT * FROM phone_records WHERE phone_id=".$this->db->escape($phone_id)." AND newcall>answer AND newcall>hangup ORDER BY newcall DESC limit 1";
 							if ($rc2 = $this->db->query($sql)->row_array()) {
 								$result['status'] = self::PHONE_STATUS_RING;
 								$result['queue'] = $rc['queue'];
