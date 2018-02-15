@@ -21,6 +21,15 @@
 		<?php } ?>
 	</tbody>
 </table>
+<table border="1">
+	<thead>
+		<tr><td><b>Queue</b></td><td><b>Calls</b></td></tr>
+	</thead>
+	<tbody>
+		<tr><td>English</td><td><?php echo $English; ?></td></tr>
+		<tr><td>Chinese</td><td><?php echo $Chinese; ?></td></tr>
+	</tbody>
+</table>
 </div>
 
 <script>
