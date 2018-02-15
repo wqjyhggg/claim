@@ -24,7 +24,7 @@ class Phone_model extends CI_Model {
 	const PHONE_OPT_LOGIN = 'Login';
 	const PHONE_OPT_LOGOUT = 'Logout';
 	const PHONE_OPT_BREAK = 'Break';
-	const PHONE_OPT_PAUSE = 'Pause';
+	const PHONE_OPT_PAUSE = 'ACW';
 	
 	const PHONE_STATUS_OFFLINE = 'Offline';
 	const PHONE_STATUS_ONLINE = 'Online';
@@ -182,12 +182,15 @@ class Phone_model extends CI_Model {
 		$para = array();
 		$rt = $this->sendRequest($req, $para, 'GET');
 		$data = json_decode($rt, true);
+		
+		$result = array('status' => self::PHONE_STATUS_OFFLINE, 'queue' => '');
 
 		if (isset($data['logged_in'])) {
-			$r = self::PHONE_STATUS_ONLINE;
+			$result['status'] = self::PHONE_STATUS_ONLINE;
 			$sql = "SELECT * FROM phone_records WHERE agent=".$this->db->escape($phoneid)." AND hangup<answer AND newcall<answer ORDER BY newcall DESC limit 1";
 			if ($rc = $this->db->query($sql)->row_array()) {
-				$r = self::PHONE_STATUS_TALKING;
+				$result['status'] = self::PHONE_STATUS_TALKING;
+				$result['queue'] = $rc['queue'];
 			} else {
 				//$sql = "SELECT * FROM phone_ring WHERE agent=".$this->db->escape($phoneid)." AND TIME_TO_SEC(TIMEDIFF(now(), event_tm))<120 ORDER BY event_tm DESC limit 1";
 				$sql = "SELECT * FROM phone_ring WHERE agent=".$this->db->escape($phoneid)." ORDER BY event_tm DESC limit 1";
@@ -198,17 +201,25 @@ class Phone_model extends CI_Model {
 						if ($rc1['agent'] == $rc['agent']) {
 							$sql = "SELECT * FROM phone_records WHERE phone_id=".$this->db->escape($phone_id)." AND newcall>answer ORDER BY newcall DESC limit 1";
 							if ($rc2 = $this->db->query($sql)->row_array()) {
-								$r = self::PHONE_STATUS_RING;
+								$result['status'] = self::PHONE_STATUS_RING;
+								$result['queue'] = $rc['queue'];
 							}
 						}
 					}
 				}
 			}
-			return $r;
 		}
-		return self::PHONE_STATUS_OFFLINE;
+		return $result;
 	}
 
+	public function get_queue_count($qname) {
+		$sql = "SELECT COUNT(*) as cnt FROM phone_ring WHERE TIME_TO_SEC(TIMEDIFF(now(), event_tm))<='5' AND queue=".$this->db->escape($qname);
+		if ($rc = $this->db->query($sql)->row_array()) {
+			return $rc['cnt'];
+		}
+		return 0;
+	}
+	
 	public function save($data) {
 		if (isset($data['id'])) {
 			// Update

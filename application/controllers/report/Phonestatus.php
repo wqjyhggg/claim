@@ -33,6 +33,8 @@ class Phonestatus extends CI_Controller {
 				$data['status'][$nm] = $this->phone_model->get_current_status($nm);
 			}
 			
+			$data['Chinese'] = $this->phone_model->get_queue_count('Chinese');
+			$data['English'] = $this->phone_model->get_queue_count('English');
 			$this->load->view('report/phonestatus', $data);
 		}
 	}
@@ -53,6 +55,8 @@ class Phonestatus extends CI_Controller {
 				$data['status'][$nm] = $this->phone_model->get_current_status($nm);
 			}
 			
+			$data['Chinese'] = $this->phone_model->get_queue_count('Chinese');
+			$data['English'] = $this->phone_model->get_queue_count('English');
 			$this->load->view('report/phonestatus_table', $data);
 		}
 	}
