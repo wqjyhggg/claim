@@ -1237,7 +1237,7 @@ class Claim extends CI_Controller {
 								'provider_name' => $array['expenses_claimed']['provider_name'][$key],
 								'referencing_physician' => $array['expenses_claimed']['referencing_physician'][$key],
 								'coverage_code' => $array['expenses_claimed']['coverage_code'][$key],
-								'diagnosis' => $array['expenses_claimed']['diagnosis'][$key],
+								'diagnosis' => isset($array['expenses_claimed']['diagnosis'][$key]) ? $array['expenses_claimed']['diagnosis'][$key] : '',
 								'service_description' => $array['expenses_claimed']['service_description'][$key],
 								'date_of_service' => $array['expenses_claimed']['date_of_service'][$key],
 								'amount_billed_org' => $array['expenses_claimed']['amount_billed_org'][$key],

@@ -825,6 +825,10 @@
 var old_status = '<?php echo !empty($claim_details["status"]) ? $claim_details["status"] : 0; ?>';
 
 $(document).ready(function() {
+	$("#print_template").on("hidden.bs.modal", function () {
+		window.location.reload();
+	});
+
 	$(".claim_items").on("click", function() {
 		var id = $(this).attr('data-id');
 		if (id) {
