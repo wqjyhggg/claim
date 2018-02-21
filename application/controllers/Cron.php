@@ -61,6 +61,11 @@ class Cron extends CI_Controller {
 		$sql = "SELECT * FROM schedule WHERE `date`='".$day."' AND shour='".$hour."'";
 		$rt = $this->db->query($sql)->result_array();
 		foreach ($rt as $rc) {
+			// Unset same phone number
+			$this->db->set('phone','');
+			$this->db->where('phone',$rc['sphone']);
+			$this->db->update('users');
+			
 			$this->db->set('phone',$rc['sphone']);
 			$this->db->where('user_id',$rc['employee_id']);
 			$this->db->update('users');
@@ -145,5 +150,16 @@ class Cron extends CI_Controller {
 				$this->db->query("UPDATE phone_action SET processed=1 WHERE phone_action_id=".(int)$act['phone_action_id']);
 			}
 		}
+	}
+	
+	public function test() {
+		$this->valid();
+		$this->load->model('phone_model');
+		
+		$req = "/api/sms/send/16479532665/14167106618";
+		$para = array('text' => 'test 他们');
+		$rt = $this->phone_model->sendRequest($req, $para);
+		$data = json_decode($rt, true);
+		print_r($data); //XXXXXXXXXXX
 	}
 }
