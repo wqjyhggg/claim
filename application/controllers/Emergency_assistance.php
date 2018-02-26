@@ -412,7 +412,7 @@ class Emergency_assistance extends CI_Controller {
 				
 				$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
 				
-				$this->data['reasons'] = $this->reasons_model->get_list();
+				$this->data['reasons'] = $this->reasons_model->get_list2();
 				$this->data['relationships'] = $this->relations_model->get_list();
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE); // XXXXXXXXXXXXXXXXXXXx
 				
@@ -689,7 +689,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->load->model('reasons_model');
 				$this->load->model('relations_model');
 				
-				$this->data['reasons'] = $this->reasons_model->get_list();
+				$this->data['reasons'] = $this->reasons_model->get_list2();
 				$this->data['relationships'] = $this->relations_model->get_list();
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE); // XXXXXXXXXXXXXXXXXXXx
 				                                                                                                                                                       
