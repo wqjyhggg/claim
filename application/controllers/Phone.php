@@ -23,8 +23,8 @@ class Phone extends CI_Controller {
 		}
 		$this->load->model('phone_model');
 		//$rdata = $this->phone_model->getmyurl();
-		$json['OK'] = TRUE;
-		$rdata = $this->phone_model->get_today_list();
+		$json['ok'] = TRUE;
+		$rdata['call_list'] = $this->phone_model->get_today_list();
 		if ($rdata) {
 			$json['html'] = $this->load->view('phone/eaclist', $rdata, TRUE);
 		} else {

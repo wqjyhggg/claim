@@ -15,7 +15,7 @@
 									<th>URL</th>
 							</thead>
 							<tbody>
-								<?php foreach($call_list['rows'] as $key => $value) : ?>
+								<?php foreach($call_list as $key => $value) : ?>
 								<tr class='phonefilelistclass' data-url='<?php echo isset($value['recording_url']) ? $value['recording_url'] : ''; ?>'>
 									<td><?php echo date("Y-m-d H:i:s", strtotime($value['start_time'])); ?></td>
 									<td><?php echo $value['queue']; ?></td>

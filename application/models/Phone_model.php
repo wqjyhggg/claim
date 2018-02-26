@@ -488,7 +488,7 @@ class Phone_model extends CI_Model {
 		$this->db->where_in('queue', array('English','Chinese'));
 		$this->db->order_by('newcall', 'DESC');
 		
-		$rc = $this->db->get('phone_records')->row_array();
+		$rc = $this->db->get('phone_records')->result_array();
 			
 		$rarr = array();
 		if ($rc) {
@@ -504,7 +504,7 @@ class Phone_model extends CI_Model {
 							if (isset($row['recording_url']) && (strpos($row['recording_url'], $phonert['phone_id']) > 0)) {
 								$row['agent'] = $phonert['agent'];
 								$row['queue'] = $phonert['queue'];
-								$phonert[] = $row;
+								$rarr[] = $row;
 								unset($rc[$phonekey]);
 								break;
 							}
