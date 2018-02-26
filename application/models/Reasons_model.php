@@ -24,6 +24,16 @@ class Reasons_model extends CI_Model {
 		return $rArr;
 	}
 
+	public function get_list2() {
+		$this->db->order_by('name');
+		$rt = $this->db->get('reason2s')->result_array();
+		$rArr = array();
+		foreach ($rt as $rc) {
+			$rArr[$rc['id']] = $rc['name'];
+		}
+		return $rArr;
+	}
+
 	/**
 	 * Get country id
 	 * 
