@@ -22,10 +22,17 @@ class Phone extends CI_Controller {
 			redirect('auth/login', 'refresh');
 		}
 		$this->load->model('phone_model');
-		$rdata = $this->phone_model->getmyurl();
+		//$rdata = $this->phone_model->getmyurl();
+		$json['OK'] = TRUE;
+		$rdata = $this->phone_model->get_today_list();
+		if ($rdata) {
+			$json['html'] = $this->load->view('phone/eaclist', $rdata, TRUE);
+		} else {
+			$json['html'] = '';
+		}
 
 		header('Content-Type: application/json');
-		echo json_encode($rdata);
+		echo json_encode($json);
 	}
 	
 	public function search() {

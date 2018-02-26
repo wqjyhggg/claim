@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Phonestatus extends CI_Controller {
 	// set private properties here
-	private $phone_numbers = array('101','102','103','104','105','106','107','108','109');
+	private $phone_numbers;
 	
 	public function __construct() {
 		parent::__construct();
@@ -11,6 +11,8 @@ class Phonestatus extends CI_Controller {
 		$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
 		
 		$this->lang->load('auth');
+		$this->load->model('phone_model');
+		$this->phone_numbers = $this->phone_model->get_working_number();
 		
 		// show the flash data error message if there is one
 		$this->data['message'] = $this->parser->parse("elements/notifications", array(), TRUE);
@@ -27,7 +29,6 @@ class Phonestatus extends CI_Controller {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 			*/
 		} else {
-			$this->load->model('phone_model');
 			$data = array('status' => array());
 			foreach ($this->phone_numbers as $nm) {
 				$data['status'][$nm] = $this->phone_model->get_current_status($nm);
@@ -49,7 +50,6 @@ class Phonestatus extends CI_Controller {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 			*/
 		} else {
-			$this->load->model('phone_model');
 			$data = array('status' => array());
 			foreach ($this->phone_numbers as $nm) {
 				$data['status'][$nm] = $this->phone_model->get_current_status($nm);

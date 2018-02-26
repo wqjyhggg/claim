@@ -34,6 +34,8 @@ class Phone_model extends CI_Model {
 	public $portt = 8080;
 	const SERVER_STR = 'phoneQ';
 	
+	private $phone_numbers = array('101','102','103','104','105','106','107','108','109');
+	
 	public function sendRequest($req, $data, $method = "POST") {
 		$http_header = array (
 				'x-app-key:' . self::PHONE_KEY ,
@@ -466,6 +468,52 @@ class Phone_model extends CI_Model {
 			}
 		}
 		return array();
+	}
+	
+	public function get_working_number() {
+		return $this->phone_numbers;
+	}
+	
+	public function get_today_list() {
+		$phonenumber = $this->ion_auth->get_user_info('phone');
+		
+		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
+			if ( ! $phonenumber ) {
+				return array();
+			}
+			$this->db->where_in('agent', $this->phone_numbers);
+		} else {
+			$this->db->where('TIME_TO_SEC(TIMEDIFF(now(), newcall))<', 3600*24);
+		}
+		$this->db->where_in('queue', array('English','Chinese'));
+		$this->db->order_by('newcall', 'DESC');
+		
+		$rc = $this->db->get('phone_records')->row_array();
+			
+		$rarr = array();
+		if ($rc) {
+			$reqArr = array('/api/cdr/'.date("Y-m-d"), '/api/cdr/'.date("Y-m-d", time() - 86400));
+			$data = array();
+			foreach ($reqArr as $req) {
+				$rt = $this->phone_model->sendRequest($req, $data, 'GET');
+			
+				$list = json_decode($rt, true);
+				if ($list) {
+					foreach ($list['rows'] as $key => $row) {
+						foreach ($rc as $phonekey => $phonert) {
+							if (isset($row['recording_url']) && (strpos($row['recording_url'], $phonert['phone_id']) > 0)) {
+								$row['agent'] = $phonert['agent'];
+								$row['queue'] = $phonert['queue'];
+								$phonert[] = $row;
+								unset($rc[$phonekey]);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		return $rarr;
 	}
 	
 	public function search($data, $limit=-1, $offset=-1) {
