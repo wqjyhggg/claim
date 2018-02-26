@@ -837,6 +837,7 @@ $(document).ready(function() {
 						$('#phonelink').html('<a href="' + url + '" target="_blank">' + url + '</a>');
 						$('input[name=phonefile]').val(url);
 						$('.removemyphonefile').show();
+						$("#phonefilelist").html('');
 					});
 				}
 				$('.getmyphonefile').hide();
