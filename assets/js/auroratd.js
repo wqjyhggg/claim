@@ -145,6 +145,7 @@ $(document).ready(function(){
 				$('#phone_logout').show();
 				$('#phone_queue_div').show();
 				$('#phone_login').hide();
+				ws_init();
 			} else if (data.login == 'Unknown') {
 				$('#phone_opt_div').hide();
 				$('#phone_queue_div').hide();
@@ -156,4 +157,7 @@ $(document).ready(function(){
 		}
 	})
 	
+	$(window).on('beforeunload', function(){
+		ws_quit();
+	});
 })
