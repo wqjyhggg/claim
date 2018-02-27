@@ -27,6 +27,7 @@ class Myphone extends CI_Controller {
 				$res ['login'] = 'NO';
 			} else {
 				$res ['login'] = 'OK';
+				$res ['phone'] = $phoneid;
 			}
 		}
 
