@@ -8,6 +8,9 @@
 							<thead>
 								<tr>
 									<th>Time</th>
+									<?php if (isset($haslocal)) : ?>
+									<th>Phone</th>
+									<?php endif; ?>
 									<th>Queue</th>
 									<th>Caller Name</th>
 									<th>Caller</th>
@@ -18,6 +21,9 @@
 								<?php foreach($call_list as $key => $value) : ?>
 								<tr class='phonefilelistclass' data-url='<?php echo isset($value['recording_url']) ? $value['recording_url'] : ''; ?>'>
 									<td><?php echo date("Y-m-d H:i:s", strtotime($value['start_time'])); ?></td>
+									<?php if (isset($haslocal)) : ?>
+									<td><?php echo $value['agent']; ?></td>
+									<?php endif; ?>
 									<td><?php echo $value['queue']; ?></td>
 									<td><?php echo $value['caller_id_name']; ?></td>
 									<td><?php echo $value['caller_id_number']; ?></td>

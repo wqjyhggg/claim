@@ -8,10 +8,15 @@
 <title>Phone Status</title>
 <!-- jQuery -->
 <script src="<?php echo base_url(); ?>assets/js/jquery_003.js"></script><!-- style sheets specific to the page -->
+<style>
+table {
+border-style: double;
+}
+</style>
 </head>
 <body>
 <div id="content">
-	<table border="1">
+	<table>
 		<thead>
 			<tr><td><b>Phone Number</b></td><td><b>Status</b></td><td><b>Queue</b></td></tr>
 		</thead>
@@ -21,7 +26,7 @@
 			<?php } ?>
 		</tbody>
 	</table>
-	<table border="1">
+	<table>
 		<thead>
 			<tr><td><b>Queue</b></td><td><b>Calls</b></td></tr>
 		</thead>
@@ -30,9 +35,9 @@
 			<tr><td>Chinese</td><td><?php echo $Chinese; ?></td></tr>
 		</tbody>
 	</table>
-	<input type='button' id='phone_file_button'>
-	<div id="phone_file_list"></div>
 </div>
+<input type='button' id='phone_file_button' value='Get Current Files'>
+<div id="phone_file_list"></div>
 <script>
 $(document).ready(function(){
 	setInterval(function(){
@@ -51,7 +56,7 @@ $(document).ready(function(){
 		$.ajax({
 			url: "<?php echo base_url("phone/getfile"); ?>",
 			method:"get",
-			// data:{policy:$(this).val()},
+			data:{haslocal:"1"},
 			dataType: "json",
 			//beforeSend: function(){
 				// $(".nav-m22d").addClass("csspinner load1");

@@ -1,4 +1,4 @@
-<table border="1">
+<table>
 	<thead>
 		<tr><td><b>Phone Number</b></td><td><b>Status</b></td><td><b>Queue</b></td></tr>
 	</thead>
@@ -8,7 +8,7 @@
 		<?php } ?>
 	</tbody>
 </table>
-<table border="1">
+<table>
 	<thead>
 		<tr><td><b>Queue</b></td><td><b>Calls</b></td></tr>
 	</thead>
