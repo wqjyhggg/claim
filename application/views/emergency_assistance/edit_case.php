@@ -740,7 +740,7 @@
 							<?php echo date("Y-m-d"); ?>
 						</div>
 					</div>
-					<div class="form-group col-sm-4">
+					<div class="form-group col-sm-6">
 						<?php echo form_label('Phone File:', 'phonefile', array("class" => 'col-sm-12')); ?>
 						<span id='phonelink'></span>
 						<span id='phonefilelist'></span>
