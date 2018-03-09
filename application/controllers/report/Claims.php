@@ -142,6 +142,8 @@ class Claims extends CI_Controller {
 									'Policy',
 									'Client Last Name',
 									'Client First Name',
+									'Birth Day',
+									'Gender',
 									'Days',
 									'Entered Date',
 									'Date of Service',
@@ -149,9 +151,19 @@ class Claims extends CI_Controller {
 									'Invoice Status',
 									'Billed Amount',
 									'Paid Amount',
-									'Cross Pending',
-									'Recovery'
-					));
+									'Gross Pending',
+									'Recovery',
+									'Address',
+									'City',
+									'Province',
+									'Postal Code',
+									'AgentID',
+									'Description of Service',
+									'Coverage Code',
+									'Deductible',
+									'Pay to Name',
+									'Reserve Amount'
+			));
 
 			$t_amount_billed = $t_amt_payable = $t_recovery_amt = $t_reserve_amount = 0;
 			foreach ($records as $key => $value) { 
@@ -163,19 +175,33 @@ class Claims extends CI_Controller {
 									$value['policy_no'],
 									$value['last_name'],
 									$value['first_name'],
+									$value['birth_day'],
+									$value['gender'],
 									$value['totaldays'],
 									substr($value['created'], 0, 10),
 									$value['date_of_service'],
 									$value['pay_date'],
 									$value['status'],
-									sprintf("%0.2f", $value['amount_billed']),
+									sprintf("%0.2f", (isset($value['amount_billed']) ? $value['amount_billed'] : 0)),
 									sprintf("%0.2f", $value['amt_payable']),
 									sprintf("%0.2f", $value['reserve_amount']),
-									sprintf("%0.2f", $value['recovery_amt'])
+									sprintf("%0.2f", $value['recovery_amt']),
+									$value['street_address'],
+									$value['city'],
+									$value['province'],
+									$value['post_code'],
+									$value['agent_id'],
+									isset($value['service_description']) ? $value['service_description'] : '',
+									isset($value['coverage_code']) ? $value['coverage_code'] : '',
+									isset($value['amt_deductible']) ? $value['amt_deductible'] : 0,
+									isset($value['pay_to']) ? $value['pay_to'] : '',
+									sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0))
 						));
 			}
 			fputcsv($output, array(
 									'Total',
+									'',
+									'',
 									'',
 									'',
 									'',

@@ -297,6 +297,9 @@ class Expenses_model extends CI_Model {
 						return 0;
 					}
 				}
+				if (($cur['status'] != $data['status']) && ($cur['status'] != self::EXPENSE_STATUS_Paid)) {
+					$data['finalize_date'] = date("Y-m-d");
+				}
 				$this->db->where('id', $id);
 				$this->db->update('expenses_claimed', $data);
 				$this->active_model->log_update('expenses_claimed', $id, $cur, $data, $this->db->last_query());
@@ -312,6 +315,7 @@ class Expenses_model extends CI_Model {
 			}
 			// insert
 			$data['created_by'] = $this->ion_auth->get_user_id();
+			$data['finalize_date'] = date("Y-m-d");
 			if (empty($data['created_by'])) $data['created_by'] = 0;
 			$this->db->insert('expenses_claimed', $data);
 			$sql = $this->db->last_query();
@@ -396,7 +400,7 @@ class Expenses_model extends CI_Model {
 		$ststr = $st->format("Y-m-01 00:00:00");
 		$edstr = $et->format("Y-m-t 23:59:59");
 		
-		$sql  = "SELECT e.claim_no, e.invoice, e.provider_name, c.insured_first_name as first_name, c.insured_last_name as last_name, c.policy_no, e.date_of_service, c.totaldays, e.pay_date, IF(e.status='".self::EXPENSE_STATUS_Paid."','F','P') as status, e.created, e.amount_billed, e.amt_payable, e.amount_billed as reserve_amount, e.recovery_amt FROM expenses_claimed e";
+		$sql  = "SELECT e.claim_no, e.invoice, e.provider_name, c.insured_first_name as first_name, c.insured_last_name as last_name, c.dob as birth_day, c.gender, c.policy_no, e.date_of_service, c.totaldays, e.finalize_date, IF(e.status='".self::EXPENSE_STATUS_Paid."','F','P') as status, e.created, e.amount_billed, e.amt_payable, 0 as reserve_amount, e.recovery_amt, c.street_address, c.city, c.province, c.post_code, c.agent_id, e.service_description, e.coverage_code, e.amt_deductible, e.pay_to  FROM expenses_claimed e";
 		$sql .= " RIGHT JOIN claim c ON (e.claim_id=c.id)";
 		$sql .= " WHERE e.status != '".self::EXPENSE_STATUS_Declined."' AND e.date_of_service>='".$ststr."' AND e.date_of_service<='".$edstr."'";
 		if (!empty($data['status'])) {

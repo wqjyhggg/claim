@@ -75,6 +75,15 @@
 								<?php endforeach; ?>
 							</select>
 						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Examiner:', 'claim_examiner', array("class"=>'col-sm-12')); ?>
+							<select name="claim_examiner" class="form-control">
+								<option value=""> -- Select Examiner -- </option>
+								<?php foreach ($examiners as $rc) :?>
+								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("assign_to")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
 						<div class="col-sm-3">
 							<label class="col-sm-12">&nbsp;</label>
 							<button class="btn btn-primary" name="filter" value="policy">Search</button>

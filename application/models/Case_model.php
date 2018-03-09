@@ -306,7 +306,7 @@ class Case_model extends CI_Model {
 		$ststr = $st->format("Y-m-01 00:00:00");
 		$edstr = $et->format("Y-m-t 23:59:59");
 		
-		$sql  = "SELECT case_no as claim_no, '' as invoice, '' as provider_name, first_name, last_name, policy_no, LEFT(created, 10) as date_of_service, totaldays, '' as pay_date, 'P' as status, created, IF(DATEDIFF(NOW(),last_update)>90,0,reserve_amount) as amount_billed, 0 as amt_payable, IF(DATEDIFF(NOW(),last_update)>90,0,reserve_amount) as reserve_amount, 0 as recovery_amt FROM `case`";
+		$sql  = "SELECT case_no as claim_no, '' as invoice, '' as provider_name, insured_firstname as first_name, insured_lastname as last_name, dob as birth_day, '' as gender, policy_no, LEFT(created, 10) as date_of_service, totaldays, '' as finalize_date, 'P' as status, created, IF(DATEDIFF(NOW(),last_update)>90,0,reserve_amount) as amount_billed, 0 as amt_payable, IF(DATEDIFF(NOW(),last_update)>90,0,reserve_amount) as reserve_amount, 0 as recovery_amt, street_name as street_address, city, province, post_code, agent_id  FROM `case`";
 		$sql .= " WHERE status='".self::STATUS_ACTIVE."' AND claim_no='' AND created>='".$ststr."' AND created<='".$edstr."'";
 		if (!empty($data['product_short'])) {
 			$sql .= " AND product_short=".$this->db->escape($data['product_short']);

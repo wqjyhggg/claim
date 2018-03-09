@@ -118,6 +118,11 @@ class Claim_model extends CI_Model {
 			$where .= " claim.policy_no IN (" . join(",", $pArr) . ")";
 		}
 		
+		if (!empty($post["claim_examiner"])) {
+			if ($where) $where .= ' AND'; 
+			$where .= " claim.assign_to='". (int) $post["claim_examiner"] . "'";
+		}
+
 		if (!empty($post["firstname"])) {
 			if ($where) $where .= ' AND'; 
 			$where .= " claim.insured_first_name like ". $this->db->escape("%" . $post["firstname"] . "%");

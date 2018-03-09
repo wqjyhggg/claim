@@ -56,12 +56,7 @@
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Agent ID:', 'agent_id', array ("class" => 'col-sm-12')); ?>
-							<select name="agent_id" class="form-control">
-								<option value="">-- Select Agent ID --</option>
-								<?php foreach ($agents as $val) { ?>
-								<option value="<?php echo $val['agent_id']; ?>" <?php if ($val['agent_id'] == $this->input->get('agent_id')) { echo "selected"; } ?>><?php echo $val['agent_id']; ?></option>
-								<?php } ?>
-							</select>
+							<?php echo form_input ( "agent_id", $this->input->get( "agent_id" ), array ("class" => "form-control", 'placeholder' => 'Agent ID') ); ?>
 						</div>
 						<div class="form-group col-sm-3">
 						</div>
@@ -86,15 +81,27 @@
 									<th>Policy</th>
 									<th>Client Last Name</th>
 									<th>Client First Name</th>
+									<th>Birth Day</th>
+									<th>Gender</th>
 									<th>Days</th>
 									<th>Entered Date</th>
 									<th>Date of Service</th>
-									<th>Pay Date</th>
+									<th>Finalize Date</th>
 									<th>Invoice Status</th>
 									<th>Billed Amount</th>
 									<th>Paid Amount</th>
-									<th>Cross Pending</th>
+									<th>Gross Pending</th>
 									<th>Recovery</th>
+									<th>Address</th>
+									<th>City</th>
+									<th>Province</th>
+									<th>Postal Code</th>
+									<th>AgentID</th>
+									<th>Description of Service</th>
+									<th>Coverage Code</th>
+									<th>Deductible</th>
+									<th>Pay to Name</th>
+									<th>Reserve Amount</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -108,15 +115,27 @@
 									<td><?php echo $value['policy_no']; ?></td>
 									<td><?php echo $value['last_name']; ?></td>
 									<td><?php echo $value['first_name']; ?></td>
+									<td><?php echo $value['birth_day']; ?></td>
+									<td><?php echo $value['gender']; ?></td>
 									<td><?php echo $value['totaldays']; ?></td>
 									<td><?php echo substr($value['created'], 0, 10); ?></td>
 									<td><?php echo $value['date_of_service']; ?></td>
-									<td><?php echo $value['pay_date']; ?></td>
+									<td><?php echo isset($value['finalize_date']) ? $value['finalize_date'] : ''; ?></td>
 									<td><?php echo $value['status']; ?></td>
-									<td><?php echo sprintf("%0.2f", $value['amount_billed']); ?></td>
+									<td><?php echo sprintf("%0.2f", (isset($value['amount_billed']) ? $value['amount_billed'] : 0)); ?></td>
 									<td><?php echo sprintf("%0.2f", $value['amt_payable']); ?></td>
 									<td><?php echo sprintf("%0.2f", $value['reserve_amount']); ?></td>
 									<td><?php echo sprintf("%0.2f", $value['recovery_amt']); ?></td>
+									<td><?php echo $value['street_address']; ?></td>
+									<td><?php echo $value['city']; ?></td>
+									<td><?php echo $value['province']; ?></td>
+									<td><?php echo $value['post_code']; ?></td>
+									<td><?php echo $value['agent_id']; ?></td>
+									<td><?php echo isset($value['service_description']) ? $value['service_description'] : ''; ?></td>
+									<td><?php echo isset($value['coverage_code']) ? $value['coverage_code'] : ''; ?></td>
+									<td><?php echo sprintf("%0.2f", (isset($value['amt_deductible']) ? $value['amt_deductible'] : 0)); ?></td>
+									<td><?php echo isset($value['pay_to']) ? $value['pay_to'] : ''; ?></td>
+									<td><?php echo sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0)); ?></td>
 								</tr>
 								<?php } ?>
 								<tr>
@@ -131,10 +150,22 @@
 									<td></td>
 									<td></td>
 									<td></td>
+									<td></td>
+									<td></td>
 									<td><?php echo sprintf("%0.2f", $t_amount_billed); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_amt_payable); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_reserve_amount); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_recovery_amt); ?></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
 								</tr>
 							</tbody>
 						</table>
@@ -162,10 +193,11 @@ function scope_change() {
 
 $(document).ready(function() {
 	$(".datepicker").datepicker({
-		format: "yyyy-mm",
-		viewMode: "months", 
-	    minViewMode: "months",
-	    endDate: '+0m'
+		format: "yyyy-mm-dd",
+		//viewMode: "months", 
+	    //minViewMode: "months",
+	    //endDate: '+0m'
+		endDate: '+0d'
     });
     
 	$("select[name=scope]").change(scope_change);
