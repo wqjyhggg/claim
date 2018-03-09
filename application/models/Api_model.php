@@ -210,6 +210,9 @@ class Api_model extends CI_Model {
 		if (isset( $para['api_id'] ))	$data['api_id'] = $this->db->escape( $para ['api_id'] );
 		if (isset( $para['token'] ))	$data['token'] = $this->db->escape( $para ['token'] );
 		if (isset( $para['policy'] ))	$data['policy'] = $this->db->escape( $para ['policy'] );
+		if (isset( $para['firstname'] ))	$data['firstname'] = $this->db->escape( $para ['firstname'] );
+		if (isset( $para['lastname'] ))	$data['lastname'] = $this->db->escape( $para ['lastname'] );
+		if (isset( $para['birthday'] ))	$data['birthday'] = $this->db->escape( $para ['birthday'] );
 		if (isset( $para['ip'] ))		$data['ip'] = $this->db->escape( $para ['ip'] );
 		
 		if (empty( $data )) {

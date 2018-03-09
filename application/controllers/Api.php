@@ -36,6 +36,7 @@ class Api extends CI_Controller {
 		}
 
 		$policy = array();
+		$firstname = $lastname = $birthday='';
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$policies = $this->api_model->get_policy(array('policy' => $data['policy']));
 			if (empty($policies)) {
@@ -45,16 +46,25 @@ class Api extends CI_Controller {
 				$hasbirthday = 0;
 				if ($policies[0]['birthday'] == $data['birthday']) {
 					$hasbirthday = 1;
+					$firstname = $data['firstname'];
+					$lastname = $data['lastname'];
+					$birthday = $data['birthday'];;
 				} else if ($policies[0]['isfamilyplan']) {
 					foreach ($policies[0]['family'] as $p) {
 						if ($p['birthday'] == $data['birthday']) {
 							$hasbirthday = 1;
+							$firstname = $p['firstname'];
+							$lastname = $p['lastname'];
+							$birthday = $p['birthday'];;
 							break;
 						}
 					}
 				}
 				if ($hasbirthday) {
 					$rdata['policy'] = $policies[0];
+					$rdata['firstname'] = $firstname;
+					$rdata['lastname'] = $lastname;
+					$rdata['birthday'] = $birthday;
 				} else {
 					$rdata['status'] = Api_model::STATUS_ERROR;
 					$rdata['message'] = 'No Matched Policy';
@@ -144,7 +154,7 @@ class Api extends CI_Controller {
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('claim_model');
-			$claims = $this->claim_model->search(array('policy_no' => $this->api['policy']/*, 'is_complete' => 'Y'*/));
+			$claims = $this->claim_model->search(array('policy_no' => $this->api['policy'], 'insured_first_name' => $this->api['firstname'], 'insured_last_name' => $this->api['lastname'], 'dob' => $this->api['birthday']));
 			$rdata['claims'] = array();
 			foreach ($claims as $cl) {
 				$ncl = array();
