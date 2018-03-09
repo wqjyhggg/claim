@@ -330,10 +330,10 @@
 
 										<div class="col-sm-7">Have you ever been treated for this or a similar condition before?</div>
 										<div class="col-sm-1">
-											<?php echo form_radio("treatment_before", "Y", $this->input->post("treatment_before"), array('class' => 'setpremium')); ?>  Yes
+											<?php echo form_radio("treatment_before", "Y", $claim_details["treatment_before"] == 'Y', array('class' => 'setpremium')); ?>  Yes
 										</div>
 										<div class="col-sm-1">
-											<?php echo form_radio("treatment_before", "N", $this->input->post("treatment_before"), array('class' => 'setpremium')); ?>  No
+											<?php echo form_radio("treatment_before", "N", $claim_details["treatment_before"] != 'Y', array('class' => 'setpremium')); ?>  No
 										</div>
 										<div class="col-sm-12">If you answered “yes”, provide all dates of treatment and list all medications taken before the effective date of the current policy:</div>
 										<div class="form-group col-sm-12">
