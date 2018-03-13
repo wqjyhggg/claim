@@ -270,6 +270,7 @@ class Api extends CI_Controller {
 			$data['physician_telephone_canada'] = $this->input->post('physician_telephone_canada');
 			$data['physician_alt_telephone_canada'] = $this->input->post('physician_alt_telephone_canada');
 			$data['other_insurance_coverage'] = $this->input->post('other_insurance_coverage');
+			$data['diagnosis'] = $this->input->post('diagnosis');
 			$data['travel_insurance_coverage_guardians'] = $this->input->post('travel_insurance_coverage_guardians');
 			$data['full_name'] = $this->input->post('full_name');
 			$data['employee_name'] = $this->input->post('employee_name');
