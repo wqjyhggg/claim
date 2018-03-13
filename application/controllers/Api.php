@@ -62,8 +62,8 @@ class Api extends CI_Controller {
 				}
 				if ($hasbirthday) {
 					$rdata['policy'] = $policies[0];
-					$rdata['firstname'] = $firstname;
-					$rdata['lastname'] = $lastname;
+					$data['firstname'] = $firstname;
+					$data['lastname'] = $lastname;
 					$rdata['birthday'] = $birthday;
 				} else {
 					$rdata['status'] = Api_model::STATUS_ERROR;
@@ -274,6 +274,7 @@ class Api extends CI_Controller {
 			$data['full_name'] = $this->input->post('full_name');
 			$data['employee_name'] = $this->input->post('employee_name');
 			$data['employee_street_address'] = $this->input->post('employee_street_address');
+			$data['employee_post_code'] = $this->input->post('employee_post_code');
 			$data['city_town'] = $this->input->post('city_town');
 			$data['country2'] = $this->input->post('country2');
 			$data['employee_telephone'] = $this->input->post('employee_telephone');
