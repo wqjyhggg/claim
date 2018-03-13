@@ -46,9 +46,9 @@ class Api extends CI_Controller {
 				$hasbirthday = 0;
 				if ($policies[0]['birthday'] == $data['birthday']) {
 					$hasbirthday = 1;
-					$firstname = $data['firstname'];
-					$lastname = $data['lastname'];
-					$birthday = $data['birthday'];;
+					$firstname = $policies[0]['firstname'];
+					$lastname = $policies[0]['lastname'];
+					$birthday = $policies[0]['birthday'];;
 				} else if ($policies[0]['isfamilyplan']) {
 					foreach ($policies[0]['family'] as $p) {
 						if ($p['birthday'] == $data['birthday']) {
