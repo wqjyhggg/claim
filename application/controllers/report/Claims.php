@@ -112,12 +112,12 @@ class Claims extends CI_Controller {
 			if ($para['scope'] != 'Claim') {
 				$cases = $this->case_model->get_report($para);
 				if ($cases) {
-					$records = array_merge($this->data['records'], $cases);
+					$records = array_merge($records, $cases);
 				}
 			}
 			
 			header('Content-Type: text/csv; charset=utf-8');
-			header('Content-Disposition: attachment; filename=Claim_summary.csv');
+			header('Content-Disposition: attachment; filename=Case_CLaim_Report.csv');
 				
 			// create a file pointer connected to the output stream
 			$output = fopen('php://output', 'w');
@@ -180,7 +180,7 @@ class Claims extends CI_Controller {
 									$value['totaldays'],
 									substr($value['created'], 0, 10),
 									$value['date_of_service'],
-									$value['pay_date'],
+									isset($value['finalize_date']) ? $value['finalize_date'] : '',
 									$value['status'],
 									sprintf("%0.2f", (isset($value['amount_billed']) ? $value['amount_billed'] : 0)),
 									sprintf("%0.2f", $value['amt_payable']),
