@@ -31,6 +31,7 @@ class Claims extends CI_Controller {
 			$para['status'] = $this->input->get('status');
 			$para['product_short'] = $this->input->get('product_short');
 			$para['agent_id'] = $this->input->get('agent_id');
+			$para['claim_date_type'] = $this->input->get('claim_date_type');
 			if ($para['scope'] == 'Claim') {
 				$para['status'] = $this->input->get('status');
 			}
@@ -145,24 +146,24 @@ class Claims extends CI_Controller {
 									'Birth Day',
 									'Gender',
 									'Days',
-									'Entered Date',
-									'Date of Service',
-									'Pay Date',
-									'Invoice Status',
-									'Billed Amount',
-									'Paid Amount',
-									'Gross Pending',
-									'Recovery',
 									'Address',
 									'City',
 									'Province',
 									'Postal Code',
 									'AgentID',
-									'Description of Service',
 									'Coverage Code',
 									'Deductible',
+									'Entered Date',
+									'Date of Service',
+									'Pay Date',
+									'Invoice Status',
+									'Gross Pending',
+									'Reserve Amount',
+									'Billed Amount',
+									'Paid Amount',
+									'Recovery',
+									'Description of Service',
 									'Pay to Name',
-									'Reserve Amount'
 			));
 
 			$t_amount_billed = $t_amt_payable = $t_recovery_amt = $t_reserve_amount = 0;
@@ -178,28 +179,35 @@ class Claims extends CI_Controller {
 									$value['birth_day'],
 									$value['gender'],
 									$value['totaldays'],
-									substr($value['created'], 0, 10),
-									$value['date_of_service'],
-									isset($value['finalize_date']) ? $value['finalize_date'] : '',
-									$value['status'],
-									sprintf("%0.2f", (isset($value['amount_billed']) ? $value['amount_billed'] : 0)),
-									sprintf("%0.2f", $value['amt_payable']),
-									sprintf("%0.2f", $value['reserve_amount']),
-									sprintf("%0.2f", $value['recovery_amt']),
 									$value['street_address'],
 									$value['city'],
 									$value['province'],
 									$value['post_code'],
 									$value['agent_id'],
-									isset($value['service_description']) ? $value['service_description'] : '',
 									isset($value['coverage_code']) ? $value['coverage_code'] : '',
 									isset($value['amt_deductible']) ? $value['amt_deductible'] : 0,
+									substr($value['created'], 0, 10),
+									$value['date_of_service'],
+									isset($value['finalize_date']) ? $value['finalize_date'] : '',
+									$value['status'],
+									sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0)),
+									sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0)),
+									sprintf("%0.2f", (isset($value['amount_billed']) ? $value['amount_billed'] : 0)),
+									sprintf("%0.2f", $value['amt_payable']),
+									sprintf("%0.2f", $value['recovery_amt']),
+									isset($value['service_description']) ? $value['service_description'] : '',
 									isset($value['pay_to']) ? $value['pay_to'] : '',
-									sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0))
 						));
 			}
 			fputcsv($output, array(
 									'Total',
+									'',
+									'',
+									'',
+									'',
+									'',
+									'',
+									'',
 									'',
 									'',
 									'',

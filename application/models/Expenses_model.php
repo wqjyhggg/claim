@@ -399,10 +399,19 @@ class Expenses_model extends CI_Model {
 		
 		$ststr = $st->format("Y-m-01 00:00:00");
 		$edstr = $et->format("Y-m-t 23:59:59");
+
+		$dtcolumn = "e.date_of_service";
+		if (isset($data['claim_date_type'])) {
+			if ($data['claim_date_type'] == 'e.created') {
+				$dtcolumn = "e.created";
+			} else if ($data['claim_date_type'] == 'e.finalize_date') {
+				$dtcolumn = "e.finalize_date";
+			}
+		}
 		
 		$sql  = "SELECT e.claim_no, e.invoice, e.provider_name, c.insured_first_name as first_name, c.insured_last_name as last_name, c.dob as birth_day, c.gender, c.policy_no, e.date_of_service, c.totaldays, e.finalize_date, IF(e.status='".self::EXPENSE_STATUS_Paid."','F','P') as status, e.created, e.amount_billed, e.amt_payable, 0 as reserve_amount, e.recovery_amt, c.street_address, c.city, c.province, c.post_code, c.agent_id, e.service_description, e.coverage_code, e.amt_deductible, e.pay_to  FROM expenses_claimed e";
 		$sql .= " RIGHT JOIN claim c ON (e.claim_id=c.id)";
-		$sql .= " WHERE e.status != '".self::EXPENSE_STATUS_Declined."' AND e.date_of_service>='".$ststr."' AND e.date_of_service<='".$edstr."'";
+		$sql .= " WHERE e.status != '".self::EXPENSE_STATUS_Declined."' AND " . $dtcolumn . ">='".$ststr."' AND " . $dtcolumn . "<='".$edstr."'";
 		if (!empty($data['status'])) {
 			$sql .= " AND c.status=".$this->db->escape($data['status']);
 		}
@@ -416,7 +425,6 @@ class Expenses_model extends CI_Model {
 			$sql .= " AND " . $nozero . "!='0'";
 		}
 		$sql .= " ORDER BY e.claim_no";
-		
 		return $this->db->query($sql)->result_array();
 	}
 }

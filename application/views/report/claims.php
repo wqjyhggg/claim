@@ -59,6 +59,12 @@
 							<?php echo form_input ( "agent_id", $this->input->get( "agent_id" ), array ("class" => "form-control", 'placeholder' => 'Agent ID') ); ?>
 						</div>
 						<div class="form-group col-sm-3">
+							<?php echo form_label('Claim Date Type:', 'claim_date_type', array ("class" => 'col-sm-12')); ?>
+							<select name="claim_date_type" class="form-control">
+								<option value="e.date_of_service" <?php if ("e.date_of_service" == $this->input->get('claim_date_type')) { echo "selected"; } ?>>Date of Service</option>
+								<option value="e.created" <?php if ("e.created" == $this->input->get('claim_date_type')) { echo "selected"; } ?>>Create Date</option>
+								<option value="e.finalize_date" <?php if ("e.finalize_date" == $this->input->get('claim_date_type')) { echo "selected"; } ?>>Finalize Date</option>
+							</select>
 						</div>
 						<div class="form-group col-sm-3">
 							<label class="col-sm-12">&nbsp;</label>
@@ -84,24 +90,24 @@
 									<th>Birth Day</th>
 									<th>Gender</th>
 									<th>Days</th>
-									<th>Entered Date</th>
-									<th>Date of Service</th>
-									<th>Finalize Date</th>
-									<th>Invoice Status</th>
-									<th>Billed Amount</th>
-									<th>Paid Amount</th>
-									<th>Gross Pending</th>
-									<th>Recovery</th>
 									<th>Address</th>
 									<th>City</th>
 									<th>Province</th>
 									<th>Postal Code</th>
 									<th>AgentID</th>
-									<th>Description of Service</th>
 									<th>Coverage Code</th>
 									<th>Deductible</th>
-									<th>Pay to Name</th>
+									<th>Entered Date</th>
+									<th>Date of Service</th>
+									<th>Finalize Date</th>
+									<th>Invoice Status</th>
+									<th>Gross Pending</th>
 									<th>Reserve Amount</th>
+									<th>Billed Amount</th>
+									<th>Paid Amount</th>
+									<th>Recovery</th>
+									<th>Description of Service</th>
+									<th>Pay to Name</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -118,24 +124,24 @@
 									<td><?php echo $value['birth_day']; ?></td>
 									<td><?php echo $value['gender']; ?></td>
 									<td><?php echo $value['totaldays']; ?></td>
-									<td><?php echo substr($value['created'], 0, 10); ?></td>
-									<td><?php echo $value['date_of_service']; ?></td>
-									<td><?php echo isset($value['finalize_date']) ? $value['finalize_date'] : ''; ?></td>
-									<td><?php echo $value['status']; ?></td>
-									<td><?php echo sprintf("%0.2f", (isset($value['amount_billed']) ? $value['amount_billed'] : 0)); ?></td>
-									<td><?php echo sprintf("%0.2f", $value['amt_payable']); ?></td>
-									<td><?php echo sprintf("%0.2f", $value['reserve_amount']); ?></td>
-									<td><?php echo sprintf("%0.2f", $value['recovery_amt']); ?></td>
 									<td><?php echo $value['street_address']; ?></td>
 									<td><?php echo $value['city']; ?></td>
 									<td><?php echo $value['province']; ?></td>
 									<td><?php echo $value['post_code']; ?></td>
 									<td><?php echo $value['agent_id']; ?></td>
-									<td><?php echo isset($value['service_description']) ? $value['service_description'] : ''; ?></td>
 									<td><?php echo isset($value['coverage_code']) ? $value['coverage_code'] : ''; ?></td>
 									<td><?php echo sprintf("%0.2f", (isset($value['amt_deductible']) ? $value['amt_deductible'] : 0)); ?></td>
-									<td><?php echo isset($value['pay_to']) ? $value['pay_to'] : ''; ?></td>
+									<td><?php echo substr($value['created'], 0, 10); ?></td>
+									<td><?php echo $value['date_of_service']; ?></td>
+									<td><?php echo isset($value['finalize_date']) ? $value['finalize_date'] : ''; ?></td>
+									<td><?php echo $value['status']; ?></td>
 									<td><?php echo sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0)); ?></td>
+									<td><?php echo sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0)); ?></td>
+									<td><?php echo sprintf("%0.2f", (isset($value['amount_billed']) ? $value['amount_billed'] : 0)); ?></td>
+									<td><?php echo sprintf("%0.2f", $value['amt_payable']); ?></td>
+									<td><?php echo sprintf("%0.2f", $value['recovery_amt']); ?></td>
+									<td><?php echo isset($value['service_description']) ? $value['service_description'] : ''; ?></td>
+									<td><?php echo isset($value['pay_to']) ? $value['pay_to'] : ''; ?></td>
 								</tr>
 								<?php } ?>
 								<tr>
@@ -152,18 +158,18 @@
 									<td></td>
 									<td></td>
 									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td><?php echo sprintf("%0.2f", $t_recovery_amt); ?></td>
+									<td></td>
 									<td><?php echo sprintf("%0.2f", $t_amount_billed); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_amt_payable); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_reserve_amount); ?></td>
-									<td><?php echo sprintf("%0.2f", $t_recovery_amt); ?></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
 									<td></td>
 									<td></td>
 								</tr>

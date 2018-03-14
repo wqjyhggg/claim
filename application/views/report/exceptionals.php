@@ -85,7 +85,7 @@
 									<th>Invoice Status</th>
 									<th>Billed Amount</th>
 									<th>Paid Amount</th>
-									<th>Cross Pending</th>
+									<th>Gross Pending</th>
 									<th>Recovery</th>
 								</tr>
 							</thead>
