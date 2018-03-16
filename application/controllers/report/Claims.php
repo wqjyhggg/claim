@@ -164,6 +164,7 @@ class Claims extends CI_Controller {
 									'Recovery',
 									'Description of Service',
 									'Pay to Name',
+									'Decline Reason',
 			));
 
 			$t_amount_billed = $t_amt_payable = $t_recovery_amt = $t_reserve_amount = 0;
@@ -197,6 +198,7 @@ class Claims extends CI_Controller {
 									sprintf("%0.2f", $value['recovery_amt']),
 									isset($value['service_description']) ? $value['service_description'] : '',
 									isset($value['pay_to']) ? $value['pay_to'] : '',
+									($value['status'] == 'D') ? $value['reason'] : '',
 						));
 			}
 			fputcsv($output, array(

@@ -68,6 +68,14 @@
 							<label>Birthday : </label><?php echo $policy['birthday']; ?>
 						</div>
 						<div class="clearfix"></div>
+
+						<div class="form-group col-sm-3">
+							<label>Apply Date : </label><?php echo $claim['apply_date']; ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<label>Arrival Date : </label><?php echo $claim['arrival_date_canada']; ?>
+						</div>
+						<div class="clearfix"></div>
 	
 						<?php if (!empty($policy['family'])) { ?>
 						<?php 	foreach($policy['family'] as $member ) { ?>
@@ -97,12 +105,7 @@
 						<div class="form-group col-sm-3">
 							<label>Case No : </label><?php echo $claim['case_no']; ?>
 						</div>
-						<div class="form-group col-sm-3">
-							<label>Apply Date : </label><?php echo $claim['apply_date']; ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Arrival Date : </label><?php echo $claim['arrival_date_canada']; ?>
-						</div>
+						<div class="clearfix"></div>
 	
 						<div class="form-group col-sm-3">
 							<label>First Name : </label><?php echo $claim['insured_first_name']; ?>
@@ -164,6 +167,7 @@
 										<th>Amt Payable</th>
 										<th>Amt Received</th>
 										<th>Decision</th>
+										<th>Cheque</th>
 										<!-- th>Comment</th -->
 									</tr>
 								</thead>
@@ -187,10 +191,11 @@
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
 										<td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
 										<td><?php echo $value['status'] ?></td>
+										<td><?php echo $value['cheque'] ?></td>
 										<!-- td><?php echo $value['comment'] ?></td -->
 									</tr>
 									<tr class='claim_items_form trinputform' id='item_form_<?php echo $value['id']; ?>'>
-										<td colspan="11">
+										<td colspan="12">
 											<div class="row policy_info">
 											<?php 
 												echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal claim_items_submit', 'method'=>'post'));
