@@ -26,10 +26,19 @@
 						<label><span>Policy No: </span><span class="policy"><?php echo (isset($policy['policy']) ? $policy['policy'] : ''); ?></span></label>
 					</div>
 					<div class="form-group col-sm-3">
-						<label style="text-transform: capitalize;"><span>By Agent: </span><spanclass="agent_firstname"><?php echo (isset($policy['agent_firstname']) ? $policy['agent_firstname'] : ''); ?></span> <span class="agent_lastname"><?php echo (isset($policy['agent_lastname']) ? $policy['agent_lastname'] : ''); ?></span></label>
+						<label style="text-transform: capitalize;"><span>By Agent: </span><span class="agent_firstname"><?php echo (isset($policy['agent_firstname']) ? $policy['agent_firstname'] : ''); ?></span> <span class="agent_lastname"><?php echo (isset($policy['agent_lastname']) ? $policy['agent_lastname'] : ''); ?></span></label>
 					</div>
 					<div class="form-group col-sm-3">
-						<label style="text-transform: capitalize;"><span>Status: </span><?php echo (isset($policy['status_id']) ? $policy_status[$policy['status_id']]['name'] : ''); ?></span></label>
+						<label style="text-transform: capitalize;"><span>Status: </span><?php echo (isset($policy['status_id']) ? $policy_status[$policy['status_id']]['name'] : ''); ?></label>
+					</div>
+					<?php if (isset($policy['product_short']) && ($policy['product_short'] == 'TOP')) { ?>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;"><span>Package: </span><?php echo (isset($policy['package']) ? preg_replace('/_/', " ", $policy['package']) : ''); ?></label>
+					</div>
+					<?php } ?>
+					<div class="clearfix"></div>
+					<div class="form-group col-sm-12">
+						<label style="text-transform: capitalize;"><span>Notes: </span></label> <?php echo isset($policy['note']) ? $policy['note'] : ''; ?>
 					</div>
 				</div>
 				<div class="row">

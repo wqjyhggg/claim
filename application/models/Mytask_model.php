@@ -222,7 +222,11 @@ class Mytask_model extends CI_Model {
 		$oarr = array('id', 'user_id', 'task_no', 'due_date', 'completion_date', 'priority', 'created_by', 'status', 'created', 'due');
 		if (isset($para['field']) && (in_array($para['field'], $oarr))) {
 			if ($para['field'] != 'due') {
-				$orderby[] = $para['field'] . " " . $order;
+				if ($para['field'] == 'priority') {
+					$orderby[] = "FIELD(priority, '".self::PRIORITY_CRITICAL."','".self::PRIORITY_HIGH."','".self::PRIORITY_MEDIUM."','".self::PRIORITY_LOW."') " . $order;
+				} else {
+					$orderby[] = $para['field'] . " " . $order;
+				}
 			} else {
 				$orderby[] = 'due_date '.$order;
 				$orderby[] = 'due_time '.$order;

@@ -544,7 +544,7 @@
 							</div>
 							<div class="col-sm-2">
 								<?php echo form_label('Claim Status:', 'status2', array("class" => 'col-sm-12')); ?>
-								<?php echo form_dropdown("status2", array('Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed'), $claim_details["status2"], array("class" => 'form-control change_claim_status')); ?>
+								<?php echo form_dropdown("status2", array('Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed'), $claim_details["status2"], array("class" => 'form-control change_claim_status2')); ?>
 							</div>
 							<div class="col-sm-2">
 								<label class="col-sm-12">&nbsp;</label>

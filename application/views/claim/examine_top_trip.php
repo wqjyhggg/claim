@@ -391,7 +391,6 @@
 										<th>Amt Payable</th>
 										<th>Amt Received</th>
 										<th>Decision</th>
-										<th>Cheque</th>
 										<!-- th>Comment</th -->
 									</tr>
 								</thead>
@@ -415,11 +414,10 @@
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
 										<td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
 										<td><?php echo $value['status'] ?></td>
-										<td><?php echo $value['cheque'] ?></td>
 										<!-- td><?php echo $value['comment'] ?></td -->
 									</tr>
 									<tr class='claim_items_form trinputform' id='item_form_<?php echo $value['id']; ?>'>
-										<td colspan="12">
+										<td colspan="11">
 											<div class="row policy_info">
 											<?php 
 												echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal claim_items_submit', 'method'=>'post'));
@@ -540,7 +538,7 @@
 						</div>
 						<div class="col-sm-6">
 							<label class="col-sm-12">&nbsp;</label>
-							<input class="btn btn-primary" name="save" value="Save Notes" type="button" id="">
+							<input class="btn btn-primary" name="save" value="Save Notes" type="button" id="save_notes">
 						</div>
 					</div>
 					<hr />
@@ -570,7 +568,7 @@
 							</div>
 							<div class="col-sm-2">
 								<?php echo form_label('Claim Status:', 'status2', array("class" => 'col-sm-12')); ?>
-								<?php echo form_dropdown("status2", array('Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed'), $claim_details["status2"], array("class" => 'form-control change_claim_status')); ?>
+								<?php echo form_dropdown("status2", array('Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed'), $claim_details["status2"], array("class" => 'form-control change_claim_status2')); ?>
 							</div>
 							<div class="col-sm-2">
 								<label class="col-sm-12">&nbsp;</label>
@@ -1316,7 +1314,7 @@ $(document).ready(function() {
       }
    })
 
-	.on("click", "#", function() {
+	.on("click", "#save_notes", function() {
 		$.ajax({
 			url: "<?php echo base_url("claim/savenotes/".$claim['id']); ?>",
 			method: "post",

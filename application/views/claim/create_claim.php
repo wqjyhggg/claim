@@ -1,3 +1,4 @@
+<?php $this->load->model('claim_model'); ?>
 <div>
 	<div class="page-title">
 		<div class="title_left">
@@ -329,7 +330,8 @@
 							<div class="row">
 								<div class="col-sm-12">
 									<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
-									<?php echo form_input("diagnosis", $this->input->post("diagnosis"), array("class" => "form-control", 'placeholder' => 'Diagnosis')); ?>
+									<?php echo form_input("diagnosis", $this->input->post("diagnosis"), array("class" => "form-control required", 'placeholder' => 'Diagnosis')); ?>
+									<?php echo form_error("diagnosis"); ?>
 								</div>
 								<div class="form-group col-sm-12">
 									<?php echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class" => 'col-sm-12')); ?>
@@ -576,14 +578,15 @@
 								<?php endforeach; ?>
 							</select>
 						</div>
-						<div class="col-sm-3">
+						<!-- div class="col-sm-3">
 							<?php echo form_label('Status:', 'status', array("class" => 'col-sm-12')); ?>
 							<select name="status" class="form-control">
 								<?php foreach ($status_list as $key => $val): ?>
 								<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post("status")) { echo "selected"; } ?>><?php echo $val; ?></option>
 								<?php endforeach; ?>
 							</select>
-						</div>
+						</div -->
+						<input type='hidden' name='status' value='<?php echo Claim_model::STATUS_Processing; ?>'>
 					</div>
 					<div class="row" style="margin-top: 20px">
 						<div class="col-sm-2">
@@ -925,7 +928,7 @@
 
       var product_short = $("input[name=product_short]").val();
 
-      if ((product_short != '') && (product_short != 'OPL') && (product_short != 'JFR') && (product_short != 'JES') && (product_short != 'JFC')) {
+      if ((product_short != '') && (product_short != 'REF') && (product_short != 'OPL') && (product_short != 'JFR') && (product_short != 'JES') && (product_short != 'JFC')) {
       	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + $("input[name=policy_no]").val();
       }
    })
@@ -1303,7 +1306,7 @@
          success: function(data){
             if(typeof data.plan_list != "undefined" && data.plan_list.length) {
                 localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
-                if ((data.plan_list[0].product_short != 'OPL') && (data.plan_list[0].product_short != 'JFR') && (data.plan_list[0].product_short != 'JES') && (data.plan_list[0].product_short != 'JFC')) {
+                if ((data.plan_list[0].product_short != 'REF') && (data.plan_list[0].product_short != 'OPL') && (data.plan_list[0].product_short != 'JFR') && (data.plan_list[0].product_short != 'JES') && (data.plan_list[0].product_short != 'JFC')) {
                 	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + policy_no;
                 }
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
@@ -1482,7 +1485,7 @@
             if(typeof data.plan_list != "undefined" && data.plan_list.length)
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
-               if ((data.plan_list[0].product_short != 'OPL') && (data.plan_list[0].product_short != 'JFR') && (data.plan_list[0].product_short != 'JES') && (data.plan_list[0].product_short != 'JFC')) {
+               if ((data.plan_list[0].product_short != 'REF') && (data.plan_list[0].product_short != 'OPL') && (data.plan_list[0].product_short != 'JFR') && (data.plan_list[0].product_short != 'JES') && (data.plan_list[0].product_short != 'JFC')) {
                	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + $("input[name=policy_no]").val();
                }
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));

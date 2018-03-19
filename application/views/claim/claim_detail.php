@@ -312,7 +312,8 @@
 								<div class="row">
 									<div class="col-sm-12">
 										<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("diagnosis", $claim_details["diagnosis"], array("class" => "form-control", 'placeholder' => 'Diagnosis')); ?>
+										<?php echo form_input("diagnosis", $claim_details["diagnosis"], array("class" => "form-control required", 'placeholder' => 'Diagnosis')); ?>
+										<?php echo form_error("diagnosis"); ?>
 									</div>
 									<div class="form-group col-sm-12">
 										<?php echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class" => 'col-sm-12')); ?>

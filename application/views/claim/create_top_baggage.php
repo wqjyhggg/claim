@@ -475,7 +475,8 @@
 							<div class="row">
 								<div class="col-sm-12">
 									<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
-									<?php echo form_input("diagnosis", $this->input->post("diagnosis"), array("class" => "form-control", 'placeholder' => 'Diagnosis')); ?>
+									<?php echo form_input("diagnosis", $this->input->post("diagnosis"), array("class" => "form-control required", 'placeholder' => 'Diagnosis')); ?>
+									<?php echo form_error("diagnosis"); ?>
 								</div>
 								<div class="form-group col-sm-12">
 									<?php echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class" => 'col-sm-12')); ?>
@@ -721,14 +722,15 @@
 								<?php endforeach; ?>
 							</select>
 						</div>
-						<div class="col-sm-3">
+						<!-- div class="col-sm-3">
 							<?php echo form_label('Status:', 'status', array("class" => 'col-sm-12')); ?>
 							<select name="status" class="form-control">
 								<?php foreach ($status_list as $key => $val): ?>
 								<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post("status")) { echo "selected"; } ?>><?php echo $val; ?></option>
 								<?php endforeach; ?>
 							</select>
-						</div>
+						</div -->
+						<input type='hidden' name='status' value='<?php echo Claim_model::STATUS_Processing; ?>'>
 					</div>
 					<div class="row" style="margin-top: 20px">
 						<div class="col-sm-2">
