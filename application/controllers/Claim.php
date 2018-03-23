@@ -74,7 +74,7 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required|alpha_numeric_spaces');
 			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('city', 'city ', 'alpha');
+			$this->form_validation->set_rules('city', 'city ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('province', 'province ', 'alpha');
 			$this->form_validation->set_rules('full_name', 'full name ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('employee_name', 'employee name ', 'alpha_numeric_spaces');
@@ -418,7 +418,7 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required|alpha_numeric_spaces');
 			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('city', 'city ', 'alpha');
+			$this->form_validation->set_rules('city', 'city ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('province', 'province ', 'alpha');
 			$this->form_validation->set_rules('full_name', 'full name ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('employee_name', 'employee name ', 'alpha_numeric_spaces');

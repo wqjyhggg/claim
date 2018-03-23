@@ -18,7 +18,10 @@ class Expenses_model extends CI_Model {
 	 */
 	public function get_coverage_code() {
 		return array(
+				'V01' => 'V01 - Hospitalization',
+				'V01A' => 'V01A - Out-PatientTreatment',
 				'V01B' => 'V01B - MedicalAppliances',
+				'V02A' => 'V02A - Medical Services',
 				'V02AE' => 'V02A - EmergencyVisit',
 				'V02AO' => 'V02A - Others',
 				'V02AS' => 'V02A - SpecialistVisit',
@@ -43,11 +46,6 @@ class Expenses_model extends CI_Model {
 				'V07' => 'V07 - PrescriptionDrugs',
 				'V08A' => 'V08A - ReturnofRemains',
 				'V08B' => 'V08B - Cremation/Burial',
-				'V12' => 'V12 - AirFlightAccident',
-				'V13' => 'V13 - PrivateDutyNursing',
-				'V01' => 'V01 - Hospitalization',
-				'V02A' => 'V02A - Medical Services',
-				'V01A' => 'V01A - Out-PatientTreatment',
 				'V0JF1' => 'V0JF1 - Trip interruption',
 				'V0JF2' => 'V0JF2 - Trip cancellation',
 				'V0JF3' => 'V0JF3 - Meal',
@@ -58,12 +56,17 @@ class Expenses_model extends CI_Model {
 				'V0JF8' => 'V0JF8 - Baggage lost',
 				'V0JF9' => 'V0JF9 - Baggage damaged',
 				'V0JFA' => 'V0JFA - Air ticket',
+				'V12' => 'V12 - AirFlightAccident',
+				'V13' => 'V13 - PrivateDutyNursing',
 		);
 	}
 	
 	public function get_coverage_code2() {
 		return array(
+				'V01' => 'Hospitalization',
+				'V01A' => 'Out-PatientTreatment',
 				'V01B' => 'MedicalAppliances',
+				'V02A' => 'Medical Services',
 				'V02AE' => 'EmergencyVisit',
 				'V02AO' => 'Others',
 				'V02AS' => 'SpecialistVisit',
@@ -88,11 +91,6 @@ class Expenses_model extends CI_Model {
 				'V07' => 'PrescriptionDrugs',
 				'V08A' => 'ReturnofRemains',
 				'V08B' => 'Cremation/Burial',
-				'V12' => 'AirFlightAccident',
-				'V13' => 'PrivateDutyNursing',
-				'V01' => 'Hospitalization',
-				'V02A' => 'Medical Services',
-				'V01A' => 'Out-PatientTreatment',
 				'V0JF1' => 'Trip interruption',
 				'V0JF2' => 'Trip cancellation',
 				'V0JF3' => 'Meal',
@@ -103,6 +101,8 @@ class Expenses_model extends CI_Model {
 				'V0JF8' => 'Baggage lost',
 				'V0JF9' => 'Baggage damaged',
 				'V0JFA' => 'Air ticket',
+				'V12' => 'AirFlightAccident',
+				'V13' => 'PrivateDutyNursing',
 		);
 	}
 	

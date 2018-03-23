@@ -118,7 +118,7 @@
 						</div>
 	
 						<div class="form-group col-sm-3">
-							<label>Decision : </label><?php echo $claim['status']; ?>
+							<label>Status : </label><?php echo $claim['status']; ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<label>Decision : </label>
@@ -131,10 +131,7 @@
 							?>
 							<?php echo form_hidden("policy_info", $claim['policy_info'] ); ?>
 						</div>
-						<div class="form-group col-sm-3">
-							<label>Priority : </label><?php echo $claim['priority']; ?>
-						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-6">
 							<label>Related Files : </label>
 							<?php 
 								foreach ($claim_files as $fn => $urlfn) {
@@ -656,7 +653,7 @@
 						<div>
 							<label for="mail_label" class="col-sm-2">Mail Addres:</label>
 							<div class="form-group col-sm-6">
-								<input name="priority" value="HIGH" id="mail_address" class="col-sm-1" type="checkbox">
+								<input id="mail_address" class="col-sm-1" type="checkbox">
 								<label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address with the policy</label>
 							</div>
 						</div>

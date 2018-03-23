@@ -309,12 +309,12 @@
 						<h2 class="move_down">Medical Information <small></small> <i class="fa fa-angle-down pull-right"></i></h2>
 						<div class="row" style="display: none">
 							<div class="col-sm-12">
+								<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("diagnosis", $claim_details["diagnosis"], array("class" => "form-control required", 'placeholder' => 'Diagnosis')); ?>
+								<?php echo form_error("diagnosis"); ?>
+							</div>
+							<div class="col-sm-12">
 								<div class="row">
-									<div class="col-sm-12">
-										<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("diagnosis", $claim_details["diagnosis"], array("class" => "form-control required", 'placeholder' => 'Diagnosis')); ?>
-										<?php echo form_error("diagnosis"); ?>
-									</div>
 									<div class="form-group col-sm-12">
 										<?php echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class" => 'col-sm-12')); ?>
 										<?php echo form_textarea("medical_description", $claim_details["medical_description"], array("class" => "form-control", 'placeholder' => 'Brief description of your sickness or injury')); ?>
@@ -749,7 +749,7 @@
 						<div>
 							<label for="mail_label" class="col-sm-2">Mail Addres:</label>
 							<div class="form-group col-sm-6">
-								<input name="priority" value="HIGH" id="mail_address" class="col-sm-1" type="checkbox"> <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same ddress with the policy</label>
+								<input id="mail_address" class="col-sm-1" type="checkbox"> <label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same ddress with the policy</label>
 							</div>
 						</div>
 						<div>
@@ -1170,7 +1170,7 @@
 	.on("click", ".payee_policy_addr", function() {
 		var addr = $(this).closest("div").find("input[name='payees[address][]']");
 		var data = $.parseJSON(localStorage.getItem("policy_data"));
-		addr.val(data[0].street_number+" "+data[0].street_name + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+		addr.val(data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
 	})
 
    .on("click", ".remove-payee", function(){
