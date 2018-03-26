@@ -171,7 +171,7 @@
 								<tr data='<?php echo json_encode($value); ?>'>
 									<td><?php echo $value['policy']; ?></td>
 									<td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
-									<td><?php echo date("d/d/Y", strtotime($value['birthday'])); ?></td>
+									<td><?php echo $value['birthday']; ?></td>
 									<td><?php echo $policy_status[$value['status_id']]['name']; ?></td>
 									<td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
 									<td><?php echo anchor("emergency_assistance/view_policy/" . $value['policy'], "Detail", array('class'=>'view-policy')); ?></td>
