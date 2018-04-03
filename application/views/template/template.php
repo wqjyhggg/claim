@@ -58,6 +58,7 @@
                            <i class="fa fa-phone"></i>
                            	<span id="phone_login" style="display:none;">
                            		<button type="button" class="btn btn-info btn-xs phonelogin">Online</button>&nbsp;
+                           		<input type='text' id='login_phone_number' value='' style="max-width: 4em; max-height: 1em; color: black;">
                            	</span>
                            	<span id="phone_logout" style="display:none;">
                            		<button type="button" class="btn btn-info btn-xs phonelogout">Logout</button>

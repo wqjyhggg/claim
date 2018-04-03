@@ -201,6 +201,14 @@ class Users_model extends CI_Model {
 		}
 	}
 	
+	public function set_user_phone($phone_number) {
+		$sql = "UPDATE users SET phone='' WHERE phone=" . $this->db->escape($phone_number);
+		$this->db->query($sql);
+		$user_id = $this->ion_auth->get_user_id();
+		$sql = "UPDATE users SET phone=" . $this->db->escape($phone_number) . " WHERE id='" . (int)$user_id . "'";
+		$this->db->query($sql);
+	}
+	
 	public function get_user_phoneid() {
 		$user_id = $this->ion_auth->get_user_id();
 		$this->db->where('id', $user_id);

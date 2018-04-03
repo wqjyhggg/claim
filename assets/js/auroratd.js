@@ -53,20 +53,27 @@ function ws_reconnect() {
 
 $(document).ready(function(){
 	$('.phonelogin').click(function () {
+		var login_phone_number = $('#login_phone_number').val();
+		if (isNaN(login_phone_number)) {
+			alert("Please input phone number");
+		} else {
 		$.ajax({
-			url: "/myphone/login",
+			url: "/myphone/login/" + login_phone_number,
 			method: "get",
 			datatype: 'json',
 			success: function(data) {
-				if (data.status='OK') {
+				if (data.status == 'OK') {
 					$('#phone_logout').show();
 					$('#phone_queue_div').show();
 					$('#phone_login').hide();
 					ws_phone = data.phone;
 					ws_init();
+				} else if (typeof data.message != 'undefined') {
+					alert(data.message);
 				}
 			}
 		})
+		}
 	});
 
 	$('.phonelogout').click(function () {
