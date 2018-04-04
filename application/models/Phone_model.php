@@ -483,9 +483,10 @@ class Phone_model extends CI_Model {
 			}
 			$this->db->where_in('agent', $this->phone_numbers);
 		} else {
+			$this->db->where('agent', $phonenumber);
 			$this->db->where('TIME_TO_SEC(TIMEDIFF(now(), newcall))<', 3600*24);
 		}
-		$this->db->where_in('queue', array('English','Chinese'));
+//		$this->db->where_in('queue', array('English','Chinese'));
 		$this->db->order_by('newcall', 'DESC');
 		
 		$rc = $this->db->get('phone_records')->result_array();
