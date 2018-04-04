@@ -1726,7 +1726,7 @@ class Emergency_assistance extends CI_Controller {
 						}
 						$dt = trim($data[1]);
 						$tmStr = trim($data[2]);
-						$sphone = trim($data[3]);
+						$sphone = ''; // trim($data[3]);
 						if (($tmStr == Schedule_model::SHIFT_8AM_STR) || ($tmStr == Schedule_model::SHIFT_2PM_STR) || ($tmStr == Schedule_model::SHIFT_8PM_STR)) {
 							$shour = $this->schedule_model->get_shift_shour($tmStr);
 							$para = array();
