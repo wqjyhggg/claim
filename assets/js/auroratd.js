@@ -154,9 +154,9 @@ $(document).ready(function(){
 				$('#phone_login').hide();
 				ws_phone = data.phone;
 				ws_init();
-			} else if (data.login == 'Unknown') {
-				$('#phone_opt_div').hide();
-				$('#phone_queue_div').hide();
+			//} else if (data.login == 'Unknown') {
+			//	$('#phone_opt_div').hide();
+			//	$('#phone_queue_div').hide();
 			} else {
 				$('#phone_logout').hide();
 				$('#phone_queue_div').hide();
