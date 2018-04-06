@@ -297,8 +297,7 @@ class Api extends CI_Controller {
 			
 			if (empty($error)) {
 				$id = $data['id'] = $this->master_model->get_id(Master_model::TYPE_CLAIM);
-				$data['claim_no'] = $this->master_model->get_number_str($data['id']);
-				$claim_no = $this->claim_model->generate_claim_no($id);
+				$data['claim_no'] = $claim_no = $this->claim_model->generate_claim_no($id);
 				
 				// upload claim pdf files to server
 				$files = @$_FILES['files_multi'];

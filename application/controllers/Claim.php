@@ -106,7 +106,7 @@ class Claim extends CI_Controller {
 			
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
-			$this->form_validation->set_rules('case_no', 'Case No', 'numeric');
+			$this->form_validation->set_rules('case_no', 'Case No', 'alpha_numeric_spaces');
 			
 			$this->load->model('master_model');
 			$this->load->model('case_model');
@@ -166,14 +166,12 @@ class Claim extends CI_Controller {
 					$case = $this->case_model->get_id_by_case_no($case_no); // Get case
 					if ($case) {
 						$data['id'] = $case['id'];
-						$claim_no = str_pad($data['id'], 7, 0, STR_PAD_LEFT);
-						$data['claim_no'] = $claim_no; 
+						$data['claim_no'] = $claim_no = $data['case_no'];
 					}
 				}
 				if (empty($data['id'])) {
 					$data['id'] = $this->master_model->get_id('claim'); // Get new id
-					$claim_no = str_pad($data['id'], 7, 0, STR_PAD_LEFT);
-					$data['claim_no'] = $claim_no;
+					$data['claim_no'] = $claim_no = $this->claim_model->generate_claim_no($data['id']);
 				}
 				// insert values to database
 				$record_id = $this->claim_model->save($data);
@@ -204,15 +202,6 @@ class Claim extends CI_Controller {
 						$this->claim_model->payees_save($payee_data);
 					}
 				}
-				/*
-				// update case no(7 length) to table
-				$claim_no = str_pad($record_id, 7, 0, STR_PAD_LEFT);
-				$this->common_model->update("claim", array(
-						"claim_no" => $claim_no 
-				), array(
-						"id" => $record_id 
-				));
-				*/
 				if (! empty($data['case_no'])) {
 					$this->common_model->update("case", array(
 							"claim_no" => $claim_no 
@@ -447,7 +436,7 @@ class Claim extends CI_Controller {
 				
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
-			$this->form_validation->set_rules('case_no', 'Case No', 'numeric');
+			$this->form_validation->set_rules('case_no', 'Case No', 'alpha_numeric_spaces');
 				
 			$this->load->model('master_model');
 			$this->load->model('case_model');
@@ -511,14 +500,12 @@ class Claim extends CI_Controller {
 						$case = $this->case_model->get_id_by_case_no($case_no); // Get case
 						if ($case) {
 							$data['id'] = $case['id'];
-							$claim_no = str_pad($data['id'], 7, 0, STR_PAD_LEFT);
-							$data['claim_no'] = $claim_no;
+							$data['claim_no'] = $claim_no = $data['case_no'];
 						}
 					}
 					if (empty($data['id'])) {
 						$data['id'] = $this->master_model->get_id('claim'); // Get new id
-						$claim_no = str_pad($data['id'], 7, 0, STR_PAD_LEFT);
-						$data['claim_no'] = $claim_no;
+						$data['claim_no'] = $claim_no = $this->claim_model->generate_claim_no($data['id']);
 					}
 					// insert values to database
 					$record_id = $this->claim_model->save($data);
@@ -549,15 +536,6 @@ class Claim extends CI_Controller {
 							$this->claim_model->payees_save($payee_data);
 						}
 					}
-					/*
-					 // update case no(7 length) to table
-					 $claim_no = str_pad($record_id, 7, 0, STR_PAD_LEFT);
-					 $this->common_model->update("claim", array(
-					 "claim_no" => $claim_no
-					 ), array(
-					 "id" => $record_id
-					 ));
-					 */
 					if (! empty($data['case_no'])) {
 						$this->common_model->update("case", array(
 								"claim_no" => $claim_no

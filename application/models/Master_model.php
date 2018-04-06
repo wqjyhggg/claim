@@ -22,8 +22,10 @@ class Master_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
+	/*
 	public function get_number_str($id) {
 		$no = str_pad($id, 7, 0, STR_PAD_LEFT);
 		return $no;
 	}
+	*/
 }

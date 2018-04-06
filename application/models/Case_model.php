@@ -26,7 +26,7 @@ class Case_model extends CI_Model {
 	 * @param unknown $id
 	 */
 	public function generate_case_no($id) {
-		return str_pad($id, 7, 0, STR_PAD_LEFT);
+		return "C".str_pad($id, 7, 0, STR_PAD_LEFT);
 	}
 	
 	/**

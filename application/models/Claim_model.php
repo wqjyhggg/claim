@@ -24,7 +24,7 @@ class Claim_model extends CI_Model {
 	 * @return string
 	 */
 	public function generate_claim_no($id) {
-		return str_pad($id, 7, 0, STR_PAD_LEFT);
+		return "C".str_pad($id, 7, 0, STR_PAD_LEFT);
 	}
 	
 	/**

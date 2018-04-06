@@ -236,7 +236,7 @@ class Emergency_assistance extends CI_Controller {
 					$new_task = array();
 					$new_task['user_id'] = $new_case['case_manager'];
 					$new_task['item_id'] = $new_case['id'];
-					$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
+					$new_task['task_no'] = $new_case['case_no'];
 					$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
 					$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
 					$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
@@ -256,7 +256,7 @@ class Emergency_assistance extends CI_Controller {
 					$new_task = array();
 					$new_task['user_id'] = $new_case['assign_to'];
 					$new_task['item_id'] = $new_case['id'];
-					$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
+					$new_task['task_no'] = $new_case['case_no'];
 					$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
 					$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
 					$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
@@ -523,7 +523,7 @@ class Emergency_assistance extends CI_Controller {
 						// Assign manager
 						$new_task['user_id'] = $new_case['case_manager'];
 						$new_task['item_id'] = $new_case['id'];
-						$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
+						$new_task['task_no'] = $new_case['case_no'];;
 						$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
 						$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
 						$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
@@ -555,7 +555,7 @@ class Emergency_assistance extends CI_Controller {
 					} else {
 						$new_task['user_id'] = $new_case['assign_to'];
 						$new_task['item_id'] = $new_case['id'];
-						$new_task['task_no'] = str_pad($new_case['id'], 6, "0", STR_PAD_LEFT);
+						$new_task['task_no'] = $new_case['case_no'];;
 						$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
 						$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
 						$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
@@ -2027,7 +2027,7 @@ class Emergency_assistance extends CI_Controller {
 			} else {
 				$new_task['user_id'] = $employee_id;
 				$new_task['item_id'] = $value;
-				$new_task['task_no'] = str_pad($value, 6, "0", STR_PAD_LEFT);
+				$new_task['task_no'] = $case_details['case_no'];;
 				$new_task['category'] = Mytask_model::CATEGORY_ASSISTANCE;
 				$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
 				$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
