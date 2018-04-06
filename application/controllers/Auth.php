@@ -639,6 +639,13 @@ class Auth extends CI_Controller {
 	public function logout() {
 		$this->data ['title'] = "Logout";
 		
+		$this->load->model('users_model');
+		
+		if ($phonenumber = $this->users_model->get_user_phoneid()) {
+			$this->load->model('phone_model');
+			$this->phone_model->do_phone_opt(Phone_model::PHONE_OPT_LOGOUT);
+		}
+		
 		// log the user out
 		$logout = $this->ion_auth->logout();
 		
