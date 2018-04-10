@@ -27,5 +27,6 @@
 	<li> <?php echo anchor("claim/payments", '<i class="fa fa-money"></i>Payments</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
 
+	<li> <?php echo anchor("auth/password", '<i class="fa fa-cog"></i>Change Password</a>', array("class"=>'leftmeun')) ?> </li>
 	<li> <?php echo anchor("auth/logout", '<i class="fa fa-power-off"></i>Logout</a>', array("class"=>'leftmeun')) ?> </li>
 </ul>

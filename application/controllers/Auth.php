@@ -128,6 +128,45 @@ class Auth extends CI_Controller {
 	}
 	
 	// edit task page
+	public function password() {
+		$this->data['my_message'] = '';
+		$cur_password = $this->input->post('cur_password');
+		$password = $this->input->post('password');
+		$password_confirm = $this->input->post('password_confirm');
+		
+		if (!$this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		} else if (!empty($this->input->post())) { 
+			if ($password != $password_confirm) {
+				$this->session->set_flashdata('error', $this->lang->line('change_password_validation_new_password_confirm_label'));
+				$this->data['my_message'] = "Confirm Password isn't match ";
+			} else {
+				$this->load->model('users_model');
+	
+				$user_id = $this->ion_auth->get_user_id();
+				
+				$verify = $this->ion_auth->hash_password_db($user_id, $cur_password);
+				if ($verify === TRUE) {
+					$this->users_model->save(array('id' => $user_id, 'password' => $password));
+					// if the password was successfully changed
+					$this->data['my_message'] = 'Successfully';
+					$this->session->set_flashdata('error', $this->ion_auth->messages());
+					// $this->logout();
+				} else {
+					$this->data['my_message'] = 'Error! Can not change password';
+					$this->session->set_flashdata('error', $this->ion_auth->errors());
+				}
+			}
+		}
+
+		// load view data
+		$this->template->write('title', SITE_TITLE . ' - Change Password', TRUE);
+		$this->template->write_view('content', 'auth/password', $this->data);
+		$this->template->render();
+	}
+	
+	// edit task page
 	public function edit_task($id = 0) {
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
