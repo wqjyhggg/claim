@@ -30,7 +30,7 @@
       <header>
          <div class="container" style="padding:0;">
             <div class="hlogo">
-               <img class="img-responsive" src="<?php echo base_url(); ?>assets/img/logo.png" alt="JF Insurance">
+               <img class="img-responsive" src="<?php echo base_url(); ?>assets/img/otc_big.jpg" alt="JF Insurance">
             </div>
             </nav>
          </div>
