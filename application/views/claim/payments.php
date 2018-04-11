@@ -125,7 +125,7 @@
 					</div>
 
 					<div class="pay_section">
-						<div class="row" style="margin-top: 20px">
+						<div class="row" style="margin-top: 20px; display:none;">
 							<div class="col-sm-2 confirm_button">
 								<input class="btn btn-primary" name="Confirm_Payment" value="Confirm Payment" id="confirm_payment" disabled="disabled">
 							</div>
