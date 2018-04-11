@@ -1349,8 +1349,8 @@
 
       // validate file extension
       var ext = $(this).val().split('.').pop().toLowerCase();
-      if($.inArray(ext, ['pdf']) == -1) {
-          alert('invalid extension! Please attach only pdf file.');
+      if (($.inArray(ext, ['pdf']) == -1) && ($.inArray(ext, ['msg']))) == -1) {
+          alert('invalid extension! Please attach pdf or msg file.');
           $(this).val('');
           return false;
       }
