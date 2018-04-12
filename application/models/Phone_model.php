@@ -481,16 +481,16 @@ class Phone_model extends CI_Model {
 			if ( ! $phonenumber ) {
 				return array();
 			}
-			$this->db->where_in('agent', $this->phone_numbers);
-		} else {
 			$this->db->where('agent', $phonenumber);
+		} else {
+			$this->db->where_in('agent', $this->phone_numbers);
 			$this->db->where('TIME_TO_SEC(TIMEDIFF(now(), newcall))<', 3600*24);
 		}
 //		$this->db->where_in('queue', array('English','Chinese'));
 		$this->db->order_by('newcall', 'DESC');
 		
 		$rc = $this->db->get('phone_records')->result_array();
-			
+
 		$rarr = array();
 		if ($rc) {
 			$reqArr = array('/api/cdr/'.date("Y-m-d"), '/api/cdr/'.date("Y-m-d", time() - 86400));
