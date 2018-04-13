@@ -4,6 +4,7 @@
 	</thead>
 	<tbody>
 		<?php foreach ($status as $key => $val) { ?>
+		<?php if ($val['status'] == 'Offline') continue; ?>
 		<tr><td><?php echo $key; ?></td><td><?php echo $val['status']; ?></td><td><?php echo $val['queue']; ?></td></tr>
 		<?php } ?>
 	</tbody>

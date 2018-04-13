@@ -189,7 +189,7 @@ class Phone_model extends CI_Model {
 
 		if (!empty($data['logged_in'])) {
 			$result['status'] = self::PHONE_STATUS_ONLINE;
-			$sql = "SELECT * FROM phone_records WHERE agent=".$this->db->escape($phoneid)." AND hangup<answer AND newcall<answer ORDER BY newcall DESC limit 1";
+			$sql = "SELECT * FROM phone_records WHERE agent=".$this->db->escape($phoneid)." AND hangup<answer AND newcall<answer AND TIME_TO_SEC(TIMEDIFF(now(), newcall))<7200 ORDER BY newcall DESC limit 1";
 			if ($rc = $this->db->query($sql)->row_array()) {
 				$result['status'] = self::PHONE_STATUS_TALKING;
 				$result['queue'] = $rc['queue'];
