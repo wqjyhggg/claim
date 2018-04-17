@@ -44,8 +44,8 @@ class Myphone extends CI_Controller {
 		$this->load->model('phone_model');
 		$phoneArr = $this->phone_model->get_working_number();
 		if (in_array($phone_number, $phoneArr)) {
-			$res['status'] = $this->phone_model->do_phone_opt(Phone_model::PHONE_OPT_LOGIN);
 			$this->users_model->set_user_phone($phone_number);
+			$res['status'] = $this->phone_model->do_phone_opt(Phone_model::PHONE_OPT_LOGIN);
 			$res['phone'] = $phone_number;
 		} else {
 			$res['status'] = "NO";
