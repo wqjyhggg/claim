@@ -1486,12 +1486,37 @@ class Claim extends CI_Controller {
 	
 	// browse claim files
 	public function file($file, $id) {
+		$filename = UPLOADFULLPATH . 'claim_files/' . $id . '/' . urldecode($file);
 		
-		// We'll be outputting a PDF
-		header('Content-type: application/pdf');
-		
-		// The PDF source is in original.pdf
-		readfile(UPLOADFULLPATH . 'claim_files/' . $id . '/' . urldecode($file));
+		$fileinfo = pathinfo($filename);
+		$mimeType = '';
+		switch ($fileinfo['extension']) {
+			case 'msg':
+				$mimeType = 'application/vnd.ms-outlook';
+				break;
+			case 'pdf':
+				$mimeType = 'application/pdf';
+				break;
+			case 'gif':
+				$mimeType = 'application/gif';
+				break;
+			case 'png':
+				$mimeType = 'application/png';
+				break;
+			case 'jpeg':
+			case 'jpg':
+				$mimeType = 'application/jpeg';
+				break;
+			default:
+				die();
+		}
+		header('Content-type: ' . $mimeType);
+		//header('Content-Disposition: attachment; filename="' . $filename . '"');
+		header('Content-Disposition: inline; filename="' . $file . '"');
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Pragma: no-cache');
+		readfile($filename);
 	}
 	
 	// for autocomplete search
