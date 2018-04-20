@@ -2114,7 +2114,7 @@ class Emergency_assistance extends CI_Controller {
 		
 		$case_details = $this->case_model->get_by_id($cases);
 		
-		$tasks = $this->mytask_model->search(array('item_id' => $iid, 'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE));
+		$tasks = $this->mytask_model->search(array('item_id' => $cases, 'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE));
 		foreach($tasks as $task) {
 			if ($status == 'A') {
 				$task['notes'] = "Active By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'];
