@@ -2104,9 +2104,9 @@ class Emergency_assistance extends CI_Controller {
 		$employee_id = $this->ion_auth->get_user_id();
 
 		if ($status == 'A') {
-			$iid = $this->intakeform_model->save($value, "Active By user id " . $employee_id, '', '', $employee_id, Mytask_model::TASK_TYPE_CASE_CHANGE);
+			$iid = $this->intakeform_model->save($cases, "Active By user id " . $employee_id, '', '', $employee_id, Mytask_model::TASK_TYPE_CASE_CHANGE);
 		} else {
-			$iid = $this->intakeform_model->save($value, "Deactivate By user id " . $employee_id, '', '', $employee_id, Mytask_model::TASK_TYPE_CASE_CHANGE);
+			$iid = $this->intakeform_model->save($cases, "Deactivate By user id " . $employee_id, '', '', $employee_id, Mytask_model::TASK_TYPE_CASE_CHANGE);
 		}
 		
 		// save record in intake form as notes
@@ -2114,7 +2114,7 @@ class Emergency_assistance extends CI_Controller {
 		
 		$case_details = $this->case_model->get_by_id($cases);
 		
-		$tasks = $this->mytask_model->search(array('item_id' => $value, 'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE));
+		$tasks = $this->mytask_model->search(array('item_id' => $iid, 'category' => Mytask_model::CATEGORY_ASSISTANCE, 'type' => Mytask_model::TASK_TYPE_CASE));
 		foreach($tasks as $task) {
 			if ($status == 'A') {
 				$task['notes'] = "Active By :" . $this->ion_auth->get_user_id() . "; " . $task['notes'];
