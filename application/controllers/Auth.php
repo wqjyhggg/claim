@@ -57,9 +57,11 @@ class Auth extends CI_Controller {
 				if ($rc['type'] == 'CASE') {
 					$case = $this->case_model->get_by_id($rc['item_id']);
 					$this->data['records'][$key]['insured_name'] = $case['insured_firstname'] . " " . $case['insured_lastname'];
+					$this->data['records'][$key]['priority'] = $case['priority'];
 				} else {
 					$claim = $this->claim_model->get_by_id($rc['item_id']);
 					$this->data['records'][$key]['insured_name'] = $claim['insured_first_name'] . " " . $claim['insured_last_name'];
+					$this->data['records'][$key]['priority'] = '-';
 				}
 				$ctuser = $this->users_model->get_by_id($rc['created_by']);
 				$this->data['records'][$key]['created_email'] = $ctuser['email'];
@@ -227,9 +229,11 @@ class Auth extends CI_Controller {
 				if ($task_details['type'] == 'CASE') {
 					$case = $this->case_model->get_by_id($task_details['item_id']);
 					$task_details['insured_name'] = $case['first_name'] . " " . $case['last_name'];
+					$task_details['priority'] = $case['priority'];
 				} else {
 					$claim = $this->claim_model->get_by_id($task_details['item_id']);
 					$task_details['insured_name'] = $claim['insured_first_name'] . " " . $claim['insured_last_name'];
+					$task_details['priority'] = '-';
 				}
 				
 				$ctuser = $this->users_model->get_by_id($task_details['created_by']);

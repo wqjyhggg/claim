@@ -51,13 +51,7 @@
 						
 						<div class="col-sm-6">
 							<?php  echo form_label('Priority:', 'priority', array("class"=>'col-sm-12')); ?>
-							<div class="form-group col-sm-12">
-								<select name="priority" class="form-control">
-									<?php foreach ($priorities as $rc) : ?>
-									<option value="<?php echo $rc; ?>" <?php if ($task_details["priority"] == $rc) { echo "selected"; } ?>><?php echo $rc; ?></option>
-									<?php endforeach; ?>
-								</select>
-							</div>
+							<div class="form-group col-sm-12"><?php echo $task_details['priority']; ?></div>
 						</div>
 
 						<div class="col-sm-6">
