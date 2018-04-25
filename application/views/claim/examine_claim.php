@@ -124,14 +124,7 @@
 							<label>Status : </label><?php echo $claim['status']; ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Decision : </label>
-							<?php 
-								if (($claim['status'] == Claim_model::STATUS_Processed) || ($claim['status'] == Claim_model::STATUS_Paid) || ($claim['status'] == Claim_model::STATUS_Closed)) {
-									echo ($claim['is_accepted'] == 'N') ? 'Deny' : 'Accept'; 
-								} else {
-									echo "&nbsp;";
-								}
-							?>
+							<label>Diagnosis : </label><?php echo $claim['diagnosis']; ?>
 							<?php echo form_hidden("policy_info", $claim['policy_info'] ); ?>
 						</div>
 						<div class="form-group col-sm-6">

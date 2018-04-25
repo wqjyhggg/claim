@@ -5,6 +5,7 @@
 		</div>
 	</div>
 	<div class="clearfix"></div>
+	<?php echo $message; ?>
 
 	<!-- Policy search and List Section -->
 	<div class="row">

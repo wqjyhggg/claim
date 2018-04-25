@@ -111,6 +111,11 @@ class Schedule_model extends CI_Model {
 		$this->db->query($sql);
 	}
 	
+	public function search($para) {
+		$this->db->where($para);
+		return $this->db->get('schedule')->result_array();
+	}
+	
 	public function save($data) {
 		if (isset($data['id'])) {
 			// Update

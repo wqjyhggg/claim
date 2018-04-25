@@ -91,7 +91,7 @@
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Created By:', 'created_by', array("class"=>'col-sm-12')); ?>
-							<div class="form-group col-sm-12"><?php echo $case_details['case_manager_email']; ?></div>
+							<div class="form-group col-sm-12"><?php echo $created_email; ?></div>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Assigned To:', 'assign_to_email', array("class"=>'col-sm-12')); ?>

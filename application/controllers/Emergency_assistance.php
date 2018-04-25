@@ -634,6 +634,10 @@ class Emergency_assistance extends CI_Controller {
 					$this->data['assign_to_name'] = $users[0]['first_name'] . " " . $users[0]['last_name'];
 					$this->data['assign_to_email'] = $users[0]['email'];
 				}
+				$this->data['created_email'] = '-'; 
+				if ($users = $this->users_model->search(array('id' => $case_details['created_by']))) {
+					$this->data['created_email'] = $users[0]['email'];
+				}
 				
 				// load dropdowns data
 				$this->data['country'] = $this->country_model->get_list(TRUE);
@@ -1717,8 +1721,12 @@ class Emergency_assistance extends CI_Controller {
 				if (($handle = fopen($tmp_name, "r")) !== FALSE) {
 					$i = 0;
 					while (($data = fgetcsv($handle, 10000)) !== FALSE) {
-						$i++;
 						$user_id = $data[0];
+						if ($user_id == 'user_id') {
+							// first title line
+							continue;
+						}
+						$i++;
 						$user = $this->users_model->get_by_id($user_id);
 						if (!$user || (strpos($user['groups'], Users_model::GROUP_EAC) <= 0)) {
 							$this->session->set_flashdata('error', "File data error at line " . $i . ", user isn't EAC.");
@@ -1733,6 +1741,10 @@ class Emergency_assistance extends CI_Controller {
 							$para['employee_id'] = (int)$user_id;
 							$para['schedule'] = $tmStr;
 							$para['date'] = $dt;
+							if ($rr = $this->schedule_model->search($para)) {
+								// there is same data already existed
+								continue;
+							}
 							$para['sphone'] = $sphone;
 							$para['created_by'] = $this->ion_auth->get_user_id();
 							$para['start_tm'] = $dt . " " . $shour . ":00:00";
