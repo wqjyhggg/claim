@@ -569,7 +569,7 @@ class Phone_model extends CI_Model {
 			foreach ($rt as $rc) {
 				$this->db->set('phonefile', $newurl);
 				$this->db->where('id', $rc['id']);
-				$this->db->update('ntake_form');
+				$this->db->update('intake_form');
 				$total++;
 			}
 		}
