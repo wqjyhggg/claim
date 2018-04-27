@@ -480,7 +480,7 @@ class Phone_model extends CI_Model {
 	}
 	
 	public function set_last_cron($dt, $page) {
-		$sql = "UPDATE phone_cron_last SET dt=".$this->db->escape($dt).", page=".$this->db->escape($page);
+		$sql = "UPDATE phone_cron_last SET dt=".$this->db->escape($dt).", page=".$this->db->escape($page).", tm=".$this->db->escape(date("Y-m-d H:i:s"));
 		$this->db->query($sql);
 	}
 	
