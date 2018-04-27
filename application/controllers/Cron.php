@@ -29,7 +29,7 @@ class Cron extends CI_Controller {
 		$req = '/api/cdr/'.$date."?items=100&currentpage=".$page;
 		$data = array();
 
-		$rt = $this->phone_model->sendRequest($req.$currentpage, $data, 'GET');
+		$rt = $this->phone_model->sendRequest($req, $data, 'GET');
 		$cnt = 0;
 		$calls = json_decode($rt, true);
 		foreach ($calls['rows'] as $call) {
@@ -40,7 +40,7 @@ class Cron extends CI_Controller {
 			$phone_id = $file['filename'];
 			if ( ! $this->phone_model->phone_existed($phone_id)) {
 				if ($this->phone_model->save_s3_file($call['recording_url'], $date."/".$filename)) {
-					$para = array('phone_id' => $phone_id, 'src' => $call['recording_url'], 'dst' => $date."/".$filename, 'dt' => $date, 'page' => $page);
+					$para = array('phone_id' => $phone_id, 'src' => $call['recording_url'], 'dst' => $date."/".$filename);
 					$this->phone_model->phone_cron_save($para);
 					echo "Save file : " . $date. "/" . $filename . "\n";
 					// Update local file name if is has
@@ -78,7 +78,7 @@ class Cron extends CI_Controller {
 				$page++;
 			} while ($cnt == 100);
 		}
-		$this->phone_model->set_last_cron($dt, $page);
+		$this->phone_model->set_last_cron($dt, $page - 1);
 	}
 
 	/*
