@@ -474,6 +474,25 @@ class Phone_model extends CI_Model {
 		return $this->phone_numbers;
 	}
 	
+	public function get_last_cron() {
+		$sql = "SELECT * FROM phone_cron_last";
+		return $this->db->query($sql)->row_array();
+	}
+	
+	public function set_last_cron($dt, $page) {
+		$sql = "UPDATE phone_cron_last SET dt=".$this->db->escape($dt).", page=".$this->db->escape($page);
+		$this->db->query($sql);
+	}
+	
+	public function phone_existed($phone_id) {
+		$sql = "SELECT * FROM phone_cron WHERE phone_id=".$this->db->escape($phone_id);
+		return $this->db->query($sql)->row_array();
+	}
+	
+	public function phone_cron_save($para) {
+		$this->db->insert('phone_cron', $para);
+	}
+	
 	public function get_today_list() {
 		$phonenumber = $this->ion_auth->get_user_info('phone');
 		

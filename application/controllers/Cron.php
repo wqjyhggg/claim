@@ -25,28 +25,60 @@ class Cron extends CI_Controller {
 	 * Daily job to save phone file
 	 * 5 3 * * * (/usr/bin/php /var/claim/index.php cron save_to_s3) >> /home/ubuntu/s3.log 2>&1
 	 */
+	private function do_save_to_s3($date, $page) {
+		$req = '/api/cdr/'.$date."?items=100&currentpage=".$page;
+		$data = array();
+
+		$rt = $this->phone_model->sendRequest($req.$currentpage, $data, 'GET');
+		$cnt = 0;
+		$calls = json_decode($rt, true);
+		foreach ($calls['rows'] as $call) {
+			$cnt++;
+			if (!isset($call['recording_url'])) continue;
+			$file = pathinfo($call['recording_url']);
+			$filename = $file['basename'];
+			$phone_id = $file['filename'];
+			if ( ! $this->phone_model->phone_existed($phone_id)) {
+				if ($this->phone_model->save_s3_file($call['recording_url'], $date."/".$filename)) {
+					$para = array('phone_id' => $phone_id, 'src' => $call['recording_url'], 'dst' => $date."/".$filename, 'dt' => $date, 'page' => $page);
+					$this->phone_model->phone_cron_save($para);
+					echo "Save file : " . $date. "/" . $filename . "\n";
+					// Update local file name if is has
+					if ($this->phone_model->update_file_url($call['recording_url'], base_url("phone/file/".$date."/".$filename))) {
+						echo "Update database : " . base_url("phone/file/".$date."/".$filename) . "\n";
+					}
+				}
+			}
+		}
+		return $cnt;
+	}
+	
 	public function save_to_s3() {
 		$this->valid();
 		
 		$this->load->model('phone_model');
 	
-		$date = date("Y-m-d", time() - 43200);
-		$req = '/api/cdr/'.$date;
-		$data = array();
-		$rt = $this->phone_model->sendRequest($req, $data, 'GET');
-		
-		$calls = json_decode($rt, true);
-		foreach ($calls['rows'] as $call) {
-			if (!isset($call['recording_url'])) continue;
-			$filename = basename($call['recording_url']);
-			if ($this->phone_model->save_s3_file($call['recording_url'], $date."/".$filename)) {
-				echo "Save file : " . $date. "/" . $filename . "\n";
-				// Update local file name if is has
-				if ($this->phone_model->update_file_url($call['recording_url'], base_url("phone/file/".$date."/".$filename))) {
-					echo "Update database : " . base_url("phone/file/".$date."/".$filename) . "\n";
-				}
-			}
+		$today = date("Y-m-d");
+		if ($last = $this->phone_model->get_last_cron()) {
+			$dt = $last['dt'];
+			$page = $last['page'];
+		} else {
+			$dt = $today;
+			$page = 1;
 		}
+		do {
+			$cnt = $this->do_save_to_s3($dt, $page);
+			$page++;
+		} while ($cnt == 100);
+		if ($today != $dt) {
+			$dt = $today;
+			$page = 1;
+			do {
+				$cnt = $this->do_save_to_s3($dt, $page);
+				$page++;
+			} while ($cnt == 100);
+		}
+		$this->phone_model->set_last_cron($dt, $page);
 	}
 
 	/*
