@@ -53,7 +53,7 @@
 							<?php echo form_label('Gender', 'gender', array("class" => 'col-sm-12')); ?>
 							<select name="gender" class="form-control">
 								<option value="male"  <?php if ($case_details["gender"] != 'female') { echo "selected"; } ?>>Male</option>
-								<option value="female"  <?php if ($case_details["gender"] != 'female') { echo "selected"; } ?>>Female</option>
+								<option value="female"  <?php if ($case_details["gender"] == 'female') { echo "selected"; } ?>>Female</option>
 							</select>
 						</div>
 						<div class="form-group col-sm-2">
@@ -1179,9 +1179,9 @@ $(document).ready(function() {
                $("textarea[name=insured_address]").val(data.plan_list[0].street_number+" "+data.plan_list[0].street_name);
                $("input[name=dob]").val((data.plan_list[0].birthday));  
                if(data.plan_list[0].gender == 'M')
-                   $("input[value=male]").prop('checked', true);
+                   $("select[name=gender]").value('male');
                else
-                   $("input[value=female]").prop('checked', true);
+                   $("select[name=gender]").value('female');
 
                $("input[name=street_no]").val((data.plan_list[0].street_number));
                $("input[name=street_name]").val((data.plan_list[0].street_name));
