@@ -35,6 +35,101 @@
 					<div class="form-group col-sm-3">
 						<label style="text-transform: capitalize;"><span>Package: </span><?php echo (isset($policy['package']) ? preg_replace('/_/', " ", $policy['package']) : ''); ?></label>
 					</div>
+					<?php if ($policy['package'] == 'all_inclusive') { ?>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;">Medical : $10,000,000</label>
+					</div>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;">AD&D : $100,000</label>
+					</div>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;">Flight Accident: $300,000</label>
+					</div>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;">Trip Cancellation and Interruption: $<?php echo number_format($policy['sum_insured'], 2); ?></label>
+					</div>
+					<?php if ($policy['free_cancel']) { ?>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;">Cancel trip for any reason</label>
+					</div>
+					<?php } ?>
+					<?php } else if (($policy['package'] == 'single_medical_plan') || ($policy['package'] == 'optional_plan')) { ?>
+					<?php     if ($policy['package'] == 'single_medical_plan') { ?>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;">Sum Insured: $10,000,000</label>
+					</div>
+					<?php     } ?>
+					<?php     if ($policy['ad_and_d_ck']) { ?>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;">AD & D : $<?php echo number_format($policy['ad_and_d_insured'], 2); ?></label>
+					</div>
+					<?php     } ?>
+					<?php     if ($policy['flight_accident_ck']) { ?>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;">Flight Accident : $<?php echo number_format($policy['flight_accident_insured'], 2); ?></label>
+					</div>
+					<?php     } ?>
+					<?php     if ($policy['trip_cancellation_ck']) { ?>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;">Trip Cancellation : $<?php echo number_format($policy['trip_cancellation_insured'], 2); ?></label>
+					</div>
+					<?php     } ?>
+					<?php } else if ($policy['package'] == 'annual_plan') { ?>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;">Selected days : <?php echo $policy['annual_plan_days']; ?></label>
+					</div>
+					<?php } ?>
+					<?php if ($policy['stable_condition']) { ?>
+					<div class="form-group col-sm-6">
+						<label style="text-transform: capitalize;"><?php echo ($policy['stable_condition'] == 1) ? 'Including' : 'Excluding'; ?> stable pre-existing condition coverage</label>
+					</div>
+					<?php } ?>
+					<?php if ($policy['questionnaire']) { ?>
+					<div class="form-group col-sm-6">
+						<label style="text-transform: capitalize;">
+							<span>With Questionnaire answers</span> 
+							<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>Question 1 : 
+								<?php if ($policy['question1'] == 4) { ?> 3 or more medications
+								<?php } else if ($policy['question1'] == 3) { ?> 2 medications
+								<?php } else if ($policy['question1'] == 2) { ?> 1 medication
+								<?php } else  { ?> none <?php } ?>
+								</span>
+							<?php if ($policy['question2']) { ?>
+							<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>Question 2 : 
+								<?php if ($policy['question2']) { ?>
+								<?php     if ($policy['question2'] == 2) { ?> Yes
+								<?php     } else  { ?> No <?php } ?> 
+								<?php } ?>
+								</span>
+							<?php if ($policy['question3']) { ?>
+							<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>Question 3 : 
+								<?php if ($policy['question3']) { ?>
+								<?php     if ($policy['question3'] == 3) { ?> 2 or more medical conditions
+								<?php     } else if ($policy['question3'] == 2) { ?> 1 medical condition
+								<?php     } else  { ?> none <?php } ?> 
+								<?php } ?>
+								</span>
+							<?php if ($policy['question4']) { ?>
+							<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>Question 4 : 
+								<?php if ($policy['question4']) { ?>
+								<?php     if ($policy['question4'] == 2) { ?> Yes
+								<?php     } else  { ?> No <?php } ?> 
+								<?php } ?>
+								</span>
+							<?php if ($policy['question5']) { ?>
+							<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>Question 5 : 
+								<?php if ($policy['question5']) { ?>
+								<?php     if ($policy['question2'] == 2) { ?> Yes
+								<?php     } else  { ?> No <?php } ?> 
+								<?php } ?>
+								</span>
+							<?php } // question5 ?>
+							<?php } // question4 ?>
+							<?php } // question3 ?>
+							<?php } // question2 ?>
+							<?php } // questionnaire ?>
+						</label>
+					</div>
 					<?php } ?>
 					<div class="clearfix"></div>
 					<div class="form-group col-sm-12">

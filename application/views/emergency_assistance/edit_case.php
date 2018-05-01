@@ -49,8 +49,17 @@
 								<?php echo form_error("insured_lastname"); ?>
 							</div>
 						</div>
-						<div class="form-group col-sm-3">
-							<?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-6')); ?><?php echo form_label(' (Age : ' . (($customer_ages>0) ? $customer_ages : '') . ")", 'dob', array("class"=>'col-sm-6')); ?>
+						<div class="form-group col-sm-2">
+							<div class="col-sm-12">
+								<?php echo form_label('&nbsp;', 'gender', array("class" => 'col-sm-12')); ?>
+								<?php echo form_radio("gender", "male", $case_details["gender"] == 'male', array('class' => 'setpremium')); ?> Male
+							</div>
+							<div class="col-sm-12">
+								<?php echo form_radio("gender", "female", $case_details["gender"] == 'female', array('class' => 'setpremium'));?> Female
+							</div>
+						</div>
+						<div class="form-group col-sm-2">
+							<?php echo form_label('Date of Birth:' . (($customer_ages>0) ? ' (Age: ' . $customer_ages . ' )' : ''), 'dob', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
 								<?php echo form_input("dob", $case_details["dob"], array("class"=>"form-control datepicker", 'placeholder'=>'Date of Birth')); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -1171,6 +1180,10 @@ $(document).ready(function() {
                $("input[name=insured_lastname]").val((data.plan_list[0].lastname));
                $("textarea[name=insured_address]").val(data.plan_list[0].street_number+" "+data.plan_list[0].street_name);
                $("input[name=dob]").val((data.plan_list[0].birthday));  
+               if(data.plan_list[0].gender == 'M')
+                   $("input[value=male]").prop('checked', true);
+               else
+                   $("input[value=female]").prop('checked', true);
 
                $("input[name=street_no]").val((data.plan_list[0].street_number));
                $("input[name=street_name]").val((data.plan_list[0].street_name));

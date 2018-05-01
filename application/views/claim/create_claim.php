@@ -27,11 +27,11 @@
 						<div class="col-sm-3">
 							<div class="col-sm-4">
 								<?php echo form_label('&nbsp;', 'gender', array("class" => 'col-sm-12')); ?>
-								<?php echo form_radio("gender", "male", $this->input->post("gender"), array('class' => 'setpremium')); ?> Male
+								<?php echo form_radio("gender", "male", "male" == $this->input->post("gender"), array('class' => 'setpremium')); ?> Male
 							</div>
 							<div class="col-sm-5">
 								<?php echo form_label('&nbsp;', 'gender', array("class" => 'col-sm-12')); ?>
-								<?php echo form_radio("gender", "female", $this->input->post("gender"), array('class' => 'setpremium'));?> Female
+								<?php echo form_radio("gender", "female", "female" == $this->input->post("gender"), array('class' => 'setpremium'));?> Female
 							</div>
 						</div>
 						<div class="col-sm-3">

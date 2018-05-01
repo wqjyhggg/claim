@@ -119,7 +119,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->form_validation->set_rules('phone_number', 'Phone', 'required|trim|min_length[4]|max_length[15]');
 			$this->form_validation->set_rules('post_code', 'Postal Code', 'required|trim|max_length[15]|min_length[4]');
 			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-			// $this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
+			$this->form_validation->set_rules('case_manager', 'Case Manager', 'required');
 			$this->form_validation->set_rules('relations', 'Relations', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 			$this->form_validation->set_rules('incident_date', 'Incident Date', 'required');
@@ -491,7 +491,7 @@ class Emergency_assistance extends CI_Controller {
 				$data['id'] = $id;
 				// insert values to database
 				$this->case_model->save($data);
-
+				
 				$new_case = $this->case_model->get_by_id($id);
 				
 				if ($new_case != $case_details) {
@@ -1040,9 +1040,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->load->model('case_model');
 			$this->load->model('claim_model');
 				
-			$policies = $this->api_model->get_policy(array(
-					'policy' => $policy 
-			));
+			$policies = $this->api_model->get_policy(array('policy' => $policy));
 			if ($policies) {
 				$this->data['policy'] = $policies[0];
 				$para = array();

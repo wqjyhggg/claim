@@ -77,7 +77,7 @@ class Case_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function post_search($post, $policies=array()) {
-		$where = "`case`.status = 'A'";
+		$where = "1 = 1";
 		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
 			$products = $this->ion_auth->get_users_products();
 			if ($products && (sizeof($products) > 0)) {
@@ -231,6 +231,7 @@ class Case_model extends CI_Model {
 		if (isset($indata['insured_lastname'])) $data['insured_lastname'] = $indata['insured_lastname'];
 		if (isset($indata['insured_address'])) $data['insured_address'] = $indata['insured_address'];
 		if (isset($indata['dob'])) $data['dob'] = $indata['dob'];
+		if (isset($indata['gender'])) $data['gender'] = $indata['gender'];
 		if (isset($indata['case_manager'])) $data['case_manager'] = $indata['case_manager'];
 		if (isset($indata['init_manager'])) $data['init_manager'] = $indata['init_manager'];
 		if (isset($indata['reserve_amount'])) $data['reserve_amount'] = $indata['reserve_amount'];
