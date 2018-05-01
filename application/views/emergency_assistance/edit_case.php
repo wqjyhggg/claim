@@ -50,13 +50,11 @@
 							</div>
 						</div>
 						<div class="form-group col-sm-2">
-							<div class="col-sm-12">
-								<?php echo form_label('&nbsp;', 'gender', array("class" => 'col-sm-12')); ?>
-								<?php echo form_radio("gender", "male", $case_details["gender"] == 'male', array('class' => 'setpremium')); ?> Male
-							</div>
-							<div class="col-sm-12">
-								<?php echo form_radio("gender", "female", $case_details["gender"] == 'female', array('class' => 'setpremium'));?> Female
-							</div>
+							<?php echo form_label('Gender', 'gender', array("class" => 'col-sm-12')); ?>
+							<select name="gender" class="form-control">
+								<option value="male"  <?php if ($case_details["gender"] != 'female') { echo "selected"; } ?>>Male</option>
+								<option value="female"  <?php if ($case_details["gender"] != 'female') { echo "selected"; } ?>>Female</option>
+							</select>
 						</div>
 						<div class="form-group col-sm-2">
 							<?php echo form_label('Date of Birth:' . (($customer_ages>0) ? ' (Age: ' . $customer_ages . ' )' : ''), 'dob', array("class"=>'col-sm-12')); ?>
