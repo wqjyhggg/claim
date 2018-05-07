@@ -46,7 +46,7 @@
 										$cases [] = $i;
 								?>
 								<tr <?php if($value['priority'] == 'HIGH') echo 'style="background-color:rgba(155, 243, 151, 0.44)"'; ?>>
-									<td><?php echo anchor('auth/edit_task/'.$value['id'], $value['id'], array('title'=>'Edit Task')); ?></td>
+									<td><?php echo anchor('auth/edit_task/'.$value['id'], $value['id'], array('title'=>'Edit Task')) . " (" . $value ['type'] . ")"; ?></td>
 									<td><?php echo $value['priority']; ?></td>
 									<td><?php echo anchor(($value['type']=='CLAIM'?'claim/claim_detail/'.$value['item_id']:'emergency_assistance/edit_case/'.$value['item_id']), $value['task_no'], array('title'=>'Item Details')) ?></td>
 									<td><?php echo $value['status']; ?></td>
