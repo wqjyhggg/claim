@@ -297,6 +297,7 @@ class Expenses_model extends CI_Model {
 						return 0;
 					}
 				}
+				if (empty($data['status'])) $data['status'] = self::EXPENSE_STATUS_Pending;
 				if (($cur['status'] != $data['status']) && ($cur['status'] != self::EXPENSE_STATUS_Paid)) {
 					$data['finalize_date'] = date("Y-m-d");
 				}
