@@ -225,7 +225,7 @@ class Claim extends CI_Controller {
 								'provider_name' => $array['expenses_claimed']['provider_name'][$key],
 								'referencing_physician' => $array['expenses_claimed']['referencing_physician'][$key],
 								'coverage_code' => $array['expenses_claimed']['coverage_code'][$key],
-								'diagnosis' => ''; // $array['expenses_claimed']['diagnosis'][$key],
+								'diagnosis' => '', // $array['expenses_claimed']['diagnosis'][$key],
 								'service_description' => $array['expenses_claimed']['service_description'][$key],
 								'date_of_service' => $array['expenses_claimed']['date_of_service'][$key],
 								'amount_billed_org' => $array['expenses_claimed']['amount_billed_org'][$key],
@@ -235,7 +235,7 @@ class Claim extends CI_Controller {
 								'amount_claimed_org' => $array['expenses_claimed']['amount_claimed_org'][$key],
 								'amount_claimed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_claimed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 								'pay_to' => $array['expenses_claimed']['payee'][$key],
-								'comment' => ''; // $array['expenses_claimed']['comment'][$key],
+								'comment' => '', // $array['expenses_claimed']['comment'][$key],
 								'status' => Expenses_model::EXPENSE_STATUS_Pending,
 								'created_by' => $this->ion_auth->get_user_id(),
 								'created' => date('Y-m-d H:i:s') 
