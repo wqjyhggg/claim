@@ -444,7 +444,7 @@
 									<?php if (! empty($expenses_claimed)) : ?>
 									<?php $this->load->model('expenses_model'); ?>
 									<?php foreach ( $expenses_claimed as $key => $value ) : ?>
-									<?php  if ($value['status'] === Expenses_model::EXPENSE_STATUS_Paid) { ?>
+									<?php  if (isset($value['status']) && ($value['status'] === Expenses_model::EXPENSE_STATUS_Paid)) { ?>
 									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
 										<div class="col-sm-3">
 											<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
