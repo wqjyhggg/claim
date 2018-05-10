@@ -878,6 +878,7 @@
 			<div class="col-sm-3">
 				<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class" => "form-control")); ?>
+				<?php echo form_hidden("expenses_claimed[id][]", 0); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
