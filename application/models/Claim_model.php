@@ -137,10 +137,14 @@ class Claim_model extends CI_Model {
 			if ($where) $where .= ' AND'; 
 			$where .= " claim.created >= " . $this->db->escape($post["created_from"]);
 		}
-			
+		
 		if (!empty($post["created_to"])) {
+			$created_to = trim($post["created_to"]);
+			if (strlen($created_to) == 10) {
+				$created_to .= " 23:59:59";
+			}
 			if ($where) $where .= ' AND'; 
-			$where .= " claim.created <= " . $this->db->escape($post["created_to"]);
+			$where .= " claim.created <= " . $this->db->escape($created_to);
 		}
 		
 		if (!$where) {

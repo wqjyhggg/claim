@@ -44,6 +44,22 @@
 						<?php echo form_input("insured_firstname", $this->input->get("insured_firstname"), array ("class" => "form-control", 'placeholder' => 'Insured First Name')); ?>
 					</div>
 					<div class="form-group col-sm-3">
+						<select name="assign_to" class="form-control">
+							<option value=""> -- Select EAC -- </option>
+							<?php foreach ($eacs as $rc):?>
+							<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("assign_to")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+					<div class="form-group col-sm-3">
+						<select name="case_manager" class="form-control">
+							<option value=""> -- Select Manager -- </option>
+							<?php foreach ($managers as $rc) :?>
+							<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("case_manager")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+					<div class="form-group col-sm-3">
 						<select name="status" class="form-control">
 							<option value="">-- Select Case Status --</option>
 							<?php foreach ($case_status as $key => $val):?>
@@ -51,16 +67,6 @@
 							<?php endforeach; ?>
 						</select>
 					</div>
-					<?php if (0) { ?>
-					<div class="form-group col-sm-3">
-						<select name="assigned_status" class="form-control">
-							<option value="">-- Select Assigned Status --</option>
-							<option value="assigned" <?php if ('assigned' == $this->input->get("assigned_status")) { echo "selected"; } ?>>Assigned</option>
-							<option value="unassigned" <?php if ('unassigned' == $this->input->get("assigned_status")) { echo "selected"; } ?>>Unassigned</option>
-						</select>
-					</div>
-					<?php } ?>
-					<div class="clearfix"></div>
 					<div class="form-group col-sm-3">
 						<?php echo form_label('My Task:', 'case_manager', array ("class" => 'col-sm-4')); ?>
 						<div class="form-group col-sm-8">
@@ -83,6 +89,7 @@
 						<button class="btn btn-primary" name="filter" value="case">Search</button>
 						<?php echo anchor("emergency_assistance/case_management", "Reset", array('class'=>'btn btn-info')); ?>
 					</div>
+					<div class="clearfix"></div>
 				</div>
 				<?php echo form_close(); ?>
 				<!-- search case filter end -->

@@ -869,6 +869,7 @@ class Emergency_assistance extends CI_Controller {
 			                                                               
 			// get login user id
 			$this->data['case_manager'] = $case_manager = $this->ion_auth->get_user_id();
+			$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
 			$this->data['priorities'] = $this->mytask_model->get_priorities();
 
 			// timing shifts array

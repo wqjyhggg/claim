@@ -57,7 +57,9 @@
 							<?php array_unshift($products, '-- Product --'); ?>
 							<?php echo form_dropdown ( "product_short", $products, $this->input->post ( "product_short" ), array ("class" => 'form-control') );?>
 						</div -->
-						<div class="form-group col-sm-3">
+						<input type="hidden" name="assign_to">
+						<input type="hidden" name="case_manager">
+						<!-- div class="form-group col-sm-3">
 							<?php echo form_label('EAC:', 'eac', array("class"=>'col-sm-12')); ?>
 							<select name="assign_to" class="form-control">
 								<option value=""> -- Select EAC -- </option>
@@ -65,8 +67,8 @@
 								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("assign_to")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
 								<?php endforeach; ?>
 							</select>
-						</div>
-						<div class="form-group col-sm-3">
+						</div -->
+						<!-- div class="form-group col-sm-3">
 							<?php echo form_label('Case Manager:', 'case', array("class"=>'col-sm-12')); ?>
 							<select name="case_manager" class="form-control">
 								<option value=""> -- Select Manager -- </option>
@@ -74,7 +76,7 @@
 								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("case_manager")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
 								<?php endforeach; ?>
 							</select>
-						</div>
+						</div -->
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Examiner:', 'claim_examiner', array("class"=>'col-sm-12')); ?>
 							<select name="claim_examiner" class="form-control">

@@ -54,11 +54,10 @@ class Claims extends CI_Controller {
 			$claims = array();
 			$this->data['records'] = array();
 			if ($para['scope'] != 'Case') {
-				$this->data['records'] = $this->expenses_model->get_report($para);
-				//echo "<pre>"; echo $this->db->last_query()."\n"; print_r($this->data['records']); die("\nXXXXXXXXXXXXXXXXX");
+				$this->data['records'] = $this->expenses_model->get_report($para, '', FALSE);
 			}
 			if ($para['scope'] != 'Claim') {
-				$cases = $this->case_model->get_report($para);
+				$cases = $this->case_model->get_report($para, FALSE);
 				if ($cases) {
 					$this->data['records'] = array_merge($this->data['records'], $cases);
 				}
@@ -109,10 +108,10 @@ class Claims extends CI_Controller {
 			$claims = array();
 			$records = array();
 			if ($para['scope'] != 'Case') {
-				$records = $this->expenses_model->get_report($para);
+				$records = $this->expenses_model->get_report($para, '', FALSE);
 			}
 			if ($para['scope'] != 'Claim') {
-				$cases = $this->case_model->get_report($para);
+				$cases = $this->case_model->get_report($para, FALSE);
 				if ($cases) {
 					$records = array_merge($records, $cases);
 				}
@@ -166,6 +165,7 @@ class Claims extends CI_Controller {
 									'Description of Service',
 									'Pay to Name',
 									'Decline Reason',
+									'Claim Status',
 			));
 
 			$t_amount_billed = $t_amt_payable = $t_recovery_amt = $t_reserve_amount = 0;
@@ -200,6 +200,7 @@ class Claims extends CI_Controller {
 									isset($value['service_description']) ? $value['service_description'] : '',
 									isset($value['pay_to']) ? $value['pay_to'] : '',
 									($value['status'] == 'D') ? $value['reason'] : '',
+									$value['status2'],
 						));
 			}
 			fputcsv($output, array(

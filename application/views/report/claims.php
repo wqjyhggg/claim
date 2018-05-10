@@ -109,6 +109,7 @@
 									<th>Description of Service</th>
 									<th>Pay to Name</th>
 									<th>Decline Reason</th>
+									<th>Claim Status</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -144,6 +145,7 @@
 									<td><?php echo isset($value['service_description']) ? $value['service_description'] : ''; ?></td>
 									<td><?php echo isset($value['pay_to']) ? $value['pay_to'] : ''; ?></td>
 									<td><?php echo ($value['status'] == 'D') ? $value['reason'] : ''; ?></td>
+									<td><?php echo $value['status2']; ?></td>
 								</tr>
 								<?php } ?>
 								<tr>
@@ -172,6 +174,7 @@
 									<td><?php echo sprintf("%0.2f", $t_amount_billed); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_amt_payable); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_reserve_amount); ?></td>
+									<td></td>
 									<td></td>
 									<td></td>
 									<td></td>
