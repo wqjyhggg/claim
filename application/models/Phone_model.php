@@ -37,7 +37,7 @@ class Phone_model extends CI_Model {
 	public $portt = 8080;
 	const SERVER_STR = 'phoneQ';
 	
-	private $phone_numbers = array('101','102','103','104','105','106','107','108','109');
+	private $phone_numbers = array('101','102','103','104','105','106','107','108','109','110','111','112');
 	
 	public function sendRequest($req, $data, $method = "POST") {
 		$http_header = array (
