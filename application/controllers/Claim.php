@@ -1104,7 +1104,7 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name', 'required');
 			// $this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
-			$this->form_validation->set_rules('case_no', 'Case No', 'is_unique[claim.case_no]');
+			//$this->form_validation->set_rules('case_no', 'Case No', 'is_unique[claim.case_no]');
 			//$this->form_validation->set_rules('school_name', 'School Name', 'required');
 			//$this->form_validation->set_rules('group_id', 'Group ID', 'required');
 			
