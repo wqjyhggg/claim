@@ -186,19 +186,45 @@ class Expenses_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function search($data, $limit=0, $offset=0, $orderby=array()) {
-		$this->db->select('SQL_CALC_FOUND_ROWS *', false);
-		$this->db->where($data);
+		$sql  = "SELECT SQL_CALC_FOUND_ROWS e.*,c.product_short,c.policy_no FROM expenses_claimed e ";
+			
+		$sql .= " JOIN claim c ON (e.claim_id= c.id)";
+		
+		$sql .= " WHERE e.status = " . $this->db->escape(Expenses_model::EXPENSE_STATUS_Approved);
+		
+		if (!empty($data['product_short'])) {
+			$sql .= " AND c.product_short = " . $this->db->escape($data['product_short']);
+		}
+		
+		if (!empty($data['last_update_from'])) {
+			$sql .= " AND e.last_update >= " . $this->db->escape($data['last_update_from']);
+		}
+		if (!empty($data['last_update_to'])) {
+			$sql .= " AND e.last_update <= " . $this->db->escape($data['last_update_to']);
+		}
+		if (!empty($data['claim_no'])) {
+			$sql .= " AND e.claim_no <= " . $this->db->escape($data['claim_no']);
+		}
+		if (!empty($data['created_from'])) {
+			$sql .= " AND e.created >= " . $this->db->escape($data['created_from']);
+		}
+		if (!empty($data['created_to'])) {
+			$sql .= " AND e.created <= " . $this->db->escape($data['created_to']);
+		}
+
 		if ($orderby) {
+			$sql .= " ORDER BY";
 			foreach ($orderby as $key => $val) {
-				$this->db->order_by($key, $val);
+				$sql .= " " . $key . " " . $val . ",";
 			}
+			$sql = substr($sql, 0, -1);
 		}
 		if ($offset) {
-			$this->db->limit($limit, $offset);
+			$sql .= " LIMIT " . $offset . ", " . $limit;
 		} else if ($limit) {
-			$this->db->limit($limit);
+			$sql .= " LIMIT " . $limit;
 		}
-		return $this->db->get('expenses_claimed')->result_array();
+		return $this->db->query($sql)->result_array();
 	}
 
 	public function last_rows() {

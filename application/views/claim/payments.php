@@ -69,6 +69,14 @@
 							</div>
 						</div>
 						<div class="col-sm-4">
+							<?php echo form_label('Product:', 'product_short', array("class"=>'col-sm-12')); ?>
+							<select name="product_short" class="form-control">
+								<option value="">--Select Product--</option>
+								<?php foreach ($products as $key => $val): ?>
+								<option value="<?php echo $key; ?>" <?php if ($key == $this->input->get("product_short")) { echo "selected"; } ?>><?php echo $val; ?></option>
+								<?php endforeach; ?>
+							</select>
+						
 							<label class="col-sm-12">&nbsp;</label>
 							<button class="btn btn-primary" name="filter" value="claim">Display Claim</button>
 						</div>

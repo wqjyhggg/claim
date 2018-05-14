@@ -1852,19 +1852,14 @@ class Claim extends CI_Controller {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			$this->load->model('expenses_model');
+			$this->load->model('product_model');
 			
 			$limit = 10;
 			$offset = $this->uri->segment(3);
 			
 			$this->data['export_para'] = '';
-			$para = array('status' => Expenses_model::EXPENSE_STATUS_Approved);
-			if ($this->input->get('last_update_from')) $para['last_update >='] = $this->input->get('last_update_from');
-			if ($this->input->get('last_update_to')) $para['last_update <='] = $this->input->get('last_update_to');
-			if ($this->input->get('claim_no_claim')) $para['claim_no'] = $this->input->get('claim_no_claim');
-			if ($this->input->get('created_from')) $para['created >='] = $this->input->get('created_from');
-			if ($this->input->get('created_to')) $para['created <='] = $this->input->get('created_to');
-
-			$this->data['items'] = $this->expenses_model->search($para, $limit, $offset);
+				
+			$this->data['items'] = $this->expenses_model->search($this->input->get(), $limit, $offset);
 			$config['total_rows'] = $this->expenses_model->last_rows();
 			$config['base_url'] = site_url('claim/payments');
 			$config['per_page'] = $limit;
@@ -1876,7 +1871,9 @@ class Claim extends CI_Controller {
 
 			$this->pagination->initialize($config); // initiaze pagination config
 
-			$this->data ['pagination'] = $this->pagination->create_links(); // create pagination links
+			$this->data['pagination'] = $this->pagination->create_links(); // create pagination links
+			
+			$this->data['products'] = $this->product_model->get_list();
 
 			$this->template->write('title', SITE_TITLE . ' - Payments', TRUE);
 			$this->template->write_view('content', 'claim/payments', $this->data);
@@ -1943,13 +1940,8 @@ class Claim extends CI_Controller {
 			$this->load->model('expenses_model');
 			
 			$para = array('status' => Expenses_model::EXPENSE_STATUS_Approved);
-			if ($this->input->get('last_update_from')) $para['last_update >='] = $this->input->get('last_update_from');
-			if ($this->input->get('last_update_to')) $para['last_update <='] = $this->input->get('last_update_to');
-			if ($this->input->get('claim_no_claim')) $para['claim_no'] = $this->input->get('claim_no_claim');
-			if ($this->input->get('created_from')) $para['created >='] = $this->input->get('created_from');
-			if ($this->input->get('created_to')) $para['created <='] = $this->input->get('created_to');
 
-			$items = $this->expenses_model->search($para);
+			$items = $this->expenses_model->search($this->input->get());
 			
 			header('Content-Type: text/csv; charset=utf-8');
 			header('Content-Disposition: attachment; filename=items.csv');
@@ -1964,6 +1956,9 @@ class Claim extends CI_Controller {
 					'claim_id', 
 					'claim_no', 
 					'claim_item_no', 
+					'policy_no', 
+					'insured_first_name', 
+					'insured_last_name', 
 					'invoice', 
 					'pay_to', 
 					'cheque',
@@ -1985,6 +1980,9 @@ class Claim extends CI_Controller {
 						$item['claim_id'],
 						$item['claim_no'],
 						$item['claim_item_no'],
+						$item['policy_no'],
+						$item['insured_first_name'],
+						$item['insured_last_name'],
 						$item['invoice'],
 						$item['pay_to'],
 						$item['cheque'],

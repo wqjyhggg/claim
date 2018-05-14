@@ -169,11 +169,11 @@
 									<td></td>
 									<td></td>
 									<td></td>
-									<td><?php echo sprintf("%0.2f", $t_recovery_amt); ?></td>
+									<td><?php echo sprintf("%0.2f", $t_reserve_amount); ?></td>
 									<td></td>
 									<td><?php echo sprintf("%0.2f", $t_amount_billed); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_amt_payable); ?></td>
-									<td><?php echo sprintf("%0.2f", $t_reserve_amount); ?></td>
+									<td><?php echo sprintf("%0.2f", $t_recovery_amt); ?></td>
 									<td></td>
 									<td></td>
 									<td></td>
