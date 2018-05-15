@@ -221,7 +221,7 @@ class Expenses_model extends CI_Model {
 	}
 	
 	public function payment_search($data, $limit=0, $offset=0, $orderby=array()) {
-		$sql  = "SELECT SQL_CALC_FOUND_ROWS e.*,c.product_short,c.policy_no FROM expenses_claimed e ";
+		$sql  = "SELECT SQL_CALC_FOUND_ROWS e.*,c.product_short,c.policy_no,c.insured_first_name,c.insured_last_name FROM expenses_claimed e ";
 			
 		$sql .= " JOIN claim c ON (e.claim_id= c.id)";
 		
