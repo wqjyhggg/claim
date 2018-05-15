@@ -192,8 +192,60 @@ class Expenses_model extends CI_Model {
 		
 		$sql .= " WHERE e.status = " . $this->db->escape(Expenses_model::EXPENSE_STATUS_Approved);
 		
-		if (!empty($data['product_short'])) {
-			$sql .= " AND c.product_short = " . $this->db->escape($data['product_short']);
+		if (!empty($data['created_to'])) {
+			$sql .= " AND e.created <= " . $this->db->escape($data['created_to']);
+		}
+		
+		if (!empty($data['id'])) {
+			$sql .= " AND e.id = '" . (int)$data['id'] . "'";
+		}
+		if (!empty($data['claim_id'])) {
+			$sql .= " AND e.claim_id = '" . (int)$data['claim_id'] . "'";
+		}
+		if (!empty($data['created_by'])) {
+			$sql .= " AND e.created_by = '" . (int)$data['created_by'] . "'";
+		}
+		if (!empty($data['claim_no'])) {
+			$sql .= " AND e.claim_no = " . $this->db->escape($data['claim_no']);
+		}
+		if (!empty($data['claim_item_no'])) {
+			$sql .= " AND e.claim_item_no = " . $this->db->escape($data['claim_item_no']);
+		}
+		if (!empty($data['case_no'])) {
+			$sql .= " AND e.case_no = " . $this->db->escape($data['case_no']);
+		}
+		if (!empty($data['claim_date'])) {
+			$sql .= " AND e.claim_date = " . $this->db->escape($data['claim_date']);
+		}
+		if (!empty($data['cellular'])) {
+			$sql .= " AND e.cellular = " . $this->db->escape($data['cellular']);
+		}
+		if (!empty($data['invoice'])) {
+			$sql .= " AND e.invoice = " . $this->db->escape($data['invoice']);
+		}
+		if (!empty($data['referencing_physician'])) {
+			$sql .= " AND e.referencing_physician = " . $this->db->escape($data['referencing_physician']);
+		}
+		if (!empty($data['coverage_code'])) {
+			$sql .= " AND e.coverage_code = " . $this->db->escape($data['coverage_code']);
+		}
+		if (!empty($data['date_of_service'])) {
+			$sql .= " AND e.date_of_service = " . $this->db->escape($data['date_of_service']);
+		}
+		if (!empty($data['pay_to'])) {
+			$sql .= " AND e.pay_to = " . $this->db->escape($data['pay_to']);
+		}
+		if (!empty($data['status'])) {
+			$sql .= " AND e.status = " . $this->db->escape($data['status']);
+		}
+		if (!empty($data['pay_date'])) {
+			$sql .= " AND e.pay_date = " . $this->db->escape($data['pay_date']);
+		}
+		if (!empty($data['finalize_date'])) {
+			$sql .= " AND e.finalize_date = " . $this->db->escape($data['finalize_date']);
+		}
+		if (!empty($data['updated_by'])) {
+			$sql .= " AND e.updated_by = '" . (int)$data['updated_by'] . "'";
 		}
 		
 		if (!empty($data['last_update_from'])) {
@@ -211,7 +263,7 @@ class Expenses_model extends CI_Model {
 		if (!empty($data['created_to'])) {
 			$sql .= " AND e.created <= " . $this->db->escape($data['created_to']);
 		}
-
+		
 		if ($orderby) {
 			$sql .= " ORDER BY";
 			foreach ($orderby as $key => $val) {
