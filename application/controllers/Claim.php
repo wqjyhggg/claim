@@ -967,7 +967,7 @@ class Claim extends CI_Controller {
 				$this->data['policy'] = $policy_info_arr[0];
 				
 				// get expenses climed items list
-				$this->data['items'] = $this->expenses_model->search(array('claim_id' => $claim['id']), 0, 0, array('date_of_service' => 'ASC'));
+				$this->data['items'] = $this->expenses_model->search2(array('claim_id' => $claim['id']), 0, 0, array('date_of_service' => 'ASC'));
 				$this->data['payinfo'] = $this->expenses_model->get_policy_payinfo($claim['policy_no']);
 				
 				// get claim items history

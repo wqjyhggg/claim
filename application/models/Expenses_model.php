@@ -185,7 +185,23 @@ class Expenses_model extends CI_Model {
 	 *        	search parameter
 	 * @return array result array, maybe null
 	 */
-	public function report($data, $limit=0, $offset=0, $orderby=array()) {
+	public function search($data, $limit=0, $offset=0, $orderby=array()) {
+		$this->db->select('SQL_CALC_FOUND_ROWS *', false);
+		$this->db->where($data);
+		if ($orderby) {
+			foreach ($orderby as $key => $val) {
+				$this->db->order_by($key, $val);
+			}
+		}
+		if ($offset) {
+			$this->db->limit($limit, $offset);
+		} else if ($limit) {
+			$this->db->limit($limit);
+		}
+		return $this->db->get('expenses_claimed')->result_array();
+	}
+	
+	public function search2($data, $limit=0, $offset=0, $orderby=array()) {
 		$this->db->select('SQL_CALC_FOUND_ROWS *', false);
 		$this->db->where($data);
 		if (empty($data['status'])) {
@@ -210,7 +226,7 @@ class Expenses_model extends CI_Model {
 		$sql .= " JOIN claim c ON (e.claim_id= c.id)";
 		
 		if (!empty($data['status'])) {
-			$sql .= " WHERE 1 = 1";
+			$sql .= " WHERE e.status=" . $this->db->escape($data['status']);;
 		} else {
 			$sql .= " WHERE e.status=" . $this->db->escape(Expenses_model::EXPENSE_STATUS_Approved);
 		}
