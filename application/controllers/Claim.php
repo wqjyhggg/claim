@@ -73,7 +73,7 @@ class Claim extends CI_Controller {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			// validate form input
-			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required|alpha_numeric_spaces');
+			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required|alpha_numeric_spaces');
 			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', 'alpha_numeric_spaces');
@@ -406,7 +406,7 @@ class Claim extends CI_Controller {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			// validate form input
-			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required|alpha_numeric_spaces');
+			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required|alpha_numeric_spaces');
 			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', 'alpha_numeric_spaces');
@@ -1100,7 +1100,7 @@ class Claim extends CI_Controller {
 			}
 				
 			// validate form input
-			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required|alpha_numeric_spaces');
+			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name', 'required');
 			// $this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
