@@ -185,12 +185,35 @@ class Expenses_model extends CI_Model {
 	 *        	search parameter
 	 * @return array result array, maybe null
 	 */
-	public function search($data, $limit=0, $offset=0, $orderby=array()) {
+	public function report($data, $limit=0, $offset=0, $orderby=array()) {
+		$this->db->select('SQL_CALC_FOUND_ROWS *', false);
+		$this->db->where($data);
+		if (empty($data['status'])) {
+			$this->db->where_in('status', array(self::EXPENSE_STATUS_Approved, self::EXPENSE_STATUS_Paid));
+		}
+		if ($orderby) {
+			foreach ($orderby as $key => $val) {
+				$this->db->order_by($key, $val);
+			}
+		}
+		if ($offset) {
+			$this->db->limit($limit, $offset);
+		} else if ($limit) {
+			$this->db->limit($limit);
+		}
+		return $this->db->get('expenses_claimed')->result_array();
+	}
+	
+	public function payment_search($data, $limit=0, $offset=0, $orderby=array()) {
 		$sql  = "SELECT SQL_CALC_FOUND_ROWS e.*,c.product_short,c.policy_no FROM expenses_claimed e ";
 			
 		$sql .= " JOIN claim c ON (e.claim_id= c.id)";
 		
-		$sql .= " WHERE e.status = " . $this->db->escape(Expenses_model::EXPENSE_STATUS_Approved);
+		if (!empty($data['status'])) {
+			$sql .= " WHERE 1 = 1";
+		} else {
+			$sql .= " WHERE e.status=" . $this->db->escape(Expenses_model::EXPENSE_STATUS_Approved);
+		}
 		
 		if (!empty($data['created_to'])) {
 			$sql .= " AND e.created <= " . $this->db->escape($data['created_to']);
@@ -234,9 +257,6 @@ class Expenses_model extends CI_Model {
 		}
 		if (!empty($data['pay_to'])) {
 			$sql .= " AND e.pay_to = " . $this->db->escape($data['pay_to']);
-		}
-		if (!empty($data['status'])) {
-			$sql .= " AND e.status = " . $this->db->escape($data['status']);
 		}
 		if (!empty($data['pay_date'])) {
 			$sql .= " AND e.pay_date = " . $this->db->escape($data['pay_date']);

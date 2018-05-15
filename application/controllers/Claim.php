@@ -1859,7 +1859,7 @@ class Claim extends CI_Controller {
 			
 			$this->data['export_para'] = '';
 				
-			$this->data['items'] = $this->expenses_model->search($this->input->get(), $limit, $offset);
+			$this->data['items'] = $this->expenses_model->payment_search($this->input->get(), $limit, $offset);
 			$config['total_rows'] = $this->expenses_model->last_rows();
 			$config['base_url'] = site_url('claim/payments');
 			$config['per_page'] = $limit;
@@ -1941,7 +1941,7 @@ class Claim extends CI_Controller {
 			
 			$para = array('status' => Expenses_model::EXPENSE_STATUS_Approved);
 
-			$items = $this->expenses_model->search($this->input->get());
+			$items = $this->expenses_model->payment_search($this->input->get());
 			
 			header('Content-Type: text/csv; charset=utf-8');
 			header('Content-Disposition: attachment; filename=items.csv');
