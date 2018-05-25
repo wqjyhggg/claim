@@ -1907,7 +1907,7 @@ class Claim extends CI_Controller {
 					$keyArr = array();
 					while (($data = fgetcsv($handle, 10000)) !== FALSE) {
 						if (empty($keyArr)) {
-							if (empty($keyArr['id'])) {
+							if (! in_array("id", $data)) {
 								$this->session->set_flashdata('error', "Not have id column.");
 								redirect('claim/payments', 'refresh');
 							}
