@@ -1916,7 +1916,13 @@ class Claim extends CI_Controller {
 						}
 						$para = array();
 						foreach ($keyArr as $key => $name) {
-							$para[$name] = $data[$key];
+							if (($name == 'claim_date') || ($name == 'date_of_service') || ($name == 'pay_date') || ($name == 'finalize_date')) {
+								$para[$name] = date("Y-m-d", strtotime($data[$key]));
+							} else if (($name == 'created') || ($name == 'last_update')) {
+								$para[$name] = date("Y-m-d H:i:s", strtotime($data[$key]));
+							} else {
+								$para[$name] = $data[$key];
+							}
 						}
 						if ($para) {
 							$this->expenses_model->save($para);
