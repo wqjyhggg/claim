@@ -232,7 +232,7 @@ class Expenses_model extends CI_Model {
 		}
 		
 		if (!empty($data['created_to'])) {
-			$sql .= " AND e.created <= " . $this->db->escape($data['created_to']);
+			$sql .= " AND e.created <= " . $this->db->escape($data['created_to']." 23:59:59");
 		}
 		
 		if (!empty($data['id'])) {
@@ -288,7 +288,7 @@ class Expenses_model extends CI_Model {
 			$sql .= " AND e.last_update >= " . $this->db->escape($data['last_update_from']);
 		}
 		if (!empty($data['last_update_to'])) {
-			$sql .= " AND e.last_update <= " . $this->db->escape($data['last_update_to']);
+			$sql .= " AND e.last_update <= " . $this->db->escape($data['last_update_to']." 23:59:59");
 		}
 		if (!empty($data['claim_no'])) {
 			$sql .= " AND e.claim_no <= " . $this->db->escape($data['claim_no']);
@@ -297,7 +297,7 @@ class Expenses_model extends CI_Model {
 			$sql .= " AND e.created >= " . $this->db->escape($data['created_from']);
 		}
 		if (!empty($data['created_to'])) {
-			$sql .= " AND e.created <= " . $this->db->escape($data['created_to']);
+			$sql .= " AND e.created <= " . $this->db->escape($data['created_to']." 23:59:59");
 		}
 		
 		if ($orderby) {
