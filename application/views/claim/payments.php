@@ -49,8 +49,8 @@
 							</div>
 						</div>
 						<div class="form-group col-sm-4">
-							<?php echo form_label('Claim Number:', 'claim_no_claim', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("claim_no_claim", $this->input->get("claim_no_claim"), array("class" => "form-control", 'placeholder' => 'Claim Number')); ?>
+							<?php echo form_label('Claim Number:', 'claim_no', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("claim_no", $this->input->get("claim_no"), array("class" => "form-control", 'placeholder' => 'Claim Number')); ?>
 						</div>
 					</div>
 					<div class="row">

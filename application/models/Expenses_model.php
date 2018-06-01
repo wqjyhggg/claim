@@ -291,7 +291,10 @@ class Expenses_model extends CI_Model {
 			$sql .= " AND e.last_update <= " . $this->db->escape($data['last_update_to']." 23:59:59");
 		}
 		if (!empty($data['claim_no'])) {
-			$sql .= " AND e.claim_no <= " . $this->db->escape($data['claim_no']);
+			$sql .= " AND e.claim_no = " . $this->db->escape($data['claim_no']);
+		}
+		if (!empty($data['product_short'])) {
+			$sql .= " AND c.product_short = " . $this->db->escape($data['product_short']);
 		}
 		if (!empty($data['created_from'])) {
 			$sql .= " AND e.created >= " . $this->db->escape($data['created_from']);
