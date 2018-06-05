@@ -1172,6 +1172,7 @@
 		var addr = $(this).closest("div").find("input[name='payees[address][]']");
 		var data = $.parseJSON(localStorage.getItem("policy_data"));
 		addr.val(data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+		remapping_payee();
 	})
 
    .on("click", ".remove-payee", function(){
@@ -1603,31 +1604,31 @@
    // to list payee in expenses payee
    .on("keyup", "input[name='payees[payee_name][]'],input[name='payees[address][]'],input[name='payees[bank][]'],input[name='payees[account_cheque][]']", function(){
       // build a list of all payees name here
+		remapping_payee();
+      //var html = "<option value=''>--Select Payee--</option>";
+      //$("input[name='payees[payee_name][]']").each(function(){
+      //   if($(this).val()) {
+      //       var p = $(this).parent().parent();
+      //       var v = p.find('input[type=radio]:checked').val();
+      //       if (v == 'cheque') {
+      //           v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
+      //       } else {
+      //           v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
+      //       }
+      //      html += '<option value="'+v+'">'+$(this).val()+'</option>';
+      //   }
+      //})
 
-      var html = "<option value=''>--Select Payee--</option>";
-      $("input[name='payees[payee_name][]']").each(function(){
-         if($(this).val()) {
-             var p = $(this).parent().parent();
-             var v = p.find('input[type=radio]:checked').val();
-             if (v == 'cheque') {
-                 v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
-             } else {
-                 v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
-             }
-            html += '<option value="'+v+'">'+$(this).val()+'</option>';
-         }
-      })
-
-      $("select[name='expenses_claimed[payee][]']").html(html);
+      //$("select[name='expenses_claimed[payee][]']").html(html);
 
       // select default payee
-      $("input[name='expenses_claimed[payee_id][]']").map(function(){
-         $(this).prev('select').val($(this).val());
-      })
+      //$("input[name='expenses_claimed[payee_id][]']").map(function(){
+      //   $(this).prev('select').val($(this).val());
+      //})
 
-      $("input[name='expenses_claimed[pay_to][]']").map(function(){
-         $(this).prev('select').val($(this).val());
-      })
+      //$("input[name='expenses_claimed[pay_to][]']").map(function(){
+      //   $(this).prev('select').val($(this).val());
+      //})
       
    })
 
@@ -1690,6 +1691,33 @@ $outer_select.each(function(){
 });
 
 $(".claim-items").html($("#claim-items").html())
+
+function remapping_payee() {
+    var html = "<option value=''>--Select Payee--</option>";
+    $("input[name='payees[payee_name][]']").each(function(){
+       if($(this).val()) {
+           var p = $(this).parent().parent();
+           var v = p.find('input[type=radio]:checked').val();
+           if (v == 'cheque') {
+               v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
+           } else {
+               v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
+           }
+          html += '<option value="'+v+'">'+$(this).val()+'</option>';
+       }
+    })
+
+    $("select[name='expenses_claimed[payee][]']").html(html);
+
+    // select default payee
+    $("input[name='expenses_claimed[payee_id][]']").map(function(){
+       $(this).prev('select').val($(this).val());
+    })
+
+    $("input[name='expenses_claimed[pay_to][]']").map(function(){
+       $(this).prev('select').val($(this).val());
+    })
+}
 
 // to validate expenses items
 function validate_form(){
