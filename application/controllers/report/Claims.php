@@ -223,6 +223,7 @@ class Claims extends CI_Controller {
 									'',
 									'',
 									'',
+									'',
 									sprintf("%0.2f", $t_reserve_amount),
 									'',
 									sprintf("%0.2f", $t_amount_billed),
