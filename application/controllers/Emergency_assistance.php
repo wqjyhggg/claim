@@ -84,10 +84,10 @@ class Emergency_assistance extends CI_Controller {
 	}
 	
 	function positive_number($num) {
-		if ($num > 0) {
+		if ($num >= 0) {
 			return TRUE;
 		}
-		$this->form_validation->set_message('positive_number', 'The %s field must great than 0');
+		$this->form_validation->set_message('positive_number', 'The %s field is mandatory');
 		return FALSE;
 	}
 	
@@ -291,6 +291,7 @@ class Emergency_assistance extends CI_Controller {
 				$case_details['created_by'] = '';
 				$case_details['street_no'] = '';
 				$case_details['street_name'] = '';
+				$case_details['suite_number'] = '';
 				$case_details['city'] = '';
 				$case_details['province'] = 'ON';
 				$case_details['post_code'] = '';
@@ -330,7 +331,7 @@ class Emergency_assistance extends CI_Controller {
 				$case_details['medical_notes'] = '';
 				$case_details['case_manager'] = '';
 				$case_details['priority'] = '';
-				$case_details['reserve_amount'] = '';
+				$case_details['reserve_amount'] = '-1';
 				
 				$this->data['policy'] = array();
 				if (empty($case_details['policy_no'])) {
@@ -342,6 +343,7 @@ class Emergency_assistance extends CI_Controller {
 							$case_details['product_short'] = $this->data['policy']['product_short'];
 							$case_details['street_no'] = $this->data['policy']['street_number'];
 							$case_details['street_name'] = $this->data['policy']['street_name'];
+							$case_details['suite_number'] = $this->data['policy']['suite_number'];
 							$case_details['city'] = $this->data['policy']['city'];
 							$case_details['province'] = $this->data['policy']['province2'];
 							$case_details['country2'] = $this->data['case_details']['country2'] = $this->data['policy']['country2'];
@@ -609,6 +611,7 @@ class Emergency_assistance extends CI_Controller {
 							$this->data['policy'] = $policies[0];
 							$this->data['case_details']['street_no'] = $this->data['policy']['street_number'];
 							$this->data['case_details']['street_name'] = $this->data['policy']['street_name'];
+							$this->data['case_details']['suite_number'] = $this->data['policy']['suite_number'];
 							$this->data['case_details']['province'] = $this->data['policy']['province2'];
 							$case_details['country2'] = $this->data['case_details']['country2'] = $this->data['policy']['country2'];
 							$case_details['country'] = $this->data['case_details']['country'] = $this->data['policy']['country2'];
@@ -2174,7 +2177,7 @@ class Emergency_assistance extends CI_Controller {
 		$intake_notes = array(
 				"Email: " . $email,
 				"Street No: " . $street_no,
-				"Street No: " . $street_name,
+				"Street Name: " . $street_name,
 				"City: " . $city,
 				"Province: " . $province 
 		);

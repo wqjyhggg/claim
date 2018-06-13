@@ -202,6 +202,7 @@ class Case_model extends CI_Model {
 		if (isset($indata['created_by'])) $data['created_by'] = $indata['created_by'];
 		if (isset($indata['street_no'])) $data['street_no'] = $indata['street_no'];
 		if (isset($indata['street_name'])) $data['street_name'] = $indata['street_name'];
+		if (isset($indata['suite_number'])) $data['suite_number'] = $indata['suite_number'];
 		if (isset($indata['city'])) $data['city'] = $indata['city'];
 		if (isset($indata['province'])) $data['province'] = $indata['province'];
 		if (isset($indata['country'])) $data['country'] = $indata['country'];

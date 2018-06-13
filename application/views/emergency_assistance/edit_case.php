@@ -116,10 +116,15 @@
 					</div>
 					<h4>Visiting Address</h4>
 					<div class="row">
-						<div class="form-group col-sm-4">
+						<div class="form-group col-sm-2">
 							<?php echo form_label('Street No.:', 'street_no', array("class"=>'col-sm-12')); ?>
 							<?php echo form_input("street_no", $case_details['street_no'], array("class"=>"form-control", 'placeholder'=>'Street No.')); ?>
 							<?php echo form_error("street_no"); ?>
+						</div>
+						<div class="form-group col-sm-2">
+							<?php echo form_label('Suite No.:', 'suite_number', array("class"=>'col-sm-12')); ?>
+							<?php echo form_input("suite_number", $case_details['suite_number'], array("class"=>"form-control", 'placeholder'=>'Suite No.')); ?>
+							<?php echo form_error("suite_number"); ?>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Street Name.:', 'street_name', array("class"=>'col-sm-12')); ?>
@@ -1185,6 +1190,7 @@ $(document).ready(function() {
 
                $("input[name=street_no]").val((data.plan_list[0].street_number));
                $("input[name=street_name]").val((data.plan_list[0].street_name));
+               $("input[name=suite_number]").val((data.plan_list[0].suite_number));
                $("input[name=city]").val((data.plan_list[0].city));
                $("input[name=province]").val((data.plan_list[0].province2));
                $("input[name=country]").val((data.plan_list[0].country2));

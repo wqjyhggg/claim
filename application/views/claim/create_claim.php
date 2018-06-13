@@ -986,7 +986,11 @@
 	.on("click", ".payee_policy_addr", function() {
 		var addr = $(this).closest("div").find("input[name='payees[address][]']");
 		var data = $.parseJSON(localStorage.getItem("policy_data"));
-		addr.val(data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+		if (data[0].suite_number) {
+			addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+		} else {
+			addr.val(data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+		}
 		remapping_payee();
 	})
 
@@ -1340,7 +1344,11 @@
                if($("input[name=same_policy]").is(":checked"))
                {
                   // fill all json values to address fields
-                  $("input[name=street_address]").val(data.plan_list[0].street_number+" "+data.plan_list[0].street_name);
+                  var addr = data.plan_list[0].street_number+" "+data.plan_list[0].street_name;
+                  if (data.plan_list[0].suite_number) {
+                      addr = data.plan_list[0].suite_number + "-"+data.plan_list[0].street_number+" "+data.plan_list[0].street_name;
+                  }
+                  $("input[name=street_address]").val(addr);
                   $("input[name=city]").val(data.plan_list[0].city);
                   $("input[name=province]").val(data.plan_list[0].province2);
                   $("input[name=telephone]").val(data.plan_list[0].phone1);
@@ -1388,7 +1396,12 @@
       if($(this).is(":checked") && $("input[name=policy_no]").val())
       {
          // fill all json values to address fields
-         $("input[name=street_address]").val(data[0].street_number+" "+data[0].street_name);
+         var addr = data[0].street_number+" "+data[0].street_name;
+         if (data[0].suite_number) {
+             addr = data[0].suite_number + "-"+data[0].street_number+" "+data[0].street_name;
+         }
+         
+         $("input[name=street_address]").val(addr);
          $("input[name=city]").val(data[0].city);
          $("input[name=province]").val(data[0].province2);
          $("input[name=telephone]").val(data[0].phone1);
