@@ -610,12 +610,12 @@
 											<?php echo form_hidden('expenses_claimed[id][]', $value['id']); ?>
 										</div>
 										<div class="col-sm-3">
-											<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
+											<?php echo form_label('Quantity:', 'provider_name', array("class" => 'col-sm-12')); ?>
 											<?php echo $value['provider_name']; ?>
 											<?php echo form_hidden("expenses_claimed[provider_name][]", $value ['provider_name']); ?>
 										</div>
 										<div class="col-sm-3">
-											<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
+											<?php echo form_label('Owner of the Item:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
 											<?php echo $value['referencing_physician']; ?>
 											<?php echo form_hidden("expenses_claimed[referencing_physician][]", $value ['referencing_physician']); ?>
 										</div>
@@ -632,12 +632,12 @@
 											<?php echo form_hidden("expenses_claimed[diagnosis][]", $value ['diagnosis']); ?>
 										</div -->
 										<div class="col-sm-3">
-											<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
+											<?php echo form_label('Description of Item Claimed:', 'service_description', array("class" => 'col-sm-12')); ?>
 											<?php echo $value['service_description']; ?>
 											<?php echo form_hidden("expenses_claimed[service_description][]", $value ['service_description']); ?>
 										</div>
 										<div class="col-sm-3">
-											<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
+											<?php echo form_label('Date Purchased:', 'date_of_service', array("class" => 'col-sm-12')); ?>
 											<?php echo $value['date_of_service']; ?>
 											<?php echo form_hidden("expenses_claimed[date_of_service][]", $value ['date_of_service']); ?>
 										</div>
@@ -650,13 +650,13 @@
 										<div class="clearfix"></div>
 
 										<div class="col-sm-3">
-											<?php echo form_label('Amount Client Paid:', 'amount_client_paid', array("class" => 'col-sm-12')); ?>
+											<?php echo form_label('Purchased Price:', 'amount_client_paid', array("class" => 'col-sm-12')); ?>
 											<?php echo $value['amount_client_paid_org']; ?>
 											<?php echo form_hidden("expenses_claimed[amount_client_paid_org][]", $value ['amount_client_paid_org']); ?>
 											<?php echo form_hidden("expenses_claimed[amount_client_paid][]", $value ['amount_client_paid']); ?>
 										</div>
 										<div class="col-sm-3">
-											<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
+											<?php echo form_label('Estimated Repair Cost or Actual Value:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
 											<?php echo $value["amount_claimed_org"]; ?>
 											<?php echo form_hidden("expenses_claimed[amount_claimed_org][]", $value ["amount_claimed_org"]); ?>
 											<?php echo form_hidden("expenses_claimed[amount_claimed][]", $value ["amount_claimed"]); ?>
@@ -688,16 +688,16 @@
 											<?php echo form_hidden('expenses_claimed[id][]', $value ['id']); ?>
 										</div>
 										<div class="col-sm-3">
-											<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
+											<?php echo form_label('Quantity:', 'provider_name', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed[provider_name][]", $value ['provider_name'], array("class" => "form-control required")); ?>
 										</div>
 										<div class="col-sm-3">
-											<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed[referencing_physician][]", $value ['referencing_physician'], array("class" => "form-control")); ?>
+											<?php echo form_label('Owner of the Item:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("expenses_claimed[referencing_physician][]", $value ['referencing_physician'], array("class" => "form-control required")); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
-											<select name="expenses_claimed[coverage_code][]" class="form-control required">
+											<select name="expenses_claimed[coverage_code][]" class="form-control ">
 												<option value="0">-- Select Coverage Code --</option>
 												<?php foreach ($expenses_list as $key => $val): ?>
 												<option value="<?php echo $key; ?>" <?php if ($key == $value ["coverage_code"]) { echo "selected"; } ?>><?php echo $val; ?></option>
@@ -711,29 +711,29 @@
 											<?php echo form_input("expenses_claimed[diagnosis][]", $value ['diagnosis'], array("class" => "form-control autocomplete_field required")); ?>
 										</div -->
 										<div class="col-sm-3">
-											<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
+											<?php echo form_label('Description of Item Claimed:', 'service_description', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed[service_description][]", $value ['service_description'], array("class" => "form-control required")); ?>
 										</div>
 										<div class="col-sm-3">
-											<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
+											<?php echo form_label('Date Purchased:', 'date_of_service', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed[date_of_service][]", $value ['date_of_service'], array("class" => "form-control  datepicker required")); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Amount Billed:', 'amount_billed_org', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed[amount_billed_org][]", $value ['amount_billed_org'], array("class" => "form-control required")); ?>
+											<?php echo form_input("expenses_claimed[amount_billed_org][]", $value ['amount_billed_org'], array("class" => "form-control ")); ?>
 											<?php echo form_hidden("expenses_claimed[amount_billed][]", $value ['amount_billed']); ?>
 											<?php echo form_error("amount_billed_org"); ?>
 										</div>
 										<div class="clearfix"></div>
 
 										<div class="col-sm-3">
-											<?php echo form_label('Amount Client Paid:', 'amount_client_paid_org', array("class" => 'col-sm-12')); ?>
+											<?php echo form_label('Purchased Price:', 'amount_client_paid_org', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed[amount_client_paid_org][]", $value ['amount_client_paid_org'], array("class" => "form-control required")); ?>
 											<?php echo form_hidden("expenses_claimed[amount_client_paid][]", $value ['amount_client_paid']); ?>
 											<?php echo form_error("amount_client_paid_org"); ?>
 										</div>
 										<div class="col-sm-3">
-											<?php echo form_label('Amount Claimed:', 'amount_claimed_org', array("class" => 'col-sm-12')); ?>
+											<?php echo form_label('Estimated Repair Cost or Actual Value:', 'amount_claimed_org', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed[amount_claimed_org][]", $value ["amount_claimed_org"], array("class" => "form-control required")); ?>
 											<?php echo form_hidden("expenses_claimed[amount_claimed][]", $value ["amount_claimed"]); ?>
 											<?php echo form_error("amount_claimed_org"); ?>
@@ -1036,16 +1036,16 @@
 				<?php echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class" => "form-control")); ?>
 			</div>
 			<div class="col-sm-3">
-				<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
+				<?php echo form_label('Quantity:', 'provider_name', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[provider_name][]", $this->input->post("provider_name"), array("class" => "form-control required")); ?>
 			</div>
 			<div class="col-sm-3">
-				<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[referencing_physician][]", $this->input->post("referencing_physician"), array("class" => "form-control")); ?>
+				<?php echo form_label('Owner of the Item:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
+				<?php echo form_input("expenses_claimed[referencing_physician][]", $this->input->post("referencing_physician"), array("class" => "form-control required")); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
-				<select name="expenses_claimed[coverage_code][]" class="form-control required">
+				<select name="expenses_claimed[coverage_code][]" class="form-control ">
 					<option value="0">-- Select Coverage Code --</option>
 					<?php foreach ($expenses_list as $key => $val): ?>
 					<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post("coverage_code")) { echo "selected"; } ?>><?php echo $val; ?></option>
@@ -1059,11 +1059,11 @@
 				<?php echo form_input("expenses_claimed[diagnosis][]", $this->input->post("diagnosis"), array("class" => "form-control autocomplete_field required")); ?>
 			</div -->
 			<div class="col-sm-3">
-				<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
+				<?php echo form_label('Description of Item Claimed:', 'service_description', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[service_description][]", $this->input->post("service_description"), array("class" => "form-control required")); ?>
 			</div>
 			<div class="col-sm-3">
-				<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
+				<?php echo form_label('Date Purchased:', 'date_of_service', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[date_of_service][]", $this->input->post("date_of_service"), array("class" => "form-control  datepicker required")); ?>
 			</div>
 			<div class="col-sm-3">
@@ -1074,12 +1074,12 @@
 			<div class="clearfix"></div>
 
 			<div class="col-sm-3">
-				<?php echo form_label('Amount Client Paid:', 'amount_client_paid', array("class" => 'col-sm-12')); ?>
+				<?php echo form_label('Purchased Price:', 'amount_client_paid', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[amount_client_paid_org][]", $this->input->post("amount_client_paid_org"), array("class" => "form-control required")); ?>
 				<?php echo form_hidden("expenses_claimed[amount_client_paid][]", $this->input->post("amount_client_paid")); ?>
 			</div>
 			<div class="col-sm-3">
-				<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
+				<?php echo form_label('Estimated Repair Cost or Actual Value:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[amount_claimed_org][]", $this->input->post("amount_claimed_org"), array("class" => "form-control required")); ?>
 				<?php echo form_hidden("expenses_claimed[amount_claimed][]", $this->input->post("amount_claimed")); ?>
 			</div>
@@ -1321,7 +1321,12 @@
 	.on("click", ".payee_policy_addr", function() {
 		var addr = $(this).closest("div").find("input[name='payees[address][]']");
 		var data = $.parseJSON(localStorage.getItem("policy_data"));
-		addr.val(data[0].street_number+" "+data[0].street_name + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+		if (data[0].suite_number) {
+			addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+		} else {
+			addr.val(data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+		}
+		remapping_payee();
 	})
 
    .on("click", ".remove-payee", function(){
@@ -1753,31 +1758,32 @@
    // to list payee in expenses payee
    .on("keyup", "input[name='payees[payee_name][]'],input[name='payees[address][]'],input[name='payees[bank][]'],input[name='payees[account_cheque][]']", function(){
       // build a list of all payees name here
+		remapping_payee();
 
-      var html = "<option value=''>--Select Payee--</option>";
-      $("input[name='payees[payee_name][]']").each(function(){
-         if($(this).val()) {
-             var p = $(this).parent().parent();
-             var v = p.find('input[type=radio]:checked').val();
-             if (v == 'cheque') {
-                 v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
-             } else {
-                 v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
-             }
-            html += '<option value="'+v+'">'+$(this).val()+'</option>';
-         }
-      })
+      //var html = "<option value=''>--Select Payee--</option>";
+      //$("input[name='payees[payee_name][]']").each(function(){
+      //   if($(this).val()) {
+      //       var p = $(this).parent().parent();
+      //       var v = p.find('input[type=radio]:checked').val();
+      //       if (v == 'cheque') {
+      //           v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
+      //       } else {
+      //           v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
+      //       }
+      //      html += '<option value="'+v+'">'+$(this).val()+'</option>';
+      //   }
+      //})
 
-      $("select[name='expenses_claimed[payee][]']").html(html);
+      //$("select[name='expenses_claimed[payee][]']").html(html);
 
       // select default payee
-      $("input[name='expenses_claimed[payee_id][]']").map(function(){
-         $(this).prev('select').val($(this).val());
-      })
+      //$("input[name='expenses_claimed[payee_id][]']").map(function(){
+      //   $(this).prev('select').val($(this).val());
+      //})
 
-      $("input[name='expenses_claimed[pay_to][]']").map(function(){
-          $(this).prev('select').val($(this).val());
-       })
+      //$("input[name='expenses_claimed[pay_to][]']").map(function(){
+      //    $(this).prev('select').val($(this).val());
+      // })
        
    })
 
@@ -1840,6 +1846,33 @@ $outer_select.each(function(){
 });
 
 $(".claim-items").html($("#claim-items").html())
+
+function remapping_payee() {
+    var html = "<option value=''>--Select Payee--</option>";
+    $("input[name='payees[payee_name][]']").each(function(){
+       if($(this).val()) {
+           var p = $(this).parent().parent();
+           var v = p.find('input[type=radio]:checked').val();
+           if (v == 'cheque') {
+               v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
+           } else {
+               v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
+           }
+          html += '<option value="'+v+'">'+$(this).val()+'</option>';
+       }
+    })
+
+    $("select[name='expenses_claimed[payee][]']").html(html);
+
+    // select default payee
+    $("input[name='expenses_claimed[payee_id][]']").map(function(){
+       $(this).prev('select').val($(this).val());
+    })
+
+    $("input[name='expenses_claimed[pay_to][]']").map(function(){
+       $(this).prev('select').val($(this).val());
+    })
+}
 
 // to validate expenses items
 function validate_form(){

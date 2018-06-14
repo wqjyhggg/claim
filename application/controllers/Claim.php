@@ -681,12 +681,13 @@ class Claim extends CI_Controller {
 					// send success message
 					$this->session->set_flashdata('success', "Claim successfully created");
 	
-					if ($this->input->post('Examine') == 'Examine')
+					if ($this->input->post('Examine') == 'Examine') {
 						// redirect them to the examine claim page
 						redirect("claim/examine_claim/$record_id");
-						else
-							// redirect them to the claim page
-							redirect("claim/claim_detail/$record_id");
+					} else {
+						// redirect them to the claim page
+						redirect("claim/claim_detail/$record_id");
+					}
 			} else {
 				$this->load->model('api_model');
 				$this->load->model('country_model');

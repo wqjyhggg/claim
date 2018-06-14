@@ -590,7 +590,7 @@
 									</div>
 									<div class="col-sm-3">
 										<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
-										<select name="expenses_claimed[coverage_code][]" class="form-control required">
+										<select name="expenses_claimed[coverage_code][]" class="form-control">
 											<option value="0">-- Select Coverage Code --</option>
 											<?php foreach ($expenses_list as $key1 => $val): ?>
 											<option value="<?php echo $key1; ?>" <?php if ($key1 == $arr["coverage_code"][$key]) { echo "selected"; } ?>><?php echo $val; ?></option>
@@ -604,7 +604,7 @@
 										<?php echo form_input("expenses_claimed[diagnosis][]", $arr['diagnosis'][$key], array("class" => "form-control autocomplete_field required")); ?>
 									</div -->
 									<div class="col-sm-3">
-										<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
+										<?php echo form_label('Diagnosis:', 'service_description', array("class" => 'col-sm-12')); ?>
 										<?php echo form_input("expenses_claimed[service_description][]", $arr['service_description'][$key], array("class" => "form-control required")); ?>
 									</div>
 									<div class="col-sm-3">
@@ -620,14 +620,14 @@
 									<div class="clearfix"></div>
 
 									<div class="col-sm-3">
-										<?php echo form_label('Amount Client Paid:', 'amount_client_paid_org', array("class" => 'col-sm-12')); ?>
+										<?php echo form_label('Amount Paid:', 'amount_client_paid_org', array("class" => 'col-sm-12')); ?>
 										<?php echo form_input("expenses_claimed[amount_client_paid_org][]", $arr['amount_client_paid_org'][$key], array("class" => "form-control required")); ?>
 										<?php echo form_hidden("expenses_claimed[amount_client_paid][]", $arr['amount_client_paid'][$key]); ?>
 										<?php echo form_error("amount_client_paid_org"); ?>
 									</div>
 									<div class="col-sm-3">
 										<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("expenses_claimed[amount_claimed_org][]", $arr["amount_claimed_org"][$key], array("class" => "form-control required")); ?>
+										<?php echo form_input("expenses_claimed[amount_claimed_org][]", $arr["amount_claimed_org"][$key], array("class" => "form-control ")); ?>
 										<?php echo form_hidden("expenses_claimed[amount_claimed][]", $arr["amount_claimed"][$key]); ?>
 										<?php echo form_error("amount_claimed_org"); ?>
 									</div>
@@ -882,7 +882,7 @@
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
-				<select name="expenses_claimed[coverage_code][]" class="form-control required">
+				<select name="expenses_claimed[coverage_code][]" class="form-control ">
 					<option value="0">-- Select Coverage Code --</option>
 					<?php foreach ($expenses_list as $key => $val): ?>
 					<option value="<?php echo $key; ?>"><?php echo $val; ?></option>
@@ -894,7 +894,7 @@
 				<?php echo form_input("expenses_claimed[diagnosis][]", '', array("class" => "form-control autocomplete_field required")); ?>
 			</div -->
 			<div class="col-sm-3">
-				<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>
+				<?php echo form_label('Diagnosis:', 'service_description', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[service_description][]", '', array("class" => "form-control required")); ?>
 			</div>
 			<div class="col-sm-3">
@@ -908,14 +908,14 @@
 				<?php echo form_error("amount_billed_org"); ?>
 			</div>
 			<div class="col-sm-3">
-				<?php echo form_label('Amount Client Paid:', 'amount_client_paid_org', array("class" => 'col-sm-12')); ?>
+				<?php echo form_label('Amount Paid:', 'amount_client_paid_org', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[amount_client_paid_org][]", '', array("class" => "form-control required")); ?>
 				<?php echo form_hidden("expenses_claimed[amount_client_paid][]", ''); ?>
 				<?php echo form_error("amount_client_paid_org"); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Amount Claimed:', 'amount_claimed_org', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[amount_claimed_org][]", '', array("class" => "form-control required")); ?>
+				<?php echo form_input("expenses_claimed[amount_claimed_org][]", '', array("class" => "form-control ")); ?>
 				<?php echo form_hidden("expenses_claimed[amount_claimed][]", ''); ?>
 				<?php echo form_error("amount_claimed_org"); ?>
 			</div>
@@ -1096,7 +1096,12 @@
 	.on("click", ".payee_policy_addr", function() {
 		var addr = $(this).closest("div").find("input[name='payees[address][]']");
 		var data = $.parseJSON(localStorage.getItem("policy_data"));
-		addr.val(data[0].street_number+" "+data[0].street_name + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+		if (data[0].suite_number) {
+			addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+		} else {
+			addr.val(data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+		}
+		remapping_payee();
 	})
 
    .on("click", ".remove-payee", function(){
@@ -1446,7 +1451,11 @@
                if($("input[name=same_policy]").is(":checked"))
                {
                   // fill all json values to address fields
-                  $("input[name=street_address]").val(data.plan_list[0].street_number+" "+data.plan_list[0].street_name);
+                  var addr = data.plan_list[0].street_number+" "+data.plan_list[0].street_name;
+                  if (data.plan_list[0].suite_number) {
+                      addr = data.plan_list[0].suite_number + "-"+data.plan_list[0].street_number+" "+data.plan_list[0].street_name;
+                  }
+                  $("input[name=street_address]").val(addr);
                   $("input[name=city]").val(data.plan_list[0].city);
                   $("input[name=province]").val(data.plan_list[0].province2);
                   $("input[name=telephone]").val(data.plan_list[0].phone1);
@@ -1456,7 +1465,7 @@
                }
                }
             } else {
-               alert("Sorry1, policy information does not exists, please check policy no and try again");
+               alert("Sorry, policy information does not exists, please check policy no and try again");
                $("input[name=policy_no]").val('Unknown - ' + $("input[name=policy_no]").val());
 
                $("input[name=policy_info]").val('');
@@ -1494,7 +1503,12 @@
       if($(this).is(":checked") && $("input[name=policy_no]").val())
       {
          // fill all json values to address fields
-         $("input[name=street_address]").val(data[0].street_number+" "+data[0].street_name);
+         var addr = data[0].street_number+" "+data[0].street_name;
+         if (data[0].suite_number) {
+             addr = data[0].suite_number + "-"+data[0].street_number+" "+data[0].street_name;
+         }
+         
+         $("input[name=street_address]").val(addr);
          $("input[name=city]").val(data[0].city);
          $("input[name=province]").val(data[0].province2);
          $("input[name=telephone]").val(data[0].phone1);
@@ -1544,21 +1558,22 @@
    // to list payee in expenses payee
    .on("keyup", "input[name='payees[payee_name][]'],input[name='payees[address][]'],input[name='payees[bank][]'],input[name='payees[account_cheque][]']", function(){
       // build a list of all payees name here
-      var html = "<option value=''>--Select Payee--</option>";
-      $("input[name='payees[payee_name][]']").each(function(){
-         if($(this).val()) {
-             var p = $(this).parent().parent();
-             var v = p.find('input[type=radio]:checked').val();
-             if (v == 'cheque') {
-                 v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
-             } else {
-                 v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
-             }
-            html += '<option value="'+v+'">'+$(this).val()+'</option>';
-         }
-      })
+		remapping_payee();
+      //var html = "<option value=''>--Select Payee--</option>";
+      //$("input[name='payees[payee_name][]']").each(function(){
+      //   if($(this).val()) {
+      //       var p = $(this).parent().parent();
+      //       var v = p.find('input[type=radio]:checked').val();
+      //       if (v == 'cheque') {
+      //           v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
+      //       } else {
+      //           v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
+      //       }
+      //      html += '<option value="'+v+'">'+$(this).val()+'</option>';
+      //   }
+      //})
 
-      $("select[name='expenses_claimed[payee][]']").html(html);
+      //$("select[name='expenses_claimed[payee][]']").html(html);
    })
 
    // to check unique payee name
@@ -1731,6 +1746,32 @@ function validate_form(){
    return true;
 }
 
+function remapping_payee() {
+	var html = "<option value=''>--Select Payee--</option>";
+	$("input[name='payees[payee_name][]']").each(function(){
+	   if($(this).val()) {
+	       var p = $(this).parent().parent();
+	       var v = p.find('input[type=radio]:checked').val();
+	       if (v == 'cheque') {
+	           v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
+	       } else {
+	           v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
+	       }
+	      html += '<option value="'+v+'">'+$(this).val()+'</option>';
+	   }
+	})
+
+	$("select[name='expenses_claimed[payee][]']").html(html);
+
+    // select default payee
+    $("input[name='expenses_claimed[payee_id][]']").map(function(){
+       $(this).prev('select').val($(this).val());
+    })
+
+    $("input[name='expenses_claimed[pay_to][]']").map(function(){
+       $(this).prev('select').val($(this).val());
+    })
+}
 
 // outer_custom_comment
 </script>
