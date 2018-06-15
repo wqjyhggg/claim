@@ -199,7 +199,7 @@ class Claims extends CI_Controller {
 									sprintf("%0.2f", $value['recovery_amt']),
 									isset($value['service_description']) ? $value['service_description'] : '',
 									isset($value['pay_to']) ? $value['pay_to'] : '',
-									($value['status'] == 'D') ? $value['reason'] : '',
+									empty($value['reason']) ? '' : $value['reason'],
 									$value['status2'],
 						));
 			}

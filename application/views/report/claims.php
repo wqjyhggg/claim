@@ -144,7 +144,7 @@
 									<td><?php echo sprintf("%0.2f", $value['recovery_amt']); ?></td>
 									<td><?php echo isset($value['service_description']) ? $value['service_description'] : ''; ?></td>
 									<td><?php echo isset($value['pay_to']) ? $value['pay_to'] : ''; ?></td>
-									<td><?php echo ($value['status'] == 'D') ? $value['reason'] : ''; ?></td>
+									<td><?php echo empty($value['reason']) ? '' : $value['reason']; ?></td>
 									<td><?php echo $value['status2']; ?></td>
 								</tr>
 								<?php } ?>
