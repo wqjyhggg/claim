@@ -46,12 +46,12 @@ class Auth extends CI_Controller {
 			);
 
 			$limit = $this->limit;
-			$offset = $this->uri->segment(3);
+			$offset = $this->uri->segment(4);
 			
 			$this->data['finished'] = (int)$this->session->userdata('finished');
 			$this->data['finish_url'] = base_url('auth/setfinish');
 			$this->data['case_only_url'] = base_url('auth/mytasks/CASE');
-			$this->data['claim_only_url'] = base_url('auth/mytasks/CLAIM');;
+			$this->data['claim_only_url'] = base_url('auth/mytasks/CLAIM');
 				
 			$this->data['records'] = $this->mytask_model->get_mytask($para, $limit, $offset);
 			$config['total_rows'] = $this->mytask_model->last_rows();
@@ -72,9 +72,9 @@ class Auth extends CI_Controller {
 				$this->data['records'][$key]['assign_name'] = $user['email'];
 			}
 			
-			$config['base_url'] = current_url();
+			$config['base_url'] = base_url('auth/mytasks/' . (empty($type) ? '0' : $type));
 			$config['per_page'] = $limit;
-			$config['first_url'] = current_url() . '?' . http_build_query($this->input->get());
+			$config['first_url'] = $config['base_url'] . '?' . http_build_query($this->input->get());
 			if (count($this->input->get()) > 0)	$config ['suffix'] = '?' . http_build_query($this->input->get(), '', "&");
 			$this->pagination->initialize($config); // initiaze pagination config
 			$this->data ['pagination'] = $this->pagination->create_links(); // create pagination links
