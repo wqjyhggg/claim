@@ -212,6 +212,10 @@ class Mytask_model extends CI_Model {
 		if (!$this->ion_auth->in_group(Users_model::GROUP_ADMIN)) {
 			$sql .= " AND t.user_id='".$this->ion_auth->get_user_id()."'";
 		}
+
+		if (!empty($para['type'])) {
+			$sql .= "  AND t.type=" . $this->db->escape($para['type']);
+		}
 		
 		$orderby = array();
 		$order = "DESC";

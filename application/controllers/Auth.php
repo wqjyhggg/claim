@@ -27,7 +27,7 @@ class Auth extends CI_Controller {
 	}
 	
 	// redirect if needed, otherwise display the my tasks list
-	public function mytasks() {
+	public function mytasks($type='') {
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
@@ -39,6 +39,7 @@ class Auth extends CI_Controller {
 
 			// if sorting enabled
 			$para = array(
+					'type' => $type,
 					'finished' => (int)$this->session->userdata('finished'),
 					'field' => $this->input->get("field"),
 					'order' => $this->input->get("order")
@@ -49,7 +50,9 @@ class Auth extends CI_Controller {
 			
 			$this->data['finished'] = (int)$this->session->userdata('finished');
 			$this->data['finish_url'] = base_url('auth/setfinish');
-			
+			$this->data['case_only_url'] = base_url('auth/mytasks/CASE');
+			$this->data['claim_only_url'] = base_url('auth/mytasks/CLAIM');;
+				
 			$this->data['records'] = $this->mytask_model->get_mytask($para, $limit, $offset);
 			$config['total_rows'] = $this->mytask_model->last_rows();
 			

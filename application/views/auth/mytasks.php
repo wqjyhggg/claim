@@ -13,6 +13,8 @@
 						My Tasks!<small></small>
 					</h2>
 					<div class='pull-right'><input type="checkbox" id="finished_input" <?php echo ($finished ? 'checked' : '');?>> Finished Task</div>
+					<div class='pull-right'><a href="<?php echo $case_only_url; ?>" class="btn btn-info" role="button">Case Only</a></div>
+					<div class='pull-right'><a href="<?php echo $claim_only_url; ?>" class="btn btn-info" role="button">Claim Only</a></div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
