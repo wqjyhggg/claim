@@ -72,9 +72,9 @@ class Auth extends CI_Controller {
 				$this->data['records'][$key]['assign_name'] = $user['email'];
 			}
 			
-			$config['base_url'] = site_url('auth/mytasks');
+			$config['base_url'] = current_url();
 			$config['per_page'] = $limit;
-			$config['first_url'] = $config ['base_url'] . '?' . http_build_query($this->input->get());
+			$config['first_url'] = current_url() . '?' . http_build_query($this->input->get());
 			if (count($this->input->get()) > 0)	$config ['suffix'] = '?' . http_build_query($this->input->get(), '', "&");
 			$this->pagination->initialize($config); // initiaze pagination config
 			$this->data ['pagination'] = $this->pagination->create_links(); // create pagination links
