@@ -136,6 +136,10 @@
 						<label style="text-transform: capitalize;"><span>Notes: </span></label> <?php echo isset($policy['note']) ? $policy['note'] : ''; ?>
 					</div>
 				</div>
+				<br>
+				<div class="row">
+					<div class="col-sm-12"></div>
+				</div>
 				<?php if(!empty($cases)) : ?>
 				<div class="table-responsive">
 					<table class="table table-hover table-bordered">

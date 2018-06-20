@@ -121,15 +121,15 @@
 							<?php echo form_input("street_no", $case_details['street_no'], array("class"=>"form-control", 'placeholder'=>'Street No.')); ?>
 							<?php echo form_error("street_no"); ?>
 						</div>
-						<div class="form-group col-sm-2">
-							<?php echo form_label('Suite No.:', 'suite_number', array("class"=>'col-sm-12')); ?>
-							<?php echo form_input("suite_number", $case_details['suite_number'], array("class"=>"form-control", 'placeholder'=>'Suite No.')); ?>
-							<?php echo form_error("suite_number"); ?>
-						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Street Name.:', 'street_name', array("class"=>'col-sm-12')); ?>
 							<?php echo form_input("street_name", $case_details["street_name"], array("class"=>"form-control", 'placeholder'=>'Street Name.')); ?>
 							<?php echo form_error("street_name"); ?>
+						</div>
+						<div class="form-group col-sm-2">
+							<?php echo form_label('Suite No.:', 'suite_number', array("class"=>'col-sm-12')); ?>
+							<?php echo form_input("suite_number", $case_details['suite_number'], array("class"=>"form-control", 'placeholder'=>'Suite No.')); ?>
+							<?php echo form_error("suite_number"); ?>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('City:', 'city', array("class"=>'col-sm-12')); ?>
