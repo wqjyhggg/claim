@@ -238,7 +238,7 @@
 							Group Insurance
 						</div>
 						<div class="form-group col-sm-6">
-							<label>Name and Address of Insurance Company : </label><?php echo isset($exinfo["group_insurance"]) ? $exinfo["group_insurance"] : ''; ?>
+							<label>Name and Address of Insurance Company : </label><?php echo isset($exinfo["group_insurance_company"]) ? $exinfo["group_insurance_company"] : ''; ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<label>Policy # : </label><?php echo isset($exinfo["group_insurance_policy"]) ? $exinfo["group_insurance_policy"] : ''; ?>
