@@ -996,6 +996,7 @@
 
    .on("click", ".remove-payee", function(){
       $(this).parent("div").parent("div").remove();
+      remapping_payee();
    })
 
    // show email/print function

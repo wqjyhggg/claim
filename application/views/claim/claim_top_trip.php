@@ -1425,30 +1425,32 @@
          }
       }
 
+      remapping_payee();
+      
       // settings to reload payees list on expenses items
-      var html = "<option value=''>--Select Payee--</option>";
-      $("input[name='payees[payee_name][]']").each(function(){
-         if($(this).val())
-            html += '<option value="'+$(this).val()+'">'+$(this).val()+'</option>';
-      })
+      //var html = "<option value=''>--Select Payee--</option>";
+      //$("input[name='payees[payee_name][]']").each(function(){
+      //   if($(this).val())
+      //      html += '<option value="'+$(this).val()+'">'+$(this).val()+'</option>';
+      //})
 
-      $("select[name='expenses_claimed[payee][]']").html(html);
+      //$("select[name='expenses_claimed[payee][]']").html(html);
 
       // select default payee
-      $("input[name='expenses_claimed[payee_id][]']").map(function(){
-         $(this).prev('select').val($(this).val());
-      })
+      //$("input[name='expenses_claimed[payee_id][]']").map(function(){
+      //   $(this).prev('select').val($(this).val());
+      //})
 
-      $("input[name='expenses_claimed[pay_to][]']").map(function(){
-         $(this).prev('select').val($(this).val());
-      })
+      //$("input[name='expenses_claimed[pay_to][]']").map(function(){
+      //   $(this).prev('select').val($(this).val());
+      //})
       
       // remap payment_type names to avoide errors
-      $count = 0;
-      $(".payee-data .row").map(function(){
-         $count++;
-         $(this).find('input[name^=payment_type]').attr('name', 'payment_type_'+$count);
-      })
+      //$count = 0;
+      //$(".payee-data .row").map(function(){
+      //   $count++;
+      //   $(this).find('input[name^=payment_type]').attr('name', 'payment_type_'+$count);
+      //})
    })
 
    // show email/print function
