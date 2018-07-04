@@ -293,7 +293,7 @@ class Api extends CI_Controller {
 			
 			$data['created'] = date('c');
 			$data['created_by'] = 0;
-			$data['status'] = Claim_model::STATUS_Processing;
+			$data['status'] = Claim_model::STATUS_Applied;
 			$data['assign_to'] = $this->mytask_model->get_auto_assign_examiner_id();
 			
 			if (empty($error)) {
@@ -398,22 +398,30 @@ class Api extends CI_Controller {
 				}
 				$id = $this->claim_model->save($data);
 				if ($id) {
-					// settings for my task section for case manager
+					$assign_to = $data['assign_to'];
+					if (empty($assign_to)) {
+						$assign_to = $this->mytask_model->get_auto_assign_examiner_id();
+					}
+					
 					$this->load->model('mytask_model');
+					// settings for my task section for case manager
 					$task_data = array(
-						'user_id'=>0,
-						'item_id'=>$id,
-						'task_no'=>$claim_no,
-						'category'=>'Claims',
-						'type'=>'CLAIM',
-						'priority'=>'Normal',
-						'created_by'=>0,
-						'created'=>date('Y-m-d H:i:s'),
-						'user_type'=>'claimsmanager'
-						);
+							'user_id' => $assign_to,
+							'item_id' => $id,
+							'task_no' => $claim_no,
+							'category' => Mytask_model::CATEGORY_CLAIMS,
+							'type' => Mytask_model::TASK_TYPE_CLAIM,
+							'due_date' => date("Y-m-d", time() + 86400),
+							'due_time' => date("H:i:s", time() + 86400),
+							'priority' => Mytask_model::PRIORITY_LOW,
+							'status' => Mytask_model::STATUS_ASSIGNED,
+							'created_by' => 0,
+							'created' => date('Y-m-d H:i:s'),
+							'user_type' => Mytask_model::USER_TYPE_EXAM
+					);
 					// insert values to database
 					$this->mytask_model->save($task_data);
-
+						
 					$rdata['claim_no'] = $claim_no;
 					$rdata['id'] = $id;
 				} else {

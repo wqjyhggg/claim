@@ -16,6 +16,7 @@ class Claim_model extends CI_Model {
 	const STATUS_Recovered='Recovered';
 	const STATUS_Appealed='Appealed';
 	const STATUS_Exceptional='Exceptional';
+	const STATUS_Applied='Applied';
 	
 	/**
 	 * Generate claim no if there is none
@@ -44,6 +45,7 @@ class Claim_model extends CI_Model {
 //				'Recovered' => self::STATUS_Recovered,
 				'Appealed' => self::STATUS_Appealed,
 //				'Exceptional' => self::STATUS_Exceptional,
+				'Applied' => self::STATUS_Applied,
 		);
 		
 		if (empty($need_empty)) unset($arr[0]);
@@ -170,7 +172,7 @@ class Claim_model extends CI_Model {
 	 */
 	public function search($data, $count=-1, $limit=-1, $sortby=array()) {
 		$products = FALSE;
-		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EXAMINER))) {
 			if ($this->ion_auth->get_user_id()) {
 				$products = $this->ion_auth->get_users_products();
 			}
