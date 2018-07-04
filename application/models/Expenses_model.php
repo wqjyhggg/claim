@@ -414,7 +414,13 @@ class Expenses_model extends CI_Model {
 						return 0;
 					}
 				}
-				if (empty($data['status'])) $data['status'] = self::EXPENSE_STATUS_Pending;
+				if (empty($data['status'])) {
+					if (empty($cur['status'])) {
+						$data['status'] = self::EXPENSE_STATUS_Pending;
+					} else {
+						$data['status'] = $cur['status'];
+					}
+				}
 				if (($cur['status'] != $data['status']) && ($cur['status'] != self::EXPENSE_STATUS_Paid)) {
 					$data['finalize_date'] = date("Y-m-d");
 				}
