@@ -161,7 +161,8 @@ class Api extends CI_Controller {
 				$ncl['id'] = $cl['id'];
 				$ncl['claim_no'] = $cl['claim_no'];
 				$ncl['status'] = $cl['status'];
-				$ncl['claim_date'] = $cl['apply_date'];
+				//$ncl['claim_date'] = $cl['apply_date'];
+				$ncl['claim_date'] = substr($cl['created'], 0, 10);
 				$ncl['insured_first_name'] = $cl['insured_first_name'];
 				$ncl['insured_last_name'] = $cl['insured_last_name'];
 				$ncl['dob'] = $cl['dob'];

@@ -91,6 +91,10 @@ class Case_model extends CI_Model {
 			$where .= ' AND `case`.case_no=' . $this->db->escape($post["case_no"]);
 		}
 
+		if (!empty($post["claim_no"])) {
+			$where .= ' AND `case`.claim_no=' . $this->db->escape($post["claim_no"]);
+		}
+
 		if (!empty($post["policy_no"])) {
 			$where .= ' AND `case`.policy_no=' . $this->db->escape($post["policy_no"]);
 		}
@@ -140,7 +144,6 @@ class Case_model extends CI_Model {
 		$sql .= " LEFT JOIN users u2 ON u2.id = `case`.case_manager";
 		if ($where) $sql .= " WHERE ". $where;
 		$sql .= " ORDER BY `case`.id DESC";
-
 		return $this->db->query($sql)->result_array();
 	}
 
