@@ -809,8 +809,6 @@ class Claim extends CI_Controller {
 					if ($key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf"))
 						$data[$key] = $value;
 				}
-				$data['created'] = date('Y-m-d H:i:s');
-				$data['created_by'] = $this->ion_auth->get_user_id();
 				
 				// upload claim pdf files to server
 				$files = @$_FILES['files_multi'];
@@ -1129,8 +1127,6 @@ class Claim extends CI_Controller {
 						$data["exinfo"] = json_encode($value);
 					}
 				}
-				$data['created'] = date('Y-m-d H:i:s');
-				$data['created_by'] = $this->ion_auth->get_user_id();
 				
 				// upload claim pdf files to server
 				$files = @$_FILES['files_multi'];
