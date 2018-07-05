@@ -271,6 +271,21 @@
 									<label><span>School Phone : </span></label> <span class="institution_phone"><?php echo (isset($policy['institution_phone']) ? $policy['institution_phone'] : ''); ?></span>
 								</div>
 							</div>
+							<?php if (isset($policy['product_short']) && (($policy['product_short'] == 'OPL') || ($policy['product_short'] == 'JFR'))) { ?>
+							<div class="row">
+								<div class="form-group col-sm-6">
+								<?php if ($policy['stable_condition'] == 1) { ?>
+									<span>Including stable pre-existing condition coverage</span>
+								<?php } else if ($policy['stable_condition'] == 2) { ?>
+									<span>Including stable pre-existing condition coverage</span>
+								<?php } ?>
+								</div>
+								<div class="form-group col-sm-3">
+								</div>
+								<div class="form-group col-sm-3">
+								</div>
+							</div>
+							<?php } ?>
 						</fieldset>
 					</div>
 				</div>
