@@ -154,6 +154,7 @@ class Api extends CI_Controller {
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('claim_model');
+			$this->load->model('expenses_model');
 			$claims = $this->claim_model->search(array('policy_no' => $this->api['policy'], 'insured_first_name' => $this->api['firstname'], 'insured_last_name' => $this->api['lastname'], 'dob' => $this->api['birthday']));
 			$rdata['claims'] = array();
 			foreach ($claims as $cl) {
@@ -182,6 +183,7 @@ class Api extends CI_Controller {
 				$ncl['received'] = isset($amt['received']) ? (float)$amt['received'] : 0;
 				$ncl['payable'] = isset($amt['payable']) ? (float)$amt['payable'] : 0;
 				$ncl['exceptional'] = isset($amt['exceptional']) ? (float)$amt['exceptional'] : 0;
+				$ncl['items'] = $this->expenses_model->search(array('claim_id' => $cl['id']));
 				$rdata['claims'][] = $ncl;
 			}
 		}
