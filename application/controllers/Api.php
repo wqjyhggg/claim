@@ -296,7 +296,7 @@ class Api extends CI_Controller {
 			$data['created'] = date('c');
 			$data['created_by'] = 0;
 			$data['status'] = Claim_model::STATUS_Applied;
-			$data['assign_to'] = $this->mytask_model->get_auto_assign_examiner_id();
+			$data['assign_to'] = 29; // $this->mytask_model->get_auto_assign_examiner_id();
 			
 			if (empty($error)) {
 				$id = $data['id'] = $this->master_model->get_id(Master_model::TYPE_CLAIM);
@@ -402,7 +402,7 @@ class Api extends CI_Controller {
 				if ($id) {
 					$assign_to = $data['assign_to'];
 					if (empty($assign_to)) {
-						$assign_to = $this->mytask_model->get_auto_assign_examiner_id();
+						$assign_to = 29; // $this->mytask_model->get_auto_assign_examiner_id();
 					}
 					
 					$this->load->model('mytask_model');
