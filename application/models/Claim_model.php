@@ -91,7 +91,7 @@ class Claim_model extends CI_Model {
 	 */
 	public function post_search($post, $policies) {
 		$products = FALSE;
-		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EXAMINER))) {
 			$products = $this->ion_auth->get_users_products();
 		}
 		
