@@ -292,7 +292,11 @@ class Api extends CI_Controller {
 			$data['medication_2'] = $this->input->post('medication_2');
 			$data['medication_date_3'] = $this->input->post('medication_date_3');
 			$data['medication_3'] = $this->input->post('medication_3');
-			
+			$data['exinfo_type'] = $this->input->post('exinfo_type');
+			if ($data['exinfo_type']) {
+				$data['exinfo'] = json_encode($this->input->post('exinfo'));
+			}
+
 			$data['created'] = date('c');
 			$data['created_by'] = 0;
 			$data['status'] = Claim_model::STATUS_Applied;
