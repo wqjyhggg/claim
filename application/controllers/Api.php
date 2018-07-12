@@ -183,7 +183,11 @@ class Api extends CI_Controller {
 				$ncl['received'] = isset($amt['received']) ? (float)$amt['received'] : 0;
 				$ncl['payable'] = isset($amt['payable']) ? (float)$amt['payable'] : 0;
 				$ncl['exceptional'] = isset($amt['exceptional']) ? (float)$amt['exceptional'] : 0;
-				$ncl['items'] = $this->expenses_model->search(array('claim_id' => $cl['id']));
+				$items = $this->expenses_model->search(array('claim_id' => $cl['id']));
+				foreach ($items as $key => $val) {
+					$items[$key]['diagnosis'] = $items[$key]['service_description'];
+				}
+				$ncl['items'] = $items;
 				$rdata['claims'][] = $ncl;
 			}
 		}
