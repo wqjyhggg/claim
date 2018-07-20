@@ -150,7 +150,7 @@
 							<label>Telephone : </label><?php echo $claim['telephone']; ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Fax : </label><?php echo $exinfo['fax']; ?>
+							<label>Fax : </label><?php echo isset($exinfo['fax']) ? $exinfo['fax'] : ''; ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<label>Email : </label><?php echo $claim['email']; ?>

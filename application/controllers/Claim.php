@@ -955,7 +955,7 @@ class Claim extends CI_Controller {
 					$flist = explode(',', $claim['files']);
 					foreach ( $flist as $fn ) {
 						if (empty($fn)) continue;
-						$this->data['claim_files'][$fn] = base_url('upload/claim_files/' . $claim['id'] . "/" . $fn);
+						$this->data['claim_files'][$fn] = base_url('assets/uploads/claim_files/' . $claim['id'] . "/" . $fn);
 					}
 				}
 				
