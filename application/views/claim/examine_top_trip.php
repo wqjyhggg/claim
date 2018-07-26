@@ -130,7 +130,7 @@
 							<label>Second Insured Birthday : </label><?php echo $exinfo['dob2']; ?>
 						</div>
 	
-						<h4>Address in Canada </h4>
+						<h4 style="margin-left: 10px;">Address in Canada </h4>
 						<div class="form-group col-sm-3">
 							<label>Street Address : </label><?php echo $claim['street_address']; ?>
 						</div>
@@ -207,7 +207,7 @@
 						</div>
 						<div class="clearfix"></div>
 
-						<h4>Name and Address of patient’s usual Family Physician</h4>
+						<h4 style="margin-left: 10px;">Name and Address of patient’s usual Family Physician</h4>
 						<div class="col-sm-12">
 							<div class="form-group col-sm-3">
 								<label>Name : </label><?php echo $claim['physician_name']; ?>
