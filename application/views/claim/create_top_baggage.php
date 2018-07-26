@@ -76,7 +76,7 @@
 						<?php echo form_hidden("apply_date", $this->input->post("apply_date")); ?>
 						<?php echo form_hidden("arrival_date", $this->input->post("arrival_date")); ?>
 
-						<h4>Address in Canada</h4>
+						<h4 class="subTitle">Address in Canada</h4>
 						<div class="col-sm-12">
 							<div class="input-group col-sm-3" style="margin-bottom: 10px">
 								<?php echo form_checkbox("same_policy", "Y", $this->input->post("same_policy"), array('class' => 'setpremium', 'style' => 'margin-left:10px')); ?>  Same with policy

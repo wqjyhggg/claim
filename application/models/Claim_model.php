@@ -16,7 +16,7 @@ class Claim_model extends CI_Model {
 	const STATUS_Recovered='Recovered';
 	const STATUS_Appealed='Appealed';
 	const STATUS_Exceptional='Exceptional';
-	const STATUS_Applied='Applied';
+	const STATUS_Applied='Eclaim';
 	
 	/**
 	 * Generate claim no if there is none
@@ -45,7 +45,7 @@ class Claim_model extends CI_Model {
 //				'Recovered' => self::STATUS_Recovered,
 				'Appealed' => self::STATUS_Appealed,
 //				'Exceptional' => self::STATUS_Exceptional,
-				'Applied' => self::STATUS_Applied,
+				'Eclaim' => self::STATUS_Applied,
 		);
 		
 		if (empty($need_empty)) unset($arr[0]);

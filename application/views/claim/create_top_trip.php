@@ -125,7 +125,7 @@
 							<?php echo form_error("guardian_phone"); ?>
 						</div>
 
-						<h4>Address in Canada</h4>
+						<h4 class="subTitle">Address in Canada</h4>
 
 						<div class="col-sm-12">
 							<div class="input-group col-sm-3" style="margin-bottom: 10px">
@@ -333,7 +333,7 @@
 							</div>
 						</div>
 
-						<h4>Name and Address of any other physician who may have treated the patient in the last 12 months</h4>
+						<h4 class="subTitle"> Name and Address of any other physician who may have treated the patient in the last 12 months</h4>
 						<div class="col-sm-12">
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Name:', 'physician_name_canada', array("class" => 'col-sm-12')); ?>

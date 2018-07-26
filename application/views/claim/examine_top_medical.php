@@ -140,7 +140,7 @@
 							?>
 						</div>
 
-						<h4>Address in Canada </h4>
+						<h4 style="margin-left: 10px;">Address in Canada </h4>
 						<div class="form-group col-sm-3">
 							<label>Street Address : </label><?php echo $claim['street_address']; ?>
 						</div>
@@ -373,13 +373,13 @@
 									$total_payable += (float)$value['amt_payable'];
 									$total_this_payable += (float)$value['amt_payable'];
 								?>
-									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_coverage_code="<?php echo nl2br($expenses_list[$value['coverage_code']]) ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable='<?php echo $value['amt_payable'] ?>' item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to='<?php echo nl2br($value['pay_to']) ?>' item_comment='<?php echo nl2br(($value['reason']!='Other') ? $value['reason'] : $value['reason_other']) ?>'>
+									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_coverage_code="<?php echo isset($expenses_list[$value['coverage_code']]) ? nl2br($expenses_list[$value['coverage_code']]) : nl2br($value['coverage_code']); ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable='<?php echo $value['amt_payable'] ?>' item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to='<?php echo nl2br($value['pay_to']) ?>' item_comment='<?php echo nl2br(($value['reason']!='Other') ? $value['reason'] : $value['reason_other']) ?>'>
 										<td><?php echo form_checkbox("items", $value['id'], FALSE); ?></td>
 										<td><?php echo $value['invoice']; ?></td>
 										<td><?php echo $value['service_description']; ?></td>
 										<td><?php echo $value['date_of_service']; ?></td>
 										<td><?php $payArr= explode(":", $value['pay_to']); echo empty($payArr[1]) ? '' : $payArr[1]; ?></td>
-										<td><?php echo $expenses_list[$value['coverage_code']]; ?></td>
+										<td><?php echo isset($expenses_list[$value['coverage_code']]) ? $expenses_list[$value['coverage_code']] : $value['coverage_code']; ?></td>
 										<!-- td><?php echo $value['diagnosis']; ?></td -->
 										<td><?php echo $value['amount_billed']?$value['amount_billed']:0; ?></td>
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
@@ -616,7 +616,7 @@
 										<td><?php echo $value['invoice']; ?></td>
 										<td><?php echo $value['service_description']; ?></td>
 										<td><?php echo $value['date_of_service']; ?></td>
-										<td><?php echo $expenses_list[$value['coverage_code']]; ?></td>
+										<td><?php echo isset($expenses_list[$value['coverage_code']]) ? $expenses_list[$value['coverage_code']] : $value['coverage_code']; ?></td>
 										<!-- td><?php echo $value['diagnosis']; ?></td -->
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
@@ -1437,3 +1437,10 @@ $outer_select.each(function(){
 });
 
 </script>
+
+<style>
+	.x_content h4 {
+		border-bottom: 2px solid #1f3e21;
+		padding-bottom: 10px;
+	}
+</style>
