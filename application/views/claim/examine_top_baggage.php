@@ -143,7 +143,7 @@
 						</div>
 
 
-						<h4>Address in Canada</h4>
+						<h4 style="margin-left: 10px;">Address in Canada</h4>
 						<div class="form-group col-sm-3">
 							<label>Street Address : </label><?php echo $claim['street_address']; ?>
 						</div>
@@ -1393,3 +1393,10 @@ $outer_select.each(function(){
 });
 
 </script>
+
+<style>
+	.x_content h4 {
+		border-bottom: 2px solid #1f3e21;
+		padding-bottom: 10px;
+	}
+</style>
