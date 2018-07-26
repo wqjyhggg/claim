@@ -685,7 +685,7 @@
 										<div class="clearfix"></div>
 
 										<div class="col-sm-3">
-											<?php echo form_label('Amount Paid:', 'amount_client_paid_org', array("class" => 'col-sm-12 required')); ?>
+											<?php echo form_label('Amount Paid:', 'amount_client_paid_org', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed[amount_client_paid_org][]", $value ['amount_client_paid_org'], array("class" => "form-control required")); ?>
 											<?php echo form_hidden("expenses_claimed[amount_client_paid][]", $value ['amount_client_paid']); ?>
 											<?php echo form_error("amount_client_paid_org"); ?>
@@ -1848,6 +1848,8 @@ function validate_form(){
    var $validate = 1;
    $("#main_form .required").map(function(o){
       if(!$(this).val()){
+console.log($(this)); //XXXXXXXXXXXXX
+console.log($(this).val()); //XXXXXXXXXXXXX
          $validate = 0;
          $(this).addClass('error-true');
       }
