@@ -228,6 +228,12 @@ th > .desc::after {
     margin-bottom: 15px;
     padding: 10px;
 }
+.subTitle {
+    margin-left: 10px;
+    padding-left: 5px;
+    border-left: 6px solid #1f3f20;
+
+}
 span.file-label {
     color: #1f3f20;
 }.fa.fa-trash.row-link {
@@ -389,10 +395,12 @@ input[type=checkbox]{
     text-align: center;
 }
 .move_down {
-    border-bottom: 1px solid #eee;
+    border-bottom: 2px solid #1f3f20;
     cursor: pointer;
     font-size: 14px !important;
     padding-bottom: 7px;
+    margin-bottom: 30px;
+
 }
 .intake-forms {
     border: 1px solid;

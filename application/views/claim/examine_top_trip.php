@@ -236,7 +236,7 @@
 						</div>
 						<div class="clearfix"></div>
 
-						<h4>Name and Address of any other physician who may have treated the patient in the last 12 months</h4>
+						<h4 style="margin-left: 10px;">Name and Address of any other physician who may have treated the patient in the last 12 months</h4>
 						<div class="col-sm-12">
 							<div class="form-group col-sm-3">
 								<label>Name : </label><?php echo $claim['physician_name_canada']; ?>

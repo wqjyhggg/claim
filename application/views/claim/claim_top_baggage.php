@@ -100,7 +100,7 @@
 							</div>
 							<div class="clearfix"></div>
 
-							<h4>Address in Canada</h4>
+							<h4 class="subTitle">Address in Canada</h4>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Street Address:', 'street_address', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("street_address", $claim_details["street_address"], array("class" => "form-control", 'placeholder' => 'Street Address')); ?>

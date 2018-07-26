@@ -140,7 +140,7 @@
 							?>
 						</div>
 
-						<h4>Address in Canada </h4>
+						<h4 style="margin-left: 10px;">Address in Canada </h4>
 						<div class="form-group col-sm-3">
 							<label>Street Address : </label><?php echo $claim['street_address']; ?>
 						</div>

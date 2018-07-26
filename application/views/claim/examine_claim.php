@@ -1235,3 +1235,10 @@ $outer_select.each(function(){
 });
 
 </script>
+
+<style>
+	.x_content h4 {
+		border-bottom: 2px solid #1f3e21;
+		padding-bottom: 10px;
+	}
+</style>
