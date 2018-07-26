@@ -1150,9 +1150,10 @@ class Claim extends CI_Controller {
 							$_FILES['userfile']['size'] = $files['size'][$key];
 							
 							// upload file to server
-							$this->upload->do_upload();
-							$file_data = $this->upload->data();
-							$file_names[] = $file_data['file_name'];
+							if ($this->upload->do_upload()) {
+								$file_data = $this->upload->data();
+								$file_names[] = $file_data['file_name'];
+							}
 						}
 					}
 				}
@@ -1174,11 +1175,12 @@ class Claim extends CI_Controller {
 				@mkdir(UPLOADFULLPATH . 'claim_files/' . $record_id, 0777);
 				
 				// move all files to that directory
-				if (! empty($file_names))
+				if (! empty($file_names)) {
 					foreach ( $file_names as $fname ) {
 						copy(UPLOADFULLPATH . "claim_files/$fname", UPLOADFULLPATH . "claim_files/$record_id/$fname");
 						unlink(UPLOADFULLPATH . "claim_files/$fname");
 					}
+				}
 					
 					// insert payee information
 				if (! empty($array['payees'])) {
@@ -1316,10 +1318,9 @@ class Claim extends CI_Controller {
 						}
 					}
 				}
-
+				
 				// send success message
 				$this->session->set_flashdata('success', "Claim successfully updated");
-				
 				// redirect them to the login page
 				redirect('claim/claim_detail/' . $id);
 			} else {
