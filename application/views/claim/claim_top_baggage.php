@@ -1568,11 +1568,11 @@
       if($(this).is(":checked"))
       {
          // fill all json values to address fields
-         $("input[name=email]").val('<?php echo @$policy_info[0]['contact_email'] ?>');
-         $("input[name=street_no_email]").val('<?php echo @$policy_info[0]['street_number'] ?>');
-         $("input[name=street_name_email]").val('<?php echo @$policy_info[0]['street_name'] ?>');
-         $("input[name=city_email]").val('<?php echo @$policy_info[0]['city'] ?>');
-         $("select[name=province_email]").val('<?php echo @$policy_info[0]['province2'] ?>');
+         $("input[name=email]").val("<?php echo @$policy_info[0]['contact_email'] ?>");
+         $("input[name=street_no_email]").val("<?php echo @$policy_info[0]['street_number'] ?>");
+         $("input[name=street_name_email]").val("<?php echo @$policy_info[0]['street_name'] ?>");
+         $("input[name=city_email]").val("<?php echo @$policy_info[0]['city'] ?>");
+         $("select[name=province_email]").val("<?php echo @$policy_info[0]['province2'] ?>");
       }
       else
       {
