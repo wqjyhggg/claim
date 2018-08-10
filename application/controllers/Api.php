@@ -261,9 +261,11 @@ class Api extends CI_Controller {
 			$data['physician_name'] = $this->input->post('physician_name');
 			$data['clinic_name'] = $this->input->post('clinic_name');
 			$data['physician_street_address'] = $this->input->post('physician_street_address');
+			/*
 			if (empty($data['physician_street_address'])) {
 				$error['physician_street_address'] = 'Required';
 			}
+			*/
 			$data['physician_city'] = $this->input->post('physician_city');
 			$data['country'] = $this->input->post('country');
 			$data['physician_post_code'] = $this->input->post('physician_post_code');
