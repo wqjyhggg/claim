@@ -416,7 +416,7 @@
 										<!-- td><?php echo $value['comment'] ?></td -->
 									</tr>
 									<tr class='claim_items_form trinputform' id='item_form_<?php echo $value['id']; ?>'>
-										<td colspan="11">
+										<td colspan="12">
 											<div class="row policy_info">
 											<?php 
 												echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal claim_items_submit', 'method'=>'post'));
