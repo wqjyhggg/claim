@@ -1,6 +1,4 @@
 <?php
-use function GuzzleHttp\json_decode;
-
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Claim_review extends CI_Controller {
