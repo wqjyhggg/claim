@@ -11,6 +11,7 @@ class Expenses_model extends CI_Model {
 	const EXPENSE_STATUS_Pending='Pending';
 	const EXPENSE_STATUS_Approved='Approved';
 	const EXPENSE_STATUS_Declined='Declined';
+	const EXPENSE_STATUS_Duplicated='Duplicated';
 	const EXPENSE_STATUS_Paid='Paid';
 	
 	/**
@@ -138,6 +139,7 @@ class Expenses_model extends CI_Model {
 				'Pending' => self::EXPENSE_STATUS_Pending,
 				'Approved' => self::EXPENSE_STATUS_Approved,
 				'Declined' => self::EXPENSE_STATUS_Declined,
+				'Duplicated' => self::EXPENSE_STATUS_Duplicated,
 				'Paid' => self::EXPENSE_STATUS_Paid,
 		);
 		if ($nopaid) {
@@ -538,7 +540,7 @@ class Expenses_model extends CI_Model {
 			}
 		}
 		
-		$sql  = "SELECT e.claim_no, e.invoice, e.provider_name, c.insured_first_name as first_name, c.insured_last_name as last_name, c.dob as birth_day, c.gender, c.policy_no, e.date_of_service, c.totaldays, e.finalize_date, IF(e.status='".self::EXPENSE_STATUS_Paid."','F',( IF(e.status='".self::EXPENSE_STATUS_Declined."', 'D', 'P') )) as status, c.status2, IF(e.reason='Other',e.reason_other,e.reason) AS reason, e.created, e.amount_billed, e.amt_payable, 0 as reserve_amount, e.recovery_amt, c.street_address, c.city, c.province, c.post_code, c.agent_id, e.service_description, e.coverage_code, e.amt_deductible, e.pay_to  FROM expenses_claimed e";
+		$sql  = "SELECT e.claim_no, e.invoice, e.provider_name, c.insured_first_name as first_name, c.insured_last_name as last_name, c.dob as birth_day, c.gender, c.policy_no, e.date_of_service, c.totaldays, e.finalize_date, IF(e.status='".self::EXPENSE_STATUS_Paid."','F',( IF(e.status='".self::EXPENSE_STATUS_Declined."' OR e.status='".self::EXPENSE_STATUS_Duplicated."', 'D', 'P') )) as status, c.status2, IF(e.reason='Other',e.reason_other,e.reason) AS reason, e.created, e.amount_billed, e.amt_payable, 0 as reserve_amount, e.recovery_amt, c.street_address, c.city, c.province, c.post_code, c.agent_id, e.service_description, e.coverage_code, e.amt_deductible, e.pay_to  FROM expenses_claimed e";
 		$sql .= " RIGHT JOIN claim c ON (e.claim_id=c.id)";
 		$sql .= " WHERE " . $dtcolumn . ">='".$ststr."' AND " . $dtcolumn . "<='".$edstr."'";
 		if (!empty($data['status'])) {
