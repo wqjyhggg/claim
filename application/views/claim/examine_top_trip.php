@@ -388,6 +388,7 @@
 										<th>Amt Payable</th>
 										<th>Amt Received</th>
 										<th>Decision</th>
+										<th>Cheque</th>
 										<!-- th>Comment</th -->
 									</tr>
 								</thead>
@@ -411,6 +412,7 @@
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
 										<td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
 										<td><?php echo $value['status'] ?></td>
+										<td><?php echo $value['cheque'] ?></td>
 										<!-- td><?php echo $value['comment'] ?></td -->
 									</tr>
 									<tr class='claim_items_form trinputform' id='item_form_<?php echo $value['id']; ?>'>
