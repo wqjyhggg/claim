@@ -964,7 +964,16 @@ class Claim extends CI_Controller {
 					return show_error('Unknown policy for this Claim' . $claim['policy_no'] . '.');
 				}
 				$this->data['policy'] = $policy_info_arr[0];
-				
+				$this->data['policy_status'] = array(
+						0 => 'Unknown',
+						1 => 'Quote',
+						2 => 'Sold',
+						3 => 'Paid',
+						4 => 'Claimed',
+						5 => 'Cancel',
+						6 => 'Refund',
+						7 => 'Changed',
+				);
 				// get expenses climed items list
 				$this->data['items'] = $this->expenses_model->search(array('claim_id' => $claim['id']), 0, 0, array('date_of_service' => 'ASC'));
 				$this->data['payinfo'] = $this->expenses_model->get_policy_payinfo($claim['policy_no']);
