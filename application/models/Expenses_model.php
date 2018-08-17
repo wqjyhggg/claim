@@ -401,6 +401,9 @@ class Expenses_model extends CI_Model {
 		if (isset($data['status']) && ($data['status'] === self::EXPENSE_STATUS_Paid)) {
 			$data['pay_date'] = date("Y-m-d");
 		}
+		if (empty($data['status'])) {
+			$data['status'] = self::EXPENSE_STATUS_Pending;
+		}
 		if (isset($data['currency']) && empty($data['currency'])) {
 			$data['currency'] = "CAD";
 		}
