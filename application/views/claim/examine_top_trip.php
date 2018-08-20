@@ -1041,7 +1041,7 @@ $(document).ready(function() {
       .replace("{insured_address}", "<?php echo $claim['street_address'] . ' ' . $claim['city'] . ' ' . $claim['province']; ?>")
       .replace("{insured_lastname}", "<?php echo $claim['insured_last_name']; ?>")
       .replace("{policy_coverage_info}", "{policy_coverage_info}")
-      .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')
+      .replace("{current_date_+_90}", "<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>")
       .replace("{clinic_name}", "<?php echo $claim['clinic_name']; ?>")
       .replace("{insured_dob}", "<?php echo $claim['dob']; ?>")
 

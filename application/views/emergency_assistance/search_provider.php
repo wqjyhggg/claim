@@ -142,7 +142,7 @@ function initMap() {
 					position: myLatLng,
 					map: map,
 					icon: 'http://maps.google.com/mapfiles/ms/icons/hospitals.png',
-					title: '<?php echo $value['address'];?>'
+					title: "<?php echo $value['address'];?>"
 				});
 			bounds.extend(marker<?php echo $i; ?>.getPosition());
 
