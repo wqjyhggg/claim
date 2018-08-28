@@ -40,10 +40,10 @@
 						<label style="text-transform: capitalize;">Medical : $10,000,000</label>
 					</div>
 					<div class="form-group col-sm-3">
-						<label style="text-transform: capitalize;">AD&D : $100,000</label>
+						<label style="text-transform: capitalize;">AD&D : $50,000</label>
 					</div>
 					<div class="form-group col-sm-3">
-						<label style="text-transform: capitalize;">Flight Accident: $300,000</label>
+						<label style="text-transform: capitalize;">Flight Accident: $100,000</label>
 					</div>
 					<div class="form-group col-sm-3">
 						<label style="text-transform: capitalize;">Trip Cancellation and Interruption: $<?php echo number_format($policy['sum_insured'], 2); ?></label>
@@ -82,6 +82,11 @@
 					<?php if ($policy['stable_condition']) { ?>
 					<div class="form-group col-sm-6">
 						<label style="text-transform: capitalize;"><?php echo ($policy['stable_condition'] == 1) ? 'Including' : 'Excluding'; ?> stable pre-existing condition coverage</label>
+					</div>
+					<?php } ?>
+					<?php if ($policy['questionnaire'] > 0) { ?>
+					<div class="form-group col-sm-3">
+						<label style="text-transform: capitalize;"><?php echo "Rate Table".$policy['questionnaire']; ?></label>
 					</div>
 					<?php } ?>
 					<?php if ($policy['questionnaire']) { ?>
