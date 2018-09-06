@@ -80,11 +80,11 @@ class Phone_waiting extends CI_Controller {
 			fputcsv($output, array(''));
 			fputcsv($output, array('Period', 'Total Waiting Time'));
 			$tt = 0;
-			foreach ($arr as $key => $value) {
+			foreach ($records as $key => $value) {
 				$tt += $value;
 				fputcsv($output, array($key, $this->phone_model->second_to_time($value)));
 			}
-			fputcsv($output, array('Total', $tt));
+			fputcsv($output, array('Total', $this->phone_model->second_to_time($tt)));
 		}
 	}
 }
