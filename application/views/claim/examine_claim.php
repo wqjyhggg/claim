@@ -522,7 +522,7 @@
 											date("F d, Y"),
 											$policy['policy'],
 											$claim['case_no'],
-											$policy['firstname'] . ' ' . $policy['lastname'],
+											$claim['insured_first_name'] . ' ' . $claim['insured_last_name'],
 											$policy['effective_date'] . ' to ' . $policy['expiry_date'],
 											$claim['assign_to_name'],
 											$this->ion_auth->user()->row()->email,
