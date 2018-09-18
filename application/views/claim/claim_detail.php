@@ -451,6 +451,7 @@
 											<?php echo $value ['invoice']; ?>
 											<?php echo form_hidden("expenses_claimed[invoice][]", $value['invoice']); ?>
 											<?php echo form_hidden('expenses_claimed[id][]', $value['id']); ?>
+											<?php echo form_hidden('expenses_claimed[status][]', $value['status']); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
@@ -530,6 +531,7 @@
 											<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed[invoice][]", $value ['invoice'], array("class" => "form-control")); ?>
 											<?php echo form_hidden('expenses_claimed[id][]', $value ['id']); ?>
+											<?php echo form_hidden('expenses_claimed[status][]', $value['status']); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
@@ -879,6 +881,7 @@
 				<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class" => "form-control")); ?>
 				<?php echo form_hidden("expenses_claimed[id][]", 0); ?>
+				<?php echo form_hidden("expenses_claimed[status][]", 'Pending'); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
