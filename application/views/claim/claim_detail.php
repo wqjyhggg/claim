@@ -1058,10 +1058,31 @@
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
+function get_policy() {
+	var policy_no = '<?php echo $claim_details['policy_no']; ?>';
+	$.ajax({
+		url: "<?php echo base_url("emergency_assistance/get_policy_info"); ?>",
+		method:"get",
+		data:{policy:policy_no},
+		dataType: "json",
+		success: function(data) {
+			if (typeof data.plan_list != "undefined" && data.plan_list.length) {
+				localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
+				$("input[name=policy_info]").val(JSON.stringify(data.plan_list));
+			}
+		}
+	})
+}
+
 	$(document).ready(function() {
 		// get policy data
 		<?php $policy_info = json_decode($claim_details ['policy_info'], TRUE); ?>
 		// to add third pary payees on this list.
+		var data = $.parseJSON(localStorage.getItem("policy_data")); 
+		if (!data) {
+			get_policy();
+		}
+		
 
 		// show area once any error occured
 		$(".alert-error").map(function(){
@@ -1173,7 +1194,7 @@
    })
 	.on("click", ".payee_policy_addr", function() {
 		var addr = $(this).closest("div").find("input[name='payees[address][]']");
-		var data = $.parseJSON(localStorage.getItem("policy_data"));
+		var data = $.parseJSON(localStorage.getItem("policy_data")); 
 		if (data[0].suite_number) {
 			addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
 		} else {
