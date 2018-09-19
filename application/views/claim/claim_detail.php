@@ -696,6 +696,15 @@
 								<?php echo form_label('Examiner:', 'assign_to', array("class" => 'col-sm-12')); ?>
 								<?php echo $examiner_email; ?>
 							</div>
+							<div class="col-sm-3">
+								<?php echo form_label('Assign To:', 'assign_to', array("class" => 'col-sm-12')); ?>
+								<select name="assign_to" class="form-control">
+									<option value=""> -- Select Examiner -- </option>
+									<?php foreach ($examiners as $rc) :?>
+									<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $claim_details["assign_to"]) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
 						</div>
 					</div>
 

@@ -1178,6 +1178,9 @@ class Claim extends CI_Controller {
 					
 				// insert values to database
 				$data['id'] = $id;
+				if (isset($data['assign_to']) && empty($data['assign_to'])) {
+					unset($data['assign_to']);
+				}
 				$record_id = $this->claim_model->save($data);
 				
 				// create folder if not exists
@@ -1407,7 +1410,8 @@ class Claim extends CI_Controller {
 				if ($examiner = $this->users_model->get_by_id($this->data['claim_details']['assign_to'])) {
 					$this->data['examiner_email'] = $examiner['email'];
 				}
-
+				$this->data['examiners'] = $this->users_model->search(array('groups' => Users_model::GROUP_EXAMINER, 'active' => 1));
+				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Claim Details', TRUE);
 				switch ($this->data['claim_details']['exinfo_type']) {
