@@ -61,10 +61,12 @@ class Auth extends CI_Controller {
 					$case = $this->case_model->get_by_id($rc['item_id']);
 					$this->data['records'][$key]['insured_name'] = $case['insured_firstname'] . " " . $case['insured_lastname'];
 					$this->data['records'][$key]['priority'] = $case['priority'];
+					$this->data['records'][$key]['policy_no'] = $case['policy_no'];
 				} else {
 					$claim = $this->claim_model->get_by_id($rc['item_id']);
 					$this->data['records'][$key]['insured_name'] = $claim['insured_first_name'] . " " . $claim['insured_last_name'];
 					$this->data['records'][$key]['priority'] = '-';
+					$this->data['records'][$key]['policy_no'] = $claim['policy_no'];
 				}
 				$ctuser = $this->users_model->get_by_id($rc['created_by']);
 				$this->data['records'][$key]['created_email'] = $ctuser['email'];

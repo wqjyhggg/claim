@@ -26,6 +26,7 @@
 									<th>Task ID</th>
 									<th><?php echo $this->pagination->sort("priority", "Priority") ?></th>
 									<th>Case/Claim No.</th>
+									<th>Policy No.</th>
 									<th>Status</th>
 									<th>Insured Name</th>
 									<th>Created By</th>
@@ -51,6 +52,7 @@
 									<td><?php echo anchor('auth/edit_task/'.$value['id'], $value['id'], array('title'=>'Edit Task')) . " (" . $value ['type'] . ")"; ?></td>
 									<td><?php echo $value['priority']; ?></td>
 									<td><?php echo anchor(($value['type']=='CLAIM'?'claim/claim_detail/'.$value['item_id']:'emergency_assistance/edit_case/'.$value['item_id']), $value['task_no'], array('title'=>'Item Details')) ?></td>
+									<td><?php echo $value['policy_no']; ?></td>
 									<td><?php echo $value['status']; ?></td>
 									<td><?php echo $value['insured_name']; ?></td>
 									<td><?php echo $value['created_email']; ?></td>
