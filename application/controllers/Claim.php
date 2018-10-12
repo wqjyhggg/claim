@@ -52,7 +52,9 @@ class Claim extends CI_Controller {
 			$this->data['examiners'] = $this->users_model->search(array('groups' => Users_model::GROUP_EXAMINER, 'active' => 1));
 			
 			$this->data['products'] = $this->api_model->get_indexed_products();
-			
+
+			$this->data['is_insurer'] = ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER)) ? 1 : 0);
+
 			// get claim examiners
 			$this->data['claim_examiner'] = ''; // $this->users_model->search(array('groups' => Users_model::GROUP_EXAMINER, 'active' => 1)); $this->common_model->getrusers($field_name = "assign_user", "", $group = array("'claimexaminer'"), $empty = "--Select Claim Examiner--", $additional_conditions = " and active = '1'");
 			                                    
@@ -756,7 +758,7 @@ class Claim extends CI_Controller {
 		if (! $this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER, Users_model::GROUP_INSURER))) {
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else if (empty($id)) {
@@ -960,6 +962,7 @@ class Claim extends CI_Controller {
 				}
 				
 				$policy_info_arr = $this->api_model->get_policy(array('policy' => $claim['policy_no']));
+
 				if (empty($policy_info_arr)) {
 					return show_error('Unknown policy for this Claim' . $claim['policy_no'] . '.');
 				}
@@ -1046,6 +1049,8 @@ class Claim extends CI_Controller {
 				// get status
 				$this->data['examine_status'] = $this->expenses_model->get_status(1);
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(1);
+
+				$this->data['is_insurer'] = ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER)) ? 1 : 0);
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Examine Claim', TRUE);

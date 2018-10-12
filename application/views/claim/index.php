@@ -275,7 +275,11 @@
 									<td><?php echo $value['diagnosis']; ?></td>
 									<td><?php echo $value['status']; ?></td>
 									<td><?php echo $value['email']; ?></td>
+									<?php if ($is_insurer) { ?>
+									<td><?php echo anchor("claim/examine_claim/".$value['id'], "View"); ?></td>
+									<?php } else { ?>
 									<td><?php echo anchor("claim/claim_detail/".$value['id'], "View"); ?></td>
+									<?php }?>
 								</tr>
 								<?php endforeach; ?>
 							</tbody>

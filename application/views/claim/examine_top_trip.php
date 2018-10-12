@@ -419,7 +419,7 @@
 										<td colspan="12">
 											<div class="row policy_info">
 											<?php 
-												echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal claim_items_submit', 'method'=>'post'));
+												if (! $is_insurer) { echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal claim_items_submit', 'method'=>'post')); }
 												echo form_hidden("id",  $value['id']);
 												echo form_hidden("claim_id", $value['claim_id'] );
 											?>
@@ -513,13 +513,15 @@
 													<label class="col-sm-12">Explanation : </label>
 													<div class='col-sm-12'><input type='text' name='comment' value="<?php echo $value['comment']; ?>"></div>
 												</div -->
+												<?php if (! $is_insurer) { ?>
 												<?php if ($value['status'] != Expenses_model::EXPENSE_STATUS_Paid) { ?>
 												<div class="form-group col-sm-3 pull-right">
 													<label class="col-sm-12">&nbsp;</label>
 													<div class='col-sm-12'><?php echo form_submit("Save", "Save", 'class="btn btn-primary"'); ?></div>
 												</div>
 												<?php } ?>
-											<?php echo form_close(); ?>
+												<?php } ?>
+											<?php if (! $is_insurer) { echo form_close(); } ?>
 											</div>
 										</td>
 									</tr>
@@ -535,10 +537,12 @@
 							<?php echo form_label('Notes :', 'notes', array("class" => 'col-sm-12')); ?>
 							<?php echo form_textarea ( "notes", $claim_details["notes"], array ("class" => "form-control", "id" => "notes", 'placeholder' => 'Notes', 'style' => "height:100px") ); ?>
 						</div>
+						<?php if (! $is_insurer) { ?>
 						<div class="col-sm-6">
 							<label class="col-sm-12">&nbsp;</label>
 							<input class="btn btn-primary" name="save" value="Save Notes" type="button" id="save_notes">
 						</div>
+						<?php } ?>
 					</div>
 					<hr />
 					<h4 style="margin-top: 35px; margin-bottom: 26px;">Total Pay info By Policy</h4>
@@ -573,6 +577,7 @@
 								<label class="col-sm-12">&nbsp;</label>
 								<?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
 							</div>
+							<?php if (! $is_insurer) { ?>
 							<div class="col-sm-2">
 								<label class="col-sm-12">&nbsp;</label>
 								<?php echo anchor("claim/claim_detail/".$claim['id'], "Edit Claim", array("class"=>'btn btn-primary')); ?>
@@ -605,6 +610,7 @@
 								<input class="btn btn-primary email_print" data-toggle="modal" name="Email" value="Email/Print" type="button" data-target="#print_template">
 							</div>
 							<?php } ?>
+							<?php } /* $is_insurer */ ?>
 						</div>
 					</div>
 					<?php if(!empty($other_items)) { ?>
