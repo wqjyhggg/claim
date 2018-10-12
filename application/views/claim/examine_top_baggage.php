@@ -495,6 +495,20 @@
 
 					<div class="row actions" style="margin-top: 20px;">
 						<div class="row">
+							<?php if ($is_insurer) { ?>
+							<div class="col-sm-2">
+								<?php echo form_label('Processing Status:', 'status', array("class" => 'col-sm-12')); ?>
+								<div class='col-sm-12'><?php echo $claim_details["status"]; ?></div>
+							</div>
+							<div class="col-sm-2">
+								<?php echo form_label('Claim Status:', 'status2', array("class" => 'col-sm-12')); ?>
+								<div class='col-sm-12'><?php echo $claim_details["status2"]; ?></div>
+							</div>
+							<div class="col-sm-2">
+								<label class="col-sm-12">&nbsp;</label>
+								<?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
+							</div>
+							<?php } else { ?>
 							<div class="col-sm-2">
 								<?php echo form_label('Processing Status:', 'status', array("class" => 'col-sm-12')); ?>
 								<?php echo form_dropdown("status", $status_list, $claim_details["status"], array("class" => 'form-control change_claim_status')); ?>
@@ -507,7 +521,6 @@
 								<label class="col-sm-12">&nbsp;</label>
 								<?php echo anchor("claim", "Cancel", array("class"=>'btn btn-primary')); ?>
 							</div>
-							<?php if (! $is_insurer) { ?>
 							<div class="col-sm-2">
 								<label class="col-sm-12">&nbsp;</label>
 								<?php echo anchor("claim/claim_detail/".$claim['id'], "Edit Claim", array("class"=>'btn btn-primary')); ?>
