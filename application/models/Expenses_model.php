@@ -428,6 +428,8 @@ class Expenses_model extends CI_Model {
 				}
 				if (($cur['status'] != $data['status']) && ($cur['status'] != self::EXPENSE_STATUS_Paid)) {
 					$data['finalize_date'] = date("Y-m-d");
+				} else {
+					unset($data['finalize_date']);
 				}
 				$this->db->where('id', $id);
 				$this->db->update('expenses_claimed', $data);
