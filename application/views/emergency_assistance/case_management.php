@@ -67,13 +67,13 @@
 							<?php endforeach; ?>
 						</select>
 					</div>
-					<div class="form-group col-sm-3">
+					<!-- div class="form-group col-sm-3">
 						<?php echo form_label('My Task:', 'case_manager', array ("class" => 'col-sm-4')); ?>
 						<div class="form-group col-sm-8">
 							<?php echo form_checkbox("case_manager", $case_manager, ($this->input->get("case_manager") == $case_manager ? TRUE : FALSE), array ("id" => 'case_manager', 'class' => 'col-sm-1')); ?>
 							<?php echo form_label('Owned by Me', 'case_manager', array ("class" => 'col-sm-10 pull-right', 'style' => 'margin-top: 3px;')); ?>
 						</div>
-					</div>
+					</div -->
 					<div class="form-group col-sm-3">
 						<?php echo form_label('Priority:', 'priority_label', array ("class" => 'col-sm-4')); ?>
 						<div class="form-group col-sm-6">
@@ -84,6 +84,8 @@
 								<?php } ?>
 							</select>
 						</div>
+					</div>
+					<div class="form-group col-sm-3">
 					</div>
 					<div class="col-sm-3">
 						<button class="btn btn-primary" name="filter" value="case">Search</button>
@@ -156,7 +158,7 @@
 							</div>
 							<div class="col-sm-6 employees-section" style="display: none">
 								<div class="col-sm-6">
-									<select name="case_manager" class="form-control">
+									<select name="case_manager_ss" class="form-control">
 										<option value=""> -- Select Manager -- </option>
 										<?php foreach ($managers as $rc) :?>
 										<option value="<?php echo $rc['id']; ?>" ><?php echo $rc['email']; ?></option>
@@ -450,11 +452,11 @@ $(document).ready(function() {
 	// once manager click on "View/     Edit"case button
 	var id = $("input[name=case]:checked").val();
 	window.location = "<?php echo base_url("emergency_assistance/edit_case") ?>/"+id+"?ref=manage";
-}).on("change", "select", function() {
+}).on("change", "select[name=case_manager_ss]", function() {
 	// set validation on emc select list
 	var val = $(this).val();
-	$("select").val("");
-	$(this).val(val);
+	//$("select").val("");
+	//$(this).val(val);
 	employee_id = val;		// set selected employee
 }).on("change", "#case_manager", function() {
 	$('#case_management_search').submit();
