@@ -243,14 +243,12 @@
 
 						<div class="form-group col-sm-12">
 							Print your name here:<br /><br /><br /><br />
-							(Medical Reviewer)<br /><br /><br /><br />
+							(Medical Reviewer)<br /><br /><br />
 						</div>
 						<br />
 
 						<div class="form-group col-sm-12">
-							<label for="details_noted" class="col-sm-12"><b>Date :</b></label>
-							<br />
-							<?php echo date("Y-m-d"); ?>
+							<label for="details_noted" class="col-sm-12"><b>Date :</b></label> <?php echo date("Y-m-d"); ?>
 						</div>
 						<?php if (! $ispdf) { ?>
 						<div class="form-group col-sm-12">
