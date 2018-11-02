@@ -46,10 +46,22 @@ class DecToRoman
 		}
 	}
 
+	private function tenpower($x) {
+		$y = 1;
+		if ($x > 0) {
+			for ($i = 0; $i < $x; $i++) $y *= 10;
+		} else if ($x < 0) {
+			for ($i = 0; $i < $x; $i++) {
+				$y = (float)($y / 10.0);
+			}
+		}
+		return $y;
+	}
+
 	public function getUpperBound()
 	{
 		$symbolGroupCount = count($this->symbolMap);
-		$valueOfOne = 10 ** ($symbolGroupCount - 1);
+		$valueOfOne = $this->tenpower($symbolGroupCount); //10 ** ($symbolGroupCount - 1);
 
 		$hasFiveSymbol = array_key_exists(1, $this->symbolMap[$symbolGroupCount - 1]);
 
@@ -62,9 +74,10 @@ class DecToRoman
 
 		$symbolMapCount = count($this->symbolMap);
 		for ($i = 0; $i < $symbolMapCount; $i++) {
-			$divisor = 10 ** ($i + 1);
+			$divisor = $this->tenpower($i + 1); // 10 ** ($i + 1);
 			$remainder = $number % $divisor;
-			$digit = $remainder / (10 ** $i);
+			//$digit = $remainder / (10 ** $i);
+			$digit = $remainder / $this->tenpower($i);
 
 			$number -= $remainder;
 			$romanNumber = $this->formatDigit($digit, $i) . $romanNumber;
