@@ -56,7 +56,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 
 	const VERSION = '7.0.2';
 
-	const SCALE = 72 / 25.4;
+	const SCALE = 2.834645669; // float(72 / 25.4);
 
 	var $useFixedNormalLineHeight; // mPDF 6
 	var $useFixedTextBaseline; // mPDF 6

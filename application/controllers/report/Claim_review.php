@@ -141,7 +141,7 @@ class Claim_review extends CI_Controller {
 			
 			$html = $this->load->view('report/claim_review', $this->data, true);
 
-			$this->data['title'] = '<h1>Claim Medical Review</h1>';
+			$this->data['title'] = '<h1>Large Loss Report</h1>';
 			$this->load->model('pdf_model');
 			$this->pdf_model->htmloutput($html, $this->data);
 		}

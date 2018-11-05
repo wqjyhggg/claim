@@ -2,7 +2,7 @@
 <div width='100%'>
 	<div class="page-title" width='100%'>
 		<div class="title_left" width='100%'>
-			<h3 width='100%' style='text-align: center;'>Claim Medical Review</h3>
+			<h3 width='100%' style='text-align: center;'>Large Loss Report</h3>
 		</div>
 	</div>
 	<div class="clearfix"></div>
