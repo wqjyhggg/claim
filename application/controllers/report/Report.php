@@ -21,7 +21,7 @@ class Report extends CI_Controller {
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} else if (!$this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_INSURER, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) {
+		} else if (!$this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_INSURER, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER, Users_model::GROUP_EAC))) {
 			// redirect them to the home page because they must be an administrator to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {

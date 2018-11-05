@@ -11,6 +11,7 @@
 			<div class="x_panel">
 				<div class="x_content">
 					<div class="table-responsive">
+						<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_INSURER, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) { ?> 
 						<ul>
 							<li style='line-height: 2em;'><?php echo anchor("report/phonestatus", ' Phone Status</a>', array("class"=>'leftmeun h4', 'target' => 'phonestatus')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/cases", ' Case Report</a>', array("class"=>'leftmeun h4')) ?> </li>
@@ -38,6 +39,15 @@
 							<li style='line-height: 2em;'><?php echo anchor("report/phone_response", ' Phone Response Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<?php } ?>
 						</ul>
+						<?php } else if ($this->ion_auth->in_group(array(Users_model::GROUP_EAC))) { ?> 
+						<ul>
+							<li style='line-height: 2em;'><?php echo anchor("report/phone_report", ' Phone Report</a>', array("class"=>'leftmeun h4')) ?> </li>
+							<li style='line-height: 2em;'><?php echo anchor("report/phone_waiting", ' Phone Waiting Report</a>', array("class"=>'leftmeun h4')) ?> </li>
+							<li style='line-height: 2em;'><?php echo anchor("report/phone_queue", ' Phone Queue Report</a>', array("class"=>'leftmeun h4')) ?> </li>
+							<li style='line-height: 2em;'><?php echo anchor("report/phone_abandon", ' Phone Abandon Report</a>', array("class"=>'leftmeun h4')) ?> </li>
+							<li style='line-height: 2em;'><?php echo anchor("report/phone_response", ' Phone Response Report</a>', array("class"=>'leftmeun h4')) ?> </li>
+						</ul>
+						<?php } ?> 
 					</div>
 				</div>
 			</div>
