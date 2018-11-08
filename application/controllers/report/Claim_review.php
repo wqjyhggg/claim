@@ -54,7 +54,7 @@ class Claim_review extends CI_Controller {
 					$para['policy_no'] = $policy_no;
 				}
 				if ($para) {
-					if (0 && ($claims = $this->claim_model->search($para))) {  //XXXXXXXXXXXXXXXXX
+					if ($claims = $this->claim_model->search($para)) {  //XXXXXXXXXXXXXXXXX
 						if (count($claims) > 1) {
 							$this->data['claims'] = $claims;
 						} else {
