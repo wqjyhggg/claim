@@ -20,10 +20,28 @@ class Claim_review extends CI_Controller {
 			redirect('auth/login', 'refresh');
 		} else {
 			$this->load->model('claim_model');
-				
+			$this->load->model('case_model');
+			$this->load->model('api_model');
+
 			$claim = array();
 			if ($claim_id = $this->input->get('claim_id')) {
 				$claim = $this->claim_model->get_by_id($claim_id);
+				if (empty($claim)) {
+					// It is a case
+					$claim = $this->case_model->get_by_id($claim_id);
+					if (!empty($claim['policy_no']) && ($policies = $this->api_model->get_policy(array('policy' => $claim['policy_no'])))) {
+						// Add infor to fit claim
+						$claim['policy_info'] = $policies[0];
+						$claim['apply_date'] = $policies[0]['apply_date'];
+						$claim['street_address'] = empty($policies[0]['suite_number']) ? $policies[0]['suite_number'] . " " : "";
+						$claim['street_address'] .= $policies[0]['street_number'] . " " . $policies[0]['street_name'];
+						$claim['insured_first_name'] = $claim['insured_firstname'];
+						$claim['insured_last_name'] = $claim['insured_lastname'];
+							
+					} else {
+						$this->data['message'] = "No record available";
+					}
+				}
 			} else {
 				$para = array();
 				if ($claim_no = $this->input->get('claim_no')) {
@@ -36,14 +54,40 @@ class Claim_review extends CI_Controller {
 					$para['policy_no'] = $policy_no;
 				}
 				if ($para) {
-					if ($claims = $this->claim_model->search($para)) {
+					if (0 && ($claims = $this->claim_model->search($para))) {  //XXXXXXXXXXXXXXXXX
 						if (count($claims) > 1) {
 							$this->data['claims'] = $claims;
 						} else {
 							$claim = $claims[0];
+							unset($claim['policy_info']);
 						}
 					} else {
-						$this->data['message'] = "No record available";
+						unset($para['claim_no']);
+						if ($cases = $this->case_model->search($para)) {
+							if (count($cases) > 1) {
+								foreach ($cases as $key => $c) {
+									$cases[$key]['insured_first_name'] = $cases[$key]['insured_firstname'];
+									$cases[$key]['insured_last_name'] = $cases[$key]['insured_lastname'];
+								}
+								$this->data['claims'] = $cases;
+							} else {
+								if (!empty($cases[0]['policy_no']) && ($policies = $this->api_model->get_policy(array('policy' => $cases[0]['policy_no'])))) {
+									// Add infor to fit claim
+									$claim = $cases[0];
+									$claim['policy_info'] = $policies[0];
+									$claim['apply_date'] = $policies[0]['apply_date'];
+									$claim['street_address'] = empty($policies[0]['suite_number']) ? $policies[0]['suite_number'] . " " : "";
+									$claim['street_address'] .= $policies[0]['street_number'] . " " . $policies[0]['street_name'];
+									$claim['insured_first_name'] = $claim['insured_firstname'];
+									$claim['insured_last_name'] = $claim['insured_lastname'];
+										
+								} else {
+									$this->data['message'] = "No record available";
+								}
+							}
+						} else {
+							$this->data['message'] = "No record available";
+						}
 					}
 				}
 			}
@@ -55,7 +99,6 @@ class Claim_review extends CI_Controller {
 				
 			$this->template->write('title', SITE_TITLE . ' - Claim Review', TRUE);
 			if ($claim) {
-				$this->load->model('api_model');
 				$this->load->model('expenses_model');
 				$this->load->model('product_model');
 				
@@ -70,7 +113,7 @@ class Claim_review extends CI_Controller {
 					$this->data['claim']['other_claims'] = 'No';
 				}
 				$this->data['claim']['product_full_name'] = $this->product_model->get_full_name($claim['product_short']);
-				if ($policies = $this->api_model->get_policy(array('policy' => $claim['policy_no']))) {
+				if (empty($this->data['claim']['policy_info']) && ($policies = $this->api_model->get_policy(array('policy' => $claim['policy_no'])))) {
 					$this->data['claim']['policy_info'] = $policies[0];
 				}
 				if (is_string($this->data['claim']['policy_info'])) {
@@ -99,12 +142,25 @@ class Claim_review extends CI_Controller {
 			redirect('auth/login', 'refresh');
 		} else {
 			$this->load->model('claim_model');
-				
+			$this->load->model('case_model');
+			$this->load->model('api_model');
+
 			$claim = array();
 			if ($claim_id = $this->input->post('claim_id')) {
 				$claim = $this->claim_model->get_by_id($claim_id);
 				if (empty($claim)) {
-					die("Can not find Claim Record");
+					$claim = $this->case_model->get_by_id($claim_id);
+					if (!empty($claim['policy_no']) && ($policies = $this->api_model->get_policy(array('policy' => $claim['policy_no'])))) {
+						// Add infor to fit claim
+						$claim['policy_info'] = $policies[0];
+						$claim['apply_date'] = $policies[0]['apply_date'];
+						$claim['street_address'] = empty($policies[0]['suite_number']) ? $policies[0]['suite_number'] . " " : "";
+						$claim['street_address'] .= $policies[0]['street_number'] . " " . $policies[0]['street_name'];
+						$claim['insured_first_name'] = $claim['insured_firstname'];
+						$claim['insured_last_name'] = $claim['insured_lastname'];
+					} else {
+						die("Can not find Claim Record");
+					}
 				}
 			} else {
 				die("Unknow Claim ID");

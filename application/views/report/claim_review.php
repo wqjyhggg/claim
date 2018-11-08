@@ -38,8 +38,8 @@
 									<td><?php echo $claim['dob'] . ", " . $claim['age'] . ", " . $claim['gender']; ?></td>
 								</tr>
 								<tr>
-									<td width='50%'><b>Claim Number :</b></td>
-									<td><?php echo $claim['claim_no']; ?></td>
+									<td width='50%'><b>Claim Number (Case Number):</b></td>
+									<td><?php echo (empty($claim['claim_no']) ? "Not a Claim " : $claim['claim_no']) . "(" . $claim['case_no'] . ")"; ?></td>
 								</tr>
 								<tr>
 									<td width='50%'><b>Other claims (related or unrelated) :</b></td>

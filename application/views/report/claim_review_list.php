@@ -15,6 +15,7 @@
 							<thead>
 								<tr>
 									<th>Claim No.</th>
+									<th>Case No.</th>
 									<th>Policy No.</th>
 									<th>First Name</th>
 									<th>Last Name</th>
@@ -27,6 +28,7 @@
 								<?php foreach($claims as $value ) { ?>
 								<tr>
 									<td><?php echo $value['claim_no']; ?></td>
+									<td><?php echo $value['case_no']; ?></td>
 									<td><?php echo $value['policy_no']; ?></td>
 									<td><?php echo $value['insured_first_name']; ?></td>
 									<td><?php echo $value['insured_last_name']; ?></td>
