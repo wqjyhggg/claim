@@ -243,6 +243,7 @@ class Claim extends CI_Controller {
 								'comment' => '', // $array['expenses_claimed']['comment'][$key],
 								'status' => Expenses_model::EXPENSE_STATUS_Pending,
 								'created_by' => $this->ion_auth->get_user_id(),
+								'finalize_date' => date('Y-m-d'),
 								'created' => date('Y-m-d H:i:s') 
 						);
 						$this->common_model->save("expenses_claimed", $payee_data);
@@ -577,6 +578,7 @@ class Claim extends CI_Controller {
 									'comment' => '', // $array['expenses_claimed']['comment'][$key],
 									'status' => Expenses_model::EXPENSE_STATUS_Pending,
 									'created_by' => $this->ion_auth->get_user_id(),
+									'finalize_date' => date('Y-m-d'),
 									'created' => date('Y-m-d H:i:s')
 							);
 							$this->common_model->save("expenses_claimed", $payee_data);

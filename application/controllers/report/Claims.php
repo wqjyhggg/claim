@@ -62,7 +62,6 @@ class Claims extends CI_Controller {
 					$this->data['records'] = array_merge($this->data['records'], $cases);
 				}
 			}
-			
 			$this->data['export_url'] = site_url('report/claims/export');
 			if (count($this->input->get()) > 0)	$this->data['export_url'] .= '?' . http_build_query($this->input->get(), '', "&");
 
@@ -151,6 +150,7 @@ class Claims extends CI_Controller {
 									'Province',
 									'Postal Code',
 									'AgentID',
+									'Diagnosis',
 									'Coverage Code',
 									'Deductible',
 									'Entered Date',
@@ -159,7 +159,7 @@ class Claims extends CI_Controller {
 									'Invoice Status',
 									'Gross Pending',
 									'Reserve Amount',
-									'Billed Amount',
+									'Claimed Amount',
 									'Paid Amount',
 									'Recovery',
 									'Description of Service',
@@ -186,6 +186,7 @@ class Claims extends CI_Controller {
 									$value['province'],
 									$value['post_code'],
 									$value['agent_id'],
+									$value['diagnosis'],
 									isset($value['coverage_code']) ? $value['coverage_code'] : '',
 									isset($value['amt_deductible']) ? $value['amt_deductible'] : 0,
 									substr($value['created'], 0, 10),
@@ -194,7 +195,7 @@ class Claims extends CI_Controller {
 									$value['status'],
 									sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0)),
 									sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0)),
-									sprintf("%0.2f", (isset($value['amount_billed']) ? $value['amount_billed'] : 0)),
+									sprintf("%0.2f", (isset($value['amount_claimed']) ? $value['amount_claimed'] : 0)),
 									sprintf("%0.2f", $value['amt_payable']),
 									sprintf("%0.2f", $value['recovery_amt']),
 									isset($value['service_description']) ? $value['service_description'] : '',

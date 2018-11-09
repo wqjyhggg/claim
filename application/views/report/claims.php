@@ -95,6 +95,7 @@
 									<th>Province</th>
 									<th>Postal Code</th>
 									<th>AgentID</th>
+									<th>Diagnosis</th>
 									<th>Coverage Code</th>
 									<th>Deductible</th>
 									<th>Entered Date</th>
@@ -103,7 +104,7 @@
 									<th>Invoice Status</th>
 									<th>Gross Pending</th>
 									<th>Reserve Amount</th>
-									<th>Billed Amount</th>
+									<th>Claim Amount</th>
 									<th>Paid Amount</th>
 									<th>Recovery</th>
 									<th>Description of Service</th>
@@ -131,6 +132,7 @@
 									<td><?php echo $value['province']; ?></td>
 									<td><?php echo $value['post_code']; ?></td>
 									<td><?php echo $value['agent_id']; ?></td>
+									<td><?php echo $value['diagnosis']; ?></td>
 									<td><?php echo isset($value['coverage_code']) ? $value['coverage_code'] : ''; ?></td>
 									<td><?php echo sprintf("%0.2f", (isset($value['amt_deductible']) ? $value['amt_deductible'] : 0)); ?></td>
 									<td><?php echo substr($value['created'], 0, 10); ?></td>
@@ -139,7 +141,7 @@
 									<td><?php echo $value['status']; ?></td>
 									<td><?php echo sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0)); ?></td>
 									<td><?php echo sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0)); ?></td>
-									<td><?php echo sprintf("%0.2f", (isset($value['amount_billed']) ? $value['amount_billed'] : 0)); ?></td>
+									<td><?php echo sprintf("%0.2f", (isset($value['amount_claimed']) ? $value['amount_claimed'] : 0)); ?></td>
 									<td><?php echo sprintf("%0.2f", $value['amt_payable']); ?></td>
 									<td><?php echo sprintf("%0.2f", $value['recovery_amt']); ?></td>
 									<td><?php echo isset($value['service_description']) ? $value['service_description'] : ''; ?></td>
