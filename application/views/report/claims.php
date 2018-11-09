@@ -114,9 +114,9 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $t_amount_billed = $t_amt_payable = $t_recovery_amt = $t_reserve_amount = 0; ?>
+								<?php $t_amount_claimed = $t_amt_payable = $t_recovery_amt = $t_reserve_amount = 0; ?>
 								<?php foreach ( $records as $key => $value ) { ?>
-								<?php 	$t_amount_billed += $value['amount_billed']; $t_amt_payable += $value['amt_payable']; $t_recovery_amt += $value['recovery_amt']; $t_reserve_amount += $value['reserve_amount']; ?>
+								<?php 	$t_amount_claimed += $value['amount_claimed']; $t_amt_payable += $value['amt_payable']; $t_recovery_amt += $value['recovery_amt']; $t_reserve_amount += $value['reserve_amount']; ?>
 								<tr>
 									<td><?php echo $value['claim_no']; ?></td>
 									<td><?php echo $value['invoice']; ?></td>
@@ -173,7 +173,7 @@
 									<td></td>
 									<td><?php echo sprintf("%0.2f", $t_reserve_amount); ?></td>
 									<td></td>
-									<td><?php echo sprintf("%0.2f", $t_amount_billed); ?></td>
+									<td><?php echo sprintf("%0.2f", $t_amount_claimed); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_amt_payable); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_recovery_amt); ?></td>
 									<td></td>
