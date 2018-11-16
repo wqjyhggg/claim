@@ -55,7 +55,7 @@
 								</tr>
 								<tr>
 									<td width='50%'><b>Plan Type :</b></td>
-									<td><?php echo empty($claim['policy_info']) ? '' : ($claim['policy_info']['isfamilyplan'] == 0) ? 'Individual' : (($claim['policy_info']['isfamilyplan'] == 1) ? 'Family' : 'Group'); ?></td>
+									<td><?php echo empty($claim['policy_info']) ? '' : empty($claim['policy_info']['isfamilyplan']) ? 'Individual' : (($claim['policy_info']['isfamilyplan'] == 1) ? 'Family' : 'Group'); ?></td>
 								</tr>
 								<tr>
 									<td width='50%'><b>Date of Application / Issue : (if applicable)</b></td>

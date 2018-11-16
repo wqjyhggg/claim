@@ -168,9 +168,9 @@ class Claims extends CI_Controller {
 									'Claim Status',
 			));
 
-			$t_amount_billed = $t_amt_payable = $t_recovery_amt = $t_reserve_amount = 0;
+			$t_amount_claimed = $t_amt_payable = $t_recovery_amt = $t_reserve_amount = 0;
 			foreach ($records as $key => $value) { 
-				$t_amount_billed += $value['amount_billed']; $t_amt_payable += $value['amt_payable']; $t_recovery_amt += $value['recovery_amt']; $t_reserve_amount += $value['reserve_amount'];
+				$t_amount_claimed += $value['amount_claimed']; $t_amt_payable += $value['amt_payable']; $t_recovery_amt += $value['recovery_amt']; $t_reserve_amount += $value['reserve_amount'];
 				fputcsv($output, array(
 									$value['claim_no'],
 									$value['invoice'],
@@ -227,7 +227,7 @@ class Claims extends CI_Controller {
 									'',
 									sprintf("%0.2f", $t_reserve_amount),
 									'',
-									sprintf("%0.2f", $t_amount_billed),
+									sprintf("%0.2f", $t_amount_claimed),
 									sprintf("%0.2f", $t_amt_payable),
 									sprintf("%0.2f", $t_recovery_amt)
 					));
