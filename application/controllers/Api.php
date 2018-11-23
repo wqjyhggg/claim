@@ -395,7 +395,7 @@ class Api extends CI_Controller {
 								'currency'=> isset($expenses_claimed['currency'][$key]) ? $expenses_claimed['currency'][$key] : 'CAD',
 								'comment'=> isset($expenses_claimed['comment'][$key]) ? $expenses_claimed['comment'][$key] : '',
 								'pay_to'=>$payee_str,
-								'status' => Expenses_model::EXPENSE_STATUS_Pending,
+								'status' => Expenses_model::EXPENSE_STATUS_Received,
 								'created_by' => 0,
 								'created' => date('Y-m-d H:i:s'));
 								

@@ -711,8 +711,8 @@ $(document).ready(function() {
 })
 .on("focusin", "input[name=amt_payable]", function() {
 	var paystatus = $(this).closest("form").find("select[name=status]").val();
-	if (paystatus == '<?php echo Expenses_model::EXPENSE_STATUS_Pending?>') {
-		alert("Don't Change [New Payable] when status is <?php echo Expenses_model::EXPENSE_STATUS_Pending; ?>");
+	if (paystatus == '<?php echo Expenses_model::EXPENSE_STATUS_Received?>') {
+		alert("Don't Change [New Payable] when status is <?php echo Expenses_model::EXPENSE_STATUS_Received; ?>");
 		$(this).blur();
 		return false;
 	}

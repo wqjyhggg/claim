@@ -8,6 +8,7 @@ if (! defined ( 'BASEPATH' )) exit ( 'No direct script access allowed' );
  */
 
 class Expenses_model extends CI_Model {
+	const EXPENSE_STATUS_Received='Received';
 	const EXPENSE_STATUS_Pending='Pending';
 	const EXPENSE_STATUS_Approved='Approved';
 	const EXPENSE_STATUS_Declined='Declined';
@@ -136,6 +137,7 @@ class Expenses_model extends CI_Model {
 	 */
 	public function get_status($nopaid=FALSE) {
 		$rt =  array(
+				'Received' => self::EXPENSE_STATUS_Received,
 				'Pending' => self::EXPENSE_STATUS_Pending,
 				'Approved' => self::EXPENSE_STATUS_Approved,
 				'Declined' => self::EXPENSE_STATUS_Declined,
@@ -402,7 +404,7 @@ class Expenses_model extends CI_Model {
 			$data['pay_date'] = date("Y-m-d");
 		}
 		if (empty($data['status'])) {
-			$data['status'] = self::EXPENSE_STATUS_Pending;
+			$data['status'] = self::EXPENSE_STATUS_Received;
 		}
 		if (isset($data['currency']) && empty($data['currency'])) {
 			$data['currency'] = "CAD";
@@ -421,7 +423,7 @@ class Expenses_model extends CI_Model {
 				}
 				if (empty($data['status'])) {
 					if (empty($cur['status'])) {
-						$data['status'] = self::EXPENSE_STATUS_Pending;
+						$data['status'] = self::EXPENSE_STATUS_Received;
 					} else {
 						$data['status'] = $cur['status'];
 					}

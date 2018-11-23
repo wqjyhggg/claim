@@ -241,7 +241,7 @@ class Claim extends CI_Controller {
 								'amount_claimed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_claimed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 								'pay_to' => $array['expenses_claimed']['payee'][$key],
 								'comment' => '', // $array['expenses_claimed']['comment'][$key],
-								'status' => Expenses_model::EXPENSE_STATUS_Pending,
+								'status' => Expenses_model::EXPENSE_STATUS_Received,
 								'created_by' => $this->ion_auth->get_user_id(),
 								'finalize_date' => date('Y-m-d'),
 								'created' => date('Y-m-d H:i:s') 
@@ -576,7 +576,7 @@ class Claim extends CI_Controller {
 									'amount_claimed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_claimed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 									'pay_to' => $array['expenses_claimed']['payee'][$key],
 									'comment' => '', // $array['expenses_claimed']['comment'][$key],
-									'status' => Expenses_model::EXPENSE_STATUS_Pending,
+									'status' => Expenses_model::EXPENSE_STATUS_Received,
 									'created_by' => $this->ion_auth->get_user_id(),
 									'finalize_date' => date('Y-m-d'),
 									'created' => date('Y-m-d H:i:s')
