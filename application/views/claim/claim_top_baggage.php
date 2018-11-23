@@ -1341,7 +1341,11 @@ function get_policy() {
       var html = $(".payee-buffer").html();
 
       var length = $(".payee-data .row").length;
-
+      if (length > 20) {
+          alter('maximum payee limit to 20');
+          retrun ;
+      }
+      
       html = html.replace(/payment_type/g, "payment_type_"+(length+1));
 
       $(".payee-data").append(html);
