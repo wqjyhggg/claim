@@ -1452,9 +1452,7 @@
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
-               if (data.plan_list[0].status_id == 6) {
-                   alert("Sorry, Refunded policy can't Create claim.");
-               } else if (data.plan_list[0].status_id == 5) {
+               if (data.plan_list[0].status_id == 5) {
                    alert("Sorry, Canceled policy can't Create claim.");
                } else {
                $("input[name=product_short]").val(data.plan_list[0].product_short);
@@ -1638,9 +1636,7 @@
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
-               if (data.plan_list[0].status_id == 6) {
-                   alert("Sorry, Refunded policy <?php echo $this->input->get('policy'); ?> can't Create claim.");
-               } else if (data.plan_list[0].status_id == 5) {
+               if (data.plan_list[0].status_id == 5) {
                    alert("Sorry, Canceled policy <?php echo $this->input->get('policy'); ?> can't Create claim.");
                } else {
                    $("input[name=product_short]").val(data.plan_list[0].product_short);
