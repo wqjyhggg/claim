@@ -656,25 +656,46 @@
 										<div class="col-sm-2">
 											<?php echo form_radio("payment_type_" . $i, "direct deposit", ($this->input->post('payment_type_' . $i) == 'direct deposit' ? TRUE : FALSE), array('class' => 'setpremium')); ?>
 											<?php echo form_label('Direct Deposit', 'Direct Deposit'); ?>
-											<?php echo form_hidden('payees[id][]', 0); ?>
+											<?php echo form_hidden('payees[id]['.$i.']', 0); ?>
 										</div>
 									</div>
 									<br />
 									<div class="col-sm-3 wire_transfer_section" <?php echo ($this->input->post('payment_type_' . $i) <> 'direct deposit'?'style="display:none"':''); ?>>
 										<?php echo form_label('Bank Name:', 'Bank Name', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("payees[bank][]", $arr["bank"][$key], array("class" => "form-control", 'placeholder' => 'Bank Name')); ?>
+										<?php echo form_input("payees[bank][".$i."]", $arr["bank"][$key], array("class" => "form-control", 'placeholder' => 'Bank Name')); ?>
 									</div>
 									<div class="col-sm-3 cheque_section wire_transfer_section">
 										<?php echo form_label('Payee Name:', 'Payee Name', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("payees[payee_name][]", $arr["payee_name"][$key], array("class" => "form-control required", 'placeholder' => 'Payee Name')); ?>
+										<?php echo form_input("payees[payee_name][".$i."]", $arr["payee_name"][$key], array("class" => "form-control required", 'placeholder' => 'Payee Name')); ?>
 									</div>
 									<div class="col-sm-3 wire_transfer_section" <?php echo ($this->input->post('payment_type_' . $i) <> 'direct deposit'?'style="display:none"':''); ?>>
 										<?php echo form_label('Account#:', 'Account', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("payees[account_cheque][]", $arr["account_cheque"][$key], array("class" => "form-control", 'placeholder' => 'Account#')); ?>
+										<?php echo form_input("payees[account_cheque][".$i."]", $arr["account_cheque"][$key], array("class" => "form-control", 'placeholder' => 'Account#')); ?>
 									</div>
 									<div class="col-sm-3 cheque_section" <?php echo ($this->input->post('payment_type_' . $i) == 'direct deposit'?'style="display:none"':''); ?>>
 										<label for="Address" class="col-sm-12">Address: &nbsp;&nbsp;<span class='payee_policy_addr'><i class="fa fa-copy"></i> use policy address</span></label>
-										<?php echo form_input("payees[address][]", $arr["address"][$key], array("class" => "form-control " . ($this->input->post('payment_type_' . $i) == 'direct deposit' ? '' : 'required'), 'placeholder' => 'Address')); ?>
+										<?php echo form_input("payees[address][".$i."]", $arr["address"][$key], array("class" => "form-control " . ($this->input->post('payment_type_' . $i) == 'direct deposit' ? '' : 'required'), 'placeholder' => 'Address')); ?>
+									</div>
+									<div class="col-sm-3 cheque_section" <?php echo ($value["payment_type"] == 'direct deposit'?'style="display:none"':''); ?>>
+										<label for="Province" class="col-sm-12">Province:</label>
+										<?php echo form_input("payees[province][".$i."]", $value ["province"], array("class" => "form-control " . ($value ["payment_type"] == 'direct deposit' ? '' : 'required'), 'placeholder' => 'Province')); ?>
+									</div>
+									<div class="col-sm-3 cheque_section" <?php echo ($value["payment_type"] == 'direct deposit'?'style="display:none"':''); ?>>
+										<label for="Country" class="col-sm-12">Country:</label>
+										<?php echo form_input("payees[country][".$i."]", $value ["country"], array("class" => "form-control " . ($value ["payment_type"] == 'direct deposit' ? '' : 'required'), 'placeholder' => 'Country')); ?>
+									</div>
+									<div class="col-sm-3 cheque_section" <?php echo ($value["payment_type"] == 'direct deposit'?'style="display:none"':''); ?>>
+										<label for="Postcode" class="col-sm-12">Postcode:</label>
+										<?php echo form_input("payees[postcode][".$i."]", $value ["postcode"], array("class" => "form-control " . ($value ["payment_type"] == 'direct deposit' ? '' : 'required'), 'placeholder' => 'Postcode')); ?>
+									</div>
+									<div class="col-sm-3 cheque_section" <?php echo ($value["payment_type"] == 'direct deposit'?'style="display:none"':''); ?>>
+										<label for="Type" class="col-sm-12">Payee Belong to: </label>
+										<div class="col-sm-4">
+										<?php echo form_radio("payees[type][".$i."]", "person", ($value ["type"] != 'business' ? TRUE : FALSE), array('class' => 'setpremium')); ?> Person
+										</div>
+										<div class="col-sm-4">
+										<?php echo form_radio("payees[type][".$i."]", "business", ($value ["type"] == 'business' ? TRUE : FALSE), array('class' => 'setpremium')); ?> Business
+										</div>
 									</div>
 									<div class="col-sm-3"><label class='col-sm-12'>&nbsp;</label> <i class="col-sm-3 fa fa-trash row-link remove-payee"></i></div>
 								</div>
@@ -1071,8 +1092,7 @@
 
 <div style="display: none">
 	<div class="payee-buffer">
-		<div class="row"
-			style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
+		<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
 			<div class="col-sm-12">
 				<div class="col-sm-2">
 					<?php echo form_radio("payment_type", "cheque", TRUE, array('class' => 'setpremium')); ?>
@@ -1081,28 +1101,46 @@
 				<div class="col-sm-2">
 					<?php echo form_radio("payment_type", "direct deposit", FALSE, array('class' => 'setpremium')); ?>
 					<?php echo form_label('Direct Deposit', 'Direct Deposit'); ?>
-					<?php echo form_hidden("payees[id][]", ''); ?>
+					<?php echo form_hidden('payees[id][nameindex]', ''); ?>
 				</div>
 			</div>
 			<br />
 			<div class="col-sm-3 wire_transfer_section" style="display: none">
 				<?php echo form_label('Bank Name:', 'Bank Name', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("payees[bank][]", $this->input->post("bank"), array("class" => "form-control alphanum", 'placeholder' => 'Bank Name')); ?>
-				<?php echo form_error("bank"); ?>
+				<?php echo form_input("payees[bank][nameindex]", $this->input->post("bank"), array("class" => "form-control", 'placeholder' => 'Bank Name')); ?>
 			</div>
 			<div class="col-sm-3 cheque_section wire_transfer_section">
 				<?php echo form_label('Payee Name:', 'Payee Name', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("payees[payee_name][]", $this->input->post("payee_name"), array("class" => "form-control required alphanum", 'placeholder' => 'Payee Name')); ?>
-				<?php echo form_error("payee_name"); ?>
+				<?php echo form_input("payees[payee_name][nameindex]", $this->input->post("payee_name"), array("class" => "form-control", 'placeholder' => 'Payee Name')); ?>
 			</div>
 			<div class="col-sm-3 wire_transfer_section" style="display: none">
 				<?php echo form_label('Account#:', 'Account', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("payees[account_cheque][]", $this->input->post("account_cheque"), array("class" => "form-control", 'placeholder' => 'Account#')); ?>
-				<?php echo form_error("account_cheque"); ?>
+				<?php echo form_input("payees[account_cheque][nameindex]", $this->input->post("account_cheque"), array("class" => "form-control", 'placeholder' => 'Account#')); ?>
 			</div>
 			<div class="col-sm-3 cheque_section">
 				<label for="Address" class="col-sm-12">Address: &nbsp;&nbsp;<span class='payee_policy_addr'><i class="fa fa-copy"></i> use policy address</span></label>
-				<?php echo form_input("payees[address][]", $this->input->post("address"), array("class" => "form-control required", 'placeholder' => 'Address')); ?>
+				<?php echo form_input("payees[address][nameindex]", $this->input->post("address"), array("class" => "form-control", 'placeholder' => 'Address')); ?>
+			</div>
+			<div class="col-sm-3 cheque_section">
+				<label for="Province" class="col-sm-12">Province:</label>
+				<?php echo form_input("payees[province][nameindex]", $this->input->post("address"), array("class" => "form-control", 'placeholder' => 'Province')); ?>
+			</div>
+			<div class="col-sm-3 cheque_section">
+				<label for="Country" class="col-sm-12">Country:</label>
+				<?php echo form_input("payees[country][nameindex]", $this->input->post("address"), array("class" => "form-control", 'placeholder' => 'Country')); ?>
+			</div>
+			<div class="col-sm-3 cheque_section">
+				<label for="Postcode" class="col-sm-12">Postcode:</label>
+				<?php echo form_input("payees[postcode][nameindex]", $this->input->post("address"), array("class" => "form-control", 'placeholder' => 'Postcode')); ?>
+			</div>
+			<div class="col-sm-3 cheque_section">
+				<label for="Type" class="col-sm-12">Payee Belong to: </label>
+				<div class="col-sm-4">
+				<?php echo form_radio("payees[type][nameindex]", "person", TRUE, array('class' => 'setpremium')); ?> Person
+				</div>
+				<div class="col-sm-4">
+				<?php echo form_radio("payees[type][nameindex]", "business", FALSE, array('class' => 'setpremium')); ?> Business
+				</div>
 			</div>
 			<div class="col-sm-3">
 				<label class='col-sm-12'>&nbsp;</label> <i class="col-sm-3 fa fa-trash row-link remove-payee"></i>
@@ -1215,6 +1253,7 @@
       }
 
       html = html.replace(/payment_type/g, "payment_type_"+(length+1));
+      html = html.replace(/nameindex/g, (length+1));
 
       $(".payee-data").append(html);
 
@@ -1225,12 +1264,18 @@
    })
 	.on("click", ".payee_policy_addr", function() {
 		var addr = $(this).closest("div").find("input[name='payees[address][]']");
-		var data = $.parseJSON(localStorage.getItem("policy_data"));
+		var prov = $(this).closest("div").parent().find("input[name^='payees[province]']");
+		var ctry = $(this).closest("div").parent().find("input[name^='payees[country]']");
+		var ptcd = $(this).closest("div").parent().find("input[name^='payees[postcode]']");
+		var data = $.parseJSON(localStorage.getItem("policy_data")); 
 		if (data[0].suite_number) {
-			addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+			addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name + " " + data[0].city);
 		} else {
-			addr.val(data[0].street_number+" "+data[0].street_name + " " + data[0].city + ", " + data[0].province2 + " " + data[0].postcode);
+			addr.val(data[0].street_number+" "+data[0].street_name + " " + data[0].city);
 		}
+		prov.val(data[0].province2);
+		ctry.val(data[0].country2);
+		ptcd.val(data[0].postcode);
 		remapping_payee();
 	})
 
@@ -1685,7 +1730,7 @@
    })
 
    // to list payee in expenses payee
-   .on("keyup", "input[name='payees[payee_name][]'],input[name='payees[address][]'],input[name='payees[bank][]'],input[name='payees[account_cheque][]']", function(){
+   .on("keyup", "input[name^='payees[payee_name]'],input[name^='payees[address]'],input[name^='payees[province]'],input[name^='payees[country]'],input[name^='payees[postcode]'],input[name^='payees[type]'],input[name^='payees[bank]'],input[name^='payees[account_cheque][]']", function(){
       // build a list of all payees name here
 		remapping_payee();
       //var html = "<option value=''>--Select Payee--</option>";
@@ -1875,18 +1920,18 @@ function validate_form(){
 
 function remapping_payee() {
 	var html = "<option value=''>--Select Payee--</option>";
-	$("input[name='payees[payee_name][]']").each(function(){
-	   if($(this).val()) {
-	       var p = $(this).parent().parent();
-	       var v = p.find('input[type=radio]:checked').val();
-	       if (v == 'cheque') {
-	           v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[address][]']").val();
-	       } else {
-	           v = v + " : " + p.find("input[name='payees[payee_name][]']").val() + " : " + p.find("input[name='payees[bank][]']").val() + " : " + p.find("input[name='payees[account_cheque][]']").val();
-	       }
-	      html += '<option value="'+v+'">'+$(this).val()+'</option>';
-	   }
-	})
+    $("input[name^='payees[payee_name]']").each(function(){
+        if($(this).val()) {
+            var p = $(this).parent().parent();
+            var v = p.find('input[name^=payment_type]:checked').val();
+            if (v == 'cheque') {
+                v = v + " : " + p.find("input[name^='payees[payee_name]']").val() + " : " + p.find("input[name^='payees[address]']").val() + " : " + p.find("input[name^='payees[province]']").val() + " : " + p.find("input[name^='payees[country]']").val() + " : " + p.find("input[name^='payees[postcode]']").val() + " : " + p.find("input[name^='payees[type]']:checked").val();
+            } else {
+                v = v + " : " + p.find("input[name^='payees[payee_name]']").val() + " : " + p.find("input[name^='payees[bank]']").val() + " : " + p.find("input[name^='payees[account_cheque]']").val();
+            }
+           html += '<option value="'+v+'">'+$(this).val()+'</option>';
+        }
+    })
 
 	$("select[name='expenses_claimed[payee][]']").html(html);
 

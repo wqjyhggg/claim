@@ -345,7 +345,7 @@ class Api extends CI_Controller {
 
 					$data['files'] = implode(",", $file_names);
 				}
-	
+
 				// insert payee information
 				$payees = $this->input->post('payees');
 				$payee_str = '';
@@ -358,17 +358,35 @@ class Api extends CI_Controller {
 							'payee_name'=> isset($payees['payee_name'][$key]) ? $payees['payee_name'][$key] : '',
 							'account_cheque'=> isset($payees['account_cheque'][$key]) ? $payees['account_cheque'][$key] : '',
 							'address'=> isset($payees['address'][$key]) ? $payees['address'][$key] : '',
-							'created'=>date('c')
+							'province'=> isset($payees['province'][$key]) ? $payees['province'][$key] : '',
+							'country'=> isset($payees['country'][$key]) ? $payees['country'][$key] : '',
+							'postcode'=> isset($payees['postcode'][$key]) ? $payees['postcode'][$key] : '',
+							'type'=> isset($payees['type'][$key]) ? $payees['type'][$key] : '',
+								'created'=>date('c')
 							);
 						$this->claim_model->payees_save($payee_data);
 						if ($payee_data['payment_type'] == 'cheque') {
-							$payee_str = "cheque : ".$payee_data['payee_name']." : ".$payee_data['address'];
+							$payee_str = "cheque : ".$payee_data['payee_name']." : ".$payee_data['address']." : ".$payee_data['province']." : ".$payee_data['country']." : ".$payee_data['postcode']." : ";
 						} else {
 							$payee_str = "direct deposit : ".$payee_data['payee_name']." : ".$payee_data['bank']." : ".$payee_data['account_cheque'];
 						}
 					}
 				}
 				
+				// insert item provider information
+				$eprovider = $this->input->post('eprovider');
+				if (!empty($eprovider)) {
+					foreach ($eprovider['eprovider'] as $key => $name) {
+						$iprovider_data = array(
+								'claim_id'=>$id,
+								'address'=> isset($payees['address'][$key]) ? $payees['address'][$key] : '',
+								'province'=> isset($payees['province'][$key]) ? $payees['province'][$key] : '',
+								'country'=> isset($payees['country'][$key]) ? $payees['country'][$key] : '',
+								'postcode'=> isset($payees['postcode'][$key]) ? $payees['postcode'][$key] : ''
+						);
+						$this->claim_model->eprovider_save($iprovider_data);
+					}
+				}
 				
 				// insert expenses_claimed data
 				$expenses_claimed = $this->input->post('expenses_claimed');
@@ -383,6 +401,7 @@ class Api extends CI_Controller {
 								'claim_no' => $claim_no,
 								'claim_item_no' => $claim_no . '_' . $i,
 								'case_no' => '',
+								'expenses_provider_id'=> isset($expenses_claimed['expenses_provider_id'][$key]) ? (int)$expenses_claimed['expenses_provider_id'][$key] : 0,
 								'provider_name'=> isset($expenses_claimed['provider_name'][$key]) ? $expenses_claimed['provider_name'][$key] : '',
 								'referencing_physician'=> isset($expenses_claimed['referencing_physician'][$key]) ? $expenses_claimed['referencing_physician'][$key] : '',
 								'coverage_code'=> isset($expenses_claimed['coverage_code'][$key]) ? $expenses_claimed['coverage_code'][$key] : '',

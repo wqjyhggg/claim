@@ -1,5 +1,5 @@
 <div>
-	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) { ?>
+	<?php if (0 && $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) { ?>
 	<div class="page-title">
 		<div class="title_left"><?php echo anchor("claim/create_claim", '<i class="fa fa-plus-circle"></i> Create New Claim', array("class"=>'btn btn-primary create_claim'))?></div>
 	</div>

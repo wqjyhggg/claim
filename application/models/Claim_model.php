@@ -270,7 +270,7 @@ class Claim_model extends CI_Model {
 		foreach ($array as $val) {
 			$key = $val['payment_type'];
 			if ($key == 'cheque') {
-				$key = $key . " : " . $val['payee_name'] . " : " . $val['address'];
+				$key = $key . " : " . $val['payee_name'] . " : " . $val['address'] . " : " . $val['province'] . " : " . $val['country'] . " : " . $val['postcode'] . " : " . $val['type'];
 			} else {
 				$key = $key . " : " . $val['payee_name'] . " : " + $val['bank'] . " : " . $val['account_cheque'];
 			}
@@ -282,7 +282,7 @@ class Claim_model extends CI_Model {
 	public function payee_remove_by_claim_id($claim_id) {
 		$this->db->query("DELETE FROM payees WHERE claim_id='" . (int)$claim_id . "'");
 	}
-
+	
 	/**
 	 * Save or Update a payees
 	 *
@@ -308,6 +308,45 @@ class Claim_model extends CI_Model {
 			$sql = $this->db->last_query();
 			$id = $this->db->insert_id();
 			$this->active_model->log_new('payees', $id, $data, $sql);
+			return $id;
+		}
+	}
+	
+	public function get_expenses_provider_by_id($id) {
+		$this->db->where('id', $id);
+		return $this->db->get('expenses_provider')->row_array();
+	}
+	
+	public function expenses_provider_search($array) {
+		$this->db->where($array);
+		return $this->db->get('expenses_provider')->result_array();
+	}
+	
+	/**
+	 * Save or Update a provider
+	 *
+	 * @param array $para     	parameter
+	 * @return int				inserted array ID
+	 */
+	public function expenses_provider_save($data) {
+		if (isset($data['id'])) {
+			// Update
+			$id = $data['id'];
+			$cur = $this->get_expenses_provider_by_id($id);
+			unset($data['id']);
+			if ($cur) {
+				$this->db->where('id', $id);
+				$this->db->update('expenses_provider', $data);
+				$this->active_model->log_update('expenses_provider', $id, $cur, $data, $this->db->last_query());
+				return $id;
+			}
+			return 0;
+		} else {
+			// insert
+			$this->db->insert('expenses_provider', $data);
+			$sql = $this->db->last_query();
+			$id = $this->db->insert_id();
+			$this->active_model->log_new('expenses_provider', $id, $data, $sql);
 			return $id;
 		}
 	}

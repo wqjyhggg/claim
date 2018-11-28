@@ -64,6 +64,50 @@ class Claim extends CI_Controller {
 			$this->template->render();
 		}
 	}
+
+	public function delete_expenses_provider() {
+		$json = array("status" => 0, "message" => 'Sorry, you don\'t have any permission to access this function.');
+		if ($this->ion_auth->logged_in() && $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
+			$post = $this->input->post();
+			if (!empty($post['expenses_provider_id'])) {
+				$data = array(
+						'id' => $post['expenses_provider_id'],
+						'status' => 0,
+				);
+				$id = $this->claim_model->expenses_provider_save($data);
+				$json = array("status" => 1);
+			}
+		}
+	}
+
+	public function update_expenses_provider() {
+		if ($this->ion_auth->logged_in() && $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
+			// validate input
+			$post = $this->input->post();
+			if (empty($post['address']) || empty($post['province']) || empty($post['country']) || empty($post['postcode'])) {
+				$json = array("status" => 0, "message" => 'Missing parameter.');
+			} else {
+				// insert item provider information
+				$data = array(
+						'claim_id' => $post['claim_id'],
+						'address' => $post['address'],
+						'province' => $post['province'],
+						'country' => $post['country'],
+						'postcode' => $post['postcode']
+				);
+				$id = $this->claim_model->expenses_provider_save($data);
+				if ($id) {
+					array("status" => 1, "id" => $id);
+				} else {
+					array("status" => 0, "message" => 'Sorry, something wrong. Please try it again');
+				}
+			}
+		} else {
+			$json = array("status" => 0, "message" => 'Sorry, you don\'t have any permission to access this function.');
+		}
+		header('Content-Type: application/json');
+		echo json_encode($json);
+	}
 	
 	// redirect if needed, otherwise display the create claim page
 	public function create_claim() {
@@ -126,7 +170,7 @@ class Claim extends CI_Controller {
 				
 				foreach ( $array as $key => $value ) {
 					// code...
-					if ($key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf") && ! strpos($key, "ayment_type"))
+					if ($key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "eprovider" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf") && ! strpos($key, "ayment_type"))
 						$data[$key] = $value;
 				}
 				$data['created'] = date('Y-m-d H:i:s');
@@ -196,12 +240,16 @@ class Claim extends CI_Controller {
 				if (! empty($array['payees'])) {
 					foreach ( $array['payees']['bank'] as $key => $val ) {
 						$payee_data = array(
-								'payment_type' => $array['payment_type_' . ($key + 1)],
+								'payment_type' => $array['payment_type_' . $key],
 								'claim_id' => $record_id,
 								'bank' => $val,
 								'payee_name' => $array['payees']['payee_name'][$key],
 								'account_cheque' => $array['payees']['account_cheque'][$key],
 								'address' => $array['payees']['address'][$key],
+								'province' => $array['payees']['province'][$key],
+								'country' => $array['payees']['country'][$key],
+								'postcode' => $array['payees']['postcode'][$key],
+								'type' => isset($array['payees']['type'][$key]) ? $array['payees']['type'][$key] : '',
 								'created' => date('Y-m-d H:i:s') 
 						);
 						$this->claim_model->payees_save($payee_data);
@@ -227,6 +275,7 @@ class Claim extends CI_Controller {
 								'claim_no' => $claim_no,
 								'claim_item_no' => $claim_no . '_' . $i,
 								'case_no' => $array['case_no'],
+								'expenses_provider_id' => $array['expenses_claimed']['expenses_provider_id'][$key],
 								'provider_name' => $array['expenses_claimed']['provider_name'][$key],
 								'referencing_physician' => $array['expenses_claimed']['referencing_physician'][$key],
 								'coverage_code' => $array['expenses_claimed']['coverage_code'][$key],
@@ -247,6 +296,12 @@ class Claim extends CI_Controller {
 								'created' => date('Y-m-d H:i:s') 
 						);
 						$this->common_model->save("expenses_claimed", $payee_data);
+						// Need to update claim id when first time create
+						$payee_data = array(
+								'claim_id' => $record_id,
+								'id' => $array['expenses_claimed']['expenses_provider_id'][$key]
+						);
+						$this->claim_model->expenses_provider_save($payee_data);
 					}
 				}
 				
@@ -457,7 +512,7 @@ class Claim extends CI_Controller {
 	
 				foreach ( $array as $key => $value ) {
 					// code...
-					if ($key != "exinfo" && $key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf") && ! strpos($key, "ayment_type")) {
+					if ($key != "exinfo" && $key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "eprovider" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf") && ! strpos($key, "ayment_type")) {
 						$data[$key] = $value;
 					} else if ($key == "exinfo") {
 						$data["exinfo"] = json_encode($value);
@@ -531,12 +586,16 @@ class Claim extends CI_Controller {
 					if (! empty($array['payees'])) {
 						foreach ( $array['payees']['bank'] as $key => $val ) {
 							$payee_data = array(
-									'payment_type' => $array['payment_type_' . ($key + 1)],
+									'payment_type' => $array['payment_type_' . $key],
 									'claim_id' => $record_id,
 									'bank' => $val,
 									'payee_name' => $array['payees']['payee_name'][$key],
 									'account_cheque' => $array['payees']['account_cheque'][$key],
 									'address' => $array['payees']['address'][$key],
+									'province' => $array['payees']['province'][$key],
+									'country' => $array['payees']['country'][$key],
+									'postcode' => $array['payees']['postcode'][$key],
+									'type' => isset($array['payees']['type'][$key]) ? $array['payees']['type'][$key] : '',
 									'created' => date('Y-m-d H:i:s')
 							);
 							$this->claim_model->payees_save($payee_data);
@@ -563,6 +622,7 @@ class Claim extends CI_Controller {
 									'claim_item_no' => $claim_no . '_' . $i,
 									'case_no' => $array['case_no'],
 									'provider_name' => $array['expenses_claimed']['provider_name'][$key],
+									'expenses_provider_id' => $array['expenses_claimed']['expenses_provider_id'][$key],
 									'referencing_physician' => $array['expenses_claimed']['referencing_physician'][$key],
 									'coverage_code' => $array['expenses_claimed']['coverage_code'][$key],
 									'diagnosis' => '', // $array['expenses_claimed']['diagnosis'][$key],
@@ -582,6 +642,12 @@ class Claim extends CI_Controller {
 									'created' => date('Y-m-d H:i:s')
 							);
 							$this->common_model->save("expenses_claimed", $payee_data);
+							// Need to update claim id when first time create
+							$payee_data = array(
+									'claim_id' => $record_id,
+									'id' => $array['expenses_claimed']['expenses_provider_id'][$key]
+							);
+							$this->claim_model->expenses_provider_save($payee_data);
 						}
 					}
 	
@@ -810,7 +876,7 @@ class Claim extends CI_Controller {
 				
 				foreach ( $array as $key => $value ) {
 					// code...
-					if ($key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf"))
+					if ($key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "eprovider" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf"))
 						$data[$key] = $value;
 				}
 				
@@ -873,10 +939,15 @@ class Claim extends CI_Controller {
 					
 					foreach ( $array['payees']['bank'] as $key => $val ) {
 						$payee_data = array(
-								'payment_type' => $array['payment_type_' . ($key + 1)],
+								'payment_type' => $array['payment_type_' . $key],
 								'claim_id' => $record_id,
 								'bank' => $val,
 								'payee_name' => $array['payees']['payee_name'][$key],
+								'address' => $array['payees']['address'][$key],
+								'province' => $array['payees']['province'][$key],
+								'country' => $array['payees']['country'][$key],
+								'postcode' => $array['payees']['postcode'][$key],
+								'type' => isset($array['payees']['type'][$key]) ? $array['payees']['type'][$key] : '',
 								'account_cheque' => $array['payees']['account_cheque'][$key],
 								'created' => date('Y-m-d H:i:s') 
 						);
@@ -1013,6 +1084,7 @@ class Claim extends CI_Controller {
 				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
 				$this->data['products'] = $this->product_model->get_list();
 				$this->data['payees'] = $this->claim_model->payee_search(array("claim_id" => $id));
+				$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id));
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code2();
 				
 				$this->data['reasons'] = $this->reasons_model->get_list();
@@ -1137,13 +1209,13 @@ class Claim extends CI_Controller {
 				$array = $this->input->post();
 				foreach ( $array as $key => $value ) {
 					// code...
-					if ($key != "exinfo" && $key != "expenses_claimed" && $key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf") && ! strpos($key, "ayment_type")) {
+					if ($key != "exinfo" && $key != "expenses_claimed" && $key != "Examine" && $key != "filter" && $key != "same_policy" && $key != "Save" && $key != "files_multi" && $key != "payees" && $key != "eprovider" && $key != "files" && $key != "expenses_claimed" && ! strpos($key, "otes_") && ! strpos($key, "iles_") && $key != "no_of_form" && ! strpos($key, "ile_pdf") && ! strpos($key, "ayment_type")) {
 						$data[$key] = $value;
 					} else if ($key == "exinfo") {
 						$data["exinfo"] = json_encode($value);
 					}
 				}
-				
+
 				// upload claim pdf files to server
 				$files = @$_FILES['files_multi'];
 				$file_names =[ ];
@@ -1201,18 +1273,22 @@ class Claim extends CI_Controller {
 					}
 				}
 					
-					// insert payee information
+				// insert payee information
 				if (! empty($array['payees'])) {
 					$this->claim_model->payee_remove_by_claim_id($record_id);
 					
 					foreach ( $array['payees']['bank'] as $key => $val ) {
 						$payee_data = array(
-								'payment_type' => $array['payment_type_' . ($key + 1)],
+								'payment_type' => $array['payment_type_' . $key],
 								'claim_id' => $record_id,
 								'bank' => $val,
 								'payee_name' => $array['payees']['payee_name'][$key],
 								'account_cheque' => $array['payees']['account_cheque'][$key],
 								'address' => $array['payees']['address'][$key],
+								'province' => $array['payees']['province'][$key],
+								'country' => $array['payees']['country'][$key],
+								'postcode' => $array['payees']['postcode'][$key],
+								'type' => isset($array['payees']['type'][$key]) ? $array['payees']['type'][$key] : '',
 								'created' => date('Y-m-d H:i:s') 
 						);
 						/*
@@ -1225,6 +1301,8 @@ class Claim extends CI_Controller {
 						$this->claim_model->payees_save($payee_data);
 					}
 				}
+				//echo "<pre>"; print_r($array); print_r($data); //XXXXXXXXXXXXXXXXXXXXX
+				//die("X12"); //XXXXXXXX
 				
 				// insert expenses_claimed data
 				if (! empty($array['expenses_claimed'])) {
@@ -1238,6 +1316,7 @@ class Claim extends CI_Controller {
 								'claim_no' => $this->data['claim_details']['claim_no'],
 								'claim_item_no' => $this->data['claim_details']['claim_no'] . '_' . $i,
 								'provider_name' => $array['expenses_claimed']['provider_name'][$key],
+								'expenses_provider_id' => $array['expenses_claimed']['expenses_provider_id'][$key],
 								'referencing_physician' => $array['expenses_claimed']['referencing_physician'][$key],
 								'coverage_code' => $array['expenses_claimed']['coverage_code'][$key],
 								'diagnosis' => isset($array['expenses_claimed']['diagnosis'][$key]) ? $array['expenses_claimed']['diagnosis'][$key] : '',
@@ -1354,6 +1433,7 @@ class Claim extends CI_Controller {
 				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
 				$this->data['products'] = $this->product_model->get_list();
 
+				$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id));
 				$this->data['payees_list'] = $this->claim_model->payee_format_array($this->claim_model->payee_search(array("claim_id" => $id)));
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
 				
@@ -1367,12 +1447,16 @@ class Claim extends CI_Controller {
 					$arr = $this->input->post('payees');
 					foreach ( $arr['bank'] as $key => $val ) {
 						$this->data['payees'][] = array(
-								'payment_type' => $this->input->post('payment_type_' . ($key + 1)),
+								'payment_type' => $this->input->post('payment_type_' . $key),
 								'id' => $arr['id'][$key],
 								'bank' => $arr['bank'][$key],
 								'payee_name' => $arr['payee_name'][$key],
 								'account_cheque' => $arr['account_cheque'][$key],
 								'address' => $arr['address'][$key],
+								'province' => $arr['province'][$key],
+								'country' => $arr['country'][$key],
+								'postcode' => $arr['postcode'][$key],
+								'type' => isset($arr['type'][$key]) ? $arr['type'][$key] : '',
 						);
 					}
 				} else {
@@ -1387,6 +1471,7 @@ class Claim extends CI_Controller {
 								'id' => $arr['id'][$key],
 								'invoice' => $arr['invoice'][$key],
 								'provider_name' => $arr['provider_name'][$key],
+								'expenses_provider_id' => $arr['expenses_provider_id'][$key],
 								'referencing_physician' => $arr['referencing_physician'][$key],
 								'coverage_code' => $arr['coverage_code'][$key],
 								'diagnosis' => '', // $arr['diagnosis'][$key],
@@ -2039,7 +2124,7 @@ class Claim extends CI_Controller {
 		
 		// get expenses climed items list
 		$this->data['expenses'] = $this->common_model->select($record = "list", $typecast = "array", $table = "expenses_claimed", $fields = "`expenses_claimed`.*", $conditions = array(
-				'expenses_claimed.claim_id' => $claim_id 
+				'expenses_claimed.claim_id' => $claim_id
 		));
 		
 		// get case info details if exists
