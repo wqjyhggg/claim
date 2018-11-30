@@ -11,11 +11,12 @@
 			<div class="x_panel">
 				<div class="x_content">
 					<?php echo form_open_multipart("", array('class'=>'form-horizontal', 'method'=>'post', 'onsubmit'=>'return validate_form()', 'id'=>'main_form')); ?>
+					<?php $gender = !empty($this->input->get("gender")) ? $this->input->get("gender") : $this->input->post("gender"); if ($gender == 'M') $gender = 'male'; if ($gender == 'F') $gender = 'female'; ?>
 					<h4 class="move_down">SECTION A: INSURED’S INFORMATION <i class="fa fa-angle-down pull-right"></i></h4>
 					<div class="row" style="margin-bottom: 15px; display: none">
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Insured First Name:', 'insured_first_name', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("insured_first_name", $this->input->post("insured_first_name"), array("class" => "form-control required", 'placeholder' => 'Insured First Name')); ?>
+							<?php echo form_input("insured_first_name", !empty($this->input->get("firstname")) ? $this->input->get("firstname") : $this->input->post("insured_first_name"), array("class" => "form-control required", 'placeholder' => 'Insured First Name')); ?>
 							<?php echo form_error("insured_first_name"); ?>
 						</div>
 						<div class="col-sm-3">
@@ -26,11 +27,11 @@
 						<div class="col-sm-3">
 							<div class="col-sm-4">
 								<?php echo form_label('&nbsp;', 'gender', array("class" => 'col-sm-12')); ?>
-								<?php echo form_radio("gender", "male", $this->input->post("gender"), array('class' => 'setpremium')); ?> Male
+								<?php echo form_radio("gender", "male", "male" == $gender, array('class' => 'setpremium')); ?> Male
 							</div>
 							<div class="col-sm-5">
 								<?php echo form_label('&nbsp;', 'gender', array("class" => 'col-sm-12')); ?>
-								<?php echo form_radio("gender", "female", $this->input->post("gender"), array('class' => 'setpremium'));?> Female
+								<?php echo form_radio("gender", "female", "female" == $gender, array('class' => 'setpremium'));?> Female
 							</div>
 						</div>
 						<div class="col-sm-3" style='display:none;'>
@@ -41,7 +42,7 @@
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
-								<?php echo form_input("dob", $this->input->post("dob"), array("class" => "form-control dob required", 'placeholder' => 'Date of Birth')); ?>
+								<?php echo form_input("dob", !empty($this->input->get("birthday")) ? $this->input->get("birthday") : $this->input->post("dob"), array("class" => "form-control dob required", 'placeholder' => 'Date of Birth')); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 							<?php echo form_error("dob"); ?>
