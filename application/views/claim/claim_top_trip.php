@@ -693,6 +693,44 @@
 						</div>
 
 						<h2 class="move_down">
+							Provider Information
+							<?php if($edit): ?>
+							<button class="btn btn-primary add_eprovider" name="filter" type="button" value="claim">Add a Provider</button>
+							<?php endif; ?>
+							<i class="fa fa-angle-down pull-right"></i>
+						</h2>
+						<div class="row" style="display: none">
+							<div class="col-sm-12">
+								<div class="eprovider-data">
+									<?php foreach ( $eprovider_list as $i => $value ) : ?>
+									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
+										<?php echo form_hidden("eprovider[id][".$i."]", $value['id']); ?>
+										<div class="col-sm-4">
+											<label for="Address" class="col-sm-12">Address:</label>
+											<?php echo form_input("eprovider[address][".$i."]", $value ["address"], array("class" => "form-control required", "placeholder" => 'Address')); ?>
+										</div>
+										<div class="col-sm-2">
+											<label for="Province" class="col-sm-12">Province:</label>
+											<?php echo form_input("eprovider[province][".$i."]", $value ["province"], array("class" => "form-control required", 'placeholder' => 'Province')); ?>
+										</div>
+										<div class="col-sm-2">
+											<label for="Country" class="col-sm-12">Country:</label>
+											<?php echo form_input("eprovider[country][".$i."]", $value ["country"], array("class" => "form-control required", 'placeholder' => 'Country')); ?>
+										</div>
+										<div class="col-sm-2">
+											<label for="Postcode" class="col-sm-12">Postcode:</label>
+											<?php echo form_input("eprovider[postcode][".$i."]", $value ["postcode"], array("class" => "form-control required", 'placeholder' => 'Postcode')); ?>
+										</div>
+										<?php if($edit): ?>
+										<div class="col-sm-2"><label class='col-sm-12'>&nbsp;</label> <i class="col-sm-3 fa fa-trash row-link remove-eprovider"></i></div>
+										<?php endif;?>
+									</div>
+									<?php endforeach; ?>
+								</div>
+							</div>
+						</div>
+
+						<h2 class="move_down">
 							Expenses Claimed
 							<i class="fa fa-angle-down pull-right"></i>
 						</h2>
@@ -793,7 +831,13 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed[provider_name][]", $value ['provider_name'], array("class" => "form-control ")); ?>
+											<select name="expenses_claimed[expenses_provider_id][]" class="form-control expenses_provider_select required">
+												<option value="0">-- Select Provider --</option>
+												<?php foreach ($eprovider_list as $key => $val): ?>
+												<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value ["expenses_provider_id"]) { echo "selected"; } ?>><?php echo $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>
+												<?php endforeach; ?>
+											</select>
+											<?php echo form_hidden("expenses_claimed[provider_name][]", $value['provider_name']); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
@@ -1156,7 +1200,13 @@
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[referencing_physician][]", $this->input->post("referencing_physician"), array("class" => "form-control")); ?>
+				<select name="expenses_claimed[expenses_provider_id][]" class="form-control expenses_provider_select required">
+					<option value="0">-- Select Provider --</option>
+					<?php foreach ($eprovider_list as $key => $val): ?>
+					<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value ["expenses_provider_id"]) { echo "selected"; } ?>><?php echo $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>
+					<?php endforeach; ?>
+				</select>
+				<?php echo form_hidden("expenses_claimed[provider_name][]", ""); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
@@ -1281,6 +1331,31 @@
 			<div class="col-sm-3">
 				<label class='col-sm-12'>&nbsp;</label> <i class="col-sm-3 fa fa-trash row-link remove-payee"></i>
 			</div>
+		</div>
+	</div>
+</div>
+
+<div style="display: none">
+	<div class="eprovider-buffer">
+		<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
+			<?php echo form_hidden("eprovider[id][nameindex]", 'idvalue'); ?>
+			<div class="col-sm-4">
+				<label for="Address" class="col-sm-12">Address:</label>
+				<?php echo form_input("eprovider[address][nameindex]", "", array("class" => "form-control required", "placeholder" => 'Address')); ?>
+			</div>
+			<div class="col-sm-2">
+				<label for="Province" class="col-sm-12">Province:</label>
+				<?php echo form_input("eprovider[province][nameindex]", "", array("class" => "form-control required", 'placeholder' => 'Province')); ?>
+			</div>
+			<div class="col-sm-2">
+				<label for="Country" class="col-sm-12">Country:</label>
+				<?php echo form_input("eprovider[country][nameindex]", "", array("class" => "form-control required", 'placeholder' => 'Country')); ?>
+			</div>
+			<div class="col-sm-2">
+				<label for="Postcode" class="col-sm-12">Postcode:</label>
+				<?php echo form_input("eprovider[postcode][nameindex]", "", array("class" => "form-control required", 'placeholder' => 'Postcode')); ?>
+			</div>
+			<div class="col-sm-2"><label class='col-sm-12'>&nbsp;</label> <i class="col-sm-3 fa fa-trash row-link remove-eprovider"></i></div>
 		</div>
 	</div>
 </div>
@@ -1479,6 +1554,32 @@ function get_policy() {
       $(this).next('i').removeClass('fa-angle-down').addClass('fa-angle-up');
       e.stopPropagation()
    })
+	.on("click", ".add_eprovider", function(e){
+		var length = $(".eprovider-data .row").length;
+		if (length > 20) {
+			alter('maximum eprovider limit to 20');
+			retrun ;
+		}
+
+		var me = $(this);
+
+		$.ajax({
+			url: "<?php echo base_url("claim/update_eprovider") ?>",
+			method:"post",
+			data:{claim_id:'<?php echo $claim_details["id"]; ?>'},
+			success: function(data) {
+				if (data.success) {
+					var html = $(".eprovider-buffer").html();
+					html = html.replace(/nameindex/g, (length+1));
+					html = html.replace(/idvalue/, data.id);
+					$(".eprovider-data").append(html);
+					me.parent('.move_down').next('.row').show();
+					me.next('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+				}
+			}
+		})
+		e.stopPropagation()
+	})
 	.on("click", ".payee_policy_addr", function() {
 		var addr = $(this).closest("div").find("input[name='payees[address][]']");
 		var prov = $(this).closest("div").parent().find("input[name^='payees[province]']");
@@ -1538,6 +1639,21 @@ function get_policy() {
       //   $(this).find('input[name^=payment_type]').attr('name', 'payment_type_'+$count);
       //})
    })
+
+	.on("click", ".remove-eprovider", function(){
+		if (confirm('Are you sure you want to remove provider?')) {
+			$(this).parent("div").parent("div").remove();
+			// remove payee from db if already stored
+			var id = $(this).parent("div").parent("div").find("input[name^='eprovider[id]']").val();
+			if(id){
+				$.ajax({
+					url: "<?php echo base_url("claim/delete_eprovider/") ?>"+id,
+					method: "get"
+				})
+			}
+		}
+		remapping_eprovider();
+	})
 
    // show email/print function
    .on("click", ".select-doc", function(){
@@ -1684,6 +1800,12 @@ function get_policy() {
       $(this).next("span.file-label").text($(this).val()).parent("div.col-sm-9").show();
    })
 
+	.on("change",".expenses_provider_select", function(){
+		var pt = $(this).parents('div');
+		var name = pt.find("input[name='expenses_claimed[provider_name][]']");
+		var txt = $(this).find(":selected").text();
+		name.val(txt);
+	})
    // custom script for multi file upload
    .on("click",".multiupload", function(){
       var count = $("input[type=file]").length;
@@ -1956,6 +2078,29 @@ function get_policy() {
        
    })
 
+	.on("change", "input[name^='eprovider[address]'],input[name^='eprovider[province]'],input[name^='eprovider[country]'],input[name^='eprovider[postcode]']", function(){
+		var me = $(this).parent('div').parent('div');
+		var id = me.find("input[name^='eprovider[id]']").val();
+		var address = me.find("input[name^='eprovider[address]']").val();
+		var province = me.find("input[name^='eprovider[province]']").val();
+		var country = me.find("input[name^='eprovider[country]']").val();
+		var postcode = me.find("input[name^='eprovider[postcode]']").val();
+		$.ajax({
+			url: "<?php echo base_url("claim/update_eprovider"); ?>",
+			method:"post",
+			data:{
+				id:id,
+				address:address,
+				province:province,
+				country:country,
+				postcode:postcode,
+				claim_id:'<?php echo $claim_details["id"]; ?>'},
+			dataType: "json",
+			success: function(data) {
+				remapping_eprovider();
+			}
+		})
+	})
    // to check unique payee name
    .on("change", "input[name='payees[payee_name][]']", function(){
       // check all payees name here
@@ -2015,6 +2160,27 @@ $outer_select.each(function(){
 });
 
 $(".claim-items").html($("#claim-items").html())
+
+function remapping_eprovider() {
+	var html = "<option value=''>--Select Provider--</option>";
+	$("input[name^='eprovider[address]']").each(function(){
+		if ($(this).val()) {
+			var p = $(this).parent().parent();
+			var id = p.find("input[name^='eprovider[id]']").val();
+			var address = p.find("input[name^='eprovider[address]']").val();
+			var province = p.find("input[name^='eprovider[province]']").val();
+			var country = p.find("input[name^='eprovider[country]']").val();
+			var postcode = p.find("input[name^='eprovider[postcode]']").val();
+			html += '<option value="'+id+'">' + address + ", " + province + " " + country + " " + postcode + '</option>';
+		}
+	})
+	
+	$("select[name^='expenses_claimed[expenses_provider_id]']").each(function(){
+		var v = $(this).val();
+		$(this).html(html);
+		$(this).val(v);
+	});
+}
 
 function remapping_payee() {
     var html = "<option value=''>--Select Payee--</option>";

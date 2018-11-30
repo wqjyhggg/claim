@@ -236,7 +236,7 @@ class Claim extends CI_Controller {
 						unlink(UPLOADFULLPATH . "claim_files/$fname");
 					}
 					
-					// insert payee information
+				// insert payee information
 				if (! empty($array['payees'])) {
 					foreach ( $array['payees']['bank'] as $key => $val ) {
 						$payee_data = array(
@@ -253,6 +253,16 @@ class Claim extends CI_Controller {
 								'created' => date('Y-m-d H:i:s') 
 						);
 						$this->claim_model->payees_save($payee_data);
+					}
+				}
+				// update eprovider claim id
+				if (! empty($array['eprovider'])) {
+					foreach ( $array['eprovider']['id'] as $key => $val ) {
+						$epdata = array(
+								'id' => $val,
+								'claim_id' => $record_id
+						);
+						$this->claim_model->expenses_provider_save($epdata);
 					}
 				}
 				if (! empty($data['case_no'])) {
@@ -427,6 +437,16 @@ class Claim extends CI_Controller {
 				$this->data['products'] = $this->product_model->get_list();
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
 				$this->data['currencies'] = $this->expenses_model->get_currencies();
+				$this->data['eprovider_list'] = array();
+				if ($arr = $this->input->post('eprovider')) {
+					foreach ($arr['id'] as $key => $val) {
+						$this->data['eprovider_list'][$key]['id'] = $val; // id
+						$this->data['eprovider_list'][$key]['address'] = $arr['address'][$key]; // id
+						$this->data['eprovider_list'][$key]['province'] = $arr['province'][$key]; // id
+						$this->data['eprovider_list'][$key]['country'] = $arr['country'][$key]; // id
+						$this->data['eprovider_list'][$key]['postcode'] = $arr['postcode'][$key]; // id
+					}
+				}
 				
 				$policy = $this->input->get('policy');
 				$this->data['policy'] = array();
@@ -599,6 +619,16 @@ class Claim extends CI_Controller {
 									'created' => date('Y-m-d H:i:s')
 							);
 							$this->claim_model->payees_save($payee_data);
+						}
+					}
+					// update eprovider claim id
+					if (! empty($array['eprovider'])) {
+						foreach ( $array['eprovider']['id'] as $key => $val ) {
+							$epdata = array(
+									'id' => $val,
+									'claim_id' => $record_id
+							);
+							$this->claim_model->expenses_provider_save($epdata);
 						}
 					}
 					if (! empty($data['case_no'])) {
@@ -1084,7 +1114,7 @@ class Claim extends CI_Controller {
 				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
 				$this->data['products'] = $this->product_model->get_list();
 				$this->data['payees'] = $this->claim_model->payee_search(array("claim_id" => $id));
-				$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id));
+				$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id, "status" => 1));
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code2();
 				
 				$this->data['reasons'] = $this->reasons_model->get_list();
@@ -1301,8 +1331,7 @@ class Claim extends CI_Controller {
 						$this->claim_model->payees_save($payee_data);
 					}
 				}
-				//echo "<pre>"; print_r($array); print_r($data); //XXXXXXXXXXXXXXXXXXXXX
-				//die("X12"); //XXXXXXXX
+
 				
 				// insert expenses_claimed data
 				if (! empty($array['expenses_claimed'])) {
@@ -1433,7 +1462,7 @@ class Claim extends CI_Controller {
 				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
 				$this->data['products'] = $this->product_model->get_list();
 
-				$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id));
+				$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id, "status" => 1));
 				$this->data['payees_list'] = $this->claim_model->payee_format_array($this->claim_model->payee_search(array("claim_id" => $id)));
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
 				
@@ -2259,6 +2288,56 @@ class Claim extends CI_Controller {
 		));
 		
 		echo TRUE;
+	}
+	
+	// update eprovider form here for ajax request
+	public function update_eprovider() {
+		$json = array("success" => 0, "id" => 0);
+		if ($this->ion_auth->logged_in() && $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+			$this->load->model('claim_model');
+			
+			$data = array();
+			$data['id'] = $this->input->post('id');
+			if (!empty($this->input->post('claim_id'))) {
+				$data['claim_id'] = $this->input->post('claim_id');
+			}
+			if (!empty($this->input->post('address'))) {
+				$data['address'] = $this->input->post('address');
+			}
+			if (!empty($this->input->post('province'))) {
+				$data['province'] = $this->input->post('province');
+			}
+			if (!empty($this->input->post('country'))) {
+				$data['country'] = $this->input->post('country');
+			}
+			if (!empty($this->input->post('postcode'))) {
+				$data['postcode'] = $this->input->post('postcode');
+			}
+			
+			$id = $this->claim_model->expenses_provider_save($data);
+			if ($id) {
+				$json['id'] = $id;
+				$json['success'] = 1;
+			}
+		}
+		header('Content-Type: application/json');
+		echo json_encode($json);
+	}
+	
+	// delete eprovider form here for ajax request
+	public function delete_eprovider($id) {
+		$json = array("success" => 0, "id" => 0);
+		if ($this->ion_auth->logged_in() && $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+			$this->load->model('claim_model');
+			$data = array('id' => $this->input->post('id'), 'status' => 0);
+			$id = $this->claim_model->expenses_provider_save($data);
+			if ($id) {
+				$json['id'] = $id;
+				$json['success'] = 1;
+			}
+		}
+		header('Content-Type: application/json');
+		echo json_encode($json);
 	}
 	
 	// delete claim item form here for ajax request

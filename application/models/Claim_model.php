@@ -317,6 +317,11 @@ class Claim_model extends CI_Model {
 		return $this->db->get('expenses_provider')->row_array();
 	}
 	
+	public function delete_provider_by_id($id) {
+		$this->db->where('id', $id);
+		$this->db->delete('expenses_provider');
+	}
+	
 	public function expenses_provider_search($array) {
 		$this->db->where($array);
 		return $this->db->get('expenses_provider')->result_array();
@@ -329,7 +334,7 @@ class Claim_model extends CI_Model {
 	 * @return int				inserted array ID
 	 */
 	public function expenses_provider_save($data) {
-		if (isset($data['id'])) {
+		if (!empty($data['id'])) {
 			// Update
 			$id = $data['id'];
 			$cur = $this->get_expenses_provider_by_id($id);
