@@ -379,6 +379,7 @@ class Api extends CI_Controller {
 					foreach ($eprovider['eprovider'] as $key => $name) {
 						$iprovider_data = array(
 								'claim_id'=>$id,
+								'name'=> isset($payees['name'][$key]) ? $payees['name'][$key] : '',
 								'address'=> isset($payees['address'][$key]) ? $payees['address'][$key] : '',
 								'province'=> isset($payees['province'][$key]) ? $payees['province'][$key] : '',
 								'country'=> isset($payees['country'][$key]) ? $payees['country'][$key] : '',

@@ -582,7 +582,11 @@
 									<?php foreach ( $eprovider_list as $i => $value ) : ?>
 									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
 										<?php echo form_hidden("eprovider[id][".$i."]", $value['id']); ?>
-										<div class="col-sm-4">
+										<div class="col-sm-2">
+											<label for="Name" class="col-sm-12">Name:</label>
+											<?php echo form_input("eprovider[name][".$i."]", $value ["name"], array("class" => "form-control required", "placeholder" => 'Name')); ?>
+										</div>
+										<div class="col-sm-2">
 											<label for="Address" class="col-sm-12">Address:</label>
 											<?php echo form_input("eprovider[address][".$i."]", $value ["address"], array("class" => "form-control required", "placeholder" => 'Address')); ?>
 										</div>
@@ -711,7 +715,7 @@
 											<select name="expenses_claimed[expenses_provider_id][]" class="form-control expenses_provider_select required">
 												<option value="0">-- Select Provider --</option>
 												<?php foreach ($eprovider_list as $key => $val): ?>
-												<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value ["expenses_provider_id"]) { echo "selected"; } ?>><?php echo $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>
+												<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value ["expenses_provider_id"]) { echo "selected"; } ?>><?php echo $val['name'] . " : " . $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>
 												<?php endforeach; ?>
 											</select>
 											<?php echo form_hidden("expenses_claimed[provider_name][]", $value['provider_name']); ?>
@@ -1076,7 +1080,7 @@
 				<select name="expenses_claimed[expenses_provider_id][]" class="form-control expenses_provider_select required">
 					<option value="0">-- Select Provider --</option>
 					<?php foreach ($eprovider_list as $key => $val): ?>
-					<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value ["expenses_provider_id"]) { echo "selected"; } ?>><?php echo $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>
+					<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value ["expenses_provider_id"]) { echo "selected"; } ?>><?php echo $val['name'] . " : " . $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>
 					<?php endforeach; ?>
 				</select>
 				<?php echo form_hidden("expenses_claimed[provider_name][]", ""); ?>
@@ -1216,7 +1220,11 @@
 	<div class="eprovider-buffer">
 		<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
 			<?php echo form_hidden("eprovider[id][nameindex]", 'idvalue'); ?>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
+				<label for="Name" class="col-sm-12">Name:</label>
+				<?php echo form_input("eprovider[name][nameindex]", "", array("class" => "form-control required", "placeholder" => 'Name')); ?>
+			</div>
+			<div class="col-sm-2">
 				<label for="Address" class="col-sm-12">Address:</label>
 				<?php echo form_input("eprovider[address][nameindex]", "", array("class" => "form-control required", "placeholder" => 'Address')); ?>
 			</div>
@@ -1955,9 +1963,10 @@ function get_policy() {
        
    })
 
-	.on("change", "input[name^='eprovider[address]'],input[name^='eprovider[province]'],input[name^='eprovider[country]'],input[name^='eprovider[postcode]']", function(){
+	.on("change", "input[name^='eprovider[name]'],input[name^='eprovider[address]'],input[name^='eprovider[province]'],input[name^='eprovider[country]'],input[name^='eprovider[postcode]']", function(){
 		var me = $(this).parent('div').parent('div');
 		var id = me.find("input[name^='eprovider[id]']").val();
+		var name = me.find("input[name^='eprovider[name]']").val();
 		var address = me.find("input[name^='eprovider[address]']").val();
 		var province = me.find("input[name^='eprovider[province]']").val();
 		var country = me.find("input[name^='eprovider[country]']").val();
@@ -1967,6 +1976,7 @@ function get_policy() {
 			method:"post",
 			data:{
 				id:id,
+				name:name,
 				address:address,
 				province:province,
 				country:country,
@@ -2044,11 +2054,12 @@ function remapping_eprovider() {
 		if ($(this).val()) {
 			var p = $(this).parent().parent();
 			var id = p.find("input[name^='eprovider[id]']").val();
+			var name = p.find("input[name^='eprovider[name]']").val();
 			var address = p.find("input[name^='eprovider[address]']").val();
 			var province = p.find("input[name^='eprovider[province]']").val();
 			var country = p.find("input[name^='eprovider[country]']").val();
 			var postcode = p.find("input[name^='eprovider[postcode]']").val();
-			html += '<option value="'+id+'">' + address + ", " + province + " " + country + " " + postcode + '</option>';
+			html += '<option value="'+id+'">' + name + " : " + address + ", " + province + " " + country + " " + postcode + '</option>';
 		}
 	})
 	

@@ -441,10 +441,11 @@ class Claim extends CI_Controller {
 				if ($arr = $this->input->post('eprovider')) {
 					foreach ($arr['id'] as $key => $val) {
 						$this->data['eprovider_list'][$key]['id'] = $val; // id
-						$this->data['eprovider_list'][$key]['address'] = $arr['address'][$key]; // id
-						$this->data['eprovider_list'][$key]['province'] = $arr['province'][$key]; // id
-						$this->data['eprovider_list'][$key]['country'] = $arr['country'][$key]; // id
-						$this->data['eprovider_list'][$key]['postcode'] = $arr['postcode'][$key]; // id
+						$this->data['eprovider_list'][$key]['name'] = $arr['name'][$key];
+						$this->data['eprovider_list'][$key]['address'] = $arr['address'][$key];
+						$this->data['eprovider_list'][$key]['province'] = $arr['province'][$key];
+						$this->data['eprovider_list'][$key]['country'] = $arr['country'][$key];
+						$this->data['eprovider_list'][$key]['postcode'] = $arr['postcode'][$key];
 					}
 				}
 				
@@ -2300,6 +2301,9 @@ class Claim extends CI_Controller {
 			$data['id'] = $this->input->post('id');
 			if (!empty($this->input->post('claim_id'))) {
 				$data['claim_id'] = $this->input->post('claim_id');
+			}
+			if (!empty($this->input->post('name'))) {
+				$data['name'] = $this->input->post('name');
 			}
 			if (!empty($this->input->post('address'))) {
 				$data['address'] = $this->input->post('address');
