@@ -706,7 +706,7 @@
 						</div>
 					</div>
 
-					<h2 class="move_down">
+					<!-- XXXXXXXXXXXXXX h2 class="move_down">
 						Provider Information
 						<button class="btn btn-primary add_eprovider" name="filter" type="button" value="claim">Add a Provider</button>
 						<i class="fa fa-angle-down pull-right"></i>
@@ -744,7 +744,7 @@
 								<?php } ?>
 							</div>
 						</div>
-					</div>
+					</div -->
 
 					<h2 class="move_down">Expenses Claimed<i class="fa fa-angle-up pull-right"></i></h2>
 					<div class="row">
@@ -761,6 +761,7 @@
 									</div>
 									<div class="col-sm-3">
 										<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
+										<?php if (0) { /* XXXXXXXXXXXXXXXXX */ ?>
 										<select name="expenses_claimed[expenses_provider_id][]" class="form-control expenses_provider_select required">
 											<option value="0">-- Select Provider --</option>
 											<?php foreach ($eprovider_list as $key => $val): ?>
@@ -768,6 +769,10 @@
 											<?php endforeach; ?>
 										</select>
 										<?php echo form_hidden("expenses_claimed[provider_name][]", $value['provider_name']); ?>
+										<?php } else { ?>
+										<?php echo form_hidden('expenses_claimed[expenses_provider_id][]', 0); ?>
+										<?php echo form_input("expenses_claimed[provider_name][]", $arr['provider_name'][$key], array("class" => "form-control required")); ?>
+										<?php } ?>
 									</div>
 									<div class="col-sm-3">
 										<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
