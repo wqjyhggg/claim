@@ -1209,6 +1209,7 @@
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
+				<?php if (0) { /*XXXXXXXXXXXXXXXXXXXXXXXX*/ ?>
 				<select name="expenses_claimed[expenses_provider_id][]" class="form-control expenses_provider_select required">
 					<option value="0">-- Select Provider --</option>
 					<?php foreach ($eprovider_list as $key => $val): ?>
@@ -1216,6 +1217,10 @@
 					<?php endforeach; ?>
 				</select>
 				<?php echo form_hidden("expenses_claimed[provider_name][]", ""); ?>
+				<?php } else { /*XXXXXXXXXXXXXXXXXXXXXXXX*/ ?>
+				<?php echo form_hidden("expenses_claimed[expenses_provider_id][]", 0); ?>
+				<?php echo form_input("expenses_claimed[provider_name][]", $value ['provider_name'], array("class" => "form-control required")); ?>
+				<?php } /*XXXXXXXXXXXXXXXXXXXXXXXX*/ ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
