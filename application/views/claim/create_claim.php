@@ -842,7 +842,7 @@
 				<?php echo form_hidden("expenses_claimed[provider_name][]", ""); ?>
 				<?php } else { ?>
 				<?php echo form_hidden('expenses_claimed[expenses_provider_id][]', 0); ?>
-				<?php echo form_input("expenses_claimed[provider_name][]", $arr['provider_name'][$key], array("class" => "form-control required")); ?>
+				<?php echo form_input("expenses_claimed[provider_name][]", '', array("class" => "form-control required")); ?>
 				<?php } ?>
 			</div>
 			<div class="col-sm-3">
