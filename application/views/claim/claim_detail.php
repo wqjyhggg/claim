@@ -519,6 +519,7 @@
 										<div class="col-sm-3">
 											<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
 											<?php echo $value['provider_name']; ?>
+											<?php echo form_hidden("expenses_claimed[expenses_provider_id][]", $value ['expenses_provider_id']); ?>
 											<?php echo form_hidden("expenses_claimed[provider_name][]", $value ['provider_name']); ?>
 										</div>
 										<div class="col-sm-3">
