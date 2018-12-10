@@ -8,9 +8,14 @@ if (! defined ( 'BASEPATH' ))	exit ( 'No direct script access allowed' );
  */
 	
 class Provider_model extends CI_Model {
+	const ACTIVE="Active";
+	const DISABLE="Disable";
+	
+	private $last_count;
+	
 	public function get_by_id($id) {
 		$this->db->where('id', $id);
-		$this->db->get('provider')->row_array();
+		return $this->db->get('provider')->row_array();
 	}
 	
 	/**
@@ -39,6 +44,42 @@ class Provider_model extends CI_Model {
 			$this->active_model->log_new('provider', $id, $data, $sql);
 			return $id;
 		}
+	}
+	
+	public function last_rows() {
+		return $this->last_count;
+	}
+	
+	public function search($para, $limit=0, $start=0) {
+		$sql = "SELECT SQL_CALC_FOUND_ROWS * FROM provider";
+		
+		$where = array();
+		if (isset($para["id"])) {
+			$where[] = "id = '" . (int)$para["id"] . "'";
+		}
+		if ((sizeof($where) > 0)) {
+			$sql .= " WHERE " . join(" AND ", $where);
+		}
+		
+		if (isset($para["field"])) {
+			if (isset($para['order'])) {
+				$sql .= " ORDER BY " . $this->db->escape_str($para["field"]) . " " . $this->db->escape_str($para["order"]);
+			} else {
+				$sql .= " ORDER BY " . $this->db->escape_str($para["field"]) . " ASC";
+			}
+		}
+		
+		if ($limit) {
+			if ($start) {
+				$sql .= " LIMIT " . (int)$start . ", " . (int)$limit;
+			} else {
+				$sql .= " LIMIT " . (int)$limit;
+			}
+		}
+		$rt = $this->db->query($sql)->result_array();
+		$query = $this->db->query('SELECT FOUND_ROWS() AS `Count`');
+		$this->last_count = $query->row()->Count;
+		return $rt;
 	}
 	
 	public function get_list($lat, $lng) {

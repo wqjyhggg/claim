@@ -2,10 +2,11 @@
 	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN))): ?>
 	<li> <?php echo anchor("auth/users", '<i class="fa fa-users"></i>Users Management</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
-	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EAC, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) : ?>
-	<li> <?php echo anchor("auth/mytasks", '<i class="fa fa-briefcase"></i>My Tasks</a>', array("class"=>'leftmeun')) ?> </li>
+	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) : ?>
+	<li> <?php echo anchor("provider", '<i class="fa fa-briefcase"></i>Provider</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
 	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EAC, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) : ?>
+	<li> <?php echo anchor("auth/mytasks", '<i class="fa fa-briefcase"></i>My Tasks</a>', array("class"=>'leftmeun')) ?> </li>
 	<li> <?php echo anchor("emergency_assistance", '<i class="fa fa-briefcase"></i>Emergency assistance</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
 	
