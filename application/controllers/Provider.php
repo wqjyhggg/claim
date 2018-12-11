@@ -137,6 +137,7 @@ class Provider extends CI_Controller {
 				$provider['country'] = '';
 				$provider['postcode'] = '';
 				$provider['discount'] = 0;
+				$provider['network_fee'] = 0;
 				$provider['contact_person'] = '';
 				$provider['phone_no'] = '';
 				$provider['email'] = '';
@@ -156,6 +157,7 @@ class Provider extends CI_Controller {
 				$provider['country'] = $this->input->post('country');
 				$provider['postcode'] = $this->input->post('postcode');
 				$provider['discount'] = $this->input->post('discount');
+				$provider['network_fee'] = $this->input->post('network_fee');
 				$provider['contact_person'] = $this->input->post('contact_person');
 				$provider['phone_no'] = $this->input->post('phone_no');
 				$provider['email'] = $this->input->post('email');
