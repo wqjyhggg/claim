@@ -57,6 +57,9 @@ class Provider_model extends CI_Model {
 		if (isset($para["id"])) {
 			$where[] = "id = '" . (int)$para["id"] . "'";
 		}
+		if (isset($para["status"])) {
+			$where[] = "status = '" . $this->db->escape_str($para["status"]) . "'";
+		}
 		if ((sizeof($where) > 0)) {
 			$sql .= " WHERE " . join(" AND ", $where);
 		}
@@ -67,6 +70,8 @@ class Provider_model extends CI_Model {
 			} else {
 				$sql .= " ORDER BY " . $this->db->escape_str($para["field"]) . " ASC";
 			}
+		} else {
+			$sql .= " ORDER BY name ASC";
 		}
 		
 		if ($limit) {

@@ -67,7 +67,7 @@ class Claim extends CI_Controller {
 
 	public function delete_expenses_provider() {
 		$json = array("status" => 0, "message" => 'Sorry, you don\'t have any permission to access this function.');
-		if ($this->ion_auth->logged_in() && $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
+		if ($this->ion_auth->logged_in()) {
 			$post = $this->input->post();
 			if (!empty($post['expenses_provider_id'])) {
 				$data = array(
@@ -81,7 +81,7 @@ class Claim extends CI_Controller {
 	}
 
 	public function update_expenses_provider() {
-		if ($this->ion_auth->logged_in() && $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
+		if ($this->ion_auth->logged_in()) {
 			// validate input
 			$post = $this->input->post();
 			if (empty($post['address']) || empty($post['province']) || empty($post['country']) || empty($post['postcode'])) {
@@ -162,7 +162,8 @@ class Claim extends CI_Controller {
 			$this->load->model('claim_model');
 			$this->load->model('mytask_model');
 			$this->load->model('expenses_model');
-				
+			$this->load->model('provider_model');
+
 			if ($this->form_validation->run() == TRUE) {
 				// prepare post data array
 				$data =[ ];
@@ -285,6 +286,7 @@ class Claim extends CI_Controller {
 								'claim_no' => $claim_no,
 								'claim_item_no' => $claim_no . '_' . $i,
 								'case_no' => $array['case_no'],
+								'provider_type' => $array['expenses_claimed']['provider_type'][$key],
 								'expenses_provider_id' => $array['expenses_claimed']['expenses_provider_id'][$key],
 								'provider_name' => $array['expenses_claimed']['provider_name'][$key],
 								'referencing_physician' => $array['expenses_claimed']['referencing_physician'][$key],
@@ -437,6 +439,7 @@ class Claim extends CI_Controller {
 				$this->data['products'] = $this->product_model->get_list();
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
 				$this->data['currencies'] = $this->expenses_model->get_currencies();
+				$this->data['bprovider_list'] = $this->provider_model->search(array("status" => Provider_model::ACTIVE));
 				$this->data['eprovider_list'] = array();
 				if ($arr = $this->input->post('eprovider')) {
 					foreach ($arr['id'] as $key => $val) {
@@ -525,7 +528,8 @@ class Claim extends CI_Controller {
 			$this->load->model('claim_model');
 			$this->load->model('mytask_model');
 			$this->load->model('expenses_model');
-				
+			$this->load->model('provider_model');
+
 			if ($this->form_validation->run() == TRUE) {
 				// prepare post data array
 				$data =[ ];
@@ -653,6 +657,7 @@ class Claim extends CI_Controller {
 									'claim_item_no' => $claim_no . '_' . $i,
 									'case_no' => $array['case_no'],
 									'provider_name' => $array['expenses_claimed']['provider_name'][$key],
+									'provider_type' => $array['expenses_claimed']['provider_type'][$key],
 									'expenses_provider_id' => $array['expenses_claimed']['expenses_provider_id'][$key],
 									'referencing_physician' => $array['expenses_claimed']['referencing_physician'][$key],
 									'coverage_code' => $array['expenses_claimed']['coverage_code'][$key],
@@ -805,7 +810,19 @@ class Claim extends CI_Controller {
 				$this->data['products'] = $this->product_model->get_list();
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
 				$this->data['currencies'] = $this->expenses_model->get_currencies();
-	
+				$this->data['bprovider_list'] = $this->provider_model->search(array("status" => Provider_model::ACTIVE));
+				$this->data['eprovider_list'] = array();
+				if ($arr = $this->input->post('eprovider')) {
+					foreach ($arr['id'] as $key => $val) {
+						$this->data['eprovider_list'][$key]['id'] = $val; // id
+						$this->data['eprovider_list'][$key]['name'] = $arr['name'][$key];
+						$this->data['eprovider_list'][$key]['address'] = $arr['address'][$key];
+						$this->data['eprovider_list'][$key]['province'] = $arr['province'][$key];
+						$this->data['eprovider_list'][$key]['country'] = $arr['country'][$key];
+						$this->data['eprovider_list'][$key]['postcode'] = $arr['postcode'][$key];
+					}
+				}
+				
 				$policy = $this->input->get('policy');
 				if (empty($policy)) {
 					$policy = $this->input->post('policy_no');
@@ -875,7 +892,8 @@ class Claim extends CI_Controller {
 			$this->load->model('intakeform_model');
 			$this->load->model('word_comments_model');
 			$this->load->model('reasons_model');
-			
+			$this->load->model('provider_model');
+
 			$claim = $this->claim_model->get_by_id($id);
 			if (empty($claim)) {
 				return show_error('Sorry, Unknown Claim Record ID.');
@@ -1115,7 +1133,8 @@ class Claim extends CI_Controller {
 				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
 				$this->data['products'] = $this->product_model->get_list();
 				$this->data['payees'] = $this->claim_model->payee_search(array("claim_id" => $id));
-				$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id, "status" => 1));
+				//$this->data['bprovider_list'] = $this->provider_model->search(array("status" => Provider_model::ACTIVE));
+				//$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id, "status" => 1));
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code2();
 				
 				$this->data['reasons'] = $this->reasons_model->get_list();
@@ -1194,7 +1213,8 @@ class Claim extends CI_Controller {
 			$this->load->model('expenses_model');
 			$this->load->model('intakeform_model');
 			$this->load->model('word_comments_model');
-				
+			$this->load->model('provider_model');
+
 			// get claim details
 			$this->data['claim_details'] = $this->claim_model->get_by_id($id);
 			if (!empty($this->data['claim_details']['exinfo'])) {
@@ -1346,6 +1366,7 @@ class Claim extends CI_Controller {
 								'claim_no' => $this->data['claim_details']['claim_no'],
 								'claim_item_no' => $this->data['claim_details']['claim_no'] . '_' . $i,
 								'provider_name' => $array['expenses_claimed']['provider_name'][$key],
+								'provider_type' => $array['expenses_claimed']['provider_type'][$key],
 								'expenses_provider_id' => $array['expenses_claimed']['expenses_provider_id'][$key],
 								'referencing_physician' => $array['expenses_claimed']['referencing_physician'][$key],
 								'coverage_code' => $array['expenses_claimed']['coverage_code'][$key],
@@ -1462,7 +1483,7 @@ class Claim extends CI_Controller {
 				$this->data['province'] = $this->province_model->get_list_by_country_short($this->input->post('country') ? $this->input->post('country') : 'CA');
 				$this->data['province2'] = $this->province_model->get_list_by_country_short($this->input->post('country2') ? $this->input->post('country2') : 'CA');
 				$this->data['products'] = $this->product_model->get_list();
-
+				$this->data['bprovider_list'] = $this->provider_model->search(array("status" => Provider_model::ACTIVE));
 				$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id, "status" => 1));
 				$this->data['payees_list'] = $this->claim_model->payee_format_array($this->claim_model->payee_search(array("claim_id" => $id)));
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
@@ -1501,6 +1522,7 @@ class Claim extends CI_Controller {
 								'id' => $arr['id'][$key],
 								'invoice' => $arr['invoice'][$key],
 								'provider_name' => $arr['provider_name'][$key],
+								'provider_type' => $arr['provider_type'][$key],
 								'expenses_provider_id' => $arr['expenses_provider_id'][$key],
 								'referencing_physician' => $arr['referencing_physician'][$key],
 								'coverage_code' => $arr['coverage_code'][$key],

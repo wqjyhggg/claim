@@ -569,7 +569,7 @@
 							</div>
 						</div>
 
-						<!-- XXXXXXXXXXXXXXXXXXXX h2 class="move_down">
+						<h2 class="move_down">
 							Provider Information
 							<?php if($edit): ?>
 							<button class="btn btn-primary add_eprovider" name="filter" type="button" value="claim">Add a Provider</button>
@@ -609,7 +609,7 @@
 									<?php endforeach; ?>
 								</div>
 							</div>
-						</div -->
+						</div>
 
 						<h2 class="move_down">
 							Expenses Claimed
@@ -712,19 +712,27 @@
 											<?php echo form_hidden('expenses_claimed[status][]', $value['status']); ?>
 										</div>
 										<div class="col-sm-3">
+											<?php echo form_label('Type of Provider:', 'provider_type', array("class" => 'col-sm-12')); ?>
+											<select name="expenses_claimed[provider_type][]" class="form-control expenses_provider_type required">
+												<option value="0" <?php if (1 != $value ["provider_type"]) { echo "selected"; } ?>>Private</option>
+												<option value="1" <?php if (1 == $value ["provider_type"]) { echo "selected"; } ?>>Bussiness</option>
+											</select>
+										</div>
+										<div class="col-sm-3">
 											<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
-											<?php if (0) { /*XXXXXXXXXXXXXXXXXXXXXXXX*/ ?>
 											<select name="expenses_claimed[expenses_provider_id][]" class="form-control expenses_provider_select required">
 												<option value="0">-- Select Provider --</option>
-												<?php foreach ($eprovider_list as $key => $val): ?>
+											<?php if (1 == $value ["provider_type"]) { ?>
+												<?php foreach ($bprovider_list as $key => $val): ?>
 												<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value ["expenses_provider_id"]) { echo "selected"; } ?>><?php echo $val['name'] . " : " . $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>
 												<?php endforeach; ?>
+											<?php } else { ?>
+												<?php foreach ($eprovider_list as $key => $val): ?>
+												<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value["expenses_provider_id"]) { echo "selected"; } ?>><?php echo $val['name'] . " : " . $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>
+												<?php endforeach; ?>
+											<?php } ?>
 											</select>
 											<?php echo form_hidden("expenses_claimed[provider_name][]", $value['provider_name']); ?>
-											<?php } else { /*XXXXXXXXXXXXXXXXXXXXXXXX*/ ?>
-											<?php echo form_hidden("expenses_claimed[expenses_provider_id][]", 0); ?>
-											<?php echo form_input("expenses_claimed[provider_name][]", $value ['provider_name'], array("class" => "form-control required")); ?>
-											<?php } /*XXXXXXXXXXXXXXXXXXXXXXXX*/ ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
@@ -739,7 +747,6 @@
 												<?php endforeach; ?>
 											</select>
 										</div>
-										<div class="clearfix"></div>
 
 										<!-- div class="col-sm-3">
 											<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
@@ -1082,8 +1089,14 @@
 				<?php echo form_hidden("expenses_claimed[status][]", 'Pending'); ?>
 			</div>
 			<div class="col-sm-3">
+				<?php echo form_label('Type of Provider:', 'provider_type', array("class" => 'col-sm-12')); ?>
+				<select name="expenses_claimed[provider_type][]" class="form-control expenses_provider_type required">
+					<option value="0" selected>Private</option>
+					<option value="1">Bussiness</option>
+				</select>
+			</div>
+			<div class="col-sm-3">
 				<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
-				<?php if (0) { /*XXXXXXXXXXXXXXXXXXXXXXXX*/ ?>
 				<select name="expenses_claimed[expenses_provider_id][]" class="form-control expenses_provider_select required">
 					<option value="0">-- Select Provider --</option>
 					<?php foreach ($eprovider_list as $key => $val): ?>
@@ -1091,10 +1104,6 @@
 					<?php endforeach; ?>
 				</select>
 				<?php echo form_hidden("expenses_claimed[provider_name][]", ""); ?>
-				<?php } else { /*XXXXXXXXXXXXXXXXXXXXXXXX*/ ?>
-				<?php echo form_hidden("expenses_claimed[expenses_provider_id][]", 0); ?>
-				<?php echo form_input("expenses_claimed[provider_name][]", '', array("class" => "form-control required")); ?>
-				<?php } /*XXXXXXXXXXXXXXXXXXXXXXXX*/ ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
@@ -1109,7 +1118,6 @@
 					<?php endforeach; ?>
 				</select>
 			</div>
-			<div class="clearfix"></div>
 
 			<!-- div class="col-sm-3">
 				<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
@@ -1329,6 +1337,19 @@ function get_policy() {
 		}
 	})
 }
+
+var bprovider_html = "<option value=''>--Select Provider--</option>";
+<?php if (isset($bprovider_list) && is_array($bprovider_list)) { ?>
+	<?php foreach ($bprovider_list as $val) {?>
+	bprovider_html +=  "<option value='<?php echo $val['id']?>'><?php echo $val['name'] . " : " . $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>"
+	<?php } ?>
+<?php } ?>
+var eprovider_html = "<option value=''>--Select Provider--</option>";
+<?php if (isset($eprovider_list) && is_array($eprovider_list)) { ?>
+	<?php foreach ($eprovider_list as $val) {?>
+	eprovider_html +=  "<option value='<?php echo $val['id']?>'><?php echo $val['name'] . " : " . $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>"
+	<?php } ?>
+<?php } ?>
 
 	$(document).ready(function() {
 		// get policy data
@@ -1696,8 +1717,21 @@ function get_policy() {
       $(this).next("span.file-label").text($(this).val()).parent("div.col-sm-9").show();
    })
 
+	.on("change",".expenses_provider_type", function(){
+		var pt = $(this).parent().parent();
+		var sls = pt.find("select[name='expenses_claimed[expenses_provider_id][]']");
+		var name = pt.find("input[name='expenses_claimed[provider_name][]']");
+		var val = $(this).val();
+		if (val == 1) { // business
+			sls.html(bprovider_html);
+		} else { // private
+			sls.html(eprovider_html);
+		}
+		name.val('');
+	})
+
 	.on("change",".expenses_provider_select", function(){
-		var pt = $(this).parents('div');
+		var pt = $(this).parent();
 		var name = pt.find("input[name='expenses_claimed[provider_name][]']");
 		var txt = $(this).find(":selected").text();
 		name.val(txt);
@@ -2073,6 +2107,7 @@ function remapping_eprovider() {
 			html += '<option value="'+id+'">' + name + " : " + address + ", " + province + " " + country + " " + postcode + '</option>';
 		}
 	})
+	eprovider_html = html;
 	
 	$("select[name^='expenses_claimed[expenses_provider_id]']").each(function(){
 		var v = $(this).val();
@@ -2122,8 +2157,6 @@ function validate_form(){
    var $validate = 1;
    $("#main_form .required").map(function(o){
       if(!$(this).val()){
-console.log($(this)); //XXXXXXXXXXXXX
-console.log($(this).val()); //XXXXXXXXXXXXX
          $validate = 0;
          $(this).addClass('error-true');
       }

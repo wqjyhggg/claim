@@ -402,6 +402,7 @@ class Api extends CI_Controller {
 								'claim_no' => $claim_no,
 								'claim_item_no' => $claim_no . '_' . $i,
 								'case_no' => '',
+								'provider_type'=> isset($expenses_claimed['provider_type'][$key]) ? (int)$expenses_claimed['provider_type'][$key] : 0,
 								'expenses_provider_id'=> isset($expenses_claimed['expenses_provider_id'][$key]) ? (int)$expenses_claimed['expenses_provider_id'][$key] : 0,
 								'provider_name'=> isset($expenses_claimed['provider_name'][$key]) ? $expenses_claimed['provider_name'][$key] : '',
 								'referencing_physician'=> isset($expenses_claimed['referencing_physician'][$key]) ? $expenses_claimed['referencing_physician'][$key] : '',
