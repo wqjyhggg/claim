@@ -86,6 +86,15 @@
 					</div>
 					<div class="row">
 						<div class="form-group col-sm-2 ">
+							<?php echo form_label('Network Fee:', 'network_fee', array("class"=>"pull-right")); ?>
+						</div>
+						<div class="form-group col-sm-10">
+							<?php echo form_input("network_fee", $provider["network_fee"], array('placeholder'=>'Network Fee')); ?>
+							<?php echo form_error("network_fee");?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-sm-2 ">
 							<?php echo form_label('Contact Person:', 'contact_person', array("class"=>"pull-right")); ?>
 						</div>
 						<div class="form-group col-sm-10">

@@ -95,6 +95,7 @@ class Provider extends CI_Controller {
 			$this->form_validation->set_rules('country', 'Country', 'required');
 			$this->form_validation->set_rules('postcode', 'postcode', 'required|callback_alpha_dash_space');
 			$this->form_validation->set_rules('discount', 'Discount', 'callback_positive_number');
+			$this->form_validation->set_rules('network_fee', 'Network Fee', 'callback_positive_number');
 			$this->form_validation->set_rules('contact_person', 'Contact Person', '');
 			$this->form_validation->set_rules('phone_no', 'Phone Number', '');
 			$this->form_validation->set_rules('email', 'Email', 'valid_email');
