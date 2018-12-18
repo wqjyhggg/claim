@@ -120,24 +120,24 @@ class Claim extends CI_Controller {
 		} else {
 			// validate form input
 			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
-			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required|alpha_numeric_spaces');
-			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('city', 'city ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required');
+			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'required');
+			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', '');
+			$this->form_validation->set_rules('city', 'city ', '');
 			$this->form_validation->set_rules('province', 'province ', 'alpha');
-			$this->form_validation->set_rules('full_name', 'full name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('employee_name', 'employee name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('city_town', 'city town ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('full_name', 'full name ', '');
+			$this->form_validation->set_rules('employee_name', 'employee name ', '');
+			$this->form_validation->set_rules('city_town', 'city town ', '');
 			
 			//$this->form_validation->set_rules('employee_telephone', 'employee telephone ', 'numeric');
 			$this->form_validation->set_rules('amount_billed_org', 'amount billed ', 'numeric');
 			$this->form_validation->set_rules('account_cheque', 'account no ', 'numeric');
 			$this->form_validation->set_rules('amount_client_paid_org', 'amount client paid ', 'numeric');
-			$this->form_validation->set_rules('physician_name_canada', 'physician name canada ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('physician_city', 'physician city ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('payee_name', 'payee name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('bank', 'bank name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('physician_city_canada', 'physician city canada ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('physician_name_canada', 'physician name canada ', '');
+			$this->form_validation->set_rules('physician_city', 'physician city ', '');
+			$this->form_validation->set_rules('payee_name', 'payee name ', '');
+			$this->form_validation->set_rules('bank', 'bank name ', '');
+			$this->form_validation->set_rules('physician_city_canada', 'physician city canada ', '');
 			//$this->form_validation->set_rules('guardian_phone', 'Guardian Phone ', 'numeric');
 			//$this->form_validation->set_rules('telephone', 'Telephone ', 'numeric');
 			//$this->form_validation->set_rules('physician_telephone', 'Physician Telephone ', 'numeric');
@@ -148,8 +148,8 @@ class Claim extends CI_Controller {
 			
 			// $this->form_validation->set_rules('school_name', 'School Name', 'required');
 			
-			$this->form_validation->set_rules('contact_first_name', 'First Name', 'alpha');
-			$this->form_validation->set_rules('contact_last_name', 'Last Name', 'alpha');
+			$this->form_validation->set_rules('contact_first_name', 'First Name', '');
+			$this->form_validation->set_rules('contact_last_name', 'Last Name', '');
 			$this->form_validation->set_rules('contact_email', 'Email', 'valid_email');
 			//$this->form_validation->set_rules('contact_phone', 'physician alt telephone ', 'numeric');
 			
@@ -496,23 +496,23 @@ class Claim extends CI_Controller {
 		} else {
 			// validate form input
 			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
-			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required|alpha_numeric_spaces');
-			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('city', 'city ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required');
+			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'required');
+			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', '');
+			$this->form_validation->set_rules('city', 'city ', '');
 			$this->form_validation->set_rules('province', 'province ', 'alpha');
-			$this->form_validation->set_rules('full_name', 'full name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('employee_name', 'employee name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('city_town', 'city town ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('full_name', 'full name ', '');
+			$this->form_validation->set_rules('employee_name', 'employee name ', '');
+			$this->form_validation->set_rules('city_town', 'city town ', '');
 			//$this->form_validation->set_rules('employee_telephone', 'employee telephone ', 'numeric');
 			$this->form_validation->set_rules('amount_billed', 'amount billed ', 'numeric');
 			$this->form_validation->set_rules('account_cheque', 'account no ', 'numeric');
 			$this->form_validation->set_rules('amount_client_paid', 'amount client paid ', 'numeric');
-			$this->form_validation->set_rules('physician_name_canada', 'physician name canada ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('physician_city', 'physician city ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('payee_name', 'payee name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('bank', 'bank name ', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('physician_city_canada', 'physician city canada ', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('physician_name_canada', 'physician name canada ', '');
+			$this->form_validation->set_rules('physician_city', 'physician city ', '');
+			$this->form_validation->set_rules('payee_name', 'payee name ', '');
+			$this->form_validation->set_rules('bank', 'bank name ', '');
+			$this->form_validation->set_rules('physician_city_canada', 'physician city canada ', '');
 			//$this->form_validation->set_rules('guardian_phone', 'Guardian Phone ', 'numeric');
 			//$this->form_validation->set_rules('telephone', 'Telephone ', 'numeric');
 			//$this->form_validation->set_rules('physician_telephone', 'Physician Telephone ', 'numeric');
@@ -521,8 +521,8 @@ class Claim extends CI_Controller {
 			//$this->form_validation->set_rules('physician_alt_telephone', 'physician alt telephone ', 'numeric');
 			$this->form_validation->set_rules('email', 'Email', 'valid_email');
 				
-			$this->form_validation->set_rules('contact_first_name', 'First Name', 'alpha');
-			$this->form_validation->set_rules('contact_last_name', 'Last Name', 'alpha');
+			$this->form_validation->set_rules('contact_first_name', 'First Name', '');
+			$this->form_validation->set_rules('contact_last_name', 'Last Name', '');
 			$this->form_validation->set_rules('contact_email', 'Email', 'valid_email');
 			//$this->form_validation->set_rules('contact_phone', 'physician alt telephone ', 'numeric');
 				
@@ -1260,8 +1260,8 @@ class Claim extends CI_Controller {
 			//$this->form_validation->set_rules('school_name', 'School Name', 'required');
 			//$this->form_validation->set_rules('group_id', 'Group ID', 'required');
 			
-			$this->form_validation->set_rules('contact_first_name', 'First Name', 'alpha');
-			$this->form_validation->set_rules('contact_last_name', 'Last Name', 'alpha');
+			$this->form_validation->set_rules('contact_first_name', 'First Name', '');
+			$this->form_validation->set_rules('contact_last_name', 'Last Name', '');
 			$this->form_validation->set_rules('contact_email', 'Email', 'valid_email');
 			//$this->form_validation->set_rules('contact_phone', 'physician alt telephone ', 'numeric');
 			
