@@ -30,6 +30,15 @@
 					</div>
 					<div class="row">
 						<div class="form-group col-sm-2 ">
+							<?php echo form_label('Payeename:', 'payeename', array("class"=>"pull-right")); ?>
+						</div>
+						<div class="form-group col-sm-10">
+							<?php echo form_input("payeename", $provider["payeename"], array('placeholder'=>'Payeename')); ?>
+							<?php echo form_error("payeename");?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-sm-2 ">
 							<?php echo form_label('Status', 'status', array("class" =>"pull-right")); ?>
 						</div>
 						<div class="form-group col-sm-10">

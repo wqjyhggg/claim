@@ -90,6 +90,7 @@ class Provider extends CI_Controller {
 				
 			// validate form input
 			$this->form_validation->set_rules('name', 'Name', 'required');
+			$this->form_validation->set_rules('payeename', 'Payeename', 'required');
 			$this->form_validation->set_rules('address', 'Address', 'required');
 			$this->form_validation->set_rules('province', 'Province', 'required');
 			$this->form_validation->set_rules('country', 'Country', 'required');
@@ -131,6 +132,7 @@ class Provider extends CI_Controller {
 			if (empty($provider)) {
 				$provider['id'] = 0;
 				$provider['name'] = '';
+				$provider['payeename'] = '';
 				$provider['status'] = Provider_model::ACTIVE;
 				$provider['address'] = '';
 				$provider['province'] = '';
@@ -151,6 +153,7 @@ class Provider extends CI_Controller {
 			if ($this->input->post()) {
 				$provider['id'] = $this->input->post('id');
 				$provider['name'] = $this->input->post('name');
+				$provider['payeename'] = $this->input->post('payeename');
 				$provider['status'] = $this->input->post('status');
 				$provider['address'] = $this->input->post('address');
 				$provider['province'] = $this->input->post('province');

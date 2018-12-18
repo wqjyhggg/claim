@@ -409,7 +409,7 @@ class Expenses_model extends CI_Model {
 		if (isset($data['currency']) && empty($data['currency'])) {
 			$data['currency'] = "CAD";
 		}
-		if (isset($data['id'])) {
+		if (!empty($data['id'])) {
 			// Update
 			$id = $data['id'];
 			unset($data['id']);

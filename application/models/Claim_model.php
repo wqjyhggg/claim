@@ -209,7 +209,7 @@ class Claim_model extends CI_Model {
 	 * @return int				inserted array ID
 	 */
 	public function save($data) {
-		if (isset($data['id'])) {
+		if (!empty($data['id'])) {
 			$id = $data['id'];
 			if ($cur = $this->get_by_id($id)) {
 				// Update
@@ -290,7 +290,7 @@ class Claim_model extends CI_Model {
 	 * @return int				inserted array ID
 	 */
 	public function payees_save($data) {
-		if (isset($data['id'])) {
+		if (!empty($data['id'])) {
 			// Update
 			$id = $data['id'];
 			$cur = $this->get_payee_by_id($id);
@@ -304,6 +304,9 @@ class Claim_model extends CI_Model {
 			return 0;
 		} else {
 			// insert
+			if (empty($data['created'])) {
+				$data['created'] = date('Y-m-d H:i:s');
+			}
 			$this->db->insert('payees', $data);
 			$sql = $this->db->last_query();
 			$id = $this->db->insert_id();
