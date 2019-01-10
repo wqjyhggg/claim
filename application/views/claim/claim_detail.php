@@ -1427,6 +1427,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		var myid = p.find("input[name^='eprovider[id]']");
 		var name = p.find("input[name^='eprovider[name]']").val();
 		var address = p.find("input[name^='eprovider[address]']").val();
+		var city = p.find("input[name^='eprovider[city]']").val();
 		var province = p.find("input[name^='eprovider[province]']").val();
 		var country = p.find("input[name^='eprovider[country]']").val();
 		var postcode = p.find("input[name^='eprovider[postcode]']").val();
