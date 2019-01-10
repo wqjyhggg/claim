@@ -96,6 +96,10 @@ class Provider extends CI_Controller {
 			$this->form_validation->set_rules('province', 'Province', 'required');
 			$this->form_validation->set_rules('country', 'Country', 'required');
 			$this->form_validation->set_rules('postcode', 'postcode', 'required|callback_alpha_dash_space');
+			$this->form_validation->set_rules('oaddress', 'Address', 'required');
+			$this->form_validation->set_rules('ocity', 'City', 'required');
+			$this->form_validation->set_rules('oprovince', 'Province', 'required');
+			$this->form_validation->set_rules('opostcode', 'postcode', 'required|callback_alpha_dash_space');
 			$this->form_validation->set_rules('discount', 'Discount', 'callback_positive_number');
 			$this->form_validation->set_rules('network_fee', 'Network Fee', 'callback_positive_number');
 			$this->form_validation->set_rules('contact_person', 'Contact Person', '');
@@ -113,9 +117,9 @@ class Provider extends CI_Controller {
 				
 				// insert values to database
 				$record_id = $this->provider_model->save($data);
-
+				
 				// send success message
-				$this->session->set_flashdata('success', "Case successfully created");
+				$this->session->set_flashdata('success', "Proviser successfully created");
 				
 				// redirect them to the login page
 				redirect('provider/records/', 'refresh');
@@ -140,6 +144,10 @@ class Provider extends CI_Controller {
 				$provider['province'] = '';
 				$provider['country'] = '';
 				$provider['postcode'] = '';
+				$provider['oaddress'] = '';
+				$provider['ocity'] = '';
+				$provider['oprovince'] = '';
+				$provider['opostcode'] = '';
 				$provider['discount'] = 0;
 				$provider['network_fee'] = 0;
 				$provider['contact_person'] = '';
@@ -162,6 +170,10 @@ class Provider extends CI_Controller {
 				$provider['province'] = $this->input->post('province');
 				$provider['country'] = $this->input->post('country');
 				$provider['postcode'] = $this->input->post('postcode');
+				$provider['oaddress'] = $this->input->post('oaddress');
+				$provider['ocity'] = $this->input->post('ocity');
+				$provider['oprovince'] = $this->input->post('oprovince');
+				$provider['opostcode'] = $this->input->post('opostcode');
 				$provider['discount'] = $this->input->post('discount');
 				$provider['network_fee'] = $this->input->post('network_fee');
 				$provider['contact_person'] = $this->input->post('contact_person');

@@ -52,7 +52,14 @@
 						<div class="form-group col-sm-2 ">
 							<?php echo form_label('Address:', 'address', array("class"=>"pull-right")); ?>
 						</div>
-						<div class="form-group col-sm-10">
+						<div class="form-group col-sm-4">
+							<?php echo form_input("oaddress", $provider["oaddress"], array('placeholder'=>'Address')); ?>
+							<?php echo form_error("oaddress");?>
+						</div>
+						<div class="form-group col-sm-2 ">
+							<?php echo form_label('Mail Address:', 'address', array("class"=>"pull-right")); ?>
+						</div>
+						<div class="form-group col-sm-4">
 							<?php echo form_input("address", $provider["address"], array('placeholder'=>'Address')); ?>
 							<?php echo form_error("address");?>
 						</div>
@@ -61,7 +68,14 @@
 						<div class="form-group col-sm-2 ">
 							<?php echo form_label('City:', 'city', array("class"=>"pull-right")); ?>
 						</div>
-						<div class="form-group col-sm-10">
+						<div class="form-group col-sm-4">
+							<?php echo form_input("ocity", $provider["ocity"], array('placeholder'=>'City')); ?>
+							<?php echo form_error("ocity");?>
+						</div>
+						<div class="form-group col-sm-2 ">
+							<?php echo form_label('Mail City:', 'city', array("class"=>"pull-right")); ?>
+						</div>
+						<div class="form-group col-sm-4">
 							<?php echo form_input("city", $provider["city"], array('placeholder'=>'City')); ?>
 							<?php echo form_error("city");?>
 						</div>
@@ -70,7 +84,14 @@
 						<div class="form-group col-sm-2 ">
 							<?php echo form_label('Province:', 'province', array("class"=>"pull-right")); ?>
 						</div>
-						<div class="form-group col-sm-10">
+						<div class="form-group col-sm-4">
+							<?php echo form_input("oprovince", $provider["oprovince"], array('placeholder'=>'Province')); ?>
+							<?php echo form_error("oprovince");?>
+						</div>
+						<div class="form-group col-sm-2 ">
+							<?php echo form_label('Mail Province:', 'province', array("class"=>"pull-right")); ?>
+						</div>
+						<div class="form-group col-sm-4">
 							<?php echo form_input("province", $provider["province"], array('placeholder'=>'Province')); ?>
 							<?php echo form_error("province");?>
 						</div>
@@ -88,7 +109,14 @@
 						<div class="form-group col-sm-2 ">
 							<?php echo form_label('Postcode:', 'postcode', array("class"=>"pull-right")); ?>
 						</div>
-						<div class="form-group col-sm-10">
+						<div class="form-group col-sm-4">
+							<?php echo form_input("opostcode", $provider["opostcode"], array('placeholder'=>'Postcode')); ?>
+							<?php echo form_error("opostcode");?>
+						</div>
+						<div class="form-group col-sm-2 ">
+							<?php echo form_label('Mail Postcode:', 'postcode', array("class"=>"pull-right")); ?>
+						</div>
+						<div class="form-group col-sm-4">
 							<?php echo form_input("postcode", $provider["postcode"], array('placeholder'=>'Postcode')); ?>
 							<?php echo form_error("postcode");?>
 						</div>

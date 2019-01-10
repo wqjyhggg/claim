@@ -25,7 +25,7 @@ class Provider_model extends CI_Model {
 	 * @return int				inserted array ID
 	 */
 	public function save($data) {
-		if (isset($data['id'])) {
+		if (!empty($data['id'])) {
 			// Update
 			$id = $data['id'];
 			unset($data['id']);
@@ -71,7 +71,7 @@ class Provider_model extends CI_Model {
 				$sql .= " ORDER BY " . $this->db->escape_str($para["field"]) . " ASC";
 			}
 		} else {
-			$sql .= " ORDER BY name ASC";
+			$sql .= " ORDER BY id ASC";
 		}
 		
 		if ($limit) {
