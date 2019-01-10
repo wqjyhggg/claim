@@ -565,4 +565,39 @@ class Expenses_model extends CI_Model {
 		$sql .= " ORDER BY e.claim_no";
 		return $this->db->query($sql)->result_array();
 	}
+	
+	public function expense_report($para) {
+		$where = array();
+		if (!empty($para['status_group'])) {
+			if ($para['status_group'] == 'Paid') {
+				$where[] = "status IN ('Paid', 'Declined')";
+			} else if ($para['status_group'] == 'Unpaid') {
+				$where[] = "status IN ('Received', 'Approved', 'Pending')";
+			}
+		}
+		if (!empty($para['start_dt'])) {
+			$where[] = "finalize_date >= " . $this->db->escape($para['start_dt']);
+		}
+		if (!empty($para['end_dt'])) {
+			$where[] = "finalize_date <= " . $this->db->escape($para['end_dt']);
+		}
+		$sql  = "SELECT * FROM expenses_claimed";
+		if ($where) {
+			$sql .= " WHERE " . join(" AND ", $where);
+		}
+		$rt = $this->db->query($sql)->result_array();
+		
+		if ($rt) {
+			foreach ($rt as $key => $val) {
+				if ($val['provider_type'] == 1) { // Business
+					$rt[$key]['provider'] = $this->db->query("SELECT * FROM provider WHERE id='".(int)$val['expenses_provider_id']."'")->row_array();
+				} else {
+					$rt[$key]['provider'] = $this->db->query("SELECT * FROM expenses_provider WHERE id='".(int)$val['expenses_provider_id']."'")->row_array();
+				}
+				$rt[$key]['payeearr'] = $this->db->query("SELECT * FROM payees WHERE id='".(int)$val['payee']."'")->row_array();
+				$rt[$key]['claim'] = $this->db->query("SELECT * FROM claim WHERE id='".(int)$val['claim_id']."'")->row_array();
+			}
+		}
+		return $rt;
+	}
 }

@@ -14,8 +14,8 @@
 					<?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>
 					<div class="row">
 						<div class="form-group col-sm-3">
-							<?php echo form_label('Products:', 'product_short', array ("class" => 'col-sm-12')); ?>
-							<select name="product_short" class="form-control">
+							<?php echo form_label('Status Group:', 'status_group', array ("class" => 'col-sm-12')); ?>
+							<select name="status_group" class="form-control">
 								<option value="Paid">Paid, Declined</option>
 								<option value="Unpaid">Received, Approved, Pending</option>
 							</select>
@@ -90,44 +90,44 @@
 							</thead>
 							<tbody>
 								<?php foreach($records as $key => $value ) { ?>
-								<?php $payee = splite(" : ", $value['pay_to']); ?>
 								<tr>
 									<td><?php echo $value['claim_no']; ?></td>
 									<td><?php echo $value['claim']['exinfo_type']; /*top_baggage, top_trip, top_medical*/ ?></td>
 									<td><?php echo $value['status']; /*Received Paid Approved Declined Duplicated Pending*/ ?></td>
 									<td><?php echo $value['claim']['policy_no']; ?></td>
+									<td><?php echo $value['claim']['product_short']; ?></td>
+									<td><?php echo $value['claim']['apply_date']; ?></td>
 									<td><?php echo $value['claim']['agent_id']; ?></td>
-									<td><?php echo $value['coverage_code']; ?></td>
 									<td><?php echo $value['created']; ?></td>
 									<td><?php echo $value['claim']['date_symptoms']; /*Incident Date*/?></td>
-									<td><?php echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX */?></td>
+									<td>N/A<?php /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */ ?></td>
 									<td><?php echo $value['pay_date']; /*Payment Date/ Void Date*/ ?></td>
-									<td><?php echo (is_array($payee) && isset($payee[1])) ? $payee[1] : ''; /* Payee Name */ ?></td>
-									<td><?php echo (is_array($payee) && isset($payee[2])) ? $payee[2] : ''; /* Payee Address */ ?></td>
-									<td><?php echo (is_array($payee) && isset($payee[4])) ? $payee[4] : ''; /* Payee Country */ ?></td>
-									<td><?php echo (is_array($payee) && isset($payee[3])) ? $payee[3] : ''; /* Payee Province */ ?></td>
-									<td><?php echo (is_array($payee) && isset($payee[5])) ? $payee[5] : ''; /* Payee Type */ ?></td>
+									<td><?php echo ($value['payeearr'] ? $value['payeearr']['payee_name'] : ''); /* Payee Name */ ?></td>
+									<td><?php echo ($value['payeearr'] ? $value['payeearr']['address'] : ''); /* Payee Address */ ?></td>
+									<td><?php echo ($value['payeearr'] ? $value['payeearr']['country'] : ''); /* Payee Country */ ?></td>
+									<td><?php echo ($value['payeearr'] ? $value['payeearr']['province'] : ''); /* Payee Province */ ?></td>
+									<td><?php echo ($value['third_party_payee'] ? 'Business' : 'Private'); /* Payee Type */ ?></td>
 
-									<td><?php echo $value['provider']['name']; /*Provider Name*/?></td>
-									<td><?php echo $value['provider']['address']; /*Provider Address*/?></td>
-									<td><?php echo $value['provider']['country']; /*Provider Country*/?></td>
-									<td><?php echo $value['provider']['province']; /*Provider Province*/?></td>
-									<td><?php echo $value['provider']['name']; /*Provider Name*/?></td>
-									<td><?php echo (is_array($payee) && isset($payee[0])) ? $payee[0] : ''; /* Payment Method */ ?></td>
-									<td><?php echo $value['cheque']; ?></td>
+									<td><?php echo isset($value['provider']['name']) ? $value['provider']['name'] : ''; /*Provider Name*/?></td>
+									<td><?php echo isset($value['provider']['address']) ? $value['provider']['address'] : ''; /*Provider Address*/?></td>
+									<td><?php echo isset($value['provider']['country']) ? $value['provider']['country'] : ''; /*Provider Country*/?></td>
+									<td><?php echo isset($value['provider']['province']) ? $value['provider']['province'] : ''; /*Provider Province*/?></td>
+									<td><?php echo ($value['payeearr'] ? $value['payeearr']['payment_type'] : ''); /* Payment Method */ ?></td>
+									<td><?php echo $value['cheque']; /* Cheque Number for claim items */?></td>
 
 									<td>$<?php echo number_format($value['amount_claimed'], 2); /*Total Claim Amount*/ ?></td>
-									<td>$<?php echo number_format($value['amount_claimed'], 2); /*Discount Amount Add in items discount_amount XXXXXXXXXXXXXXXXX */?></td>
-									<td>$<?php echo number_format($value['amount_claimed'], 2); /*Denied Amount : claimed - discount - payable XXXXXXXXXXXXXXXXX */?></td>
+									<td>$<?php echo number_format(0, 2); /*Discount Amount Add in items discount_amount XXXXXXXXXXXXXXXXX */?></td>
+									<td>$<?php echo number_format($value['amount_claimed'] - $value['amt_payable'], 2); /*Denied Amount : claimed - payable */?></td>
 									<td>$<?php echo number_format($value['amt_deductible'], 2); /*Deductible Amount*/?></td>
 									<td>$<?php echo number_format($value['amt_payable'], 2); /*Net Claim Paid Amount*/?></td>
 									<td><?php echo 'CAD'; /*Payment Currency CAD only */ ?></td>
 									<td><?php echo $value['currency']; /*Invoice Currency*/ ?></td>
-									<td>$<?php echo number_format($value['third_party_payee'], 2); /*Network Fees XXXXXXXXXXXXXXXXX */?></td>
-									<td><?php echo $value['provider']['name']; /*Network Provider XXXXXXXXXXXXXXXXX*/ ?></td>
+									<td>$<?php echo ($value['provider_type'] ? number_format($value['provider']['network_fee'], 2) : 0); /*Network Fees */?></td>
+									<td><?php echo isset($value['provider']['name']) ? $value['provider']['name'] : ''; /*Network Provider */ ?></td>
+									<td>$<?php echo number_format($value['recovery_amt'], 2); /* Recovery amount XXXXXXXXXXXXXXX no input place */?></td>
 									<td>$<?php echo number_format($value['amount_claimed'], 2); /*Void amount  Duplicated / Void XXXXXXXXXXXXXXXXX */?></td>
-									<td><?php echo $value['reason']['name']; /*Void Reason*/ ?></td>
-									<td><?php echo $value['reason_other']['name']; /*Deny Reason*/ ?></td>
+									<td><?php echo $value['reason']; /*Void Reason*/ ?></td>
+									<td><?php echo $value['reason_other']; /*Deny Reason*/ ?></td>
 								</tr>
 								<?php } ?>
 							</tbody>

@@ -25,8 +25,13 @@ class Expenses extends CI_Controller {
 				
 			// if sorting enabled
 			$para = array();
-			$para['product_short'] = $this->input->get('product_short');
-			$para['agent_id'] = $this->input->get('agent_id');
+			$para['status_group'] = $this->input->get('status_group');
+			/*
+			 * Paid => Paid, Declined
+			 * Unpaid => Received, Approved, Pending
+			 * Duplicated not included
+			 */
+			//$para['agent_id'] = $this->input->get('agent_id');
 			if ($this->input->get('start_dt')) {
 				$para['start_dt'] = $this->input->get('start_dt');
 			} else {
@@ -41,7 +46,7 @@ class Expenses extends CI_Controller {
 			$this->data['agents'] = $this->claim_model->get_agents_list();
 			$this->data['products'] = $this->product_model->get_list();
 				
-			$this->data['records'] = $this->expenses_model->summary($para);
+			$this->data['records'] = $this->expenses_model->expense_report($para);
 			
 			$this->data['export_url'] = site_url('report/expenses/export');
 			if (count($this->input->get()) > 0)	$this->data['export_url'] .= '?' . http_build_query($this->input->get(), '', "&");
@@ -62,12 +67,11 @@ class Expenses extends CI_Controller {
 				
 			// if sorting enabled
 			$para = array();
-			$para['product_short'] = $this->input->get('product_short');
-			$para['agent_id'] = $this->input->get('agent_id');
+			$para['status_group'] = $this->input->get('status_group');
 			$para['start_dt'] = $this->input->get('start_dt');
 			$para['end_dt'] = $this->input->get('end_dt');
 
-			$records = $this->expenses_model->summary($para);
+			$records = $this->expenses_model->expense_report($para);
 			
 			header('Content-Type: text/csv; charset=utf-8');
 			header('Content-Disposition: attachment; filename=Claim_summary.csv');
@@ -85,34 +89,86 @@ class Expenses extends CI_Controller {
 			fputcsv($output, array(''));
 
 			fputcsv($output, array(
-					'Month',
-					'Writen Premium',
-					'Earned Premium',
-					'Billed Amount',
-					'Paid Amount',
-					'Recovery Amount',
-			));
+							'Claim Number',
+							'Claim Type',
+							'Status',
+							'Policy Number',
+							'Product',
+							'Policy Date',
+							'Agent ID ',
+							'Coverage Code',
+							'Entered Date',
+							'Incident Date',
+							'Incident Country ',
+							'Payment Date/ Void Date',
+							'Payee Name',
+							'Payee Address',
+							'Payee Country',
+							'Payee Province',
+							'Payee Type',
+							'Provider Name',
+							'Provider Address ',
+							'Provider Country',
+							'Provider Province',
+							'Payment Method',
+							'Cheque Number',
+							'Total Claim Amount',
+							'Discount Amount',
+							'Denied Amount',
+							'Deductible Amount',
+							'Net Claim Paid amount',
+							'Payment Currency',
+							'Invoice Currency ',
+							'Network Fees',
+							'Network Provider',
+							'Recovery Amount',
+							'Void amount',
+							'Void Reason ',
+							'Deny Reason',
+					));
 
-			$t_writen = $t_earned = $t_billed = $t_paid = $t_recovery = 0;
 			foreach ($records as $key => $value) { 
-				$t_writen += $value['writen']; $t_earned += $value['earned']; $t_billed += $value['billed']; $t_paid += $value['paid']; $t_recovery += $value['recovery'];
 				fputcsv($output, array(
-					$key,
-					sprintf("%0.2f", $value['writen']),
-					sprintf("%0.2f", $value['earned']),
-					sprintf("%0.2f", $value['billed']),
-					sprintf("%0.2f", $value['paid']),
-					sprintf("%0.2f", $value['recovery'])
+						$value['claim_no'],
+						$value['claim']['exinfo_type'],
+						$value['status'],
+						$value['claim']['policy_no'],
+						$value['claim']['product_short'],
+						$value['claim']['apply_date'],
+						$value['claim']['agent_id'],
+						$value['created'],
+						$value['claim']['date_symptoms'],
+						'N/A', /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */
+						$value['pay_date'],
+						($value['payeearr'] ? $value['payeearr']['payee_name'] : ''),
+						($value['payeearr'] ? $value['payeearr']['address'] : ''),
+						($value['payeearr'] ? $value['payeearr']['country'] : ''),
+						($value['payeearr'] ? $value['payeearr']['province'] : ''),
+						($value['third_party_payee'] ? 'Business' : 'Private'),
+
+						isset($value['provider']['name']) ? $value['provider']['name'] : '',
+						isset($value['provider']['address']) ? $value['provider']['address'] : '',
+						isset($value['provider']['country']) ? $value['provider']['country'] : '',
+						isset($value['provider']['province']) ? $value['provider']['province'] : '',
+						($value['payeearr'] ? $value['payeearr']['payment_type'] : ''),
+						$value['cheque'],
+
+						sprintf("%0.2f", number_format($value['amount_claimed'], 2)),
+						sprintf("%0.2f", number_format(0, 2)),
+						sprintf("%0.2f", number_format($value['amount_claimed'] - $value['amt_payable'], 2)),
+						sprintf("%0.2f", number_format($value['amt_deductible'], 2)),
+						sprintf("%0.2f", number_format($value['amt_payable'], 2)),
+						'CAD',
+						$value['currency'],
+						sprintf("%0.2f", ($value['provider_type'] ? number_format($value['provider']['network_fee'], 2) : 0)),
+						isset($value['provider']['name']) ? $value['provider']['name'] : '',
+						sprintf("%0.2f", number_format($value['recovery_amt'], 2)),
+						sprintf("%0.2f", number_format($value['amount_claimed'], 2)),
+						$value['reason'],
+						$value['reason_other'],
 				));
 			}
-			fputcsv($output, array(
-				'Total',
-				sprintf("%0.2f", $t_writen),
-				sprintf("%0.2f", $t_earned),
-				sprintf("%0.2f", $t_billed),
-				sprintf("%0.2f", $t_paid),
-				sprintf("%0.2f", $t_recovery)
-			));
+			fputcsv($output, array(''));
 		}
 	}
 }
