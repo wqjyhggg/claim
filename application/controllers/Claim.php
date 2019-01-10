@@ -84,13 +84,14 @@ class Claim extends CI_Controller {
 		if ($this->ion_auth->logged_in()) {
 			// validate input
 			$post = $this->input->post();
-			if (empty($post['address']) || empty($post['province']) || empty($post['country']) || empty($post['postcode'])) {
+			if (empty($post['address']) || empty($post['city']) || empty($post['province']) || empty($post['country']) || empty($post['postcode'])) {
 				$json = array("status" => 0, "message" => 'Missing parameter.');
 			} else {
 				// insert item provider information
 				$data = array(
 						'claim_id' => $post['claim_id'],
 						'address' => $post['address'],
+						'city' => $post['city'],
 						'province' => $post['province'],
 						'country' => $post['country'],
 						'postcode' => $post['postcode']
@@ -440,6 +441,7 @@ class Claim extends CI_Controller {
 						$this->data['eprovider_list'][$key]['id'] = $val; // id
 						$this->data['eprovider_list'][$key]['name'] = $arr['name'][$key];
 						$this->data['eprovider_list'][$key]['address'] = $arr['address'][$key];
+						$this->data['eprovider_list'][$key]['city'] = $arr['city'][$key];
 						$this->data['eprovider_list'][$key]['province'] = $arr['province'][$key];
 						$this->data['eprovider_list'][$key]['country'] = $arr['country'][$key];
 						$this->data['eprovider_list'][$key]['postcode'] = $arr['postcode'][$key];
@@ -453,6 +455,7 @@ class Claim extends CI_Controller {
 						$this->data['payees_list'][$key]['bank'] = $arr['bank'][$key];
 						$this->data['payees_list'][$key]['account_cheque'] = $arr['account_cheque'][$key];
 						$this->data['payees_list'][$key]['address'] = $arr['address'][$key];
+						$this->data['payees_list'][$key]['city'] = $arr['city'][$key];
 						$this->data['payees_list'][$key]['province'] = $arr['province'][$key];
 						$this->data['payees_list'][$key]['country'] = $arr['country'][$key];
 						$this->data['payees_list'][$key]['postcode'] = $arr['postcode'][$key];
@@ -818,6 +821,7 @@ class Claim extends CI_Controller {
 						$this->data['eprovider_list'][$key]['id'] = $val; // id
 						$this->data['eprovider_list'][$key]['name'] = $arr['name'][$key];
 						$this->data['eprovider_list'][$key]['address'] = $arr['address'][$key];
+						$this->data['eprovider_list'][$key]['city'] = $arr['city'][$key];
 						$this->data['eprovider_list'][$key]['province'] = $arr['province'][$key];
 						$this->data['eprovider_list'][$key]['country'] = $arr['country'][$key];
 						$this->data['eprovider_list'][$key]['postcode'] = $arr['postcode'][$key];
@@ -831,6 +835,7 @@ class Claim extends CI_Controller {
 						$this->data['payees_list'][$key]['bank'] = $arr['bank'][$key];
 						$this->data['payees_list'][$key]['account_cheque'] = $arr['account_cheque'][$key];
 						$this->data['payees_list'][$key]['address'] = $arr['address'][$key];
+						$this->data['payees_list'][$key]['city'] = $arr['city'][$key];
 						$this->data['payees_list'][$key]['province'] = $arr['province'][$key];
 						$this->data['payees_list'][$key]['country'] = $arr['country'][$key];
 						$this->data['payees_list'][$key]['postcode'] = $arr['postcode'][$key];
@@ -1007,6 +1012,7 @@ class Claim extends CI_Controller {
 								'bank' => $val,
 								'payee_name' => $array['payees']['payee_name'][$key],
 								'address' => $array['payees']['address'][$key],
+								'city' => $array['payees']['city'][$key],
 								'province' => $array['payees']['province'][$key],
 								'country' => $array['payees']['country'][$key],
 								'postcode' => $array['payees']['postcode'][$key],
@@ -2322,6 +2328,9 @@ class Claim extends CI_Controller {
 			if (!empty($this->input->post('address'))) {
 				$payee_data['address'] = $this->input->post('address');
 			}
+			if (!empty($this->input->post('city'))) {
+				$payee_data['city'] = $this->input->post('city');
+			}
 			if (!empty($this->input->post('province'))) {
 				$payee_data['province'] = $this->input->post('province');
 			}
@@ -2370,6 +2379,9 @@ class Claim extends CI_Controller {
 			}
 			if (!empty($this->input->post('address'))) {
 				$data['address'] = $this->input->post('address');
+			}
+			if (!empty($this->input->post('city'))) {
+				$data['city'] = $this->input->post('city');
 			}
 			if (!empty($this->input->post('province'))) {
 				$data['province'] = $this->input->post('province');

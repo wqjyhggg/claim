@@ -570,6 +570,10 @@
 											<?php echo form_input("payees[address][]", $value ["address"], array("class" => "form-control " . ($value ["payment_type"] != 'cheque' ? '' : 'required'), 'placeholder' => 'Address', "readonly" => "readonly")); ?>
 										</div>
 										<div class="col-sm-3 cheque_section" <?php echo ($value["payment_type"] != 'cheque'?'style="display:none"':''); ?>>
+											<label for="City" class="col-sm-12">City:</label>
+											<?php echo form_input("payees[city][]", $value ["city"], array("class" => "form-control " . ($value ["payment_type"] != 'cheque' ? '' : 'required'), 'placeholder' => 'City', "readonly" => "readonly")); ?>
+										</div>
+										<div class="col-sm-3 cheque_section" <?php echo ($value["payment_type"] != 'cheque'?'style="display:none"':''); ?>>
 											<label for="Province" class="col-sm-12">Province:</label>
 											<?php echo form_input("payees[province][]", $value ["province"], array("class" => "form-control " . ($value ["payment_type"] != 'cheque' ? '' : 'required'), 'placeholder' => 'Province', "readonly" => "readonly")); ?>
 										</div>
@@ -757,12 +761,12 @@
 												<option value="0">-- Select Payee --</option>
 											<?php if (1 == $value["third_party_payee"]) { ?>
 												<?php foreach ($bprovider_list as $val): ?>
-												<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value["payee"]) { echo "selected"; } ?>><?php echo $val['name'] . " : " . $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>
+												<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value["payee"]) { echo "selected"; } ?>><?php echo $val['name'] . " : " . $val['address'] . " " . $val['city'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>
 												<?php endforeach; ?>
 											<?php } else { ?>
 												<?php foreach ( $payees_list as $payee ) { ?>
 												<?php if ($payee['payment_type'] == 'cheque') { ?> 
-												<option value="<?php echo $payee['id']; ?>" <?php echo (($payee['id'] == $value['payee']) ? "Selected" : ""); ?>><?php echo $payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address'] . ", " . $payee['province'] . " " . $payee['country'] . " " . $payee['postcode']; ?></option>
+												<option value="<?php echo $payee['id']; ?>" <?php echo (($payee['id'] == $value['payee']) ? "Selected" : ""); ?>><?php echo $payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address'] . " " . $payee['city'] . ", " . $payee['province'] . " " . $payee['country'] . " " . $payee['postcode']; ?></option>
 												<?php } else { ?> 
 												<option value="<?php echo $payee['id']; ?>" <?php echo (($payee['id'] == $value['payee']) ? "Selected" : ""); ?>><?php echo $payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['bank'] . ", " . $payee['account_cheque']; ?></option>
 												<?php } ?>
@@ -1131,7 +1135,7 @@
 					<option value="">--Select Payee--</option>
 					<?php foreach ( $payees_list as $payee ) { ?>
 					<?php if ($payee['payment_type'] == 'cheque') { ?> 
-					<option value="<?php echo $payee['id']; ?>"><?php echo $payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address'] . ", " . $payee['province'] . " " . $payee['country'] . " " . $payee['postcode']; ?></option>
+					<option value="<?php echo $payee['id']; ?>"><?php echo $payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address'] . " " . $payee['city'] . ", " . $payee['province'] . " " . $payee['country'] . " " . $payee['postcode']; ?></option>
 					<?php } else { ?> 
 					<option value="<?php echo $payee['id']; ?>"><?php echo $payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['bank'] . ", " . $payee['account_cheque']; ?></option>
 					<?php } ?>
@@ -1186,6 +1190,10 @@
 			<div class="col-sm-3 cheque_section">
 				<label for="Address" class="col-sm-12">Address: &nbsp;&nbsp;<span class='payee_policy_addr'><i class="fa fa-copy"></i> use policy address</span></label>
 				<?php echo form_input("payees[address][]", $this->input->post("address"), array("class" => "form-control", 'placeholder' => 'Address')); ?>
+			</div>
+			<div class="col-sm-3 cheque_section">
+				<label for="City" class="col-sm-12">City:</label>
+				<?php echo form_input("payees[city][]", $this->input->post("city"), array("class" => "form-control", 'placeholder' => 'City')); ?>
 			</div>
 			<div class="col-sm-3 cheque_section">
 				<label for="Province" class="col-sm-12">Province:</label>
@@ -1283,14 +1291,14 @@ function get_policy() {
 var bpayee_html = "<option value=''>--Select Payee--</option>";
 <?php if (isset($bprovider_list) && is_array($bprovider_list)) { ?>
 	<?php foreach ($bprovider_list as $val) {?>
-	bpayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo "cheque : " . $val['payeename'] . " : " . $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>"
+	bpayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo "cheque : " . $val['payeename'] . " : " . $val['address'] . " " . $val['city'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>"
 	<?php } ?>
 <?php } ?>
 var epayee_html = "<option value=''>--Select Payee--</option>";
 <?php if (isset($payees_list) && is_array($payees_list)) { ?>
 	<?php foreach ($payees_list as $val) {?>
 		<?php if ($val['payment_type'] == 'cheque') { ?>
-		epayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo $val['payment_type'] . " : " . $val['payee_name'] . " : " . $val['address'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>"
+		epayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo $val['payment_type'] . " : " . $val['payee_name'] . " : " . $val['address'] . " " . $val['city'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>"
 		<?php } else { ?>
 		epayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo $val['payment_type'] . " : " . $val['payee_name'] . " : " . $val['bank'] . ", " . $val['account_cheque']; ?></option>"
 		<?php } ?>
@@ -1393,6 +1401,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		var bank = p.find("input[name^='payees[bank]']").val();
 		var account_cheque = p.find("input[name^='payees[account_cheque]']").val();
 		var address = p.find("input[name^='payees[address]']").val();
+		var city = p.find("input[name^='payees[city]']").val();
 		var province = p.find("input[name^='payees[province]']").val();
 		var country = p.find("input[name^='payees[country]']").val();
 		var postcode = p.find("input[name^='payees[postcode]']").val();
@@ -1408,6 +1417,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 				bank:bank,
 				account_cheque:account_cheque,
 				address:address,
+				city:city,
 				province:province,
 				country:country,
 				postcode:postcode
@@ -1449,15 +1459,17 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 	})
 	.on("click", ".payee_policy_addr", function() {
 		var addr = $(this).closest("div").find("input[name='payees[address][]']");
+		var city = $(this).closest("div").parent().find("input[name^='payees[city]']");
 		var prov = $(this).closest("div").parent().find("input[name^='payees[province]']");
 		var ctry = $(this).closest("div").parent().find("input[name^='payees[country]']");
 		var ptcd = $(this).closest("div").parent().find("input[name^='payees[postcode]']");
 		var data = $.parseJSON(localStorage.getItem("policy_data"));
 		if (data[0].suite_number) {
-			addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name + " " + data[0].city);
+			addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name);
 		} else {
-			addr.val(data[0].street_number+" "+data[0].street_name + " " + data[0].city);
+			addr.val(data[0].street_number+" "+data[0].street_name);
 		}
+		city.val(data[0].city);
 		prov.val(data[0].province2);
 		ctry.val(data[0].country2);
 		ptcd.val(data[0].postcode);
@@ -1944,7 +1956,7 @@ function remapping_payee() {
 			var v = p.find(".payees_payment_type").val();
 
 			if (v == 'cheque') {
-				v = v + " : " + p.find("input[name^='payees[payee_name]']").val() + " : " + p.find("input[name^='payees[address]']").val() + ", " + p.find("input[name^='payees[province]']").val() + " " + p.find("input[name^='payees[country]']").val() + " " + p.find("input[name^='payees[postcode]']").val();
+				v = v + " : " + p.find("input[name^='payees[payee_name]']").val() + " : " + p.find("input[name^='payees[address]']").val() + " " + p.find("input[name^='payees[city]']").val() + ", " + p.find("input[name^='payees[province]']").val() + " " + p.find("input[name^='payees[country]']").val() + " " + p.find("input[name^='payees[postcode]']").val();
 			} else { // deposit
 				v = v + " : " + p.find("input[name^='payees[payee_name]']").val() + " : " + p.find("input[name^='payees[bank]']").val() + ", " + p.find("input[name^='payees[account_cheque]']").val();
 			}

@@ -59,6 +59,15 @@
 					</div>
 					<div class="row">
 						<div class="form-group col-sm-2 ">
+							<?php echo form_label('City:', 'city', array("class"=>"pull-right")); ?>
+						</div>
+						<div class="form-group col-sm-10">
+							<?php echo form_input("city", $provider["city"], array('placeholder'=>'City')); ?>
+							<?php echo form_error("city");?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-sm-2 ">
 							<?php echo form_label('Province:', 'province', array("class"=>"pull-right")); ?>
 						</div>
 						<div class="form-group col-sm-10">

@@ -358,6 +358,7 @@ class Api extends CI_Controller {
 							'payee_name'=> isset($payees['payee_name'][$key]) ? $payees['payee_name'][$key] : '',
 							'account_cheque'=> isset($payees['account_cheque'][$key]) ? $payees['account_cheque'][$key] : '',
 							'address'=> isset($payees['address'][$key]) ? $payees['address'][$key] : '',
+							'city'=> isset($payees['city'][$key]) ? $payees['city'][$key] : '',
 							'province'=> isset($payees['province'][$key]) ? $payees['province'][$key] : '',
 							'country'=> isset($payees['country'][$key]) ? $payees['country'][$key] : '',
 							'postcode'=> isset($payees['postcode'][$key]) ? $payees['postcode'][$key] : '',
@@ -366,7 +367,7 @@ class Api extends CI_Controller {
 							);
 						$this->claim_model->payees_save($payee_data);
 						if ($payee_data['payment_type'] == 'cheque') {
-							$payee_str = "cheque : ".$payee_data['payee_name']." : ".$payee_data['address']." : ".$payee_data['province']." : ".$payee_data['country']." : ".$payee_data['postcode']." : ";
+							$payee_str = "cheque : ".$payee_data['payee_name']." : ".$payee_data['address']." : ".$payee_data['city']." : ".$payee_data['province']." : ".$payee_data['country']." : ".$payee_data['postcode']." : ";
 						} else {
 							$payee_str = "direct deposit : ".$payee_data['payee_name']." : ".$payee_data['bank']." : ".$payee_data['account_cheque'];
 						}
@@ -381,6 +382,7 @@ class Api extends CI_Controller {
 								'claim_id'=>$id,
 								'name'=> isset($payees['name'][$key]) ? $payees['name'][$key] : '',
 								'address'=> isset($payees['address'][$key]) ? $payees['address'][$key] : '',
+								'city'=> isset($payees['city'][$key]) ? $payees['city'][$key] : '',
 								'province'=> isset($payees['province'][$key]) ? $payees['province'][$key] : '',
 								'country'=> isset($payees['country'][$key]) ? $payees['country'][$key] : '',
 								'postcode'=> isset($payees['postcode'][$key]) ? $payees['postcode'][$key] : ''

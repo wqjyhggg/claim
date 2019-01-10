@@ -270,7 +270,7 @@ class Claim_model extends CI_Model {
 		foreach ($array as $val) {
 			$key = $val['payment_type'];
 			if ($key == 'cheque') {
-				$key = $key . " : " . $val['payee_name'] . " : " . $val['address'] . " : " . $val['province'] . " : " . $val['country'] . " : " . $val['postcode'] . " : " . $val['type'];
+				$key = $key . " : " . $val['payee_name'] . " : " . $val['address'] . " : " . $val['city'] . " : " . $val['province'] . " : " . $val['country'] . " : " . $val['postcode'] . " : " . $val['type'];
 			} else {
 				$key = $key . " : " . $val['payee_name'] . " : " + $val['bank'] . " : " . $val['account_cheque'];
 			}

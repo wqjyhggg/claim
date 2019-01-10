@@ -92,6 +92,7 @@ class Provider extends CI_Controller {
 			$this->form_validation->set_rules('name', 'Name', 'required');
 			$this->form_validation->set_rules('payeename', 'Payeename', 'required');
 			$this->form_validation->set_rules('address', 'Address', 'required');
+			$this->form_validation->set_rules('city', 'City', 'required');
 			$this->form_validation->set_rules('province', 'Province', 'required');
 			$this->form_validation->set_rules('country', 'Country', 'required');
 			$this->form_validation->set_rules('postcode', 'postcode', 'required|callback_alpha_dash_space');
@@ -135,6 +136,7 @@ class Provider extends CI_Controller {
 				$provider['payeename'] = '';
 				$provider['status'] = Provider_model::ACTIVE;
 				$provider['address'] = '';
+				$provider['city'] = '';
 				$provider['province'] = '';
 				$provider['country'] = '';
 				$provider['postcode'] = '';
@@ -156,6 +158,7 @@ class Provider extends CI_Controller {
 				$provider['payeename'] = $this->input->post('payeename');
 				$provider['status'] = $this->input->post('status');
 				$provider['address'] = $this->input->post('address');
+				$provider['city'] = $this->input->post('city');
 				$provider['province'] = $this->input->post('province');
 				$provider['country'] = $this->input->post('country');
 				$provider['postcode'] = $this->input->post('postcode');
