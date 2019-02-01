@@ -1373,7 +1373,7 @@ class Claim extends CI_Controller {
 								'status' => $array['expenses_claimed']['status'][$key],
 								'payee' => $array['expenses_claimed']['payee'][$key],
 								'pay_to' => $array['expenses_claimed']['pay_to'][$key],
-								'third_party_payee' => $array['expenses_claimed']['third_party_payee'][$key],
+								'third_party_payee' => empty($array['expenses_claimed']['third_party_payee'][$key]) ? 0 : (int)$array['expenses_claimed']['third_party_payee'][$key],
 								'currency' => $array['expenses_claimed']['currency'][$key],
 								//'comment' => $array['expenses_claimed']['comment'][$key],
 								'created_by' => $this->ion_auth->get_user_id(),
