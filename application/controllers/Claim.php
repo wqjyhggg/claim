@@ -469,6 +469,14 @@ class Claim extends CI_Controller {
 						$this->data['policy'] = $policies[0];
 					}
 				}
+				$case_no = $this->input->get('case_no');
+				if (!empty($case_no)) {
+					$this->data["case_no"] = $case_no;
+				}
+				$product_short = $this->input->get('product_short');
+				if (!empty($product_short)) {
+					$this->data["product_short"] = $product_short;
+				}
 				
 				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(TRUE);
@@ -854,6 +862,14 @@ class Claim extends CI_Controller {
 				}
 				if ($this->input->post('exinfo')) {
 					$data["exinfo"] = $this->input->post('exinfo');
+				}
+				$case_no = $this->input->get('case_no');
+				if (!empty($case_no)) {
+					$this->data["case_no"] = $case_no;
+				}
+				$product_short = $this->input->get('product_short');
+				if (!empty($product_short)) {
+					$this->data["product_short"] = $product_short;
 				}
 				
 				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));

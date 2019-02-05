@@ -1105,7 +1105,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
       var product_short = $("input[name=product_short]").val();
 
       if ((product_short != '') && (product_short != 'REF') && (product_short != 'OPL') && (product_short != 'JFR') && (product_short != 'JES') && (product_short != 'JFC')) {
-      	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + $("input[name=policy_no]").val();
+      	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + $("input[name=policy_no]").val() + "&case_no=" + $("input[name=case_no]").val() + "&product_short=" + $("input[name=product_short]").val();
       }
    })
 
@@ -1648,7 +1648,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
             if(typeof data.plan_list != "undefined" && data.plan_list.length) {
                 localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                 if ((data.plan_list[0].product_short != 'REF') && (data.plan_list[0].product_short != 'OPL') && (data.plan_list[0].product_short != 'JFR') && (data.plan_list[0].product_short != 'JES') && (data.plan_list[0].product_short != 'JFC')) {
-                	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + policy_no;
+                	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + policy_no + "&case_no=" + $("input[name=case_no]").val() + "&product_short=" + $("input[name=product_short]").val();
                 }
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
                if (data.plan_list[0].status_id == 5) {
@@ -1796,7 +1796,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
                if ((data.plan_list[0].product_short != 'REF') && (data.plan_list[0].product_short != 'OPL') && (data.plan_list[0].product_short != 'JFR') && (data.plan_list[0].product_short != 'JES') && (data.plan_list[0].product_short != 'JFC')) {
-               	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + $("input[name=policy_no]").val();
+               	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + $("input[name=policy_no]").val() + "&case_no=" + $("input[name=case_no]").val() + "&product_short=" + $("input[name=product_short]").val();
                }
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
                if (data.plan_list[0].status_id == 5) {
