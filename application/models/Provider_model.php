@@ -71,7 +71,7 @@ class Provider_model extends CI_Model {
 				$sql .= " ORDER BY " . $this->db->escape_str($para["field"]) . " ASC";
 			}
 		} else {
-			$sql .= " ORDER BY id ASC";
+			$sql .= " ORDER BY name ASC";
 		}
 		
 		if ($limit) {
