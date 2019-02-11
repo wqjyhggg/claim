@@ -136,6 +136,7 @@ class Expenses extends CI_Controller {
 						$value['claim']['product_short'],
 						$value['claim']['apply_date'],
 						$value['claim']['agent_id'],
+						$value['coverage_code'],
 						$value['created'],
 						$value['claim']['date_symptoms'],
 						'N/A', /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */

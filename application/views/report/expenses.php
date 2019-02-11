@@ -98,6 +98,7 @@
 									<td><?php echo $value['claim']['product_short']; ?></td>
 									<td><?php echo $value['claim']['apply_date']; ?></td>
 									<td><?php echo $value['claim']['agent_id']; ?></td>
+									<td><?php echo $value['coverage_code']; ?></td>
 									<td><?php echo $value['created']; ?></td>
 									<td><?php echo $value['claim']['date_symptoms']; /*Incident Date*/?></td>
 									<td>N/A<?php /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */ ?></td>
