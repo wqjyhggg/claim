@@ -15,7 +15,8 @@ class Phone_model extends CI_Model {
 	//const PHONE_URL = 'http://api.jfgroup.genvoice.net';
 	/* JF new */
 	const PHONE_KEY = '6c9cd24e20afac819909526828000cf9';
-	const PHONE_URL = 'http://portal.ontimecare.genvoice.net';
+	//const PHONE_URL = 'http://portal.ontimecare.genvoice.net';
+	const PHONE_URL = 'http://ontimecare.api.genvoice.net';
 	/**/
 	
 	const S3_BUCKET = "jfphone";

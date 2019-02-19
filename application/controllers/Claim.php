@@ -31,6 +31,21 @@ class Claim extends CI_Controller {
 			
 			$this->data['policies'] = $this->api_model->get_policy($this->input->post());
 			
+			$products = FALSE;
+			if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+				$products = $this->ion_auth->get_users_products();
+
+				if (empty($products)) {
+					return show_error('Sorry, Unknown products.');
+				}
+				foreach ($this->data['policies'] as $key => $val) {
+					if (!in_array($val['product_short'], $products)) {
+						unset($this->data['policies'][$key]);
+					}
+				}
+			}
+			
+
 			// pass policies data to view
 			$this->data['policies_error'] = $this->api_model->errormsg;
 			if ($this->data['policies_error'] == 'Empty query condition') $this->data['policies_error'] = ''; 
