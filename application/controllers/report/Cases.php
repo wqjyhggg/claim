@@ -17,7 +17,7 @@ class Cases extends CI_Controller {
 	}
 	
 	// redirect if needed, otherwise display the products list
-	public function index() {
+	public function index($offset=0) {
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
@@ -40,7 +40,7 @@ class Cases extends CI_Controller {
 			if (count($this->input->get()) > 0)	$this->data['export_url'] .= '?' . http_build_query($this->input->get(), '', "&");
 				
 			$limit = $this->limit;
-			$offset = $this->uri->segment(3);
+			//$offset = $this->uri->segment(3);
 			
 			$this->data['records'] = $this->case_model->search($para, $limit, $offset);
 			$config['total_rows'] = $this->case_model->last_rows();
@@ -52,7 +52,7 @@ class Cases extends CI_Controller {
 				$this->data['records'][$key]['manager_email'] = $user['email'];
 			}
 			
-			$config['base_url'] = site_url('reports/cases');
+			$config['base_url'] = site_url('report/cases');
 			$config['per_page'] = $limit;
 			$config['first_url'] = $config ['base_url'] . '?' . http_build_query($this->input->get());
 			if (count($this->input->get()) > 0)	$config ['suffix'] = '?' . http_build_query($this->input->get(), '', "&");
