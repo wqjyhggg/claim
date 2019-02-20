@@ -26,6 +26,7 @@ class Expenses extends CI_Controller {
 			// if sorting enabled
 			$para = array();
 			$para['status_group'] = $this->input->get('status_group');
+			$para['product_short'] = $this->input->get('product_short');
 			/*
 			 * Paid => Paid, Declined
 			 * Unpaid => Received, Approved, Pending
@@ -68,6 +69,7 @@ class Expenses extends CI_Controller {
 			// if sorting enabled
 			$para = array();
 			$para['status_group'] = $this->input->get('status_group');
+			$para['product_short'] = $this->input->get('product_short');
 			$para['start_dt'] = $this->input->get('start_dt');
 			$para['end_dt'] = $this->input->get('end_dt');
 

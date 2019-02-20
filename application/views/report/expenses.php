@@ -21,6 +21,15 @@
 							</select>
 						</div>
 						<div class="form-group col-sm-3">
+							<?php echo form_label('Products:', 'product_short', array ("class" => 'col-sm-12')); ?>
+							<select name="product_short" class="form-control">
+								<option value="">-- Select Product --</option>
+								<?php foreach ($products as $key => $val) { ?>
+								<option value="<?php echo $key; ?>" <?php if ($key == $this->input->get('product_short')) { echo "selected"; } ?>><?php echo /* $val */$key; ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<div class="form-group col-sm-3">
 							<?php echo form_label('Date From:', 'start_dt', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
 								<?php echo form_input ( "start_dt", $this->input->get( "start_dt" ), array ("class" => "form-control datepicker", 'placeholder' => 'Date From') ); ?>
@@ -148,9 +157,9 @@
 <script>
 $(document).ready(function() {
 	$(".datepicker").datepicker({
-		format: "yyyy-mm",
-		viewMode: "months", 
-	    minViewMode: "months",
+		format: "yyyy-mm-dd",
+		viewMode: "days", 
+	    minViewMode: "days",
 	    endDate: '+0m'
     });
 });

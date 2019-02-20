@@ -48,7 +48,7 @@
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Products:', 'product_short', array ("class" => 'col-sm-12')); ?>
 							<select name="product_short" class="form-control">
-								<option value="">-- Select Products --</option>
+								<option value="">-- Select Product --</option>
 								<?php foreach ($products as $key => $val) { ?>
 								<option value="<?php echo $key; ?>" <?php if ($key == $this->input->get('product_short')) { echo "selected"; } ?>><?php echo /* $val */$key; ?></option>
 								<?php } ?>

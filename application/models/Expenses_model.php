@@ -573,18 +573,22 @@ class Expenses_model extends CI_Model {
 		$where = array();
 		if (!empty($para['status_group'])) {
 			if ($para['status_group'] == 'Paid') {
-				$where[] = "status IN ('Paid', 'Declined')";
+				$where[] = "expenses_claimed.status IN ('Paid', 'Declined')";
 			} else if ($para['status_group'] == 'Unpaid') {
-				$where[] = "status IN ('Received', 'Approved', 'Pending')";
+				$where[] = "expenses_claimed.status IN ('Received', 'Approved', 'Pending')";
 			}
 		}
 		if (!empty($para['start_dt'])) {
-			$where[] = "finalize_date >= " . $this->db->escape($para['start_dt']);
+			$where[] = "expenses_claimed.finalize_date >= " . $this->db->escape($para['start_dt']);
 		}
 		if (!empty($para['end_dt'])) {
-			$where[] = "finalize_date <= " . $this->db->escape($para['end_dt']);
+			$where[] = "expenses_claimed.finalize_date <= " . $this->db->escape($para['end_dt']);
 		}
-		$sql  = "SELECT * FROM expenses_claimed";
+		$sql  = "SELECT expenses_claimed.* FROM expenses_claimed";
+		
+		if (!empty($para['product_short'])) {
+			$sql .= " JOIN claim ON (expenses_claimed.claim_id=claim.id AND claim.product_short=" . $this->db->escape($para['product_short']) . ")";
+		}
 		if ($where) {
 			$sql .= " WHERE " . join(" AND ", $where);
 		}
