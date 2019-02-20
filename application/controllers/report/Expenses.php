@@ -170,7 +170,7 @@ class Expenses extends CI_Controller {
 						sprintf("%0.2f", ($value['provider_type'] ? number_format($value['provider']['network_fee'], 2) : 0)),
 						isset($value['provider']['name']) ? $value['provider']['name'] : '',
 						sprintf("%0.2f", number_format($value['recovery_amt'], 2)),
-						sprintf("%0.2f", number_format($value['amount_claimed'], 2)),
+						($value['status'] != Expenses_model::EXPENSE_STATUS_Duplicated) ? "0.00" : sprintf("%0.2f", number_format($value['amount_claimed'], 2)),
 						$value['reason'],
 						$value['reason_other'],
 				));
