@@ -45,7 +45,11 @@ class Expenses extends CI_Controller {
 			}
 
 			$this->data['agents'] = $this->claim_model->get_agents_list();
-			$this->data['products'] = $this->product_model->get_list();
+			if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+				$this->data['products'] = $this->product_model->get_list();
+			} else {
+				$this->data['products'] = $this->ion_auth->get_users_products();
+			}
 				
 			$this->data['records'] = $this->expenses_model->expense_report($para);
 			
