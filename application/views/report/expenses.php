@@ -1,7 +1,7 @@
 <div>
 	<div class="page-title">
 		<div class="title_left">
-			<h3>Claim Summary Report</h3>
+			<h3>Expenses Report</h3>
 		</div>
 	</div>
 	<div class="clearfix"></div>
@@ -135,7 +135,7 @@
 									<td>$<?php echo ($value['provider_type'] ? number_format($value['provider']['network_fee'], 2) : 0); /*Network Fees */?></td>
 									<td><?php echo isset($value['provider']['name']) ? $value['provider']['name'] : ''; /*Network Provider */ ?></td>
 									<td>$<?php echo number_format($value['recovery_amt'], 2); /* Recovery amount XXXXXXXXXXXXXXX no input place */?></td>
-									<td>$<?php echo number_format($value['amount_claimed'], 2); /*Void amount  Duplicated / Void XXXXXXXXXXXXXXXXX */?></td>
+									<td>$<?php echo (($value['status'] != Expenses_model::EXPENSE_STATUS_Duplicated) ? "0.00" : number_format($value['amount_claimed'], 2)); /*Void amount  Duplicated / Void XXXXXXXXXXXXXXXXX */?></td>
 									<td><?php echo $value['reason']; /*Void Reason*/ ?></td>
 									<td><?php echo $value['reason_other']; /*Deny Reason*/ ?></td>
 								</tr>
