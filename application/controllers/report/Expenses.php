@@ -58,7 +58,7 @@ class Expenses extends CI_Controller {
 			$this->data['export_url'] = site_url('report/expenses/export');
 			if (count($this->input->get()) > 0)	$this->data['export_url'] .= '?' . http_build_query($this->input->get(), '', "&");
 
-			$this->template->write('title', SITE_TITLE . ' - Expenses Report', TRUE);
+			$this->template->write('title', SITE_TITLE . ' - Reserve Report', TRUE);
 			$this->template->write_view('content', 'report/expenses', $this->data);
 			$this->template->render();
 		}
