@@ -97,6 +97,7 @@ class Expenses extends CI_Controller {
 			fputcsv($output, array(''));
 
 			fputcsv($output, array(
+							'Claim Item Number',
 							'Claim Number',
 							'Claim Type',
 							'Status',
@@ -137,6 +138,7 @@ class Expenses extends CI_Controller {
 
 			foreach ($records as $key => $value) { 
 				fputcsv($output, array(
+						$value['claim_item_no'],
 						$value['claim_no'],
 						$value['claim']['exinfo_type'],
 						$value['status'],
