@@ -23,12 +23,12 @@
 							<li style='line-height: 2em;'><?php echo anchor("report/exceptionals", ' CLaim Exceptional Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/recoveries", ' Recovery Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<?php if (0) { ?>
-							<li style='line-height: 2em;'><?php echo anchor("report/receivables", ' Receivable Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/payables", ' Payable Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/agents", ' Agent Working Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<?php } ?>
+							<li style='line-height: 2em;'><?php echo anchor("report/receivables", ' Reserved Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/claim_review", ' Large Loss Report</a>', array("class"=>'leftmeun h4')) ?> </li>
-							<li style='line-height: 2em;'><?php echo anchor("report/expenses", ' Reserve Report</a>', array("class"=>'leftmeun h4')) ?> </li>
+							<li style='line-height: 2em;'><?php echo anchor("report/expenses", ' Claim Summary Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 						</ul>
 						<ul>
 							<li style='line-height: 2em;'><?php echo anchor("report/agent_activity", ' Agent Activity Report</a>', array("class"=>'leftmeun h4')) ?> </li>

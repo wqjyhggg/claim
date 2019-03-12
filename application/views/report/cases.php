@@ -85,7 +85,11 @@
 								<?php foreach ( $records as $key => $value ) { ?>
 								<tr>
 									<td><?php echo anchor('emergency_assistance/edit_case/'.$value['id'], $value['case_no'], array('title'=>'Details')); ?></td>
+									<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
+									<td><?php echo $value['claim_no'] ? anchor('claim/examine_claim/'.$value['id'], $value['claim_no'], array('title'=>'Details')) : ''; ?></td>
+									<?php } else { ?>
 									<td><?php echo $value['claim_no'] ? anchor('claim/claim_detail/'.$value['id'], $value['claim_no'], array('title'=>'Details')) : ''; ?></td>
+									<?php } ?>
 									<td><?php echo $value['priority']; ?></td>
 									<td><?php echo $statuses[$value['status']]; ?></td>
 									<td><?php echo $value['created_email']; ?></td>

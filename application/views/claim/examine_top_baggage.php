@@ -402,6 +402,10 @@
 													<label class="col-sm-12">Decision : </label>
 													<div class='col-sm-12'><?php echo form_dropdown ( "status", $examine_status, $value['status'], array () ); ?></div>
 												</div>
+												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Finalize Date</label>
+													<div class='col-sm-12'><?php echo $value['finalize_date']; ?></div>
+												</div>
 												<?php } else { ?>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Decision : </label>
@@ -462,6 +466,7 @@
 					<?php } ?>
 					</div>
 					<hr />
+					<?php if (!$this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
 					<div class="row actions" style="margin-top: 20px;">
 						<div class="col-sm-6">
 							<?php echo form_label('Notes :', 'notes', array("class" => 'col-sm-12')); ?>
@@ -475,6 +480,7 @@
 						<?php } ?>
 					</div>
 					<hr />
+					<?php } ?>
 					<h4 style="margin-top: 35px; margin-bottom: 26px;">Total Pay info By Policy</h4>
 					<div class="row actions" style="margin-top: 20px;">
 						<div class="col-sm-3">

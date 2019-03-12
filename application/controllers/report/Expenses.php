@@ -58,7 +58,7 @@ class Expenses extends CI_Controller {
 			$this->data['export_url'] = site_url('report/expenses/export');
 			if (count($this->input->get()) > 0)	$this->data['export_url'] .= '?' . http_build_query($this->input->get(), '', "&");
 
-			$this->template->write('title', SITE_TITLE . ' - Reserve Report', TRUE);
+			$this->template->write('title', SITE_TITLE . ' - Claim Summary Report', TRUE);
 			$this->template->write_view('content', 'report/expenses', $this->data);
 			$this->template->render();
 		}
@@ -164,17 +164,17 @@ class Expenses extends CI_Controller {
 						($value['payeearr'] ? $value['payeearr']['payment_type'] : ''),
 						$value['cheque'],
 
-						sprintf("%0.2f", number_format($value['amount_claimed'], 2)),
-						sprintf("%0.2f", number_format(0, 2)),
-						sprintf("%0.2f", number_format($value['amount_claimed'] - $value['amt_payable'], 2)),
-						sprintf("%0.2f", number_format($value['amt_deductible'], 2)),
-						sprintf("%0.2f", number_format($value['amt_payable'], 2)),
+						sprintf("%0.2f", $value['amount_claimed']),
+						sprintf("%0.2f", 0),
+						sprintf("%0.2f", $value['amount_claimed'] - $value['amt_payable']),
+						sprintf("%0.2f", $value['amt_deductible']),
+						sprintf("%0.2f", $value['amt_payable']),
 						'CAD',
 						$value['currency'],
-						sprintf("%0.2f", ($value['provider_type'] ? number_format($value['provider']['network_fee'], 2) : 0)),
+						sprintf("%0.2f", ($value['provider_type'] ? $value['provider']['network_fee'] : 0)),
 						isset($value['provider']['name']) ? $value['provider']['name'] : '',
-						sprintf("%0.2f", number_format($value['recovery_amt'], 2)),
-						($value['status'] != Expenses_model::EXPENSE_STATUS_Duplicated) ? "0.00" : sprintf("%0.2f", number_format($value['amount_claimed'], 2)),
+						sprintf("%0.2f", $value['recovery_amt']),
+						($value['status'] != Expenses_model::EXPENSE_STATUS_Duplicated) ? "0.00" : sprintf("%0.2f", $value['amount_claimed']),
 						$value['reason'],
 						$value['reason_other'],
 				));
