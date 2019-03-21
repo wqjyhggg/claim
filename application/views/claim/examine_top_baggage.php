@@ -480,6 +480,30 @@
 						<?php } ?>
 					</div>
 					<hr />
+					<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER))) { ?>
+					<div class="row actions" style="margin-top: 20px;">
+						<div class="col-sm-12">
+							<?php echo form_label('Internal Notes :', 'intnotes', array("class" => 'col-sm-12')); ?>
+						</div>
+						<?php 
+						$intnotes = json_decode($claim['intnotes'], TRUE);
+						if ($intnotes && is_array($intnotes) && (sizeof($intnotes) > 0)) {
+							foreach ($intnotes as $r) {
+								echo "<div class='col-sm-12' style=\"background: #eeeeee;\">" . $r['dt'] . " - " . $r['user'] . "</div>\n";
+								echo "<div class='col-sm-12'>" . $r['notes'] . "</div>\n";
+							}
+						}
+						?>
+						<div class="col-sm-6">
+							<?php echo form_textarea ( "intnotes_input", "", array ("class" => "form-control", "id" => "intnotes_input", 'placeholder' => 'Internal Notes', 'style' => "height:100px") ); ?>
+						</div>
+						<div class="col-sm-6">
+							<label class="col-sm-12">&nbsp;</label>
+							<input class="btn btn-primary" name="save" value="Save Notes" type="button" id="save_internal_notes">
+						</div>
+					</div>
+					<hr />
+					<?php } ?>
 					<?php } ?>
 					<h4 style="margin-top: 35px; margin-bottom: 26px;">Total Pay info By Policy</h4>
 					<div class="row actions" style="margin-top: 20px;">
@@ -1269,6 +1293,18 @@ $(document).ready(function() {
       }
    })
 
+	.on("click", "#save_internal_notes", function() {
+		$.ajax({
+			url: "<?php echo base_url("claim/saveintnotes/".$claim['id']); ?>",
+			method: "post",
+			data:{intnotes:$('#intnotes_input').val()},
+			beforeSend: function(){
+				$(".modal-content, .main_container").addClass("csspinner load1");
+			},
+			success: function() {
+				window.location.reload();
+			}
+		})
 	.on("click", "#save_notes", function() {
 		$.ajax({
 			url: "<?php echo base_url("claim/savenotes/".$claim['id']); ?>",

@@ -1756,6 +1756,33 @@ class Claim extends CI_Controller {
 		echo TRUE;
 	}
 
+	public function saveintnotes($id) {
+		if (! $this->ion_auth->logged_in()) {
+			die("0");
+		}
+		$data['id'] = $id;
+		$intnotes = $this->input->post('intnotes');
+		if (empty($id) || empty($intnotes)) {
+			die("No data");
+		}
+		$this->load->model('claim_model');
+		$claim = $this->claim_model->get_by_id($id);
+		if ($claim) {
+			$arr = json_decode($claim['intnotes'], TRUE);
+			$iarr = array('dt' => date("Y-m-d H:i"), "user" => $this->ion_auth->get_user_info('email'), 'notes' => $intnotes);
+			if ($arr && is_array($arr) && (sizeof($arr) > 0)) {
+				array_push($arr, $iarr);
+			} else {
+				$arr = array($iarr);
+			}
+			$array['intnotes'] = json_encode($intnotesArr); 
+			$data['intnotes'] = json_encode($arr);
+			$this->claim_model->save($data);
+		}
+	
+		echo TRUE;
+	}
+	
 	public function savenotes($id) {
 		if (! $this->ion_auth->logged_in()) {
 			die("0");
