@@ -26,7 +26,7 @@
 							<li style='line-height: 2em;'><?php echo anchor("report/payables", ' Payable Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/agents", ' Agent Working Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<?php } ?>
-							<li style='line-height: 2em;'><?php echo anchor("report/receivables", ' Reserved Report</a>', array("class"=>'leftmeun h4')) ?> </li>
+							<li style='line-height: 2em;'><?php echo anchor("report/reserve", ' Reserve Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/claim_review", ' Large Loss Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/expenses", ' Claim Summary Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 						</ul>

@@ -275,6 +275,9 @@ class Case_model extends CI_Model {
 			if ($cur = $this->get_by_id($id)) {
 				// Update
 				unset($data['id']);
+				if (isset($data['reserve_amount']) && ($data['reserve_amount'] != $cur['reserve_amount'])) {
+					$data['reserve_update_tm'] = date("Y-m-d H:i:s");
+				}
 				
 				$this->db->where('id', $id);
 				$this->db->update('case', $data);
@@ -286,12 +289,48 @@ class Case_model extends CI_Model {
 			$this->load->model('master_model');
 			$data['id'] = $this->master_model->get_id('case');
 		}
+		$data['init_reserve_tm'] = date("Y-m-d H:i:s");
+		$data['reserve_update_tm'] = date("Y-m-d H:i:s");
 		$data['init_reserve_amount'] = $data['reserve_amount'];
 		$this->db->insert('case', $data);
 		$sql = $this->db->last_query();
 		$id = $this->db->insert_id();
 		$this->active_model->log_new('case', $id, $data, $sql);
 		return $id;
+	}
+	
+	public function get_reserve_report($data) {
+		$this->load->model('Expenses_model');
+		$where = array();
+		if (!empty($data['created_from'])) $where[] = "init_reserve_tm >= " . $this->db->escape($data['created_from']);
+		if (!empty($data['created_to'])) $where[] = "init_reserve_tm <= " . $this->db->escape($data['created_to']);
+		if (!empty($data['last_update_from'])) $where[] = "reserve_update_tm >= " . $this->db->escape($data['last_update_from']);
+		if (!empty($data['last_update_to'])) $where[] = "reserve_update_tm <= " . $this->db->escape($data['last_update_to']);
+		
+		if (empty($where)) return array(); // No data
+		
+		$sql = "SELECT id, case_no, claim_no, init_reserve_amount, reserve_amount, init_reserve_tm, reserve_update_tm FROM `case` WHERE " . join(" AND ", $where) . "ORDER BY id";
+		$rt = $this->db->query($sql)->result_array();
+		if ($rt) {
+			foreach ($rt as $k => $v) {
+				$rt[$k]['paied_amount'] = 0;
+				$rt[$k]['approved_amount'] = 0;
+				if (!empty($v['claim_no'])) {
+					$sql = "SELECT SUM(amt_payable) AS amt, status FROM expenses_claimed WHERE claim_id='" . (int)$v['id'] . "' AND status IN (" . $this->db->escape(Expenses_model::EXPENSE_STATUS_Approved) . "," . $this->db->escape(Expenses_model::EXPENSE_STATUS_Paid) . ") GROUP BY status";
+					$rt_amt = $this->db->query($sql)->result_array();
+					if ($rt_amt) {
+						foreach ($rt_amt as $amt) {
+							if ($amt['status'] == Expenses_model::EXPENSE_STATUS_Approved) {
+								$rt[$k]['approved_amount'] = $amt['amt'];
+							} else if ($amt['status'] == Expenses_model::EXPENSE_STATUS_Paid) {
+								$rt[$k]['paied_amount'] = $amt['amt'];
+							}
+						}
+					}
+				}
+			}
+		}
+		return $rt;
 	}
 	
 	public function get_report($data, $monthly=TRUE) {
