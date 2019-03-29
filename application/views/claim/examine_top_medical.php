@@ -446,10 +446,6 @@
 													<label class="col-sm-12">Decision : </label>
 													<div class='col-sm-12'><?php echo form_dropdown ( "status", $examine_status, $value['status'], array () ); ?></div>
 												</div>
-												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Finalize Date</label>
-													<div class='col-sm-12'><?php echo $value['finalize_date']; ?></div>
-												</div>
 												<?php } else { ?>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Decision : </label>
@@ -461,6 +457,10 @@
 													<div class='col-sm-12'><?php echo $value['pay_date']; ?></div>
 												</div>
 												<?php } ?>
+												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Finalize Date</label>
+													<div class='col-sm-12'><?php echo $value['finalize_date']; ?></div>
+												</div>
 												<div class="clearfix"></div>
 												
 												<div class="form-group col-sm-3">
