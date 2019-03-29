@@ -537,19 +537,6 @@
 					</div>
 					<hr />
 					<?php if (!$this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) { ?>
-					<div class="row actions" style="margin-top: 20px;">
-						<div class="col-sm-6">
-							<?php echo form_label('Notes :', 'notes', array("class" => 'col-sm-12')); ?>
-							<?php echo form_textarea ( "notes", $claim_details["notes"], array ("class" => "form-control", "id" => "notes", 'placeholder' => 'Notes', 'style' => "height:100px") ); ?>
-						</div>
-						<?php if (! $is_insurer) { ?>
-						<div class="col-sm-6">
-							<label class="col-sm-12">&nbsp;</label>
-							<input class="btn btn-primary" name="save" value="Save Notes" type="button" id="save_notes">
-						</div>
-						<?php } ?>
-					</div>
-					<hr />
 					<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER))) { ?>
 					<div class="row actions" style="margin-top: 20px;">
 						<div class="col-sm-12">
@@ -574,6 +561,19 @@
 					</div>
 					<hr />
 					<?php } ?>
+					<div class="row actions" style="margin-top: 20px;">
+						<div class="col-sm-6">
+							<?php echo form_label('Notes :', 'notes', array("class" => 'col-sm-12')); ?>
+							<?php echo form_textarea ( "notes", $claim_details["notes"], array ("class" => "form-control", "id" => "notes", 'placeholder' => 'Notes', 'style' => "height:100px") ); ?>
+						</div>
+						<?php if (! $is_insurer) { ?>
+						<div class="col-sm-6">
+							<label class="col-sm-12">&nbsp;</label>
+							<input class="btn btn-primary" name="save" value="Save Notes" type="button" id="save_notes">
+						</div>
+						<?php } ?>
+					</div>
+					<hr />
 					<?php } ?>
 					<h4 style="margin-top: 25px; margin-bottom: 26px;">Total Pay info By Policy</h4>
 					<div class="row actions" style="margin-top: 20px;">
