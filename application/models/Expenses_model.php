@@ -601,7 +601,11 @@ class Expenses_model extends CI_Model {
 				} else {
 					$rt[$key]['provider'] = $this->db->query("SELECT * FROM expenses_provider WHERE id='".(int)$val['expenses_provider_id']."'")->row_array();
 				}
-				$rt[$key]['payeearr'] = $this->db->query("SELECT * FROM payees WHERE id='".(int)$val['payee']."'")->row_array();
+				if ($val['status'] != self::EXPENSE_STATUS_Declined) {
+					$rt[$key]['payeearr'] = $this->db->query("SELECT * FROM payees WHERE id='".(int)$val['payee']."'")->row_array();
+				} else {
+					$rt[$key]['payeearr'] = array();
+				}
 				$rt[$key]['claim'] = $this->db->query("SELECT * FROM claim WHERE id='".(int)$val['claim_id']."'")->row_array();
 			}
 		}
