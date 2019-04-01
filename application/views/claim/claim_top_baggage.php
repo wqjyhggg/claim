@@ -1072,7 +1072,7 @@
 				<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[invoice][]", $this->input->post("invoice"), array("class" => "form-control")); ?>
 				<?php echo form_hidden("expenses_claimed[id][]", 0); ?>
-				<?php echo form_hidden("expenses_claimed[status][]", 'Pending'); ?>
+				<?php echo form_hidden("expenses_claimed[status][]", 'Received'); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Quantity:', 'provider_name', array("class" => 'col-sm-12')); ?>
