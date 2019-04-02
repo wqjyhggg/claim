@@ -136,6 +136,7 @@ class Claim extends CI_Controller {
 		} else {
 			// validate form input
 			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
+			$this->form_validation->set_rules('date_symptoms', 'Date symptoms or injury first appeared ', 'required');
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required');
 			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'required');
 			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', '');
@@ -522,6 +523,7 @@ class Claim extends CI_Controller {
 		} else {
 			// validate form input
 			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
+			$this->form_validation->set_rules('date_symptoms', 'Date symptoms or injury first appeared ', 'required');
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required');
 			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'required');
 			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', '');
@@ -1290,6 +1292,7 @@ class Claim extends CI_Controller {
 				
 			// validate form input
 			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
+			$this->form_validation->set_rules('date_symptoms', 'Date symptoms or injury first appeared ', 'required');
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name', 'required');
 			// $this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');

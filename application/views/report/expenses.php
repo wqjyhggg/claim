@@ -113,7 +113,7 @@
 									<td><?php echo $value['created']; ?></td>
 									<td><?php echo $value['claim']['date_symptoms']; /*Incident Date*/?></td>
 									<td>N/A<?php /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */ ?></td>
-									<td><?php echo $value['pay_date']; /*Payment Date/ Void Date*/ ?></td>
+									<td><?php echo ($value['status']=='Paid') ? $value['pay_date'] : substr($value['last_update'], 0, 10); /*Payment Date/ Void Date*/ ?></td>
 									<td><?php echo ($value['payeearr'] ? $value['payeearr']['payee_name'] : ''); /* Payee Name */ ?></td>
 									<td><?php echo ($value['payeearr'] ? $value['payeearr']['address'] : ''); /* Payee Address */ ?></td>
 									<td><?php echo ($value['payeearr'] ? $value['payeearr']['country'] : ''); /* Payee Country */ ?></td>

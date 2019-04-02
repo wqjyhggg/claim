@@ -332,69 +332,66 @@
 							<?php echo form_input("diagnosis", $this->input->post("diagnosis"), array("class" => "form-control required", 'placeholder' => 'Diagnosis')); ?>
 							<?php echo form_error("diagnosis"); ?>
 						</div>
-						<div class="col-sm-12">
-							<div class="row">
-								<div class="form-group col-sm-12">
-									<?php echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class" => 'col-sm-12')); ?>
-									<?php echo form_textarea("medical_description", $this->input->post("medical_description"), array("class" => "form-control", 'placeholder' => 'Brief description of your sickness or injury')); ?>
-								</div>
-								<div class="col-sm-6">
-									<?php echo form_label('Date symptoms or injury first appeared:', 'date_symptoms', array("class" => 'col-sm-12')); ?>
-									<?php echo form_input("date_symptoms", $this->input->post("date_symptoms"), array("class" => "form-control dob", 'placeholder' => 'Date symptoms or injury first appeared')); ?>
-								</div>
-								<div class="col-sm-6">
-									<?php echo form_label('Date you first saw physician for this condition:', 'date_first_physician', array("class" => 'col-sm-12')); ?>
-									<?php echo form_input("date_first_physician", $this->input->post("date_first_physician"), array("class" => "form-control dob", 'placeholder' => 'Date you first saw physician for this condition')); ?>
-								</div>
+						<div class="form-group col-sm-12">
+							<?php echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class" => 'col-sm-12')); ?>
+							<?php echo form_textarea("medical_description", $this->input->post("medical_description"), array("class" => "form-control", 'placeholder' => 'Brief description of your sickness or injury')); ?>
+						</div>
+						<div class="col-sm-6">
+							<?php echo form_label('Date symptoms or injury first appeared:', 'date_symptoms', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("date_symptoms", $this->input->post("date_symptoms"), array("class" => "form-control dob", 'placeholder' => 'Date symptoms or injury first appeared')); ?>
+							<?php echo form_error("date_symptoms"); ?>
+						</div>
+						<div class="col-sm-6">
+							<?php echo form_label('Date you first saw physician for this condition:', 'date_first_physician', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("date_first_physician", $this->input->post("date_first_physician"), array("class" => "form-control dob", 'placeholder' => 'Date you first saw physician for this condition')); ?>
+						</div>
 
-								<div class="col-sm-7">Have you ever been treated for this or a similar condition before?</div>
-								<div class="col-sm-1">
-									<?php echo form_radio("treatment_before", "Y", $this->input->post("treatment_before"), array('class' => 'setpremium')); ?>  Yes
+						<div class="col-sm-7">Have you ever been treated for this or a similar condition before?</div>
+						<div class="col-sm-1">
+							<?php echo form_radio("treatment_before", "Y", $this->input->post("treatment_before"), array('class' => 'setpremium')); ?>  Yes
+						</div>
+						<div class="col-sm-1">
+							<?php echo form_radio("treatment_before", "N", $this->input->post("treatment_before"), array('class' => 'setpremium')); ?>  No
+						</div>
+						<div class="col-sm-12">If you answered “yes”, provide all dates of treatment and list all medications taken before the effective date of the current policy:</div>
+						<div class="col-sm-12" style="margin-top: 20px">
+							<div class="form-group col-sm-12">
+								<div class="col-sm-3">
+									<?php echo form_label('Date:', 'medication_date_1', array("class"=>'col-sm-12'));   ?>
+									<div class="input-group date">
+										<?php echo form_input("medication_date_1", $this->input->post("medication_date_1"), array("class" => "form-control datepicker", 'placeholder' => 'Date')); ?>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+									</div>
 								</div>
-								<div class="col-sm-1">
-									<?php echo form_radio("treatment_before", "N", $this->input->post("treatment_before"), array('class' => 'setpremium')); ?>  No
+								<div class="col-sm-3">
+									<?php echo form_label('Medication:', 'medication_1', array("class" => 'col-sm-12')); ?>
+									<?php echo form_input("medication_1", $this->input->post("medication_1"), array("class" => "form-control", 'placeholder' => 'Medication')); ?>
 								</div>
-								<div class="col-sm-12">If you answered “yes”, provide all dates of treatment and list all medications taken before the effective date of the current policy:</div>
-								<div class="col-sm-12" style="margin-top: 20px">
-									<div class="form-group col-sm-12">
-										<div class="col-sm-3">
-											<?php echo form_label('Date:', 'medication_date_1', array("class"=>'col-sm-12'));   ?>
-											<div class="input-group date">
-												<?php echo form_input("medication_date_1", $this->input->post("medication_date_1"), array("class" => "form-control datepicker", 'placeholder' => 'Date')); ?>
-												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-											</div>
-										</div>
-										<div class="col-sm-3">
-											<?php echo form_label('Medication:', 'medication_1', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("medication_1", $this->input->post("medication_1"), array("class" => "form-control", 'placeholder' => 'Medication')); ?>
-										</div>
+							</div>
+							<div class="form-group col-sm-12">
+								<div class="col-sm-3">
+									<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_2', array("class"=>'col-sm-12'));   ?>
+									<div class="input-group date">
+										<?php echo form_input("medication_date_2", $this->input->post("medication_date_2"), array("class" => "form-control datepicker", 'placeholder' => 'Date')); ?>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 									</div>
-									<div class="form-group col-sm-12">
-										<div class="col-sm-3">
-											<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_2', array("class"=>'col-sm-12'));   ?>
-											<div class="input-group date">
-												<?php echo form_input("medication_date_2", $this->input->post("medication_date_2"), array("class" => "form-control datepicker", 'placeholder' => 'Date')); ?>
-												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-											</div>
-										</div>
-										<div class="col-sm-3">
-											<?php echo form_label('Medication:', 'medication_2', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("medication_2", $this->input->post("medication_2"), array("class" => "form-control", 'placeholder' => 'Medication')); ?>
-										</div>
+								</div>
+								<div class="col-sm-3">
+									<?php echo form_label('Medication:', 'medication_2', array("class" => 'col-sm-12')); ?>
+									<?php echo form_input("medication_2", $this->input->post("medication_2"), array("class" => "form-control", 'placeholder' => 'Medication')); ?>
+								</div>
+							</div>
+							<div class="form-group col-sm-12">
+								<div class="col-sm-3">
+									<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_3', array("class"=>'col-sm-12'));   ?>
+									<div class="input-group date">
+										<?php echo form_input("medication_date_3", $this->input->post("medication_date_3"), array("class" => "form-control datepicker", 'placeholder' => 'Date')); ?>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 									</div>
-									<div class="form-group col-sm-12">
-										<div class="col-sm-3">
-											<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_3', array("class"=>'col-sm-12'));   ?>
-											<div class="input-group date">
-												<?php echo form_input("medication_date_3", $this->input->post("medication_date_3"), array("class" => "form-control datepicker", 'placeholder' => 'Date')); ?>
-												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-											</div>
-										</div>
-										<div class="col-sm-3">
-											<?php echo form_label('Medication:', 'medication_3', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("medication_3", $this->input->post("medication_3"), array("class" => "form-control", 'placeholder' => 'Medication')); ?>
-										</div>
-									</div>
+								</div>
+								<div class="col-sm-3">
+									<?php echo form_label('Medication:', 'medication_3', array("class" => 'col-sm-12')); ?>
+									<?php echo form_input("medication_3", $this->input->post("medication_3"), array("class" => "form-control", 'placeholder' => 'Medication')); ?>
 								</div>
 							</div>
 						</div>
