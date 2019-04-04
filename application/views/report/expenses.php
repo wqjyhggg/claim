@@ -100,6 +100,17 @@
 							</thead>
 							<tbody>
 								<?php foreach($records as $key => $value ) { ?>
+								<?php 
+									$paytype = 'cheque';
+									if ($value['payeearr']) {
+										$paytype = $value['payeearr']['payment_type'];
+									} else {
+										$payarr = preg_split("/:/", $value['pay_to']);
+										if (is_array($payarr)) {
+											$paytype = trim($payarr[0]);
+										}
+									}
+								?>
 								<tr>
 									<td><?php echo $value['claim_item_no']; ?></td>
 									<td><?php echo $value['claim_no']; ?></td>
@@ -113,7 +124,7 @@
 									<td><?php echo $value['created']; ?></td>
 									<td><?php echo $value['claim']['date_symptoms']; /*Incident Date*/?></td>
 									<td>N/A<?php /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */ ?></td>
-									<td><?php echo ($value['status']=='Paid') ? $value['pay_date'] : substr($value['last_update'], 0, 10); /*Payment Date/ Void Date*/ ?></td>
+									<td><?php echo substr($value['payment_tm'], 0, 10); /*Payment Date/ Void Date*/ ?></td>
 									<td><?php echo ($value['payeearr'] ? $value['payeearr']['payee_name'] : ''); /* Payee Name */ ?></td>
 									<td><?php echo ($value['payeearr'] ? $value['payeearr']['address'] : ''); /* Payee Address */ ?></td>
 									<td><?php echo ($value['payeearr'] ? $value['payeearr']['country'] : ''); /* Payee Country */ ?></td>
@@ -124,7 +135,7 @@
 									<td><?php echo isset($value['provider']['address']) ? $value['provider']['address'] : ''; /*Provider Address*/?></td>
 									<td><?php echo isset($value['provider']['country']) ? $value['provider']['country'] : ''; /*Provider Country*/?></td>
 									<td><?php echo isset($value['provider']['province']) ? $value['provider']['province'] : ''; /*Provider Province*/?></td>
-									<td><?php echo ($value['payeearr'] ? $value['payeearr']['payment_type'] : ''); /* Payment Method */ ?></td>
+									<td><?php echo $paytype; /* Payment Method */ ?></td>
 									<td><?php echo $value['cheque']; /* Cheque Number for claim items */?></td>
 
 									<td>$<?php echo number_format($value['amount_claimed'], 2); /*Total Claim Amount*/ ?></td>

@@ -136,7 +136,16 @@ class Expenses extends CI_Controller {
 							'Deny Reason',
 					));
 
-			foreach ($records as $key => $value) { 
+			foreach ($records as $key => $value) {
+				$paytype = 'cheque';
+				if ($value['payeearr']) {
+					$paytype = $value['payeearr']['payment_type'];
+				} else {
+					$payarr = preg_split("/:/", $value['pay_to']);
+					if (is_array($payarr)) {
+						$paytype = trim($payarr[0]);
+					}
+				}
 				fputcsv($output, array(
 						$value['claim_item_no'],
 						$value['claim_no'],
@@ -150,7 +159,7 @@ class Expenses extends CI_Controller {
 						$value['created'],
 						$value['claim']['date_symptoms'],
 						'N/A', /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */
-						($value['status']=='Paid') ? $value['pay_date'] : substr($value['last_update'], 0, 10),
+						substr($value['payment_tm'], 0, 10),
 						($value['payeearr'] ? $value['payeearr']['payee_name'] : ''),
 						($value['payeearr'] ? $value['payeearr']['address'] : ''),
 						($value['payeearr'] ? $value['payeearr']['country'] : ''),
@@ -161,7 +170,7 @@ class Expenses extends CI_Controller {
 						isset($value['provider']['address']) ? $value['provider']['address'] : '',
 						isset($value['provider']['country']) ? $value['provider']['country'] : '',
 						isset($value['provider']['province']) ? $value['provider']['province'] : '',
-						($value['payeearr'] ? $value['payeearr']['payment_type'] : ''),
+						$paytype,
 						$value['cheque'],
 
 						sprintf("%0.2f", $value['amount_claimed']),

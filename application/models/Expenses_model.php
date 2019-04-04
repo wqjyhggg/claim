@@ -595,6 +595,9 @@ class Expenses_model extends CI_Model {
 		$rt = $this->db->query($sql)->result_array();
 		
 		if ($rt) {
+			$this->load->model('api_model');
+			$last_policy = '';
+			$last_payment_tm = '';
 			foreach ($rt as $key => $val) {
 				if ($val['provider_type'] == 1) { // Business
 					$rt[$key]['provider'] = $this->db->query("SELECT * FROM provider WHERE id='".(int)$val['expenses_provider_id']."'")->row_array();
@@ -607,6 +610,14 @@ class Expenses_model extends CI_Model {
 					$rt[$key]['payeearr'] = array();
 				}
 				$rt[$key]['claim'] = $this->db->query("SELECT * FROM claim WHERE id='".(int)$val['claim_id']."'")->row_array();
+				if ($last_policy != $rt[$key]['claim']['policy_no']) {
+					$policy = $this->api_model->get_policy(array('policy' => $rt[$key]['claim']['policy_no']));
+					if ($policy) {
+						$last_policy = $rt[$key]['claim']['policy_no'];
+						$last_payment_tm = $policy[0]['payment_tm'];
+					}
+				}
+				$rt[$key]['payment_tm'] = $last_payment_tm;
 			}
 		}
 		return $rt;
