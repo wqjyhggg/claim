@@ -146,6 +146,7 @@ class Expenses extends CI_Controller {
 						$paytype = trim($payarr[0]);
 					}
 				}
+				if ($value['status'] != 'Paid') $paytype = '';
 				fputcsv($output, array(
 						$value['claim_item_no'],
 						$value['claim_no'],
