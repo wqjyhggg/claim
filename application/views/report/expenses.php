@@ -110,6 +110,7 @@
 											$paytype = trim($payarr[0]);
 										}
 									}
+									if ($value['status'] != 'Paid') $paytype = ''; 
 								?>
 								<tr>
 									<td><?php echo $value['claim_item_no']; ?></td>
