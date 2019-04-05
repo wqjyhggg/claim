@@ -470,7 +470,7 @@
 					<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER))) { ?>
 					<div class="row actions" style="margin-top: 20px;">
 						<div class="col-sm-12">
-							<?php echo form_label('Internal Notes :', 'intnotes', array("class" => 'col-sm-12')); ?>
+							<?php echo form_label('Notes :', 'intnotes', array("class" => 'col-sm-12')); ?>
 						</div>
 						<?php 
 						$intnotes = json_decode($claim['intnotes'], TRUE);
@@ -493,7 +493,7 @@
 					<?php } ?>
 					<div class="row actions" style="margin-top: 20px;">
 						<div class="col-sm-6">
-							<?php echo form_label('Notes :', 'notes', array("class" => 'col-sm-12')); ?>
+							<?php echo form_label('Internal Notes :', 'notes', array("class" => 'col-sm-12')); ?>
 							<?php echo form_textarea ( "notes", $claim_details["notes"], array ("class" => "form-control", "id" => "notes", 'placeholder' => 'Notes', 'style' => "height:100px") ); ?>
 						</div>
 						<?php if (! $is_insurer) { ?>
