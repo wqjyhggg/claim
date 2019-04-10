@@ -1349,7 +1349,7 @@ $(document).ready(function() {
 				window.location.reload();
 			}
 		})
-	.on("click", "#save_notes", function() {
+	}).on("click", "#save_notes", function() {
 		$.ajax({
 			url: "<?php echo base_url("claim/savenotes/".$claim['id']); ?>",
 			method: "post",
