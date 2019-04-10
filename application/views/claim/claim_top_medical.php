@@ -622,6 +622,7 @@
 										<div class="col-sm-3">
 											<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
 											<?php echo $value['provider_name']; ?>
+											<?php echo form_hidden("expenses_claimed[provider_type][]", $value ['provider_type']); ?>
 											<?php echo form_hidden("expenses_claimed[expenses_provider_id][]", $value ['expenses_provider_id']); ?>
 											<?php echo form_hidden("expenses_claimed[provider_name][]", $value ['provider_name']); ?>
 										</div>
@@ -675,6 +676,7 @@
 										<div class="col-sm-3">
 											<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>
 											<?php echo $value["pay_to"]; ?>
+											<?php echo form_hidden("expenses_claimed[third_party_payee][]", $value ["third_party_payee"]); ?>
 											<?php echo form_hidden("expenses_claimed[pay_to][]", $value ["pay_to"]); ?>
 											<?php echo form_hidden("expenses_claimed[payee][]", $value ["payee"]); ?>
 										</div>
