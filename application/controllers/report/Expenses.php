@@ -157,7 +157,7 @@ class Expenses extends CI_Controller {
 						$value['claim']['apply_date'],
 						$value['claim']['agent_id'],
 						$value['coverage_code'],
-						$value['created'],
+						substr($value['created'], 0, 10),
 						$value['claim']['date_symptoms'],
 						'N/A', /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */
 						substr($value['payment_tm'], 0, 10),
@@ -180,7 +180,7 @@ class Expenses extends CI_Controller {
 						sprintf("%0.2f", $value['amt_deductible']),
 						sprintf("%0.2f", $value['amt_payable']),
 						'CAD',
-						$value['currency'],
+						empty($value['currency']) ? 'CAD' : $value['currency'],
 						sprintf("%0.2f", ($value['provider_type'] ? $value['provider']['network_fee'] : 0)),
 						isset($value['provider']['name']) ? $value['provider']['name'] : '',
 						sprintf("%0.2f", $value['recovery_amt']),

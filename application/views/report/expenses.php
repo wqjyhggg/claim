@@ -122,7 +122,7 @@
 									<td><?php echo $value['claim']['apply_date']; ?></td>
 									<td><?php echo $value['claim']['agent_id']; ?></td>
 									<td><?php echo $value['coverage_code']; ?></td>
-									<td><?php echo $value['created']; ?></td>
+									<td><?php echo substr($value['created'], 0, 10); ?></td>
 									<td><?php echo $value['claim']['date_symptoms']; /*Incident Date*/?></td>
 									<td>N/A<?php /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */ ?></td>
 									<td><?php echo substr($value['payment_tm'], 0, 10); /*Payment Date/ Void Date*/ ?></td>
@@ -145,7 +145,7 @@
 									<td>$<?php echo number_format($value['amt_deductible'], 2); /*Deductible Amount*/?></td>
 									<td>$<?php echo number_format($value['amt_payable'], 2); /*Net Claim Paid Amount*/?></td>
 									<td><?php echo 'CAD'; /*Payment Currency CAD only */ ?></td>
-									<td><?php echo $value['currency']; /*Invoice Currency*/ ?></td>
+									<td><?php echo empty($value['currency']) ? 'CAD' : $value['currency']; /*Invoice Currency*/ ?></td>
 									<td>$<?php echo ($value['provider_type'] ? number_format($value['provider']['network_fee'], 2) : 0); /*Network Fees */?></td>
 									<td><?php echo isset($value['provider']['name']) ? $value['provider']['name'] : ''; /*Network Provider */ ?></td>
 									<td>$<?php echo number_format($value['recovery_amt'], 2); /* Recovery amount XXXXXXXXXXXXXXX no input place */?></td>
