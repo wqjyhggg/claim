@@ -113,7 +113,7 @@
 									if ($value['status'] != 'Paid') $paytype = ''; 
 								?>
 								<tr>
-									<td><?php echo $value['claim_item_no']; ?></td>
+									<td><?php echo str_replace("_", "", $value['claim_item_no']); ?></td>
 									<td><?php echo $value['claim_no']; ?></td>
 									<td><?php echo $value['claim']['exinfo_type']; /*top_baggage, top_trip, top_medical*/ ?></td>
 									<td><?php echo $value['status']; /*Received Paid Approved Declined Duplicated Pending*/ ?></td>
