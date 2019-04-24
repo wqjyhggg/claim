@@ -148,7 +148,7 @@ class Expenses extends CI_Controller {
 				}
 				if ($value['status'] != 'Paid') $paytype = '';
 				fputcsv($output, array(
-						str_replace("_", "", $value['claim_item_no']),
+						preg_replace("/[^0-9]/", "", $value['claim_item_no']),
 						$value['claim_no'],
 						$value['claim']['exinfo_type'],
 						$value['status'],
