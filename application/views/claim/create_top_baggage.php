@@ -474,7 +474,7 @@
 					<div class="row" style="display: none">
 						<div class="col-sm-12">
 							<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("diagnosis", $this->input->post("diagnosis"), array("class" => "form-control required", 'placeholder' => 'Diagnosis')); ?>
+							<?php echo form_input("diagnosis", $this->input->post("diagnosis"), array("class" => "form-control", 'placeholder' => 'Diagnosis')); ?>
 							<?php echo form_error("diagnosis"); ?>
 						</div>
 						<div class="form-group col-sm-12">
@@ -587,9 +587,7 @@
 										<label for="Postcode" class="col-sm-12">Postcode:</label>
 										<?php echo form_input("payees[postcode][]", $value ["postcode"], array("class" => "form-control " . ($value ["payment_type"] != 'cheque' ? '' : 'required'), 'placeholder' => 'Postcode', "readonly" => "readonly")); ?>
 									</div>
-									<?php if($edit): ?>
 									<div class="col-sm-3"><label class='col-sm-12'>&nbsp;</label> <i class="col-sm-3 fa fa-trash row-link remove-payee"></i></div>
-									<?php endif;?>
 								</div>
 								<?php endforeach; ?>
 								<?php endif; ?>
@@ -1035,7 +1033,7 @@
 			</div>
 			<div class="col-sm-3 cheque_section">
 				<label for="City" class="col-sm-12">City:</label>
-				<?php echo form_input("payees[City][]", "", array("class" => "form-control", 'placeholder' => 'City')); ?>
+				<?php echo form_input("payees[city][]", "", array("class" => "form-control", 'placeholder' => 'City')); ?>
 			</div>
 			<div class="col-sm-3 cheque_section">
 				<label for="Province" class="col-sm-12">Province:</label>

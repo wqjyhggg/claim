@@ -558,9 +558,7 @@
 										<label for="Postcode" class="col-sm-12">Postcode:</label>
 										<?php echo form_input("payees[postcode][]", $value ["postcode"], array("class" => "form-control " . ($value ["payment_type"] != 'cheque' ? '' : 'required'), 'placeholder' => 'Postcode', "readonly" => "readonly")); ?>
 									</div>
-									<?php if($edit): ?>
 									<div class="col-sm-3"><label class='col-sm-12'>&nbsp;</label> <i class="col-sm-3 fa fa-trash row-link remove-payee"></i></div>
-									<?php endif;?>
 								</div>
 								<?php endforeach; ?>
 								<?php endif; ?>

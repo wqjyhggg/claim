@@ -522,8 +522,10 @@ class Claim extends CI_Controller {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			// validate form input
-			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
-			$this->form_validation->set_rules('date_symptoms', 'Date symptoms or injury first appeared ', 'required');
+			if ($formtype != "top_baggage") {
+				$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
+				$this->form_validation->set_rules('date_symptoms', 'Date symptoms or injury first appeared ', 'required');
+			}
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required');
 			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'required');
 			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', '');
