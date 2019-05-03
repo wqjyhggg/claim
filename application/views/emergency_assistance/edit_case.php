@@ -507,7 +507,9 @@
 							</div>
 							<?php } else { ?>
 							<div class="col-sm-10">
-								<div class="col-sm-12"><pre><?php echo $value['notes'] ?></pre></div>
+								<div class="col-sm-12">
+									<?php echo str_replace(array("\r\n", "\n\r", "\n", "\r"), "<br />", $value['notes']); ?>
+								</div>
 								<div class="form-group col-sm-11 files">
 									<br />
 									<?php $files = $value['docs'] ? explode(",", $value['docs']) : array(); ?>
