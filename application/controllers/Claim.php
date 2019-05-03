@@ -1364,8 +1364,42 @@ class Claim extends CI_Controller {
 					
 				// insert values to database
 				$data['id'] = $id;
-				if (isset($data['assign_to']) && empty($data['assign_to'])) {
-					unset($data['assign_to']);
+				if (isset($data['assign_to'])) {
+					if (empty($data['assign_to'])) {
+						unset($data['assign_to']);
+					} else {
+						if ($this->data['claim_details']['assign_to'] != $data['assign_to']) {
+							$this->load->model('mytask_model');
+							$tasks = $this->mytask_model->search(array('item_id' => $id, 'category' => Mytask_model::CATEGORY_CLAIMS, 'type' => Mytask_model::TASK_TYPE_CLAIM, 'user_type' => Mytask_model::USER_TYPE_EXAM));
+							$new_task = array();
+							if ($tasks) {
+								// Change manager
+								$new_task['id'] = $tasks[0]['id'];
+								$new_task['user_id'] = $data['assign_to'];
+								$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
+								$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
+								$new_task['status'] = Mytask_model::STATUS_REASSIGNED;
+								$new_task['finished'] = 0;
+								$new_task['notes'] = "Reassign By :" . $this->ion_auth->get_user_id() . "; " . $tasks[0]['notes'];
+							} else {
+								// Assign manager
+								$new_task['user_id'] = $data['assign_to'];
+								$new_task['item_id'] = $id;
+								$new_task['task_no'] = $this->data['claim_details']['claim_no'];;
+								$new_task['category'] = Mytask_model::CATEGORY_CLAIMS;
+								$new_task['due_date'] = $this->input->post('due_date') ? $this->input->post('due_date') : date("Y-m-d", time() + 86400);
+								$new_task['due_time'] = $this->input->post('due_time') ? $this->input->post('due_time') : date("H:i:s", time() + 86400);
+								$new_task['type'] = Mytask_model::TASK_TYPE_CLAIM;
+								$new_task['priority'] = Mytask_model::PRIORITY_MEDIUM;
+								$new_task['created_by'] = $this->ion_auth->get_user_id();
+								$new_task['created'] = date("Y-m-d H:i:s");
+								$new_task['user_type'] = Mytask_model::USER_TYPE_EXAM;
+								$new_task['status'] = Mytask_model::STATUS_ASSIGNED;
+								$new_task['notes'] = "New Assign";
+							}
+							$this->mytask_model->save($new_task);
+						}
+					}
 				}
 				$record_id = $this->claim_model->save($data);
 				
