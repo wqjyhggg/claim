@@ -79,6 +79,9 @@ class Cron extends CI_Controller {
 			} while ($cnt == 100);
 		}
 		$this->phone_model->set_last_cron($dt, $page - 1);
+		
+		// do saved file update again
+		$this->phone_model->update_unupdated_url();
 	}
 
 	/*
