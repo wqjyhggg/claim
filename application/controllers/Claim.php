@@ -1291,10 +1291,21 @@ class Claim extends CI_Controller {
 			if ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER))) {
 				$this->data['edit'] = FALSE;
 			}
-				
+
+			switch ($this->data['claim_details']['exinfo_type']) {
+				case "top_baggage":
+					break;
+				case "top_medical":
+					break;
+				case "top_trip":
+					break;
+				default:
+					$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
+					$this->form_validation->set_rules('date_symptoms', 'Date symptoms or injury first appeared ', 'required');
+					break;
+			}
+
 			// validate form input
-			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
-			$this->form_validation->set_rules('date_symptoms', 'Date symptoms or injury first appeared ', 'required');
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name', 'required');
 			// $this->form_validation->set_rules('personal_id', 'Personal ID', 'required');
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
@@ -1591,8 +1602,8 @@ class Claim extends CI_Controller {
 								'id' => $arr['id'][$key],
 								'invoice' => $arr['invoice'][$key],
 								'provider_name' => $arr['provider_name'][$key],
-								'provider_type' => $arr['provider_type'][$key],
-								'expenses_provider_id' => $arr['expenses_provider_id'][$key],
+								'provider_type' => isset($arr['provider_type'][$key]) ? $arr['provider_type'][$key] : 0,
+								'expenses_provider_id' => isset($arr['expenses_provider_id'][$key]) ? $arr['expenses_provider_id'][$key] : 0,
 								'referencing_physician' => $arr['referencing_physician'][$key],
 								'coverage_code' => $arr['coverage_code'][$key],
 								'diagnosis' => '', // $arr['diagnosis'][$key],
