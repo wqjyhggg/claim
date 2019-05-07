@@ -111,9 +111,15 @@
 										}
 									}
 									if ($value['status'] != 'Paid') $paytype = ''; 
+									$tarr = preg_split("/_/", $value['claim_item_no']);
+									if (is_array($tarr) && isset($tarr[1])) {
+										$claim_item_no = $tarr[0].str_pad($tarr[1], 2, "0", STR_PAD_LEFT);
+									} else {
+										$claim_item_no = $value['claim_item_no'];
+									}
 								?>
 								<tr>
-									<td><?php echo preg_replace("/[^0-9]/", "", $value['claim_item_no']); ?></td>
+									<td><?php echo $claim_item_no; ?></td>
 									<td><?php echo $value['claim_no']; ?></td>
 									<td><?php echo $value['claim']['exinfo_type']; /*top_baggage, top_trip, top_medical*/ ?></td>
 									<td><?php echo $value['status']; /*Received Paid Approved Declined Duplicated Pending*/ ?></td>

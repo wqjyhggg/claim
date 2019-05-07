@@ -147,8 +147,15 @@ class Expenses extends CI_Controller {
 					}
 				}
 				if ($value['status'] != 'Paid') $paytype = '';
+				$tarr = preg_split("/_/", $value['claim_item_no']);
+				if (is_array($tarr) && isset($tarr[1])) {
+					$claim_item_no = $tarr[0].str_pad($tarr[1], 2, "0", STR_PAD_LEFT);
+				} else {
+					$claim_item_no = $value['claim_item_no'];
+				}
+				
 				fputcsv($output, array(
-						preg_replace("/[^0-9]/", "", $value['claim_item_no']),
+						$claim_item_no,
 						$value['claim_no'],
 						$value['claim']['exinfo_type'],
 						$value['status'],
