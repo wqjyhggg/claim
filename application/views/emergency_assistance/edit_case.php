@@ -468,8 +468,8 @@
                         <div class="col-sm-12 intake-forms">
 							<div class="col-sm-2">
 								<div class="col-sm-12"><?php echo $i." : " . $value['created'] ?></div>
-								<div class="col-sm-12"><?php echo "Created by : " . $value['username'] ?></div>
-								<?php if ($value['followup']) { echo '<div class="col-sm-12">Follow up by: ' . $value['followup'] ."</div>"; } ?>
+								<div class="col-sm-12" style="overflow-x: auto;"><?php echo "Created by : " . $value['username']; ?></div>
+								<?php if ($value['followup']) { echo '<div class="col-sm-12" style="overflow-x: auto;">Follow up by: ' . $value['followup'] ."</div>"; } ?>
 							</div>
 							<?php $note_tm = strtotime($value['created']) + $note_delay - time(); ?>
 							<?php if (($my_user_id == $value['created_by']) && $last && ($note_tm > 0)) { ?>
