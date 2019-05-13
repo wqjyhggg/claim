@@ -403,9 +403,6 @@ class Expenses_model extends CI_Model {
 		if (isset($data['status']) && ($data['status'] === self::EXPENSE_STATUS_Paid)) {
 			$data['pay_date'] = date("Y-m-d");
 		}
-		if (empty($data['third_party_payee'])) {
-			$data['third_party_payee'] = 0;
-		}
 		if (empty($data['status'])) {
 			$data['status'] = self::EXPENSE_STATUS_Received;
 		}
@@ -443,6 +440,9 @@ class Expenses_model extends CI_Model {
 			}
 			return 0;
 		} else {
+			if (empty($data['third_party_payee'])) {
+				$data['third_party_payee'] = 0;
+			}
 			if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
 				// No change if not account
 				if (isset($data['status']) && ($data['status'] === self::EXPENSE_STATUS_Paid)) {
