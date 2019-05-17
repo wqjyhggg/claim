@@ -522,7 +522,7 @@ class Claim extends CI_Controller {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			// validate form input
-			if ($formtype != "top_baggage") {
+			if (($formtype != "top_baggage") && ($formtype != "top_trip")) {
 				$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
 				$this->form_validation->set_rules('date_symptoms', 'Date symptoms or injury first appeared ', 'required');
 			}

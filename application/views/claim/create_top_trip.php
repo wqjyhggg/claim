@@ -562,7 +562,7 @@
 					<div class="row" style="display: none">
 						<div class="col-sm-12">
 							<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("diagnosis", $this->input->post("diagnosis"), array("class" => "form-control required", 'placeholder' => 'Diagnosis')); ?>
+							<?php echo form_input("diagnosis", $this->input->post("diagnosis"), array("class" => "form-control", 'placeholder' => 'Diagnosis')); ?>
 							<?php echo form_error("diagnosis"); ?>
 						</div>
 						<div class="form-group col-sm-12">
