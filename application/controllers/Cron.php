@@ -187,6 +187,196 @@ class Cron extends CI_Controller {
 		}
 	}
 	
+	const FTP_HOST="72.142.65.148";	// filetransfer.allianz-assistance.ca
+	const FTP_PORT=22;
+	const FTP_USER='JFInsurance';
+	const FTP_PASS='jk5edQbl@vc';
+	
+	private function ftp($src, $dst) {
+		$this->valid();
+		$conn = ssh2_connect(self::FTP_HOST, self::FTP_PORT);
+		if (!$conn) {
+			echo "Can't open connect to ". self::FTP_HOST . " prot " . self::FTP_PORT . " at time " .date('Ymd His') . "\n";
+			return FALSE;
+		}
+		$login_result = ssh2_auth_password($conn, self::FTP_USER, self::FTP_PASS);
+	
+		if (!$login_result) {
+			echo "can't login at time " .date('Ymd His') . "\n";
+			return FALSE;
+		} else {
+			echo "connected ";
+			$resSFTP = ssh2_sftp($conn);
+			$resFile = fopen("ssh2.sftp://".intval($resSFTP)."/".$dst, 'w');
+			$srcFile = fopen($src, 'r');
+			$writtenBytes = stream_copy_to_stream($srcFile, $resFile);
+			echo " and send file: ".$dst." with ".$writtenBytes." bytes data at time " .date('Ymd His') . "\n";
+			fclose($resFile);
+			fclose($srcFile);
+			//ssh2_exec($conn, 'exit');
+			unset($conn);
+		}
+		return TRUE;
+	}
+	
+	public function sftpupload() {
+		$this->valid();
+		set_time_limit(0);
+		$this->load->model ( 'claim_model' );
+		$this->load->model ( 'expenses_model' );
+
+		$outdir = '/tmp/';
+		$pattern = "/^([_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,}))(.*)$/";
+	
+		$para['start_dt'] = date('Y-m-01', strtotime('last month'));
+		$para['end_dt'] = date('Y-m-t', strtotime('last month'));
+		$filepre = date('Ym', strtotime('last month'));
+		$products = array('OPL', 'JFC');
+		$status_groups = array("Paid" => "Paid_Declined", "Unpaid" => "Received_Approved_Pending");
+		
+		foreach ($products as $product) {
+			foreach ($status_groups as $status_group => $filename) {
+				$para['status_group'] = $status_group;
+				$para['product_short'] = $product;
+				
+				$records = $this->expenses_model->expense_report($para);
+				$uploadFilename = $filepre . "_" . $product . "_" . $filename . '.xlsx';
+				$outfile = $outdir . $uploadFilename;
+				$objPHPExcel = new PHPExcel();
+				$objPHPExcel->getDefaultStyle()->getFont()->setName('Arial')->setSize(10);
+				
+				// Set document properties
+				$objPHPExcel->getProperties()->setCreator("AuroraTech Inc.")
+							->setLastModifiedBy("Jack Wu")
+							->setTitle("Office Document")
+							->setSubject("Office Document")
+							->setDescription("Generated using PHP classes.")
+							->setKeywords("php")
+							->setCategory("result file");
+				$objPHPExcel->setActiveSheetIndex(0);
+				$sheet = $objPHPExcel->getActiveSheet();
+				$sheet->setTitle('Sheet1');
+				$sheet->setCellValue('A1', 'Claim Item Number');
+				$sheet->setCellValue('B1', 'Claim Number');
+				$sheet->setCellValue('C1', 'Claim Type');
+				$sheet->setCellValue('D1', 'Status');
+				$sheet->setCellValue('E1', 'Policy Number');
+				$sheet->setCellValue('F1', 'Policy Number');
+				$sheet->setCellValue('G1', 'Policy Date');
+				$sheet->setCellValue('H1', 'Agent ID');
+				$sheet->setCellValue('I1', 'Coverage Code');
+				$sheet->setCellValue('J1', 'Entered Date');
+				$sheet->setCellValue('K1', 'Incident Date');
+				$sheet->setCellValue('L1', 'Incident Country');
+				$sheet->setCellValue('M1', 'Payment Date/ Void Date');
+				$sheet->setCellValue('N1', 'Payee Name');
+				$sheet->setCellValue('O1', 'Payee Address');
+				$sheet->setCellValue('P1', 'Payee Country');
+				$sheet->setCellValue('Q1', 'Payee Province');
+				$sheet->setCellValue('R1', 'Payee Type');
+				$sheet->setCellValue('S1', 'Provider Name');
+				$sheet->setCellValue('T1', 'Provider Address');
+				$sheet->setCellValue('U1', 'Provider Country');
+				$sheet->setCellValue('V1', 'Provider Province');
+				$sheet->setCellValue('W1', 'Payment Method');
+				$sheet->setCellValue('X1', 'Cheque Number');
+				$sheet->setCellValue('Y1', 'Total Claim Amount');
+				$sheet->setCellValue('Z1', 'Discount Amount');
+				$sheet->setCellValue('AA1', 'Denied Amount');
+				$sheet->setCellValue('AB1', 'Deductible Amount');
+				$sheet->setCellValue('AC1', 'Net Claim Paid amount');
+				$sheet->setCellValue('AD1', 'Payment Currency');
+				$sheet->setCellValue('AE1', 'Invoice Currency');
+				$sheet->setCellValue('AF1', 'Network Fees');
+				$sheet->setCellValue('AG1', 'Network Provider');
+				$sheet->setCellValue('AH1', 'Recovery Amount');
+				$sheet->setCellValue('AI1', 'Void amount');
+				$sheet->setCellValue('AJ1', 'Void Reason');
+				$sheet->setCellValue('AK1', 'Deny Reason');
+				
+				$row = 2;
+				foreach ($records as $value) {
+					$paytype = 'cheque';
+					if ($value['payeearr']) {
+						$paytype = $value['payeearr']['payment_type'];
+					} else {
+						$payarr = preg_split("/:/", $value['pay_to']);
+						if (is_array($payarr)) {
+							$paytype = trim($payarr[0]);
+						}
+					}
+					if ($value['status'] != 'Paid') $paytype = '';
+					$tarr = preg_split("/_/", $value['claim_item_no']);
+					if (is_array($tarr) && isset($tarr[1])) {
+						$claim_item_no = $tarr[0].str_pad($tarr[1], 2, "0", STR_PAD_LEFT);
+					} else {
+						$claim_item_no = $value['claim_item_no'];
+					}
+					$sheet->setCellValue('A'.$row, $claim_item_no);
+					$sheet->setCellValue('B'.$row, $value['claim_no']);
+					$sheet->setCellValue('C'.$row, $value['claim']['exinfo_type']);
+					$sheet->setCellValue('D'.$row, $value['status']);
+					$sheet->setCellValue('E'.$row, $value['claim']['policy_no']);
+					$sheet->setCellValue('F'.$row, $value['claim']['product_short']);
+					$sheet->setCellValue('G'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime($value['claim']['apply_date'] . ' 00:00:00 UTC')));
+					$sheet->getStyle('G'.$row)->getNumberFormat()->setFormatCode('m/d/yyyy h:mm:ss AM/PM');
+					$sheet->setCellValue('H'.$row, $value['claim']['agent_id']);
+					$sheet->setCellValue('I'.$row, $value['coverage_code']);
+					$sheet->setCellValue('J'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime($value['claim']['created'] . ' UTC')));
+					$sheet->getStyle('J'.$row)->getNumberFormat()->setFormatCode('m/d/yyyy h:mm:ss AM/PM');
+					$sheet->setCellValue('K'.$row, $value['claim']['date_symptoms']);
+					$sheet->setCellValue('L'.$row, 'N/A');
+					$sheet->setCellValue('M'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime($value['claim']['payment_tm'] . ' UTC')));
+					$sheet->getStyle('M'.$row)->getNumberFormat()->setFormatCode('m/d/yyyy h:mm:ss AM/PM');
+					$sheet->setCellValue('N'.$row, ($value['payeearr'] ? $value['payeearr']['payee_name'] : ''));
+					$sheet->setCellValue('O'.$row, ($value['payeearr'] ? $value['payeearr']['address'] : ''));
+					$sheet->setCellValue('P'.$row, ($value['payeearr'] ? $value['payeearr']['country'] : ''));
+					$sheet->setCellValue('Q'.$row, ($value['payeearr'] ? $value['payeearr']['province'] : ''));
+					$sheet->setCellValue('R'.$row, ($value['third_party_payee'] ? 'Business' : 'Private'));
+					$sheet->setCellValue('S'.$row, isset($value['provider']['name']) ? $value['provider']['name'] : '');
+					$sheet->setCellValue('T'.$row, isset($value['provider']['address']) ? $value['provider']['address'] : '');
+					$sheet->setCellValue('U'.$row, isset($value['provider']['country']) ? $value['provider']['country'] : '');
+					$sheet->setCellValue('V'.$row, isset($value['provider']['province']) ? $value['provider']['province'] : '');
+					$sheet->setCellValue('W'.$row, $paytype);
+					$sheet->setCellValue('X'.$row, $value['cheque']);
+					$sheet->setCellValue('Y'.$row, sprintf("%0.2f", $value['amount_claimed']));
+					$sheet->setCellValue('Z'.$row, sprintf("%0.2f", 0));
+					$sheet->setCellValue('AA'.$row, sprintf("%0.2f", $value['amount_claimed'] - $value['amt_payable']));
+					$sheet->setCellValue('AB'.$row, sprintf("%0.2f", $value['amt_deductible']));
+					$sheet->setCellValue('AC'.$row, sprintf("%0.2f", $value['amt_payable']));
+					$sheet->setCellValue('AD'.$row, 'CAD');
+					$sheet->setCellValue('AE'.$row, empty($value['currency']) ? 'CAD' : $value['currency']);
+					$sheet->setCellValue('AF'.$row, sprintf("%0.2f", ($value['provider_type'] ? $value['provider']['network_fee'] : 0)));
+					$sheet->setCellValue('AG'.$row, isset($value['provider']['name']) ? $value['provider']['name'] : '');
+					$sheet->setCellValue('AH'.$row, sprintf("%0.2f", $value['recovery_amt']));
+					$sheet->setCellValue('AI'.$row, ($value['status'] != Expenses_model::EXPENSE_STATUS_Duplicated) ? "0.00" : sprintf("%0.2f", $value['amount_claimed']));
+					$sheet->setCellValue('AJ'.$row, $value['reason']);
+					$sheet->setCellValue('AK'.$row, $value['reason_other']);
+					$row++;
+				}
+				
+				$objPHPExcel->setActiveSheetIndex(0);
+				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+				$objWriter->save($outfile);
+				echo "Save to : " . $outfile . "\n";
+				$uploaded = FALSE;
+				for ($i = 0; $i < 5; $i++) {
+					$uploaded = $this->ftp($outfile, $uploadFilename);
+					if ($uploaded) {
+						// unlink($outfile);
+						break;
+					}
+					sleep(60); // wait 1 minute too retry
+				}
+				if (!$uploaded) {
+					$this->load->model("mymail_model");
+					$this->mymail_model->send_mymail('wqjyhggg@gmail.com', 'JF upload error', "File: " . $outfile);
+					$this->mymail_model->send_mymail('cosmo@jfgroup.ca', 'JF upload error', "File: " . $outfile, array($outfile));
+				}
+			}
+		}
+	}
+	
 	public function test() {
 		$this->valid();
 		$this->load->model('phone_model');
