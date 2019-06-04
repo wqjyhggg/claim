@@ -20,12 +20,12 @@ class DecToRoman
 		}
 	}
 
-	public function convert($number)
+	public function convert($number, $toUpper = true)
 	{
 		$this->ensureNumberIsAnInteger($number);
 		$this->ensureNumberIsWithinBounds($number);
 
-		return $this->constructRomanString($number);
+		return $this->constructRomanString($number, $toUpper);
 	}
 
 	private function ensureNumberIsAnInteger($number)
@@ -46,38 +46,25 @@ class DecToRoman
 		}
 	}
 
-	private function tenpower($x) {
-		$y = 1;
-		if ($x > 0) {
-			for ($i = 0; $i < $x; $i++) $y *= 10;
-		} else if ($x < 0) {
-			for ($i = 0; $i < $x; $i++) {
-				$y = (float)($y / 10.0);
-			}
-		}
-		return $y;
-	}
-
 	public function getUpperBound()
 	{
 		$symbolGroupCount = count($this->symbolMap);
-		$valueOfOne = $this->tenpower($symbolGroupCount); //10 ** ($symbolGroupCount - 1);
+		$valueOfOne = 10 ** ($symbolGroupCount - 1);
 
 		$hasFiveSymbol = array_key_exists(1, $this->symbolMap[$symbolGroupCount - 1]);
 
 		return $valueOfOne * ($hasFiveSymbol ? 9 : 4) - 1;
 	}
 
-	private function constructRomanString($number)
+	private function constructRomanString($number, $toUpper)
 	{
 		$romanNumber = '';
 
 		$symbolMapCount = count($this->symbolMap);
 		for ($i = 0; $i < $symbolMapCount; $i++) {
-			$divisor = $this->tenpower($i + 1); // 10 ** ($i + 1);
+			$divisor = 10 ** ($i + 1);
 			$remainder = $number % $divisor;
-			//$digit = $remainder / (10 ** $i);
-			$digit = $remainder / $this->tenpower($i);
+			$digit = $remainder / (10 ** $i);
 
 			$number -= $remainder;
 			$romanNumber = $this->formatDigit($digit, $i) . $romanNumber;
@@ -85,6 +72,10 @@ class DecToRoman
 			if ($number === 0) {
 				break;
 			}
+		}
+
+		if (!$toUpper) {
+			$romanNumber = strtolower($romanNumber);
 		}
 
 		return $romanNumber;
