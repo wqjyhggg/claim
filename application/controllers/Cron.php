@@ -319,15 +319,15 @@ class Cron extends CI_Controller {
 					$sheet->setCellValue('E'.$row, $value['claim']['policy_no']);
 					$sheet->setCellValue('F'.$row, $value['claim']['product_short']);
 					$sheet->setCellValue('G'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime($value['claim']['apply_date'] . ' 00:00:00 UTC')));
-					$sheet->getStyle('G'.$row)->getNumberFormat()->setFormatCode('m/d/yyyy h:mm:ss AM/PM');
+					$sheet->getStyle('G'.$row)->getNumberFormat()->setFormatCode('yyyy-d-m');
 					$sheet->setCellValue('H'.$row, $value['claim']['agent_id']);
 					$sheet->setCellValue('I'.$row, $value['coverage_code']);
 					$sheet->setCellValue('J'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime($value['created'] . ' UTC')));
-					$sheet->getStyle('J'.$row)->getNumberFormat()->setFormatCode('m/d/yyyy h:mm:ss AM/PM');
+					$sheet->getStyle('J'.$row)->getNumberFormat()->setFormatCode('yyyy-d-m');
 					$sheet->setCellValue('K'.$row, $value['claim']['date_symptoms']);
 					$sheet->setCellValue('L'.$row, 'N/A');
 					$sheet->setCellValue('M'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime($value['payment_tm'] . ' UTC')));
-					$sheet->getStyle('M'.$row)->getNumberFormat()->setFormatCode('m/d/yyyy h:mm:ss AM/PM');
+					$sheet->getStyle('M'.$row)->getNumberFormat()->setFormatCode('yyyy-d-m');
 					$sheet->setCellValue('N'.$row, ($value['payeearr'] ? $value['payeearr']['payee_name'] : ''));
 					$sheet->setCellValue('O'.$row, ($value['payeearr'] ? $value['payeearr']['address'] : ''));
 					$sheet->setCellValue('P'.$row, ($value['payeearr'] ? $value['payeearr']['country'] : ''));
