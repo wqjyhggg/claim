@@ -173,7 +173,7 @@
                <?php if(!empty($policies)): ?>
                <div class="table-responsive">
                   <table class="table table-hover table-bordered">
-                     <?php if(($this->input->get("lastname") or $this->input->get("firstname")) and !$this->input->get("result")): ?>
+                     <?php if(0 && ($this->input->get("lastname") or $this->input->get("firstname")) and !$this->input->get("result")): ?>
                         <thead>
                            <tr>
                               <th>First Name</th>
