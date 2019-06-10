@@ -55,7 +55,7 @@ class Expenses2 extends CI_Controller {
 				
 			$this->data['records'] = $this->expenses_model->expense_report($para);
 			
-			$this->data['export_url'] = site_url('report/expenses/export');
+			$this->data['export_url'] = site_url('report/expenses2/export');
 			if (count($this->input->get()) > 0)	$this->data['export_url'] .= '?' . http_build_query($this->input->get(), '', "&");
 
 			$this->template->write('title', SITE_TITLE . ' - Claim Summary Report', TRUE);
@@ -107,6 +107,7 @@ class Expenses2 extends CI_Controller {
 							'Agent ID ',
 							'Coverage Code',
 							'Entered Date',
+							'Finalize Date',
 							'Incident Date',
 							'Incident Country ',
 							'Payment Date/ Void Date',
@@ -134,7 +135,6 @@ class Expenses2 extends CI_Controller {
 							'Void amount',
 							'Void Reason ',
 							'Deny Reason',
-							'Finalize Date',
 					));
 
 			foreach ($records as $key => $value) {
@@ -166,6 +166,7 @@ class Expenses2 extends CI_Controller {
 						$value['claim']['agent_id'],
 						$value['coverage_code'],
 						substr($value['created'], 0, 10),
+						$value['finalize_date'],
 						$value['claim']['date_symptoms'],
 						'N/A', /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */
 						substr($value['payment_tm'], 0, 10),
@@ -195,7 +196,6 @@ class Expenses2 extends CI_Controller {
 						($value['status'] != Expenses_model::EXPENSE_STATUS_Duplicated) ? "0.00" : sprintf("%0.2f", $value['amount_claimed']),
 						$value['reason'],
 						$value['reason_other'],
-						$value['finalize_date'],
 				));
 			}
 			fputcsv($output, array(''));

@@ -69,6 +69,7 @@
 									<th>Agent ID </th>
 									<th>Coverage Code</th>
 									<th>Entered Date</th>
+									<th>Finalize Date</th>
 									<th>Incident Date</th>
 									<th>Incident Country </th>
 									<th>Payment Date/ Void Date</th>
@@ -96,7 +97,6 @@
 									<th>Void amount</th>
 									<th>Void Reason </th>
 									<th>Deny Reason</th>
-									<th>Finalize Date</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -130,6 +130,7 @@
 									<td><?php echo $value['claim']['agent_id']; ?></td>
 									<td><?php echo $value['coverage_code']; ?></td>
 									<td><?php echo substr($value['created'], 0, 10); ?></td>
+									<td><?php echo $value['finalize_date']; ?></td>
 									<td><?php echo $value['claim']['date_symptoms']; /*Incident Date*/?></td>
 									<td>N/A<?php /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */ ?></td>
 									<td><?php echo substr($value['payment_tm'], 0, 10); /*Payment Date/ Void Date*/ ?></td>
@@ -159,7 +160,6 @@
 									<td>$<?php echo (($value['status'] != Expenses_model::EXPENSE_STATUS_Duplicated) ? "0.00" : number_format($value['amount_claimed'], 2)); /*Void amount  Duplicated / Void XXXXXXXXXXXXXXXXX */?></td>
 									<td><?php echo $value['reason']; /*Void Reason*/ ?></td>
 									<td><?php echo $value['reason_other']; /*Deny Reason*/ ?></td>
-									<td><?php echo $value['finalize_date']; ?></td>
 								</tr>
 								<?php } ?>
 							</tbody>
