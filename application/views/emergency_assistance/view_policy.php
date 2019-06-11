@@ -282,7 +282,7 @@
 								<?php if ($policy['stable_condition'] == 1) { ?>
 									<span>Including stable pre-existing condition coverage</span>
 								<?php } else if ($policy['stable_condition'] == 2) { ?>
-									<span>Including stable pre-existing condition coverage</span>
+									<span>Excluding stable pre-existing condition coverage</span>
 								<?php } ?>
 								</div>
 								<div class="form-group col-sm-3">
