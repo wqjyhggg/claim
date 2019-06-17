@@ -129,9 +129,9 @@
 									<td><?php echo $value['claim']['agent_id']; ?></td>
 									<td><?php echo $value['coverage_code']; ?></td>
 									<td><?php echo substr($value['created'], 0, 10); ?></td>
-									<td><?php echo $value['claim']['date_symptoms']; /*Incident Date*/?></td>
+									<td><?php echo $value['date_of_service']; /*Incident Date*/?></td>
 									<td>N/A<?php /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */ ?></td>
-									<td><?php echo substr($value['payment_tm'], 0, 10); /*Payment Date/ Void Date*/ ?></td>
+									<td><?php echo $value['finalize_date']; /*Payment Date/ Void Date*/ ?></td>
 									<td><?php echo ($value['payeearr'] ? $value['payeearr']['payee_name'] : ''); /* Payee Name */ ?></td>
 									<td><?php echo ($value['payeearr'] ? $value['payeearr']['address'] : ''); /* Payee Address */ ?></td>
 									<td><?php echo ($value['payeearr'] ? $value['payeearr']['country'] : ''); /* Payee Country */ ?></td>

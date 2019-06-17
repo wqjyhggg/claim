@@ -165,9 +165,9 @@ class Expenses extends CI_Controller {
 						$value['claim']['agent_id'],
 						$value['coverage_code'],
 						substr($value['created'], 0, 10),
-						$value['claim']['date_symptoms'],
+						$value['date_of_service'],
 						'N/A', /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */
-						substr($value['payment_tm'], 0, 10),
+						$value['finalize_date'],
 						($value['payeearr'] ? $value['payeearr']['payee_name'] : ''),
 						($value['payeearr'] ? $value['payeearr']['address'] : ''),
 						($value['payeearr'] ? $value['payeearr']['country'] : ''),

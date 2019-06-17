@@ -240,8 +240,118 @@ class Cron extends CI_Controller {
 				$para['product_short'] = $product;
 				
 				$records = $this->expenses_model->expense_report($para);
-				$uploadFilename = $filepre . "_" . $product . "_" . $filename . '.xlsx';
+				//$uploadFilename = $filepre . "_" . $product . "_" . $filename . '.xlsx';
+				$uploadFilename = $filepre . "_" . $product . "_" . $filename . '.csv';
 				$outfile = $outdir . $uploadFilename;
+				
+				$output = fopen($outfile, 'w');
+				
+				fputcsv($output, array(
+						'Claim Item Number',
+						'Claim Number',
+						'Claim Type',
+						'Status',
+						'Policy Number',
+						'Product',
+						'Policy Date',
+						'Agent ID ',
+						'Coverage Code',
+						'Entered Date',
+						'Finalize Date',
+						'Incident Date',
+						'Incident Country ',
+						'Payment Date/ Void Date',
+						'Payee Name',
+						'Payee Address',
+						'Payee Country',
+						'Payee Province',
+						'Payee Type',
+						'Provider Name',
+						'Provider Address ',
+						'Provider Country',
+						'Provider Province',
+						'Payment Method',
+						'Cheque Number',
+						'Total Claim Amount',
+						'Discount Amount',
+						'Denied Amount',
+						'Deductible Amount',
+						'Net Claim Paid amount',
+						'Payment Currency',
+						'Invoice Currency ',
+						'Network Fees',
+						'Network Provider',
+						'Recovery Amount',
+						'Void amount',
+						'Void Reason ',
+						'Deny Reason',
+				));
+				
+				foreach ($records as $key => $value) {
+					$paytype = 'cheque';
+					if ($value['payeearr']) {
+						$paytype = $value['payeearr']['payment_type'];
+					} else {
+						$payarr = preg_split("/:/", $value['pay_to']);
+						if (is_array($payarr)) {
+							$paytype = trim($payarr[0]);
+						}
+					}
+					if ($value['status'] != 'Paid') $paytype = '';
+					$tarr = preg_split("/_/", $value['claim_item_no']);
+					if (is_array($tarr) && isset($tarr[1])) {
+						$claim_item_no = $tarr[0].str_pad($tarr[1], 2, "0", STR_PAD_LEFT);
+					} else {
+						$claim_item_no = $value['claim_item_no'];
+					}
+				
+					fputcsv($output, array(
+							$claim_item_no,
+							$value['claim_no'],
+							$value['claim']['exinfo_type'],
+							$value['status'],
+							$value['claim']['policy_no'],
+							$value['claim']['product_short'],
+							$value['claim']['apply_date'],
+							$value['claim']['agent_id'],
+							$value['coverage_code'],
+							substr($value['created'], 0, 10),
+							$value['finalize_date'],
+							$value['date_of_service'],
+							'N/A', /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */
+							$value['finalize_date'],
+							($value['payeearr'] ? $value['payeearr']['payee_name'] : ''),
+							($value['payeearr'] ? $value['payeearr']['address'] : ''),
+							($value['payeearr'] ? $value['payeearr']['country'] : ''),
+							($value['payeearr'] ? $value['payeearr']['province'] : ''),
+							($value['third_party_payee'] ? 'Business' : 'Private'),
+				
+							isset($value['provider']['name']) ? $value['provider']['name'] : '',
+							isset($value['provider']['address']) ? $value['provider']['address'] : '',
+							isset($value['provider']['country']) ? $value['provider']['country'] : '',
+							isset($value['provider']['province']) ? $value['provider']['province'] : '',
+							$paytype,
+							$value['cheque'],
+				
+							sprintf("%0.2f", $value['amount_claimed']),
+							sprintf("%0.2f", 0),
+							sprintf("%0.2f", $value['amount_claimed'] - $value['amt_payable']),
+							sprintf("%0.2f", $value['amt_deductible']),
+							sprintf("%0.2f", $value['amt_payable']),
+							'CAD',
+							empty($value['currency']) ? 'CAD' : $value['currency'],
+							sprintf("%0.2f", ($value['provider_type'] ? $value['provider']['network_fee'] : 0)),
+							isset($value['provider']['name']) ? $value['provider']['name'] : '',
+							sprintf("%0.2f", $value['recovery_amt']),
+							($value['status'] != Expenses_model::EXPENSE_STATUS_Duplicated) ? "0.00" : sprintf("%0.2f", $value['amount_claimed']),
+							$value['reason'],
+							$value['reason_other'],
+					));
+				}
+				fputcsv($output, array(''));
+				fclose($output);
+				
+				/*
 				$objPHPExcel = new PHPExcel();
 				$objPHPExcel->getDefaultStyle()->getFont()->setName('Arial')->setSize(10);
 				
@@ -324,9 +434,9 @@ class Cron extends CI_Controller {
 					$sheet->setCellValue('I'.$row, $value['coverage_code']);
 					$sheet->setCellValue('J'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime($value['created'] . ' UTC')));
 					$sheet->getStyle('J'.$row)->getNumberFormat()->setFormatCode('yyyy-d-m');
-					$sheet->setCellValue('K'.$row, $value['claim']['date_symptoms']);
+					$sheet->setCellValue('K'.$row, $value['date_of_service']);
 					$sheet->setCellValue('L'.$row, 'N/A');
-					$sheet->setCellValue('M'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime($value['payment_tm'] . ' UTC')));
+					$sheet->setCellValue('M'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime($value['finalize_date'] . ' UTC')));
 					$sheet->getStyle('M'.$row)->getNumberFormat()->setFormatCode('yyyy-d-m');
 					$sheet->setCellValue('N'.$row, ($value['payeearr'] ? $value['payeearr']['payee_name'] : ''));
 					$sheet->setCellValue('O'.$row, ($value['payeearr'] ? $value['payeearr']['address'] : ''));
@@ -358,6 +468,7 @@ class Cron extends CI_Controller {
 				$objPHPExcel->setActiveSheetIndex(0);
 				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 				$objWriter->save($outfile);
+				*/
 				echo "Save to : " . $outfile . "\n";
 				$uploaded = FALSE;
 				for ($i = 0; $i < 5; $i++) {
