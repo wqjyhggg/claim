@@ -257,7 +257,6 @@ class Cron extends CI_Controller {
 						'Agent ID ',
 						'Coverage Code',
 						'Entered Date',
-						'Finalize Date',
 						'Incident Date',
 						'Incident Country ',
 						'Payment Date/ Void Date',
@@ -316,7 +315,6 @@ class Cron extends CI_Controller {
 							$value['claim']['agent_id'],
 							$value['coverage_code'],
 							substr($value['created'], 0, 10),
-							$value['finalize_date'],
 							$value['date_of_service'],
 							'N/A', /* echo $value['claim']['country_symptoms']; /*Incident Country XXXXXXXXXXXXXXXXXXXXX no input place */
 							$value['finalize_date'],
