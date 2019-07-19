@@ -1,5 +1,8 @@
 <?php $this->load->model('claim_model'); $this->load->model('expenses_model'); ?>
 <?php $total_payable = 0; $total_this_payable = 0; ?>
+<style>
+.outer-text { margin: 0; }
+</style>
 <div>
 	<div class="page-title">
 		<div class="title_left">
@@ -117,7 +120,7 @@
 							<label>Gender : </label><?php echo $claim['gender']; ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Birthday : </label><?php echo $claim['dob']; ?>
+							<label>Birthday : </label><?php echo $claim['dob']; ?><input type='hidden' name='dob' value='<?php echo $claim['dob']; ?>'>
 						</div>
 	
 						<div class="form-group col-sm-3">
@@ -168,7 +171,7 @@
 									$total_payable += (float)$value['amt_payable'];
 									$total_this_payable += (float)$value['amt_payable'];
 								?>
-									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_coverage_code="<?php echo isset($expenses_list[$value['coverage_code']]) ? nl2br($expenses_list[$value['coverage_code']]) : nl2br($value['coverage_code']); ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable="<?php echo $value['amt_payable'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to="<?php echo nl2br($value['pay_to']) ?>" item_comment="<?php echo nl2br(($value['reason']!='Other') ? $value['reason'] : $value['reason_other']) ?>">
+									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_provider_name="<?php echo $value['item_provider_name']; ?>" item_provider_addr1="<?php echo $value['item_provider_addr1']; ?>" item_provider_addr2="<?php echo $value['item_provider_addr2']; ?>" item_provider_postcode="<?php echo $value['item_provider_postcode']; ?>" item_coverage_code="<?php echo isset($expenses_list[$value['coverage_code']]) ? nl2br($expenses_list[$value['coverage_code']]) : nl2br($value['coverage_code']); ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable="<?php echo $value['amt_payable'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to="<?php echo nl2br($value['pay_to']) ?>" item_comment="<?php echo nl2br(($value['reason']!='Other') ? $value['reason'] : $value['reason_other']) ?>">
 										<td><?php echo form_checkbox("items", $value['id'], FALSE); ?></td>
 										<td><?php echo $value['invoice']; ?></td>
 										<td><?php echo $value['service_description']; ?></td>
@@ -501,28 +504,37 @@
 								<label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address with the policy</label>
 							</div>
 						</div>
-						<div>
-							<?php echo form_label ( 'To:', 'email', array ("class" => 'col-sm-12') );?>
+					</div>
+					<div class="form-group col-sm-12">
+						<div class="form-group col-sm-6">
+							<?php echo form_label('To:', 'email', array("class"=>'col-sm-12')); ?>
 							<div class="form-group col-sm-12">
-								<?php echo form_input ( "email", "", array ("class" => "form-control col-sm-6 form-group email required", 'placeholder' => 'Email Address') ); ?>
+								<?php echo form_input ( "email", $claim['email'], array ("class" => "form-control form-group email required", 'placeholder' => 'Email Address') ); ?>
 								<?php echo form_hidden ( 'type', 'email' ); // used for which action need to perform "email or deny claim" ?>
+							</div>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Firstname:', 'first_name_email', array("class"=>'col-sm-12')); ?>
+							<div class="form-group col-sm-12">
+								<?php echo form_input("first_name_email", $claim['insured_first_name'], array("class"=>"form-control form-group email required", 'placeholder'=>'First Name')); ?>
+							</div>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('lastname:', 'last_name_email', array("class"=>'col-sm-12')); ?>
+							<div class="form-group col-sm-12">
+								<?php echo form_input("last_name_email", $claim['insured_last_name'], array("class"=>"form-control form-group email required", 'placeholder'=>'Last Name')); ?>
 							</div>
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
 						<div class="form-group col-sm-3">
-							<?php echo form_label ( 'Street No.:', 'street_no_email', array ("class" => 'col-sm-12') ); ?>
-							<?php echo form_input ( "street_no_email", "", array ("class" => "form-control required", 'placeholder' => 'Street No.') ); ?>
-							<?php echo form_error ( "street_no_email" ); ?>
-						</div>
-						<div class="form-group col-sm-3">
 							<?php echo form_label ( 'Street Name.:', 'street_name_email', array ("class" => 'col-sm-12') ); ?>
-							<?php echo form_input ( "street_name_email", "", array ("class" => "form-control required", 'placeholder' => 'Street Name.') ); ?>
+							<?php echo form_input ( "street_name_email", $claim['street_address'], array ("class" => "form-control required", 'placeholder' => 'Street Name.') ); ?>
 							<?php echo form_error ( "street_name_email" ); ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label ( 'City:', 'city_email', array ("class" => 'col-sm-12') ); ?>
-							<?php echo form_input ( "city_email", "", array ("class" => "form-control required", 'placeholder' => 'City') ); ?>
+							<?php echo form_input ( "city_email", $claim['city'], array ("class" => "form-control required", 'placeholder' => 'City') ); ?>
 							<?php echo form_error ( "city" );?>
 						</div>
 						<div class="form-group col-sm-3">
@@ -533,6 +545,11 @@
 								<?php endforeach; ?>
 							</select>
 							<?php echo form_error ( "province_email" ); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label ( 'Post Code:', 'post_code_email', array ("class" => 'col-sm-12') ); ?>
+							<?php echo form_input ( "post_code_email", $claim['post_code'], array ("class" => "form-control required", 'placeholder' => 'Post Code') ); ?>
+							<?php echo form_error ( "post_code_email" ); ?>
 						</div>
 						<?php echo form_label ( 'Select Template:', 'select_template', array ("class" => 'col-sm-12') ); ?>
 						<div class="form-group col-sm-12">
@@ -565,6 +582,7 @@
 											'{casemanager_name}',
 											'{claimexaminer_email}',
 											'{claimexaminer_name}',
+											'{policy_full_name}',
 									);
 									$replace = array(
 											img(array('src' => 'assets/img/otc.jpg', 'width' => '130')),
@@ -578,6 +596,7 @@
 											$claim['assign_to_name'],
 											$this->ion_auth->user()->row()->email,
 											$this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name,
+											$product_full_name,
 									);
 									echo str_replace($find, $replace, $doc['description']);
 								?>
@@ -668,6 +687,10 @@
 	src="<?php echo base_url(); ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
 var old_status = '<?php echo !empty($claim_details["status"]) ? $claim_details["status"] : 0; ?>';
+var item_provider_name = '<?php echo $item_provider_name; ?>';
+var item_provider_addr1 = '<?php echo $item_provider_addr1; ?>';
+var item_provider_addr2 = '<?php echo $item_provider_addr2; ?>';
+var item_provider_postcode = '<?php echo $item_provider_postcode; ?>';
 
 $(document).ready(function() {
 	$("#print_template").on("hidden.bs.modal", function () {
@@ -810,6 +833,10 @@ $(document).ready(function() {
 					$(this).html(str);
 				});
 			}
+			item_provider_name = ptr.attr('item_provider_name');
+			item_provider_addr1 = ptr.attr('item_provider_addr1');
+			item_provider_addr2 = ptr.attr('item_provider_addr2');
+			item_provider_postcode = ptr.attr('item_provider_postcode');
 		}
 
 		total_amount_claimed += parseFloat(amount_claimed);
@@ -858,11 +885,23 @@ $(document).ready(function() {
 
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
-      str = str.replace(/{insured_name}/gi, "<?php echo $claim['insured_first_name'] . ' ' . $claim['insured_last_name']; ?>")
-      .replace(/{claimant_name}/gi, "<?php echo $claim['insured_first_name'] . ' ' . $claim['insured_last_name']; ?>")
-      .replace("{insured_address}", "<?php echo $claim['street_address'] . ' ' . $claim['city'] . ' ' . $claim['province']; ?>")
-      .replace("{insured_lastname}", "<?php echo $claim['insured_last_name']; ?>")
-      .replace("{policy_coverage_info}", "{policy_coverage_info}")
+      var insured_name = $("input[name=first_name_email]").val() + ' ' + $("input[name=last_name_email]").val();
+      var insured_address2 = $("input[name=city_email]").val() + ', ' + $("select[name=province_email]").val();
+      var pre_sex = "Mrs."; 
+      if ($("select[name=gender]").val() != 'female') pre_sex = "Mr.";
+
+      str = str.replace(/{insured_name}/gi, insured_name)
+      .replace(/{claimant_name}/gi, insured_name)
+      .replace("{insured_address}", $("input[name=street_name_email]").val())
+      .replace("{insured_address2}", insured_address2)
+      .replace("{insured_postcode}", $("input[name=post_code_email]").val())
+      .replace("{insured_lastname}", $("input[name=last_name_email]").val())
+      .replace("{insured_birth_date}", $("input[name=dob]").val())
+      .replace("{medical_privider_name}", item_provider_name)
+      .replace("{medical_privider_address}", item_provider_addr1)
+      .replace("{medical_privider_address2}", item_provider_addr2)
+      .replace("{medical_privider_postcode}", item_provider_postcode)
+      .replace("{pre_sex}", pre_sex)
       .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')
       .replace("{clinic_name}", "<?php echo $claim['clinic_name']; ?>")
       .replace("{insured_dob}", "<?php echo $claim['dob']; ?>")
@@ -1051,12 +1090,12 @@ $(document).ready(function() {
 		if ($(this).is(":checked")) {
 			// fill all json values to address fields
 			$("input[name=email]").val("<?php echo $policy['contact_email']; ?>");
-			$("input[name=street_no_email]").val("<?php echo $policy['street_number']; ?>");
-			$("input[name=street_name_email]").val("<?php echo $policy['street_name']; ?>");
+			$("input[name=post_code_email]").val("<?php echo $policy['postcode']; ?>");
+			$("input[name=street_name_email]").val("<?php echo $policy['street_number'] . " " . $policy['street_name']; ?>");
 			$("input[name=city_email]").val("<?php echo $policy['city']; ?>");
 			$("select[name=province_email]").val("<?php echo $policy['province2']; ?>");
 		} else {
-			$("input[name=street_no_email],input[name=street_name_email],input[name=city_email],select[name=province_email]").val("");
+			$("input[name=post_code_email],input[name=street_name_email],input[name=city_email],select[name=province_email]").val("");
 		}
 	})
 
@@ -1115,10 +1154,13 @@ $(document).ready(function() {
             method: "post",
             data:{
                email:$("#send_print_email input[name=email]").val(),
-               street_no:$("#send_print_email  input[name=street_no_email]").val(),
+               first_name:$("#send_print_email  input[name=first_name_email]").val(),
+               last_name:$("#send_print_email  input[name=last_name_email]").val(),
+               street_no:'',
                street_name:$("#send_print_email  input[name=street_name_email]").val(),
                city:$("#send_print_email  input[name=city_email]").val(),
                province:$("#send_print_email  select[name=province_email]").val(),
+               postcode:$("#send_print_email  select[name=post_code_email]").val(),
                template:template,
                case_id: $(".select_claim.active-green").attr('alt'),
                claim_item_id:$(".edit_claim.active-green").attr('alt'),

@@ -1,5 +1,6 @@
 <style>
 .modal-lg { width: 75%; }
+.outer-text { margin: 0; }
 </style>
 <div>
 	<div class="page-title">
@@ -565,10 +566,24 @@
 								<label for="mail_address" class="col-sm-10 pull-right" style="margin-top: 3px;">Use same address with the policy</label>
 							</div>
 						</div>
-						<div>
+					</div>
+					<div class="form-group col-sm-12">
+						<div class="form-group col-sm-6">
 							<?php echo form_label('To:', 'email', array("class"=>'col-sm-12')); ?>
 							<div class="form-group col-sm-12">
-								<?php echo form_input("email_template", $case_details['email'], array("class"=>"form-control col-sm-6 form-group email required", 'placeholder'=>'Email Address')); ?>
+								<?php echo form_input("email_template", $case_details['email'], array("class"=>"form-control form-group email required", 'placeholder'=>'Email Address')); ?>
+							</div>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Firstname:', 'first_name_email', array("class"=>'col-sm-12')); ?>
+							<div class="form-group col-sm-12">
+								<?php echo form_input("first_name_email", $case_details['insured_firstname'], array("class"=>"form-control form-group email required", 'placeholder'=>'First Name')); ?>
+							</div>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('lastname:', 'last_name_email', array("class"=>'col-sm-12')); ?>
+							<div class="form-group col-sm-12">
+								<?php echo form_input("last_name_email", $case_details['insured_lastname'], array("class"=>"form-control form-group email required", 'placeholder'=>'Last Name')); ?>
 							</div>
 						</div>
 					</div>
@@ -636,7 +651,7 @@
 				<button type="button" class="btn btn-info preview-template" disabled>Preview</button>
 				<button class="btn btn-primary email-intakeform" disabled>Email</button>
 				<button type="button" class="btn btn-info print" disabled>Print</button>
-				<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-info email-template-cancel" data-dismiss="modal">Cancel</button>
 			</div>
 			<?php echo form_close(); ?>
 		</div>
@@ -1000,6 +1015,11 @@ $(document).ready(function() {
       })
    })
 
+   // show email/print cancel
+   .on("click", ".email-template-cancel", function(){
+	   window.location.reload();                                              
+   })
+
    // show email/print function
    .on("click", ".select-doc", function(){                                              
       
@@ -1020,11 +1040,22 @@ $(document).ready(function() {
       var data = $("input[name=policy_info]").val()?$.parseJSON($("input[name=policy_info]").val()):'';
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
-      str = str.replace(/{insured_name}/gi, obj.attr("insured_name"))
-      .replace("{claimant_name}", obj.attr("insured_name"))
-      .replace("{insured_address}", obj.attr("insured_address"))
-      .replace("{insured_lastname}", obj.attr("insured_lastname"))
+      var insured_name = $("input[name=first_name_email]").val() + ' ' + $("input[name=last_name_email]").val();
+      var insured_address = $("input[name=street_no_email]").val() + ' ' + $("input[name=street_name_email]").val();
+      var insured_address2 = $("input[name=city_email]").val() + ', ' + $("input[name=province_email]").val();
+      var pre_sex = "Mrs."; 
+      if ($("select[name=gender]").val() != 'female') pre_sex = "Mr.";
+ 
+      str = str.replace(/{insured_name}/gi, insured_name)
+      .replace("{claimant_name}", insured_name)
+      .replace("{insured_address}", insured_address)
+      .replace("{insured_address2}", insured_address2)
+      .replace("{insured_postcode}", $("input[name=post_code_email]").val())
+      .replace("{insured_lastname}", $("input[name=last_name_email]").val())
+      .replace("{coverage_period}", '<?php echo $policy['effective_date'] . " to " . $policy['expiry_date']; ?>')
+      .replace("{policy_full_name}", '<?php echo $product_full_name?>')
       .replace("{policy_no}", obj.attr("policy_no"))
+      .replace("{pre_sex}", pre_sex)
       .replace("{case_no}", obj.attr("case_no"))
       .replace("{policy_coverage_info}", "{policy_coverage_info}")
       .replace("{casemanager_name}", obj.attr("casemanager_name"));

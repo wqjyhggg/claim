@@ -1158,6 +1158,36 @@ class Claim extends CI_Controller {
 				$this->data['items'] = $this->expenses_model->search(array('claim_id' => $claim['id']), 0, 0, array('date_of_service' => 'ASC'));
 				$this->data['payinfo'] = $this->expenses_model->get_policy_payinfo($claim['policy_no']);
 				
+				foreach ($this->data['items'] as $ikey => $ival) {
+					if ($ival['provider_type']) {
+						// bussiness
+						$iadd = $this->provider_model->get_by_id($ival['expenses_provider_id']);
+						$this->data['items'][$ikey]['item_provider_name'] = $iadd['payeename'];
+						$this->data['items'][$ikey]['item_provider_addr1'] = $iadd['address'];
+						$this->data['items'][$ikey]['item_provider_addr2'] = $iadd['city'] . " " . $iadd['province'];
+						$this->data['items'][$ikey]['item_provider_postcode'] = $iadd['postcode'];
+						if (empty($this->data['item_provider_name'])) {
+							$this->data['item_provider_name'] = $iadd['payeename'];
+							$this->data['item_provider_addr1'] = $iadd['address'];
+							$this->data['item_provider_addr2'] = $iadd['city'] . " " . $iadd['province'];
+							$this->data['item_provider_postcode'] = $iadd['postcode'];
+						}
+					} else {
+						// private
+						$iadd = $this->claim_model->get_expenses_provider_by_id($ival['expenses_provider_id']);
+						$this->data['items'][$ikey]['item_provider_name'] = $iadd['name'];
+						$this->data['items'][$ikey]['item_provider_addr1'] = $iadd['address'];
+						$this->data['items'][$ikey]['item_provider_addr2'] = $iadd['city'] . " " . $iadd['province'];
+						$this->data['items'][$ikey]['item_provider_postcode'] = $iadd['postcode'];
+						if (empty($this->data['item_provider_name'])) {
+							$this->data['item_provider_name'] = $iadd['name'];
+							$this->data['item_provider_addr1'] = $iadd['address'];
+							$this->data['item_provider_addr2'] = $iadd['city'] . " " . $iadd['province'];
+							$this->data['item_provider_postcode'] = $iadd['postcode'];
+						}
+					}
+				}
+				
 				// get claim items history
 				$this->data['claim_history'] = $this->expenses_model->expenses_history($id);
 				$history = array();
@@ -1220,6 +1250,7 @@ class Claim extends CI_Controller {
 				}
 				
 				$this->data['policy_info'] = $this->parser->parse("claim/policy_info", $this->data, TRUE);
+				$this->data['product_full_name'] = $this->product_model->get_full_name($this->data['policy']['product_short']);
 				$this->data['case_info'] = $this->parser->parse("claim/case_info", $this->data, TRUE);
 				
 				// get all word documents
