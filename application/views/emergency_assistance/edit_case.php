@@ -631,13 +631,12 @@
 					<div class="form-group col-sm-12 docfiles">
 						<?php foreach($docs as $doc): ?>
 						<div class="col-sm-12 doc-description doc-<?php echo $doc['id'] ?>" style="display: none">
-							<div class="col-sm-12 doc_title"><?php echo heading($doc['name']); ?></div>
 							<div class="col-sm-12 doc-desc">
 								<?php
 								// find and replace text
 								$find = array('{otc_logo}', '{otc_logo_big}', '{current_date}');
 								// $replace = array(img(array('src'=>'assets/img/otc.jpg','width'=>'130')), img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')), date("F d, Y"));
-								$replace = array('', '', date("F d, Y"));
+								$replace = array(img(array('src' => 'assets/img/otc.jpg', 'width' => '130')), img(array('src' => 'assets/img/otc_big.jpg', 'width' => '262')), date("F d, Y"));
 								echo str_replace($find, $replace, $doc['description']);
 								?>
 							</div>
