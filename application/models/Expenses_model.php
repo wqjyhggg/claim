@@ -622,4 +622,10 @@ class Expenses_model extends CI_Model {
 		}
 		return $rt;
 	}
+	
+	public function expense_sum_report($firstname, $lastname, $dob) {
+		$sql = "SELECT case_no, policy_no, CONCAT(street_no, ' ', street_name, ' ', city, ', ', province, ' ', country, ' ', post_code) as address, SUM(reserve_amount) as amount FROM `case` WHERE LOWER(insured_firstname)=".$this->db->escape($firstname)." AND LOWER(insured_lastname)=".$this->db->escape($lastname)." AND dob=".$this->db->escape($dob)." AND claim_no=''";
+		$rt = $this->db->query($sql)->result_array();
+		return $rt;
+	}
 }

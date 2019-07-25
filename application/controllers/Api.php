@@ -151,6 +151,7 @@ class Api extends CI_Controller {
 	}
 	*/
 	public function claims() {
+		$this->load->model('api_model');
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('claim_model');
@@ -197,6 +198,7 @@ class Api extends CI_Controller {
 	}
 
 	public function apply() {
+		$this->load->model('api_model');
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('claim_model');
@@ -475,12 +477,40 @@ class Api extends CI_Controller {
 	}
 
 	public function diagnosis_suggest() {
+		$this->load->model('api_model');
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('diagnosis_model');
 			$rdata['suggestions'] = $this->diagnosis_model->search_description($this->input->post("query"));
 		}
 
+		header('Content-Type: application/json');
+		echo json_encode($rdata);
+	}
+
+	public function claim_search() {
+		$this->load->model('api_model');
+		$ips = array('127.0.0.1', '54.89.143.155', '52.205.81.107', '54.164.58.203');
+		$keys = array('qqnzcPfp', 'H5FqpJdc');
+		
+		$key = $this->input->get_post('key');
+		$rdata = array('status' => Api_model::STATUS_ERROR, 'message' => 'Unknown Error');
+		if (! in_array($_SERVER['REMOTE_ADDR'], $ips) || ! in_array($key, $keys)) {
+			die(json_encode($rdata));
+		}
+		
+		$this->load->model('expenses_model');
+		$this->load->model('case_model');
+		
+		$insured_first_name = strtolower($this->input->get_post('firstname'));
+		$insured_last_name = strtolower($this->input->get_post('lastname'));
+		$dob = $this->input->get_post('birth');
+		
+		$rdata['claims'] = $this->expenses_model->expense_sum_report($insured_first_name, $insured_last_name, $dob);
+		$rdata['cases'] = $this->case_model->case_sum_report($insured_first_name, $insured_last_name, $dob);
+		$rdata['status'] = Api_model::STATUS_OK;
+		$rdata['message'] = '';
+		
 		header('Content-Type: application/json');
 		echo json_encode($rdata);
 	}
