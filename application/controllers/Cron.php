@@ -247,7 +247,7 @@ class Cron extends CI_Controller {
 				$output = fopen($outfile, 'w');
 				
 				fputcsv($output, array(
-						'Claim Item Number',
+						'Claim Item ID',
 						'Claim Number',
 						'Claim Type',
 						'Status',
@@ -297,15 +297,15 @@ class Cron extends CI_Controller {
 						}
 					}
 					if ($value['status'] != 'Paid') $paytype = '';
-					$tarr = preg_split("/_/", $value['claim_item_no']);
-					if (is_array($tarr) && isset($tarr[1])) {
-						$claim_item_no = $tarr[0].str_pad($tarr[1], 2, "0", STR_PAD_LEFT);
-					} else {
-						$claim_item_no = $value['claim_item_no'];
-					}
+					//$tarr = preg_split("/_/", $value['claim_item_no']);
+					//if (is_array($tarr) && isset($tarr[1])) {
+					//	$claim_item_no = $tarr[0].str_pad($tarr[1], 2, "0", STR_PAD_LEFT);
+					//} else {
+					//	$claim_item_no = $value['claim_item_no'];
+					//}
 				
 					fputcsv($output, array(
-							$claim_item_no,
+							$value['id'],
 							$value['claim_no'],
 							$value['claim']['exinfo_type'],
 							$value['status'],
