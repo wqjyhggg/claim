@@ -232,12 +232,18 @@ class Cron extends CI_Controller {
 		$para['end_dt'] = date('Y-m-t', strtotime('last month'));
 		$filepre = date('Ym', strtotime('last month'));
 		$products = array('OPL', 'JFC');
+
 		$status_groups = array("Paid" => "Paid_Declined", "Unpaid" => "Received_Approved_Pending");
 		
 		foreach ($products as $product) {
 			foreach ($status_groups as $status_group => $filename) {
 				$para['status_group'] = $status_group;
 				$para['product_short'] = $product;
+				if ($status_group == 'Unpaid') {
+					$para['start_dt'] = "2019-01-21";
+				} else {
+					$para['start_dt'] = date('Y-m-01', strtotime('last month'));
+				}
 				
 				$records = $this->expenses_model->expense_report($para);
 				//$uploadFilename = $filepre . "_" . $product . "_" . $filename . '.xlsx';
