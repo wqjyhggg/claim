@@ -968,7 +968,11 @@ class Claim extends CI_Controller {
 			$this->data['claim_details'] = $claim;
 
 			$this->data['id'] = $id;
-			
+			$this->data['item_payee_name'] = '';
+			$this->data['item_payee_addr1'] = '';
+			$this->data['item_payee_addr2'] = '';
+			$this->data['item_payee_postcode'] = '';
+	
 			// validate form input
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 			
