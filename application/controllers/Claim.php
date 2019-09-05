@@ -1186,6 +1186,21 @@ class Claim extends CI_Controller {
 							$this->data['item_provider_postcode'] = $iadd['postcode'];
 						}
 					}
+					$this->data['item_payee_name'] = '';
+					$this->data['item_payee_addr1'] = '';
+					$this->data['item_payee_addr2'] = '';
+					$this->data['item_payee_postcode'] = '';
+					if ((int)$ival['third_party_payee'] && ($payee = $this->provider_model->get_by_id($ival['third_party_payee']))) {
+						$this->data['item_payee_name'] = $payee['payeename'];
+						$this->data['item_payee_addr1'] = $payee['address'];
+						$this->data['item_payee_addr2'] = $payee['city'] . " " . $payee['province'];
+						$this->data['item_payee_postcode'] = $payee['postcode'];
+					} else if ((int)$ival['payee'] && ($payee = $this->claim_model->get_payee_by_id($ival['payee'])) && ($payee['payment_type'] == 'cheque')) {
+						$this->data['item_payee_name'] = $payee['payee_name'];
+						$this->data['item_payee_addr1'] = $payee['address'];
+						$this->data['item_payee_addr2'] = $payee['city'] . " " . $payee['province'];
+						$this->data['item_payee_postcode'] = $payee['postcode'];
+					}
 				}
 				
 				// get claim items history

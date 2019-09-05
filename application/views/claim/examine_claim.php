@@ -171,7 +171,7 @@
 									$total_payable += (float)$value['amt_payable'];
 									$total_this_payable += (float)$value['amt_payable'];
 								?>
-									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_provider_name="<?php echo $value['item_provider_name']; ?>" item_provider_addr1="<?php echo $value['item_provider_addr1']; ?>" item_provider_addr2="<?php echo $value['item_provider_addr2']; ?>" item_provider_postcode="<?php echo $value['item_provider_postcode']; ?>" item_coverage_code="<?php echo isset($expenses_list[$value['coverage_code']]) ? nl2br($expenses_list[$value['coverage_code']]) : nl2br($value['coverage_code']); ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable="<?php echo $value['amt_payable'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to="<?php echo nl2br($value['pay_to']) ?>" item_comment="<?php echo nl2br(($value['reason']!='Other') ? $value['reason'] : $value['reason_other']) ?>">
+									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_payee_name="<?php echo $value['item_payee_name']; ?>" item_payee_addr1="<?php echo $value['item_payee_addr1']; ?>" item_payee_addr2="<?php echo $value['item_payee_addr2']; ?>" item_payee_postcode="<?php echo $value['item_payee_postcode']; ?>" item_provider_name="<?php echo $value['item_provider_name']; ?>" item_provider_addr1="<?php echo $value['item_provider_addr1']; ?>" item_provider_addr2="<?php echo $value['item_provider_addr2']; ?>" item_provider_postcode="<?php echo $value['item_provider_postcode']; ?>" item_coverage_code="<?php echo isset($expenses_list[$value['coverage_code']]) ? nl2br($expenses_list[$value['coverage_code']]) : nl2br($value['coverage_code']); ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable="<?php echo $value['amt_payable'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to="<?php echo nl2br($value['pay_to']) ?>" item_comment="<?php echo nl2br(($value['reason']!='Other') ? $value['reason'] : $value['reason_other']) ?>">
 										<td><?php echo form_checkbox("items", $value['id'], FALSE); ?></td>
 										<td><?php echo $value['invoice']; ?></td>
 										<td><?php echo $value['service_description']; ?></td>
@@ -691,6 +691,10 @@ var item_provider_name = '<?php echo $item_provider_name; ?>';
 var item_provider_addr1 = '<?php echo $item_provider_addr1; ?>';
 var item_provider_addr2 = '<?php echo $item_provider_addr2; ?>';
 var item_provider_postcode = '<?php echo $item_provider_postcode; ?>';
+var item_payee_name = '<?php echo $item_payee_name; ?>';
+var item_payee_addr1 = '<?php echo $item_payee_addr1; ?>';
+var item_payee_addr2 = '<?php echo $item_payee_addr2; ?>';
+var item_payee_postcode = '<?php echo $item_payee_postcode; ?>';
 
 $(document).ready(function() {
 	$("#print_template").on("hidden.bs.modal", function () {
@@ -837,6 +841,10 @@ $(document).ready(function() {
 			item_provider_addr1 = ptr.attr('item_provider_addr1');
 			item_provider_addr2 = ptr.attr('item_provider_addr2');
 			item_provider_postcode = ptr.attr('item_provider_postcode');
+			item_payee_name = ptr.attr('item_payee_name');
+			item_payee_addr1 = ptr.attr('item_payee_addr1');
+			item_payee_addr2 = ptr.attr('item_payee_addr2');
+			item_payee_postcode = ptr.attr('item_payee_postcode');
 		}
 
 		total_amount_claimed += parseFloat(amount_claimed);
@@ -901,6 +909,10 @@ $(document).ready(function() {
       .replace("{medical_privider_address}", item_provider_addr1)
       .replace("{medical_privider_address2}", item_provider_addr2)
       .replace("{medical_privider_postcode}", item_provider_postcode)
+      .replace("{payee_name}", item_payee_name)
+      .replace("{payee_address1}", item_payee_addr1)
+      .replace("{payee_address2}", item_payee_addr2)
+      .replace("{payee_postcode}", item_payee_postcode)
       .replace("{pre_sex}", pre_sex)
       .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')
       .replace("{clinic_name}", "<?php echo $claim['clinic_name']; ?>")
