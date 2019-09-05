@@ -624,7 +624,7 @@ class Expenses_model extends CI_Model {
 	}
 	
 	public function expense_sum_report($firstname, $lastname, $dob) {
-		$sql = "SELECT c.claim_no, c.policy_no, CONCAT(street_address, ' ', city, ',', province, ' ', country, ' ', post_code) as address, SUM(e.amount_claimed) as amount FROM claim c JOIN expenses_claimed e ON (c.id=e.claim_id) WHERE LOWER(c.insured_first_name)=".$this->db->escape($firstname)." AND LOWER(c.insured_last_name)=".$this->db->escape($lastname)." AND c.dob=".$this->db->escape($dob)." GROUP BY c.claim_no ASC";
+		$sql = "SELECT c.claim_no, c.policy_no, CONCAT(c.street_address, ' ', c.city, ',', c.province, ' ', c.country, ' ', post_code) as address, SUM(e.amount_claimed) as amount FROM claim c JOIN expenses_claimed e ON (c.id=e.claim_id) WHERE LOWER(c.insured_first_name)=".$this->db->escape($firstname)." AND LOWER(c.insured_last_name)=".$this->db->escape($lastname)." AND c.dob=".$this->db->escape($dob)." GROUP BY c.claim_no,c.policy_no,address ORDER BY c.claim_no ASC";
 		$rt = $this->db->query($sql)->result_array();
 		return $rt;
 	}
