@@ -11,7 +11,7 @@
 			<div class="x_panel">
 				<div class="x_content">
 					<!-- search filter start -->
-					<?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>
+					<?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get', 'autocomplete'=>"off")); ?>
 					<div class="row">
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Status Group:', 'status_group', array ("class" => 'col-sm-12')); ?>

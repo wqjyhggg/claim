@@ -231,14 +231,14 @@ class Cron extends CI_Controller {
 		$para['start_dt'] = date('Y-m-01', strtotime('last month'));
 		$para['end_dt'] = date('Y-m-t', strtotime('last month'));
 		$filepre = date('Ym', strtotime('last month'));
-		$products = array('OPL', 'JFC');
+		$para['product_short_group'] = array('OPL', 'JFC');
 
 		$status_groups = array("Paid" => "Paid_Declined", "Unpaid" => "Received_Approved_Pending");
 		
-		foreach ($products as $product) {
+		if (1) {
 			foreach ($status_groups as $status_group => $filename) {
 				$para['status_group'] = $status_group;
-				$para['product_short'] = $product;
+				// $para['product_short'] = $product;
 				if ($status_group == 'Unpaid') {
 					$para['start_dt'] = "2019-01-21";
 				} else {
@@ -247,7 +247,8 @@ class Cron extends CI_Controller {
 				
 				$records = $this->expenses_model->expense_report($para);
 				//$uploadFilename = $filepre . "_" . $product . "_" . $filename . '.xlsx';
-				$uploadFilename = $filepre . "_" . $product . "_" . $filename . '.csv';
+				//$uploadFilename = $filepre . "_" . $product . "_" . $filename . '.csv';
+				$uploadFilename = $filepre . "_" . $filename . '.csv';
 				$outfile = $outdir . $uploadFilename;
 				
 				$output = fopen($outfile, 'w');

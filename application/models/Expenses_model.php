@@ -588,12 +588,14 @@ class Expenses_model extends CI_Model {
 		
 		if (!empty($para['product_short'])) {
 			$sql .= " JOIN claim ON (expenses_claimed.claim_id=claim.id AND claim.product_short=" . $this->db->escape($para['product_short']) . ")";
+		} else if (!empty($para['product_short_group'])) {
+			$sql .= " JOIN claim ON (expenses_claimed.claim_id=claim.id AND claim.product_short in ('" . join("','", $para['product_short_group']) . "'))";
 		}
 		if ($where) {
 			$sql .= " WHERE " . join(" AND ", $where);
 		}
 		$rt = $this->db->query($sql)->result_array();
-		
+
 		if ($rt) {
 			$this->load->model('api_model');
 			$last_policy = '';
