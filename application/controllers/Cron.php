@@ -231,7 +231,7 @@ class Cron extends CI_Controller {
 		$para['start_dt'] = date('Y-m-01', strtotime('last month'));
 		$para['end_dt'] = date('Y-m-t', strtotime('last month'));
 		$filepre = date('Ym', strtotime('last month'));
-		$para['product_short_group'] = array('OPL', 'JFC');
+		$para['product_short_group'] = array('OPL', 'JFC', 'REF');
 
 		$status_groups = array("Paid" => "Paid_Declined", "Unpaid" => "Received_Approved_Pending");
 		
