@@ -233,7 +233,8 @@ class Cron extends CI_Controller {
 		$filepre = date('Ym', strtotime('last month'));
 		$para['product_short_group'] = array('OPL', 'JFC', 'REF');
 
-		$status_groups = array("Paid" => "Paid_Declined", "Unpaid" => "Received_Approved_Pending");
+		//$status_groups = array("Paid" => "Paid_Declined", "Unpaid" => "Received_Approved_Pending");
+		$status_groups = array("Paid" => "Paid_Declined", "Unpaid" => "Pending");
 		
 		if (1) {
 			foreach ($status_groups as $status_group => $filename) {
