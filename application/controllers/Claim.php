@@ -52,13 +52,17 @@ class Claim extends CI_Controller {
 			$this->data['policies_success'] = $this->api_model->success;
 			$this->data['policy_status'] = $this->api_model->status_list;
 			// echo "<pre>"; print_r($this->input->post()); print_r($this->data['policy_status']); die("XX"); //XXXXXXXXXXXx
-			if ($this->input->post('case_no') || $this->input->post('claim_no')) {
+			if ($this->input->post_get('case_no') || $this->input->post_get('claim_no')) {
 				$this->data['cases'] = $this->case_model->post_search($this->input->post(), $this->data['policies']);
 			} else {
 				$this->data['cases'] = array();
 			}
 			
-			$this->data['claims'] = $this->claim_model->post_search($this->input->post(), $this->data['policies']);
+			$post = $this->input->post();
+			if (empty($post)) {
+				$post = $this->input->get();
+			}
+			$this->data['claims'] = $this->claim_model->post_search($post, $this->data['policies']);
 			$this->data['claim_status'] = $this->claim_model->get_claim_status_list(1);
 			
 			// send case manager and eac managers list

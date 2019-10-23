@@ -17,37 +17,37 @@
 				</div>
 				<div class="x_content">
 					<!-- search filter start -->
-					<?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'post')); ?>
+					<?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>
 					<div class="row">
 						<div class="form-group col-sm-2">
 							<?php echo form_label ( 'Policy Number:', 'policy', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input ( "policy_match", $this->input->post("policy_match"), array("class" => "form-control",'placeholder' => 'Policy Number') ); ?>
+							<?php echo form_input ( "policy_match", $this->input->post_get("policy_match"), array("class" => "form-control",'placeholder' => 'Policy Number') ); ?>
 						</div>
 						<div class="form-group col-sm-2">
 							<?php echo form_label ( 'Case Number:', 'case', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input ( "case_no", $this->input->post( "case_no" ), array("class" => "form-control", 'placeholder' => 'Case Number') );?>
+							<?php echo form_input ( "case_no", $this->input->post_get( "case_no" ), array("class" => "form-control", 'placeholder' => 'Case Number') );?>
 						</div>
 						<div class="form-group col-sm-2">
 							<?php echo form_label ( 'Claim Number:', 'claim', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input ( "claim_no", $this->input->post( "claim_no" ), array("class" => "form-control", 'placeholder' => 'Claim Number') );?>
+							<?php echo form_input ( "claim_no", $this->input->post_get( "claim_no" ), array("class" => "form-control", 'placeholder' => 'Claim Number') );?>
 						</div>
 						<div class="form-group col-sm-2">
 							<?php echo form_label('Claim Created Date From:', 'created_from', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
-								<?php echo form_input ( "created_from", $this->input->post( "created_from" ), array ("class" => "form-control datepicker", 'placeholder' => 'Created Date From') ); ?>
+								<?php echo form_input ( "created_from", $this->input->post_get( "created_from" ), array ("class" => "form-control datepicker", 'placeholder' => 'Created Date From') ); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
 						<div class="form-group col-sm-2">
 							<?php echo form_label('Claim Created Date To:', 'created_to', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
-								<?php echo form_input ( "created_to", $this->input->post ( "created_to" ), array ("class" => "form-control datepicker", 'placeholder' => 'Created Date To') ); ?>
+								<?php echo form_input ( "created_to", $this->input->post_get( "created_to" ), array ("class" => "form-control datepicker", 'placeholder' => 'Created Date To') ); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
 						<div class="form-group col-sm-2">
 							<?php echo form_label ( 'Claim Status:', 'status', array ("class" => 'col-sm-12') ); ?>
-							<?php echo form_dropdown ( "status", $claim_status, $this->input->post ( "status" ), array ("class" => 'form-control') );?>
+							<?php echo form_dropdown ( "status", $claim_status, $this->input->post_get( "status" ), array ("class" => 'form-control') );?>
 						</div>
 						<div class="clearfix"></div>
 					</div>
@@ -55,7 +55,7 @@
 						<!-- div class="form-group col-sm-3">
 							<?php echo form_label('Products:', 'products', array("class"=>'col-sm-12')); ?>
 							<?php array_unshift($products, '-- Product --'); ?>
-							<?php echo form_dropdown ( "product_short", $products, $this->input->post ( "product_short" ), array ("class" => 'form-control') );?>
+							<?php echo form_dropdown ( "product_short", $products, $this->input->post_get( "product_short" ), array ("class" => 'form-control') );?>
 						</div -->
 						<input type="hidden" name="assign_to">
 						<input type="hidden" name="case_manager">
@@ -64,7 +64,7 @@
 							<select name="assign_to" class="form-control">
 								<option value=""> -- Select EAC -- </option>
 								<?php foreach ($eacs as $rc):?>
-								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("assign_to")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post_get("assign_to")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
 								<?php endforeach; ?>
 							</select>
 						</div -->
@@ -73,7 +73,7 @@
 							<select name="case_manager" class="form-control">
 								<option value=""> -- Select Manager -- </option>
 								<?php foreach ($mamagers as $rc) :?>
-								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("case_manager")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post_get("case_manager")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
 								<?php endforeach; ?>
 							</select>
 						</div -->
@@ -82,7 +82,7 @@
 							<select name="claim_examiner" class="form-control">
 								<option value=""> -- Select Examiner -- </option>
 								<?php foreach ($examiners as $rc) :?>
-								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("assign_to")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+								<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post_get("assign_to")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
 								<?php endforeach; ?>
 							</select>
 						</div>
@@ -96,26 +96,26 @@
 					<div class="row more_items" style="display:none">
 						<div class="form-group col-sm-3">
 							<?php echo form_label ( 'Last / First Nmae:', 'name', array ("class" => 'col-sm-12')); ?>
-							<?php echo form_input ( "lastname", $this->input->post("lastname"), array("class" => "form-control", 'placeholder' => 'Last Name') );?>
+							<?php echo form_input ( "lastname", $this->input->post_get("lastname"), array("class" => "form-control", 'placeholder' => 'Last Name') );?>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label ( 'Arrival Date:', 'arrival_date', array ("class" => 'col-sm-12')); ?>
 							<div class="input-group date">
-								<?php echo form_input ( "arrival_date", $this->input->post ( "arrival_date" ), array ("class" => "form-control datepicker",'placeholder' => 'Arrival Date From') ); ?>
+								<?php echo form_input ( "arrival_date", $this->input->post_get( "arrival_date" ), array ("class" => "form-control datepicker",'placeholder' => 'Arrival Date From') ); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label ( 'Effective Date:', 'effective_date', array ("class" => 'col-sm-12')); ?>
 							<div class="input-group date">
-								<?php echo form_input ( "effective_date", $this->input->post ( "effective_date" ), array ("class" => "form-control datepicker", 'placeholder' => 'Effective Date From') ); ?>
+								<?php echo form_input ( "effective_date", $this->input->post_get( "effective_date" ), array ("class" => "form-control datepicker", 'placeholder' => 'Effective Date From') ); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label ( 'Expiry Date:', 'expiry_date', array ("class" => 'col-sm-12')); ?>
 							<div class="input-group date">
-								<?php echo form_input ( "expiry_date", $this->input->post ( "expiry_date" ), array ("class" => "form-control datepicker", 'placeholder' => 'Expiry Date From') ); ?>
+								<?php echo form_input ( "expiry_date", $this->input->post_get( "expiry_date" ), array ("class" => "form-control datepicker", 'placeholder' => 'Expiry Date From') ); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
@@ -124,23 +124,23 @@
 						
 					<div class="row more_items" style="display:none">
 						<div class="form-group col-sm-3">
-							<?php echo form_input ( "firstname", $this->input->post("firstname"), array("class" => "form-control", 'placeholder' => 'First Name') ); ?>
+							<?php echo form_input ( "firstname", $this->input->post_get("firstname"), array("class" => "form-control", 'placeholder' => 'First Name') ); ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<div class="input-group date">
-								<?php echo form_input ( "arrival_date2", $this->input->post ( "arrival_date2" ), array ("class" => "form-control datepicker", 'placeholder' => 'Arrival Date To') ); ?>
+								<?php echo form_input ( "arrival_date2", $this->input->post_get( "arrival_date2" ), array ("class" => "form-control datepicker", 'placeholder' => 'Arrival Date To') ); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
 						<div class="form-group col-sm-3">
 							<div class="input-group date">
-								<?php echo form_input ( "effective_date2", $this->input->post ( "effective_date2" ), array ("class" => "form-control datepicker", 'placeholder' => 'Effective Date To') ); ?>
+								<?php echo form_input ( "effective_date2", $this->input->post_get( "effective_date2" ), array ("class" => "form-control datepicker", 'placeholder' => 'Effective Date To') ); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
 						<div class="form-group col-sm-3">
 							<div class="input-group date">
-								<?php echo form_input ( "expiry_date2", $this->input->post ( "expiry_date2" ), array ("class" => "form-control datepicker", 'placeholder' => 'Expiry Date To') ); ?>
+								<?php echo form_input ( "expiry_date2", $this->input->post_get( "expiry_date2" ), array ("class" => "form-control datepicker", 'placeholder' => 'Expiry Date To') ); ?>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
