@@ -249,7 +249,7 @@ class Cron extends CI_Controller {
 				$records = $this->expenses_model->expense_report($para);
 				//$uploadFilename = $filepre . "_" . $product . "_" . $filename . '.xlsx';
 				//$uploadFilename = $filepre . "_" . $product . "_" . $filename . '.csv';
-				$uploadFilename = $filepre . "_" . $filename . '.csv';
+				$uploadFilename = $filename . '_' . $filepre . '.csv';
 				$outfile = $outdir . $uploadFilename;
 				
 				$output = fopen($outfile, 'w');
