@@ -304,7 +304,15 @@ class Cron extends CI_Controller {
 							$paytype = trim($payarr[0]);
 						}
 					}
-					if ($value['status'] != 'Paid') $paytype = '';
+					if ($value['status'] != 'Paid') {
+						$paytype = '';
+						$value['finalize_date'] = '';
+						$amount_denide = '';
+						$amt_payable = '';
+					} else {
+						$amount_denide = sprintf("%0.2f", $value['amount_claimed'] - $value['amt_payable']);
+						$amt_payable = sprintf("%0.2f", $value['amt_payable']);
+					}
 					//$tarr = preg_split("/_/", $value['claim_item_no']);
 					//if (is_array($tarr) && isset($tarr[1])) {
 					//	$claim_item_no = $tarr[0].str_pad($tarr[1], 2, "0", STR_PAD_LEFT);
@@ -341,9 +349,9 @@ class Cron extends CI_Controller {
 				
 							sprintf("%0.2f", $value['amount_claimed']),
 							sprintf("%0.2f", 0),
-							sprintf("%0.2f", $value['amount_claimed'] - $value['amt_payable']),
+							$amount_denide,
 							sprintf("%0.2f", $value['amt_deductible']),
-							sprintf("%0.2f", $value['amt_payable']),
+							$amt_payable,
 							'CAD',
 							empty($value['currency']) ? 'CAD' : $value['currency'],
 							sprintf("%0.2f", ($value['provider_type'] ? $value['provider']['network_fee'] : 0)),
