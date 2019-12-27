@@ -29,7 +29,9 @@ class Claim extends CI_Controller {
 			$this->load->model('claim_model');
 			$this->load->model('users_model');
 			
-			$this->data['policies'] = $this->api_model->get_policy($this->input->post());
+			$post = $this->input->post();
+			if (empty($post)) $post = $this->input->get();
+			$this->data['policies'] = $this->api_model->get_policy($post);
 			
 			$products = FALSE;
 			if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
