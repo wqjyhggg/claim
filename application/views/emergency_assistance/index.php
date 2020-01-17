@@ -208,7 +208,7 @@
                         </thead>
                         <tbody>
                            <?php foreach ($policies as $key => $value): ?>
-                           <tr class="view-policy" <?php if (!empty($value['has_claim'])) { ?>style='background-color:#efc7c7' <?php } ?> data='<?php echo json_encode($value); ?>'>
+                           <tr class="view-policy" <?php if (!empty($value['has_claim'])) { ?>style='background-color:#efc7c7' <?php } ?> data="<?php echo htmlspecialchars(json_encode($value)); ?>">
                               <td><?php echo form_checkbox('select_policy', $value['policy']); ?></td>
                               <td><?php echo htmlspecialchars($value['policy']); ?></td>
                               <td><?php echo htmlspecialchars($value['firstname']." ".$value['lastname']); ?></td>
@@ -365,7 +365,6 @@ $(document).ready(function() {
       localStorage.setItem("policy_data", data);
 
       var ddata = jQuery.parseJSON(data);
-      console.log(ddata); //XXXXXXXXXXXXXXXXXX
 
       // redirect it to view policy page
       window.location = "<?php echo base_url("emergency_assistance/view_policy") ?>" + "/" + ddata.policy;
