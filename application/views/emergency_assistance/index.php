@@ -185,11 +185,11 @@
                         </thead>
                         <tbody>
                            <?php foreach ($policies as $key => $value): ?>
-                              <tr class="view-policies" data='<?php echo json_encode($value); ?>'>
-                                 <td><?php echo $value['firstname']; ?></td>
-                                 <td><?php echo $value['lastname']; ?></td>
-                                 <td><?php echo $value['birthday']; ?></td>
-                                 <td><?php echo $value['gender']; ?></td>
+                              <tr class="view-policies" data="<?php echo htmlspecialchars(json_encode($value)); ?>">
+                                 <td><?php echo htmlspecialchars($value['firstname']); ?></td>
+                                 <td><?php echo htmlspecialchars($value['lastname']); ?></td>
+                                 <td><?php echo htmlspecialchars($value['birthday']); ?></td>
+                                 <td><?php echo htmlspecialchars($value['gender']); ?></td>
                                  <td class="policies"><?php echo anchor("emergency_assistance/?result=policy&filter=policy&lastname=".$value['lastname']."&firstname=".$value['firstname'], "View Policies"); ?></td>
                               </tr>
                            <?php endforeach; ?>
@@ -365,6 +365,7 @@ $(document).ready(function() {
       localStorage.setItem("policy_data", data);
 
       var ddata = jQuery.parseJSON(data);
+      console.log(ddata); //XXXXXXXXXXXXXXXXXX
 
       // redirect it to view policy page
       window.location = "<?php echo base_url("emergency_assistance/view_policy") ?>" + "/" + ddata.policy;
