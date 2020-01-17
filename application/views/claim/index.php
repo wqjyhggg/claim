@@ -172,10 +172,10 @@
 								<?php foreach ($policies as $key => $value): ?>
 								<tr data='<?php echo json_encode($value); ?>'>
 									<td><?php echo $value['policy']; ?></td>
-									<td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
-									<td><?php echo $value['birthday']; ?></td>
+									<td><?php echo htmlspecialchars($value['firstname']." ".$value['lastname']); ?></td>
+									<td><?php echo htmlspecialchars($value['birthday']); ?></td>
 									<td><?php echo $policy_status[$value['status_id']]['name']; ?></td>
-									<td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
+									<td><?php echo htmlspecialchars($value['agent_firstname']." ".$value['agent_lastname']); ?></td>
 									<td><?php echo anchor("emergency_assistance/view_policy/" . $value['policy'], "Detail", array('class'=>'view-policy')); ?></td>
 								</tr>
 								<?php endforeach; ?>
@@ -215,15 +215,15 @@
 								<?php foreach ($cases as $key => $value): ?>
 								<tr alt='<?php echo $value['id']; ?>' policy='<?php echo $value['policy_no'] ?>' case_no='<?php echo $value['case_no']; ?>'>
 									<td><?php echo $value['case_no']; ?></td>
-									<td><?php echo $value['created']; ?></td>
-									<td><?php echo $value['province']; ?></td>
-									<td><?php echo $value['reason']; ?></td>
-									<td><?php echo $value['policy_no']; ?></td>
-									<td><?php echo $value['insured_name']; ?></td>
-									<td><?php echo $value['dob']; ?></td>
+									<td><?php echo htmlspecialchars($value['created']); ?></td>
+									<td><?php echo htmlspecialchars($value['province']); ?></td>
+									<td><?php echo htmlspecialchars($value['reason']); ?></td>
+									<td><?php echo htmlspecialchars($value['policy_no']); ?></td>
+									<td><?php echo htmlspecialchars($value['insured_name']); ?></td>
+									<td><?php echo htmlspecialchars($value['dob']); ?></td>
 									<td><?php echo $value['assign_to_email']; ?></td>
 									<td><?php echo $value['manager_email']; ?></td>
-									<td><?php echo $value['priority']; ?></td>
+									<td><?php echo htmlspecialchars($value['priority']); ?></td>
 									<!-- <td><?php echo anchor('emergency_assistance/create_claim?policy='.$value['policy_no'].'&case_no='.$value['case_no'], 'Detail'); ?></td> -->
 									<td><?php echo anchor('emergency_assistance/edit_case/'.$value['id'].'?type=add_claim', 'Detail'); ?></td>
 								</tr>
@@ -265,14 +265,14 @@
 								<tr>
 									<td title='Check for assign to claim examiner'><?php echo form_checkbox("claim", $value['id'], FALSE, "alt='Check for assign to claim examiner'"); ?></td>
 									<td><?php echo $value['claim_no']; ?></td>
-									<td><?php echo $value['policy_no']; ?></td>
-									<td><?php echo $value['insured_first_name']; ?></td>
-									<td><?php echo $value['insured_last_name']; ?></td>
+									<td><?php echo htmlspecialchars($value['policy_no']); ?></td>
+									<td><?php echo htmlspecialchars($value['insured_first_name']); ?></td>
+									<td><?php echo htmlspecialchars($value['insured_last_name']); ?></td>
 									<td><?php echo $value['gender']; ?></td>
-									<td><?php echo $value['dob']; ?></td>
-									<td><?php echo $value['created']; ?></td>
+									<td><?php echo htmlspecialchars($value['dob']); ?></td>
+									<td><?php echo htmlspecialchars($value['created']); ?></td>
 									<td><?php echo number_format($value['amount_claimed'], 2); ?></td>
-									<td><?php echo $value['diagnosis']; ?></td>
+									<td><?php echo htmlspecialchars($value['diagnosis']); ?></td>
 									<td><?php echo $value['status']; ?></td>
 									<td><?php echo $value['email']; ?></td>
 									<?php if ($is_insurer) { ?>

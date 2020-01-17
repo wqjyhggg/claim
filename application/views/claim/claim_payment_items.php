@@ -24,15 +24,15 @@ if(!empty($claims)):?>
                   <td><?php echo ++$i; ?>.</td>
                   <td><?php echo $val['claim_no'] ?></td>
                   <td><?php echo $val['claim_item_no'] ?></td>
-                  <td><?php echo $val['invoice'] ?></td>
+                  <td><?php echo htmlspecialchars($val['invoice']); ?></td>
                   <td><?php echo $val['date_of_service'] ?></td>
-                  <td><?php echo $val['coverage_code'] ?></td>
-                  <!-- td><?php echo $val['diagnosis'] ?></td -->
+                  <td><?php echo htmlspecialchars($val['coverage_code']); ?></td>
+                  <!-- td><?php echo htmlspecialchars($val['diagnosis']); ?></td -->
                   <td><?php echo $val['amount_claimed'] ?></td>
                   <td><?php echo $val['amt_payable'] ?></td>
                   <td><?php echo $val['amt_deductible'] ?></td>
                   <td><?php echo $val['amt_insured'] ?></td>
-                  <td><?php echo $val['pay_to'] ?></td>
+                  <td><?php echo htmlspecialchars($val['pay_to']); ?></td>
                </tr>
          <?php  endforeach; ?>
          </tbody>

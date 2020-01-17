@@ -36,6 +36,7 @@ class Auth extends CI_Controller {
 			$this->load->model('mytask_model');
 			$this->load->model('claim_model');
 			$this->load->model('case_model');
+			$this->load->model('html_model');
 
 			// if sorting enabled
 			$para = array(
@@ -80,6 +81,7 @@ class Auth extends CI_Controller {
 			if (count($this->input->get()) > 0)	$config ['suffix'] = '?' . http_build_query($this->input->get(), '', "&");
 			$this->pagination->initialize($config); // initiaze pagination config
 			$this->data ['pagination'] = $this->pagination->create_links(); // create pagination links
+			$this->data ['html_model'] = $this->html_model;
 			
 			$this->template->write('title', SITE_TITLE . ' - My Tasks', TRUE);
 			$this->template->write_view('content', 'auth/mytasks', $this->data);

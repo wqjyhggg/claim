@@ -26,16 +26,16 @@
                <td><?php echo $i; ?></td>
                <td><?php echo $value['claim_no'] ?></td>
                <td><?php echo $value['claim_item_no'] ?></td>
-               <td><?php echo $value['invoice'] ?></td>
+               <td><?php echo htmlspecialchars($value['invoice']); ?></td>
                <td><?php echo $value['date_of_service'] ?></td>
-               <td><?php echo $value['coverage_code'] ?></td>
-               <!-- td><?php echo $value['diagnosis'] ?></td -->
+               <td><?php echo htmlspecialchars($value['coverage_code']); ?></td>
+               <!-- td><?php echo htmlspecialchars($value['diagnosis']); ?></td -->
                <td><?php echo $value['amount_claimed'] ?></td>
                <td><?php echo $value['amt_payable'] ?></td>
                <td><?php echo $value['amt_deductible'] ?></td>
                <td><?php echo $value['amt_insured'] ?></td>
                <td><?php echo $value['amt_received'] ?></td>
-               <td><?php echo $value['comment'] ?></td>
+               <td><?php echo htmlspecialchars($value['comment']); ?></td>
             </tr>
          <?php 
             $i++;
@@ -69,7 +69,7 @@
                $claim_total+=$value['amount_claimed'];  $payable += $value['amt_payable'];
                ?>
             <tr>
-               <td><?php echo $value['service_description'] ?></td><td><?php echo $value['date_of_service'] ?></td><td><?php echo $value['amount_claimed'] ?></td><td>$<?php echo $value['amt_payable'] ?></td><td><?php echo $value['comment'] ?></td>
+               <td><?php echo htmlspecialchars($value['service_description']) ?></td><td><?php echo $value['date_of_service'] ?></td><td><?php echo $value['amount_claimed'] ?></td><td>$<?php echo $value['amt_payable'] ?></td><td><?php echo htmlspecialchars($value['comment']); ?></td>
             </tr>
             <?php
             endforeach;

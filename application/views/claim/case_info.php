@@ -11,7 +11,7 @@
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Created By:', 'created_by', array("class"=>'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['created_by']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['created_by']); ?></div>
 	</div>
 </div>
 
@@ -19,36 +19,36 @@
 <div class="row" style="display: none">
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Street No.:', 'street_no', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['street_no']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['street_no']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Street Name.:', 'street_name', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['street_name']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['street_name']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('City:', 'city', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['city']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['city']); ?></div>
 	</div>
 
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Province:', 'province', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['province']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['province']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Country:', 'country', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['country']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['country']); ?></div>
 	</div>
 	<div class="form-group col-sm-2">
 		<?php echo form_label('Postal Code:', 'post_code', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['post_code']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['post_code']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Assign To:', 'assign_to', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['assign_to_email']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['assign_to_email']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Reason:', 'reason', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['reason']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['reason']); ?></div>
 	</div>
 </div>
 
@@ -56,27 +56,27 @@
 <div class="row" style="display: none">
 	<div class="form-group col-sm-4">
 		<?php echo form_label('First Name:', 'first_name', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['first_name']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['first_name']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Last Name.:', 'last_name', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['last_name']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['last_name']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Phone Number:', 'phone_number', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['phone_number']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['phone_number']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Email:', 'email', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['email']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['email']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Relationship:', 'relations', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['relations']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['relations']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Country:', 'country2', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['country2']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['country2']); ?></div>
 	</div>
 </div>
 
@@ -84,15 +84,15 @@
 <div class="row" style="display: none">
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Main Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['diagnosis']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['diagnosis']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Treatment:', 'treatment', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['treatment']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['treatment']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Third Party Recovery:', 'third_party_recovery', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['third_party_recovery']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['third_party_recovery']); ?></div>
 	</div>
 </div>
 
@@ -104,11 +104,11 @@
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Insured Name:', 'insured_name', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-6"><?php echo $case_details['insured_firstname'].' '.$case_details['insured_lastname']; ?></div>
+		<div class="form-group col-sm-6"><?php echo htmlspecialchars($case_details['insured_firstname'].' '.$case_details['insured_lastname']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Insured Address:', 'insured_address', array("class"=>'col-sm-12'));   ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['insured_address']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['insured_address']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Date of Birth:', 'dob', array("class"=>'col-sm-12'));   ?>
@@ -120,7 +120,7 @@
 <div class="row" style="display: none">
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Case Manager:', 'case_manager', array("class" => 'col-sm-12')); ?>
-		<div class="form-group col-sm-12"><?php echo $case_details['case_manager_name']; ?></div>
+		<div class="form-group col-sm-12"><?php echo htmlspecialchars($case_details['case_manager_name']); ?></div>
 	</div>
 	<div class="form-group col-sm-4">
 		<?php echo form_label('Priority:', 'priority', array("class" => 'col-sm-12')); ?>

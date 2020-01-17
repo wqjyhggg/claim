@@ -210,11 +210,11 @@
                            <?php foreach ($policies as $key => $value): ?>
                            <tr class="view-policy" <?php if (!empty($value['has_claim'])) { ?>style='background-color:#efc7c7' <?php } ?> data='<?php echo json_encode($value); ?>'>
                               <td><?php echo form_checkbox('select_policy', $value['policy']); ?></td>
-                              <td><?php echo $value['policy']; ?></td>
-                              <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
-                              <td><?php echo $value['birthday']; ?></td>
+                              <td><?php echo htmlspecialchars($value['policy']); ?></td>
+                              <td><?php echo htmlspecialchars($value['firstname']." ".$value['lastname']); ?></td>
+                              <td><?php echo htmlspecialchars($value['birthday']); ?></td>
                               <td><?php echo $policy_status['array'][$value['status_id']]; ?></td>
-                              <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
+                              <td><?php echo htmlspecialchars($value['agent_firstname']." ".$value['agent_lastname']); ?></td>
                               <td><?php echo anchor("emergency_assistance/view_policy/" . $value['policy'], "Open"); ?></td>
                            </tr>
                            <?php endforeach; ?>
@@ -318,16 +318,16 @@
                      <tbody>
                      <?php foreach ($cases as $key => $value): ?>
                         <tr class="row-link" alt="<?php echo $value['id']; ?>" title="Click to View/Edit">
-                           <td><?php echo $value['case_no']; ?></td>
-                           <td><?php echo $value['created']; ?></td>
-                           <td><?php echo $value['province']; ?></td>
-                           <td><?php echo $value['reason']; ?></td>
-                           <td><?php echo $value['policy_no']; ?></td>
-                           <td><?php echo $value['insured_name']; ?></td>
-                           <td><?php echo $value['dob']; ?></td>
-                           <td><?php echo $value['assign_to_email']; ?></td>
-                           <td><?php echo $value['manager_email']; ?></td>
-                           <td><?php echo $value['priority']; ?></td>
+                           <td><?php echo htmlspecialchars($value['case_no']); ?></td>
+                           <td><?php echo htmlspecialchars($value['created']); ?></td>
+                           <td><?php echo htmlspecialchars($value['province']); ?></td>
+                           <td><?php echo htmlspecialchars($value['reason']); ?></td>
+                           <td><?php echo htmlspecialchars($value['policy_no']); ?></td>
+                           <td><?php echo htmlspecialchars($value['insured_name']); ?></td>
+                           <td><?php echo htmlspecialchars($value['dob']); ?></td>
+                           <td><?php echo htmlspecialchars($value['assign_to_email']); ?></td>
+                           <td><?php echo htmlspecialchars($value['manager_email']); ?></td>
+                           <td><?php echo htmlspecialchars($value['priority']); ?></td>
                            <td><?php echo anchor("emergency_assistance/edit_case/".$value['id'], "Detail"); ?></td>
                            <td><?php echo date('Y-m-d h:i a', strtotime($value['last_update'])); ?></td>
                         </tr>

@@ -112,15 +112,15 @@
 										<td><?php echo form_checkbox("item_id", '', false, array("class" => "item_id", 'data-id' => $item['id'])); ?></td>
 										<td><?php echo $item['id']; ?></td>
 										<td><?php echo $item['claim_no']; ?></td>
-										<td><?php echo $item['claim_item_no']; ?></td>
-										<td><?php echo $item['invoice']; ?></td>
-										<td><?php echo $item['date_of_service']; ?></td>
-										<td><?php echo $item['coverage_code']; ?></td>
-										<!-- td><?php echo $item['diagnosis']; ?></td -->
+										<td><?php echo htmlspecialchars($item['claim_item_no']); ?></td>
+										<td><?php echo htmlspecialchars($item['invoice']); ?></td>
+										<td><?php echo htmlspecialchars($item['date_of_service']); ?></td>
+										<td><?php echo htmlspecialchars($item['coverage_code']); ?></td>
+										<!-- td><?php echo htmlspecialchars($item['diagnosis']); ?></td -->
 										<td><?php echo $item['amount_claimed']; ?></td>
 										<td><?php echo $item['amt_payable']; ?></td>
 										<td><?php echo $item['amt_deductible']; ?></td>
-										<td><?php echo $item['pay_to']; ?></td>
+										<td><?php echo htmlspecialchars($item['pay_to']); ?></td>
 									</tr>
 									<?php } ?>
 								</tbody>

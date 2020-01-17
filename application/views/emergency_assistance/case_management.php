@@ -126,14 +126,14 @@
 									<td><?php echo form_checkbox("case", $value['id'], FALSE, array('class'=>((($case_manager != $value['case_manager']) && (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN))) )?'own_by_other':''), ($value['status'] == 'C'?'disabled':'')=>'')); ?></td>
 									<td><?php echo $value['case_no']; ?></td>
 									<td><?php echo date('d/m/Y', strtotime($value['created'])); ?></td>
-									<td><?php echo $value['province']; ?></td>
-									<td><?php echo $value['reason']; ?></td>
-									<td><?php echo $value['policy_no']; ?></td>
-									<td><?php echo $value['insured_firstname'] . " " . $value['insured_lastname']; ?></td>
-									<td><?php echo ($value['dob']<>'N/A')?date('d/m/Y', strtotime($value['dob'])):'N/A'; ?></td>
-									<td><?php echo $value['initiator']; ?></td>
-									<td><?php echo $value['case_manager_name']; ?></td>
-									<td><?php echo $value['priority']; ?></td>
+									<td><?php echo htmlspecialchars($value['province']); ?></td>
+									<td><?php echo htmlspecialchars($value['reason']); ?></td>
+									<td><?php echo htmlspecialchars($value['policy_no']); ?></td>
+									<td><?php echo htmlspecialchars($value['insured_firstname'] . " " . $value['insured_lastname']); ?></td>
+									<td><?php echo htmlspecialchars(($value['dob']<>'N/A')?date('d/m/Y', strtotime($value['dob'])):'N/A'); ?></td>
+									<td><?php echo htmlspecialchars($value['initiator']); ?></td>
+									<td><?php echo htmlspecialchars($value['case_manager_name']); ?></td>
+									<td><?php echo htmlspecialchars($value['priority']); ?></td>
 									<td><?php echo @$case_status[$value['status']]; ?></td>
 									<td><?php echo date('Y-m-d h:i a', strtotime($value['last_update'])); ?></td>
 								</tr>
@@ -325,7 +325,7 @@
 																		)),
 																		date("F d, Y") 
 																);
-																echo str_replace($find, $replace, $doc ['description']);
+																echo htmlspecialchars(str_replace($find, $replace, $doc ['description']));
 																?>
 							</div>
 						</div>

@@ -1,4 +1,4 @@
-<duv >
+<div >
    <div class="page-title">
       <div class="title_left">
          <h3>Provider Batch Upload</h3>         
@@ -39,7 +39,7 @@
       </div>
    </div>
 
-</duv>
+</div>
 
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>

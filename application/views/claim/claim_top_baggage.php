@@ -610,36 +610,36 @@
 									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
 										<div class="col-sm-3">
 											<?php echo form_label('Invoice#:', 'invoice', array("class" => 'col-sm-12')); ?>
-											<?php echo $value ['invoice']; ?>
+											<?php echo htmlspecialchars($value['invoice']); ?>
 											<?php echo form_hidden("expenses_claimed[invoice][]", $value['invoice']); ?>
 											<?php echo form_hidden('expenses_claimed[id][]', $value['id']); ?>
 											<?php echo form_hidden('expenses_claimed[status][]', $value['status']); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Quantity:', 'provider_name', array("class" => 'col-sm-12')); ?>
-											<?php echo $value['provider_name']; ?>
+											<?php echo htmlspecialchars($value['provider_name']); ?>
 											<?php echo form_hidden("expenses_claimed[provider_name][]", $value ['provider_name']); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Owner of the Item:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
-											<?php echo $value['referencing_physician']; ?>
+											<?php echo htmlspecialchars($value['referencing_physician']); ?>
 											<?php echo form_hidden("expenses_claimed[referencing_physician][]", $value ['referencing_physician']); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
-											<?php echo $value['coverage_code']; ?>
+											<?php echo htmlspecialchars($value['coverage_code']); ?>
 											<?php echo form_hidden("expenses_claimed[coverage_code][]", $value['coverage_code']); ?>
 										</div>
 										<div class="clearfix"></div>
 
 										<!-- div class="col-sm-3">
 											<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
-											<?php echo $value['diagnosis']; ?>
+											<?php echo htmlspecialchars($value['diagnosis']); ?>
 											<?php echo form_hidden("expenses_claimed[diagnosis][]", $value ['diagnosis']); ?>
 										</div -->
 										<div class="col-sm-3">
 											<?php echo form_label('Description of Item Claimed:', 'service_description', array("class" => 'col-sm-12')); ?>
-											<?php echo $value['service_description']; ?>
+											<?php echo htmlspecialchars($value['service_description']); ?>
 											<?php echo form_hidden("expenses_claimed[service_description][]", $value ['service_description']); ?>
 										</div>
 										<div class="col-sm-3">
@@ -669,7 +669,7 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Payee:', 'payee', array("class" => 'col-sm-12')); ?>
-											<?php echo $value["pay_to"]; ?>
+											<?php echo htmlspecialchars($value["pay_to"]); ?>
 											<?php echo form_hidden("expenses_claimed[third_party_payee][]", $value ["third_party_payee"]); ?>
 											<?php echo form_hidden("expenses_claimed[pay_to][]", $value ["pay_to"]); ?>
 											<?php echo form_hidden("expenses_claimed[payee][]", $value ["payee"]); ?>
@@ -683,7 +683,7 @@
 
 										<!-- div class="col-sm-3">
 											<?php echo form_label('Comment:', 'comment', array("class" => 'col-sm-12')); ?>
-											<?php echo $value ['comment']; ?>
+											<?php echo htmlspecialchars($value ['comment']); ?>
 											<?php echo form_hidden("expenses_claimed[comment][]", $value ['comment']); ?>
 										</div -->
 									</div>
@@ -759,14 +759,14 @@
 												<option value="0">-- Select Payee --</option>
 											<?php if (1 == $value["third_party_payee"]) { ?>
 												<?php foreach ($bprovider_list as $val): ?>
-												<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value["payee"]) { echo "selected"; } ?>><?php echo $val['name'] . " : " . $val['address'] . " " . $val['city'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>
+												<option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $value["payee"]) { echo "selected"; } ?>><?php echo htmlspecialchars($val['name'] . " : " . $val['address'] . " " . $val['city'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']); ?></option>
 												<?php endforeach; ?>
 											<?php } else { ?>
 												<?php foreach ( $payees_list as $payee ) { ?>
 												<?php if ($payee['payment_type'] == 'cheque') { ?> 
-												<option value="<?php echo $payee['id']; ?>" <?php echo (($payee['id'] == $value['payee']) ? "Selected" : ""); ?>><?php echo $payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address'] . " " . $payee['city'] . ", " . $payee['province'] . " " . $payee['country'] . " " . $payee['postcode']; ?></option>
+												<option value="<?php echo $payee['id']; ?>" <?php echo (($payee['id'] == $value['payee']) ? "Selected" : ""); ?>><?php echo htmlspecialchars($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address'] . " " . $payee['city'] . ", " . $payee['province'] . " " . $payee['country'] . " " . $payee['postcode']); ?></option>
 												<?php } else { ?> 
-												<option value="<?php echo $payee['id']; ?>" <?php echo (($payee['id'] == $value['payee']) ? "Selected" : ""); ?>><?php echo $payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['bank'] . ", " . $payee['account_cheque']; ?></option>
+												<option value="<?php echo $payee['id']; ?>" <?php echo (($payee['id'] == $value['payee']) ? "Selected" : ""); ?>><?php echo htmlspecialchars($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['bank'] . ", " . $payee['account_cheque']); ?></option>
 												<?php } ?>
 												<?php } ?>
 											<?php } ?>
@@ -818,7 +818,7 @@
 									<div class="col-sm-12"><?php echo $value['created']; ?></div>
 								</div>
 								<div class="col-sm-10">
-									<div class="col-sm-12"><?php echo $value['notes'] ?></div>
+									<div class="col-sm-12"><?php echo htmlspecialchars($value['notes']); ?></div>
 									<div class="form-group col-sm-11 files">
 										<br />
 										<?php $files = $value ['docs'] ? explode(",", $value ['docs']) : array(); ?>
@@ -1133,9 +1133,9 @@
 					<option value="">--Select Payee--</option>
 					<?php foreach ( $payees_list as $payee ) { ?>
 					<?php if ($payee['payment_type'] == 'cheque') { ?> 
-					<option value="<?php echo $payee['id']; ?>"><?php echo $payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address'] . " " . $payee['city'] . ", " . $payee['province'] . " " . $payee['country'] . " " . $payee['postcode']; ?></option>
+					<option value="<?php echo $payee['id']; ?>"><?php echo htmlspecialchars($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address'] . " " . $payee['city'] . ", " . $payee['province'] . " " . $payee['country'] . " " . $payee['postcode']); ?></option>
 					<?php } else { ?> 
-					<option value="<?php echo $payee['id']; ?>"><?php echo $payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['bank'] . ", " . $payee['account_cheque']; ?></option>
+					<option value="<?php echo $payee['id']; ?>"><?php echo htmlspecialchars($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['bank'] . ", " . $payee['account_cheque']); ?></option>
 					<?php } ?>
 					<?php } ?>
 				</select>
@@ -1231,11 +1231,11 @@
 			<?php  $claim_total += $value ['amount_claimed']; ?>
 			<?php  $payable += $value ['amt_payable']; ?>
 			<tr>
-				<td><?php echo $value['service_description'] ?></td>
+				<td><?php echo htmlspecialchars($value['service_description']); ?></td>
 				<td><?php echo $value['date_of_service'] ?></td>
 				<td><?php echo $value['amount_claimed'] ?></td>
 				<td>$<?php echo $value['amt_payable'] ?></td>
-				<td><?php echo $value['comment'] ?></td>
+				<td><?php echo htmlspecialchars($value['comment']); ?></td>
 			</tr>
 			<?php endforeach; ?>
 			<?php else : ?>
@@ -1289,16 +1289,16 @@ function get_policy() {
 var bpayee_html = "<option value=''>--Select Payee--</option>";
 <?php if (isset($bprovider_list) && is_array($bprovider_list)) { ?>
 	<?php foreach ($bprovider_list as $val) {?>
-	bpayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo "cheque : " . $val['payeename'] . " : " . $val['address'] . " " . $val['city'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>"
+	bpayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo htmlspecialchars("cheque : " . $val['payeename'] . " : " . $val['address'] . " " . $val['city'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']); ?></option>"
 	<?php } ?>
 <?php } ?>
 var epayee_html = "<option value=''>--Select Payee--</option>";
 <?php if (isset($payees_list) && is_array($payees_list)) { ?>
 	<?php foreach ($payees_list as $val) {?>
 		<?php if ($val['payment_type'] == 'cheque') { ?>
-		epayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo $val['payment_type'] . " : " . $val['payee_name'] . " : " . $val['address'] . " " . $val['city'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']; ?></option>"
+		epayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo htmlspecialchars($val['payment_type'] . " : " . $val['payee_name'] . " : " . $val['address'] . " " . $val['city'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']); ?></option>"
 		<?php } else { ?>
-		epayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo $val['payment_type'] . " : " . $val['payee_name'] . " : " . $val['bank'] . ", " . $val['account_cheque']; ?></option>"
+		epayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo htmlspecialchars($val['payment_type'] . " : " . $val['payee_name'] . " : " . $val['bank'] . ", " . $val['account_cheque']); ?></option>"
 		<?php } ?>
 	<?php } ?>
 <?php } ?>
@@ -1541,7 +1541,6 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
       .replace("{insured_lastname}", $("input[name=insured_last_name]").val())
       .replace("{policy_no}", $("input[name=policy_no]").val())
       .replace("{case_no}", $("input[name=case_no]").val())
-      .replace("{policy_coverage_info}", "{policy_coverage_info}")
       .replace("{casemanager_name}", '<?php echo $this->ion_auth->user()->row()->first_name ?>')
       .replace("{claimexaminer_name}", '<?php echo $this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name; ?>')
       .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')

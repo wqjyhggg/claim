@@ -28,7 +28,7 @@
                <div class="form-group col-sm-3">
                   <?php 
                      echo form_label('Our Product:', 'product_short', array("class"=>'col-sm-12'));                  
-                     echo $products;
+                     echo htmlspecialchars($products);
                   ?>
                </div>
                <div class="form-group col-sm-3">
@@ -168,12 +168,12 @@
                </div>
                <div class="form-group col-sm-3">
                   <?php               
-                     echo $province;
+                     echo htmlspecialchars($province);
                   ?>
                </div>
                <div class="form-group col-sm-3">
                   <?php             
-                     echo $country;
+                     echo htmlspecialchars($country);
                   ?>
                </div>
             </div>
@@ -208,14 +208,14 @@
                      <tbody>
                         <?php foreach ($policies as $key => $value): ?>
                         <tr class="view-policy" data='<?php echo json_encode($value); ?>'>
-                           <td><?php echo $value['policy']; ?></td>
+                           <td><?php echo htmlspecialchars($value['policy']); ?></td>
                            <td><?php echo $value['plan_id']; ?></td>
-                           <td><?php echo $value['firstname']." ".$value['lastname']; ?></td>
+                           <td><?php echo htmlspecialchars($value['firstname']." ".$value['lastname']); ?></td>
                            <td><?php echo date("d/d/Y", strtotime($value['birthday'])); ?></td>
                            <td><?php echo $policy_status['array'][$value['status_id']]; ?></td>
                            <td><?php echo date("d/d/Y", strtotime($value['effective_date'])); ?></td>
                            <td>Which data goes here</td>
-                           <td><?php echo $value['agent_firstname']." ".$value['agent_lastname']; ?></td>
+                           <td><?php echo htmlspecialchars($value['agent_firstname']." ".$value['agent_lastname']); ?></td>
                            <td><?php echo anchor("emergency_assistance/view_policy", "Open"); ?></td>
                         </tr>
                         <?php endforeach; ?>
@@ -321,14 +321,14 @@
                            <tr class="row-link" alt="<?php echo $value['id']; ?>" title="Click to View/Edit">
                               <td><?php echo $value['case_no']; ?></td>
                               <td><?php echo $value['created']; ?></td>
-                              <td><?php echo $value['province']; ?></td>
-                              <td><?php echo $value['reason']; ?></td>
-                              <td><?php echo $value['policy_no']; ?></td>
-                              <td><?php echo $value['insured_name']; ?></td>
-                              <td><?php echo $value['dob']; ?></td>
-                              <td><?php echo $value['assign_to_name']; ?></td>
-                              <td><?php echo $value['case_manager_name']; ?></td>
-                              <td><?php echo $value['priority']; ?></td>
+                              <td><?php echo htmlspecialchars($value['province']); ?></td>
+                              <td><?php echo htmlspecialchars($value['reason']); ?></td>
+                              <td><?php echo htmlspecialchars($value['policy_no']); ?></td>
+                              <td><?php echo htmlspecialchars($value['insured_name']); ?></td>
+                              <td><?php echo htmlspecialchars($value['dob']); ?></td>
+                              <td><?php echo htmlspecialchars($value['assign_to_name']); ?></td>
+                              <td><?php echo htmlspecialchars($value['case_manager_name']); ?></td>
+                              <td><?php echo htmlspecialchars($value['priority']); ?></td>
                               <td><?php echo anchor("emergency_assistance/create_case/".$value['id'], "Clone"); ?></td>
                            </tr>
                         <?php endforeach; ?>

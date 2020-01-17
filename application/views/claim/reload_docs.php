@@ -46,7 +46,7 @@
       <div class="form-group col-sm-3">
          <?php
             echo form_label('Province:', 'province_email', array("class"=>'col-sm-12'));
-            echo $province2;
+            echo htmlspecialchars($province2);
             echo form_error("province_email");
          ?>
       </div>
@@ -58,7 +58,7 @@
          <?php foreach($docs as $doc): ?>
             <div class="select-doc col-sm-2" doc="<?php echo $doc['id'] ?>">
                <i class="fa fa-file-word-o large"></i>
-               <?php echo $doc['name'] ?>
+               <?php echo htmlspecialchars($doc['name']); ?>
             </div>
          <?php endforeach; ?>
       </div>
@@ -67,7 +67,7 @@
       <?php foreach($docs as $doc): ?>
          <div class="col-sm-12 doc-description doc-<?php echo $doc['id'] ?>" style="display:none">
             <div class="col-sm-12 doc_title">
-               <?php echo heading($doc['name']); ?>
+               <?php echo heading(htmlspecialchars($doc['name'])); ?>
             </div>
             <div class="col-sm-12 doc-desc">
                <?php
@@ -82,7 +82,7 @@
                      img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')),
                      date("F d, Y")
                      );
-                echo str_replace($find, $replace, $doc['description']);
+                echo htmlspecialchars(str_replace($find, $replace, $doc['description']));
                ?>
             </div>
          </div>

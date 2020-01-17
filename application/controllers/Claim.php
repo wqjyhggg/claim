@@ -442,8 +442,10 @@ class Claim extends CI_Controller {
 				$this->load->model('template_model');
 				$this->load->model('product_model');
 				$this->load->model('word_comments_model');
+				$this->load->model('html_model');
 				
 				// load dropdowns- countries, province, products data
+				$this->data['html_model'] = $this->html_model;
 				$this->data['country'] = $this->country_model->get_list(TRUE);
 				$this->data['country2'] = $this->country_model->get_list(FALSE);
 				$this->data['province'] = $this->province_model->get_list_by_country_short($this->input->post('country') ? $this->input->post('country') : 'CA');
@@ -833,8 +835,10 @@ class Claim extends CI_Controller {
 				$this->load->model('template_model');
 				$this->load->model('product_model');
 				$this->load->model('word_comments_model');
+				$this->load->model('html_model');
 	
 				// load dropdowns- countries, province, products data
+				$this->data['html_model'] = $this->html_model;
 				$this->data['country'] = $this->country_model->get_list(TRUE);
 				$this->data['country2'] = $this->country_model->get_list(FALSE);
 				$this->data['province'] = $this->province_model->get_list_by_country_short($this->input->post('country') ? $this->input->post('country') : 'CA');
@@ -949,6 +953,7 @@ class Claim extends CI_Controller {
 			$this->load->model('word_comments_model');
 			$this->load->model('reasons_model');
 			$this->load->model('provider_model');
+			$this->load->model('html_model');
 
 			$claim = $this->claim_model->get_by_id($id);
 			if (empty($claim)) {
@@ -974,6 +979,7 @@ class Claim extends CI_Controller {
 			$this->data['item_payee_addr1'] = '';
 			$this->data['item_payee_addr2'] = '';
 			$this->data['item_payee_postcode'] = '';
+			$this->data['html_model'] = $this->html_model;
 	
 			// validate form input
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
@@ -1338,9 +1344,11 @@ class Claim extends CI_Controller {
 			$this->load->model('intakeform_model');
 			$this->load->model('word_comments_model');
 			$this->load->model('provider_model');
+			$this->load->model('html_model');
 
 			// get claim details
 			$this->data['claim_details'] = $this->claim_model->get_by_id($id);
+			$this->data['html_model'] = $this->html_model;
 			if (!empty($this->data['claim_details']['exinfo'])) {
 				$this->data['exinfo'] = json_decode($this->data['claim_details']['exinfo'], true);
 			}
@@ -2381,6 +2389,8 @@ class Claim extends CI_Controller {
 		$this->data['claim_details'] = $this->common_model->select($record = "first", $typecast = "array", $table = "claim", $fields = "`claim`.policy_info, status", $conditions = array(
 				'claim.id' => $claim_id 
 		));
+		$this->load->model('html_model');
+		$this->data['html_model'] = $this->html_model;
 		
 		$data = array(
 				'claim_items' => $this->parser->parse("claim/claim_items", $this->data, TRUE),

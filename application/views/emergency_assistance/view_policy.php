@@ -23,7 +23,7 @@
 				</div>
 				<div class="x_content">
 					<div class="form-group col-sm-3">
-						<label><span>Policy No: </span><span class="policy"><?php echo (isset($policy['policy']) ? $policy['policy'] : ''); ?></span></label>
+						<label><span>Policy No: </span><span class="policy"><?php echo (isset($policy['policy']) ? htmlspecialchars($policy['policy']) : ''); ?></span></label>
 					</div>
 					<div class="form-group col-sm-3">
 						<label style="text-transform: capitalize;"><span>By Agent: </span><span class="agent_firstname"><?php echo (isset($policy['agent_firstname']) ? $policy['agent_firstname'] : ''); ?></span> <span class="agent_lastname"><?php echo (isset($policy['agent_lastname']) ? $policy['agent_lastname'] : ''); ?></span></label>
@@ -138,7 +138,7 @@
 					<?php } ?>
 					<div class="clearfix"></div>
 					<div class="form-group col-sm-12">
-						<label style="text-transform: capitalize;"><span>Notes: </span></label> <?php echo isset($policy['note']) ? $policy['note'] : ''; ?>
+						<label style="text-transform: capitalize;"><span>Notes: </span></label> <?php echo isset($policy['note']) ? htmlspecialchars($policy['note']) : ''; ?>
 					</div>
 				</div>
 				<br>
@@ -166,11 +166,11 @@
                               <tr class="view-policies" data='<?php echo json_encode($value); ?>'>
                                  <td><?php echo anchor("emergency_assistance/edit_case/".$value['id'], $value['case_no']); ?></td>
                                  <td><?php echo substr($value['created'], 0, 10); ?></td>
-                                 <td><?php echo $value['reason']; ?></td>
-                                 <td><?php echo $value['insured_firstname'] . " " . $value['insured_lastname']; ?></td>
-                                 <td><?php echo $value['assign_to_email']; ?></td>
-                                 <td><?php echo $value['case_manager_email']; ?></td>
-                                 <td><?php echo $value['priority']; ?></td>
+                                 <td><?php echo htmlspecialchars($value['reason']); ?></td>
+                                 <td><?php echo htmlspecialchars($value['insured_firstname'] . " " . $value['insured_lastname']); ?></td>
+                                 <td><?php echo htmlspecialchars($value['assign_to_email']); ?></td>
+                                 <td><?php echo htmlspecialchars($value['case_manager_email']); ?></td>
+                                 <td><?php echo htmlspecialchars($value['priority']); ?></td>
                                  <td><?php echo ($value['status'] == 'A') ? "Active" : "Inactive"; ?></td>
                                  <td><?php echo substr($value['last_update'], 0, 10); ?></td>
                               </tr>
@@ -203,7 +203,7 @@
                               <tr class="view-policies" data='<?php echo json_encode($value); ?>'>
                                  <td><?php echo anchor("claim/claim_detail/".$value['id'], $value['claim_no']); ?></td>
                                  <td><?php echo substr($value['created'], 0, 10); ?></td>
-                                 <td><?php echo $value['insured_first_name'] . " " . $value['insured_last_name']; ?></td>
+                                 <td><?php echo htmlspecialchars($value['insured_first_name'] . " " . $value['insured_last_name']); ?></td>
                                  <td><?php echo $value['assign_to_email']; ?></td>
                                  <td><?php echo $value['status']; ?></td>
                                  <td><?php echo substr($value['last_update'], 0, 10); ?></td>
@@ -264,16 +264,16 @@
 							</div>
 							<div class="row">
 								<div class="form-group col-sm-3">
-									<label><span>Student ID : </span></label> <span class="student_id"><?php echo (isset($policy['student_id']) ? $policy['student_id'] : ''); ?></span>
+									<label><span>Student ID : </span></label> <span class="student_id"><?php echo (isset($policy['student_id']) ? htmlspecialchars($policy['student_id']) : ''); ?></span>
 								</div>
 								<div class="form-group col-sm-3">
-									<label><span>School Name : </span></label> <span class="institution"><?php echo (isset($policy['institution']) ? $policy['institution'] : ''); ?></span>
+									<label><span>School Name : </span></label> <span class="institution"><?php echo (isset($policy['institution']) ? htmlspecialchars($policy['institution']) : ''); ?></span>
 								</div>
 								<div class="form-group col-sm-3">
-									<label><span>School Address : </span></label> <span class="institution_addr"><?php echo (isset($policy['institution_addr']) ? $policy['institution_addr'] : ''); ?></span>
+									<label><span>School Address : </span></label> <span class="institution_addr"><?php echo (isset($policy['institution_addr']) ? htmlspecialchars($policy['institution_addr']) : ''); ?></span>
 								</div>
 								<div class="form-group col-sm-3">
-									<label><span>School Phone : </span></label> <span class="institution_phone"><?php echo (isset($policy['institution_phone']) ? $policy['institution_phone'] : ''); ?></span>
+									<label><span>School Phone : </span></label> <span class="institution_phone"><?php echo (isset($policy['institution_phone']) ? htmlspecialchars($policy['institution_phone']) : ''); ?></span>
 								</div>
 							</div>
 							<?php if (isset($policy['product_short']) && (($policy['product_short'] == 'OPL') || ($policy['product_short'] == 'JFR'))) { ?>
@@ -302,8 +302,8 @@
 							<div class="row">
 								<div class="form-group col-sm-3">
 									<label><span>Name : </span></label>
-									<span class="firstname"><?php echo (isset($policy['firstname']) ? $policy['firstname'] : ''); ?></span>
-									<span class="lastname"><?php echo (isset($policy['lastname']) ? $policy['lastname'] : ''); ?></span>
+									<span class="firstname"><?php echo (isset($policy['firstname']) ? htmlspecialchars($policy['firstname']) : ''); ?></span>
+									<span class="lastname"><?php echo (isset($policy['lastname']) ? htmlspecialchars($policy['lastname']) : ''); ?></span>
 								</div>
 								<div class="form-group col-sm-3">
 									<label><span>Birth Date : </span></label> <span class="birthday"><?php echo (isset($policy['birthday']) ? $policy['birthday'] : ''); ?></span>
@@ -325,8 +325,8 @@
 							<div class="row">
 								<div class="form-group col-sm-3">
 									<label><span>Name : </span></label>
-									<span class="firstname"><?php echo $val['firstname']; ?></span>
-									<span class="lastname"><?php echo $val['lastname']; ?></span>
+									<span class="firstname"><?php echo htmlspecialchars($val['firstname']); ?></span>
+									<span class="lastname"><?php echo htmlspecialchars($val['lastname']); ?></span>
 								</div>
 								<div class="form-group col-sm-3">
 									<label><span>Birth Date : </span></label> <span class="birthday"><?php echo $val['birthday']; ?></span>
@@ -355,35 +355,35 @@
 							<legend>Address</legend>
 							<div class="row">
 								<div class="form-group col-sm-3">
-									<label><span>Street# : </span></label> <span class="street_number"><?php echo (isset($policy['street_number']) ? $policy['street_number'] : ''); ?></span>
+									<label><span>Street# : </span></label> <span class="street_number"><?php echo (isset($policy['street_number']) ? htmlspecialchars($policy['street_number']) : ''); ?></span>
 								</div>
 								<div class="form-group col-sm-3">
-									<label><span>Street Name : </span></label> <span class="street_name"><?php echo (isset($policy['street_name']) ? $policy['street_name'] : ''); ?></span>
+									<label><span>Street Name : </span></label> <span class="street_name"><?php echo (isset($policy['street_name']) ? htmlspecialchars($policy['street_name']) : ''); ?></span>
 								</div>
 								<div class="form-group col-sm-3">
-									<label><span>Suite# : </span></label> <span class="suite_number"><?php echo (isset($policy['suite_number']) ? $policy['suite_number'] : ''); ?></span>
+									<label><span>Suite# : </span></label> <span class="suite_number"><?php echo (isset($policy['suite_number']) ? htmlspecialchars($policy['suite_number']) : ''); ?></span>
 								</div>
 								<div class="form-group col-sm-3">
-									<label><span>City : </span></label> <span class="city"><?php echo (isset($policy['city']) ? $policy['city'] : ''); ?></span>
-								</div>
-							</div>
-							<div class="row">
-								<div class="form-group col-sm-3">
-									<label><span>Province : </span></label> <span class="province2"><?php echo (isset($policy['province2']) ? $policy['province2'] : ''); ?></span>
-								</div>
-								<div class="form-group col-sm-3">
-									<label><span>Country : </span></label> <span class="country2"><?php echo (isset($policy['country2']) ? $policy['country2'] : ''); ?></span>
-								</div>
-								<div class="form-group col-sm-3">
-									<label><span>Postcode : </span></label> <span class="postcode"><?php echo (isset($policy['postcode']) ? $policy['postcode'] : ''); ?></span>
+									<label><span>City : </span></label> <span class="city"><?php echo (isset($policy['city']) ? htmlspecialchars($policy['city']) : ''); ?></span>
 								</div>
 							</div>
 							<div class="row">
 								<div class="form-group col-sm-3">
-									<label><span>Phone1 : </span></label> <span class="phone1"><?php echo (isset($policy['phone1']) ? $policy['phone1'] : ''); ?></span>
+									<label><span>Province : </span></label> <span class="province2"><?php echo (isset($policy['province2']) ? htmlspecialchars($policy['province2']) : ''); ?></span>
 								</div>
 								<div class="form-group col-sm-3">
-									<label><span>Phone2 : </span></label> <span class="phone2"><?php echo (isset($policy['phone2']) ? $policy['phone2'] : ''); ?></span>
+									<label><span>Country : </span></label> <span class="country2"><?php echo (isset($policy['country2']) ? htmlspecialchars($policy['country2']) : ''); ?></span>
+								</div>
+								<div class="form-group col-sm-3">
+									<label><span>Postcode : </span></label> <span class="postcode"><?php echo (isset($policy['postcode']) ? htmlspecialchars($policy['postcode']) : ''); ?></span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="form-group col-sm-3">
+									<label><span>Phone1 : </span></label> <span class="phone1"><?php echo (isset($policy['phone1']) ? htmlspecialchars($policy['phone1']) : ''); ?></span>
+								</div>
+								<div class="form-group col-sm-3">
+									<label><span>Phone2 : </span></label> <span class="phone2"><?php echo (isset($policy['phone2']) ? htmlspecialchars($policy['phone2']) : ''); ?></span>
 								</div>
 							</div>
 						</fieldset>
@@ -396,13 +396,13 @@
 							<legend>Contact</legend>
 							<div class="row">
 								<div class="form-group col-sm-3">
-									<label><span>Email : </span></label> <span class="contact_email"><?php echo (isset($policy['contact_email']) ? $policy['contact_email'] : ''); ?></span>
+									<label><span>Email : </span></label> <span class="contact_email"><?php echo (isset($policy['contact_email']) ? htmlspecialchars($policy['contact_email']) : ''); ?></span>
 								</div>
 								<div class="form-group col-sm-3">
-									<label><span>Phone : </span></label> <span class="contact_phone"><?php echo (isset($policy['contact_phone']) ? $policy['contact_phone'] : ''); ?></span>
+									<label><span>Phone : </span></label> <span class="contact_phone"><?php echo (isset($policy['contact_phone']) ? htmlspecialchars($policy['contact_phone']) : ''); ?></span>
 								</div>
 								<div class="form-group col-sm-3">
-									<label><span>Residence : </span></label> <span class="residence"><?php echo (isset($policy['residence']) ? $policy['residence'] : ''); ?></span>
+									<label><span>Residence : </span></label> <span class="residence"><?php echo (isset($policy['residence']) ? htmlspecialchars($policy['residence']) : ''); ?></span>
 								</div>
 							</div>
 						</fieldset>

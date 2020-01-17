@@ -75,15 +75,15 @@
 						<tbody>
 							<?php foreach($records as $value): ?>
 							<tr>
-								<td><?php echo $value['name']; ?></td>
-								<td><?php echo $value['services']; ?></td>
-								<td><?php echo $value['address']; ?></td>
-								<td><?php echo $value['postcode']; ?></td>
-								<td><?php echo $value['discount']; ?></td>
-								<td><?php echo $value['contact_person']; ?></td>
-								<td><?php echo $value['phone_no']; ?></td>
-								<td><?php echo $value['email']; ?></td>
-								<td><?php echo $value['ppo_codes']; ?></td>
+								<td><?php echo htmlspecialchars($value['name']); ?></td>
+								<td><?php echo htmlspecialchars($value['services']); ?></td>
+								<td><?php echo htmlspecialchars($value['address']); ?></td>
+								<td><?php echo htmlspecialchars($value['postcode']); ?></td>
+								<td><?php echo htmlspecialchars($value['discount']); ?></td>
+								<td><?php echo htmlspecialchars($value['contact_person']); ?></td>
+								<td><?php echo htmlspecialchars($value['phone_no']); ?></td>
+								<td><?php echo htmlspecialchars($value['email']); ?></td>
+								<td><?php echo htmlspecialchars($value['ppo_codes']); ?></td>
 							</tr>
 							<?php endforeach;?>
 						</tbody>

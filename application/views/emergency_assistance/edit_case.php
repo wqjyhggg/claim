@@ -35,9 +35,9 @@
 							<?php echo form_input("policy_no", $case_details["policy_no"], array("class"=>"form-control", 'placeholder'=>'Policy Number')); ?>
 							<?php echo form_error("policy_no"); ?>
 							<?php echo form_hidden('policy_info', $case_details['policy_info']); ?>
-							<input type='hidden' name='product_short' value='<?php echo $case_details["product_short"]; ?>'>
-							<input type='hidden' name='totaldays' value='<?php echo $case_details["totaldays"]; ?>'>
-							<input type='hidden' name='agent_id' value='<?php echo $case_details["agent_id"]; ?>'>
+							<?php echo form_hidden('product_short', $case_details['product_short']); ?>
+							<?php echo form_hidden('totaldays', $case_details['totaldays']); ?>
+							<?php echo form_hidden('agent_id', $case_details['agent_id']); ?>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Insured Name:', 'insured_name', array("class"=>'col-sm-12')); ?>
@@ -278,12 +278,12 @@
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Country:', 'doctor_country', array("class"=>'col-sm-12')); ?>
-							<?php echo $doctor_country; ?>
+							<?php echo htmlspecialchars($doctor_country); ?>
 							<?php echo form_error("doctor_country"); ?>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Province:', 'doctor_province', array("class"=>'col-sm-12')); ?>
-							<?php echo $doctor_province; ?>
+							<?php echo htmlspecialchars($doctor_province); ?>
 							<?php echo form_error("doctor_province"); ?>
 						</div>
 						<div class="form-group col-sm-4">
@@ -346,12 +346,12 @@
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Province:', 'outpatient_province', array("class"=>'col-sm-12')); ?>
-							<?php echo $outpatient_province; ?>
+							<?php echo htmlspecialchars($outpatient_province); ?>
 							<?php echo form_error("outpatient_province"); ?>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Country:', 'outpatient_country', array("class"=>'col-sm-12')); ?>
-							<?php echo $outpatient_country; ?>
+							<?php echo htmlspecialchars($outpatient_country); ?>
 							<?php echo form_error("outpatient_country"); ?>
 						</div>
 						<div class="form-group col-sm-4">
@@ -637,7 +637,7 @@
 								$find = array('{otc_logo}', '{otc_logo_big}', '{current_date}');
 								// $replace = array(img(array('src'=>'assets/img/otc.jpg','width'=>'130')), img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')), date("F d, Y"));
 								$replace = array(img(array('src' => 'assets/img/otc.jpg', 'width' => '130')), img(array('src' => 'assets/img/otc_big.jpg', 'width' => '262')), date("F d, Y"));
-								echo str_replace($find, $replace, $doc['description']);
+								echo htmlspecialchars(str_replace($find, $replace, $doc['description']));
 								?>
 							</div>
 						</div>

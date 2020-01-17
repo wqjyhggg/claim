@@ -59,40 +59,40 @@
 						<div class="clearfix"></div>
 	
 						<div class="form-group col-sm-3">
-							<label>First Name : </label><?php echo $policy['firstname']; ?>
+							<label>First Name : </label><?php echo htmlspecialchars($policy['firstname']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Last Name : </label><?php echo $policy['lastname']; ?>
+							<label>Last Name : </label><?php echo htmlspecialchars($policy['lastname']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Gender : </label><?php echo $policy['gender']; ?>
+							<label>Gender : </label><?php echo htmlspecialchars($policy['gender']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Birthday : </label><?php echo $policy['birthday']; ?>
+							<label>Birthday : </label><?php echo htmlspecialchars($policy['birthday']); ?>
 						</div>
 						<div class="clearfix"></div>
 
 						<div class="form-group col-sm-3">
-							<label>Apply Date : </label><?php echo $claim['apply_date']; ?>
+							<label>Apply Date : </label><?php echo htmlspecialchars($claim['apply_date']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Arrival Date : </label><?php echo $claim['arrival_date_canada']; ?>
+							<label>Arrival Date : </label><?php echo htmlspecialchars($claim['arrival_date_canada']); ?>
 						</div>
 						<div class="clearfix"></div>
 	
 						<?php if (!empty($policy['family'])) { ?>
 						<?php 	foreach($policy['family'] as $member ) { ?>
 						<div class="form-group col-sm-3">
-							<label>First Name : </label><?php echo $member['firstname']; ?>
+							<label>First Name : </label><?php echo htmlspecialchars($member['firstname']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Last Name : </label><?php echo $member['lastname']; ?>
+							<label>Last Name : </label><?php echo htmlspecialchars($member['lastname']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Gender : </label><?php echo $member['gender']; ?>
+							<label>Gender : </label><?php echo htmlspecialchars($member['gender']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Birthday : </label><?php echo $member['birthday']; ?>
+							<label>Birthday : </label><?php echo htmlspecialchars($member['birthday']); ?>
 						</div>
 						<div class="clearfix"></div>
 						<?php 	} ?>
@@ -111,10 +111,10 @@
 						<div class="clearfix"></div>
 	
 						<div class="form-group col-sm-3">
-							<label>First Name : </label><?php echo $claim['insured_first_name']; ?>
+							<label>First Name : </label><?php echo htmlspecialchars($claim['insured_first_name']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Last Name : </label><?php echo $claim['insured_last_name']; ?>
+							<label>Last Name : </label><?php echo htmlspecialchars($claim['insured_last_name']); ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<label>Gender : </label><?php echo $claim['gender']; ?>
@@ -127,7 +127,7 @@
 							<label>Status : </label><?php echo $claim['status']; ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Diagnosis : </label><?php echo $claim['diagnosis']; ?>
+							<label>Diagnosis : </label><?php echo htmlspecialchars($claim['diagnosis']); ?>
 							<?php echo form_hidden("policy_info", $claim['policy_info'] ); ?>
 						</div>
 						<div class="form-group col-sm-6">
@@ -171,21 +171,21 @@
 									$total_payable += (float)$value['amt_payable'];
 									$total_this_payable += (float)$value['amt_payable'];
 								?>
-									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_payee_name="<?php echo $value['item_payee_name']; ?>" item_payee_addr1="<?php echo $value['item_payee_addr1']; ?>" item_payee_addr2="<?php echo $value['item_payee_addr2']; ?>" item_payee_postcode="<?php echo $value['item_payee_postcode']; ?>" item_provider_name="<?php echo $value['item_provider_name']; ?>" item_provider_addr1="<?php echo $value['item_provider_addr1']; ?>" item_provider_addr2="<?php echo $value['item_provider_addr2']; ?>" item_provider_postcode="<?php echo $value['item_provider_postcode']; ?>" item_coverage_code="<?php echo isset($expenses_list[$value['coverage_code']]) ? nl2br($expenses_list[$value['coverage_code']]) : nl2br($value['coverage_code']); ?>" item_service_description="<?php echo nl2br($value['service_description']) ?>" item_date_of_service="<?php echo $value['date_of_service'] ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable="<?php echo $value['amt_payable'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to="<?php echo nl2br($value['pay_to']) ?>" item_comment="<?php echo nl2br(($value['reason']!='Other') ? $value['reason'] : $value['reason_other']) ?>">
+									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_payee_name="<?php echo $html_model->escapeQuote2($value['item_payee_name']); ?>" item_payee_addr1="<?php echo $html_model->escapeQuote2($value['item_payee_addr1']); ?>" item_payee_addr2="<?php echo $html_model->escapeQuote2($value['item_payee_addr2']); ?>" item_payee_postcode="<?php echo $html_model->escapeQuote2($value['item_payee_postcode']); ?>" item_provider_name="<?php echo $html_model->escapeQuote2($value['item_provider_name']); ?>" item_provider_addr1="<?php echo $html_model->escapeQuote2($value['item_provider_addr1']); ?>" item_provider_addr2="<?php echo $html_model->escapeQuote2($value['item_provider_addr2']); ?>" item_provider_postcode="<?php echo $html_model->escapeQuote2($value['item_provider_postcode']); ?>" item_coverage_code="<?php echo isset($expenses_list[$value['coverage_code']]) ? nl2br($expenses_list[$value['coverage_code']]) : nl2br($value['coverage_code']); ?>" item_service_description="<?php echo $html_model->escapeQuote2(nl2br($value['service_description'])); ?>" item_date_of_service="<?php echo $html_model->escapeQuote2($value['date_of_service']); ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable="<?php echo $value['amt_payable'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_pay_to="<?php echo $html_model->escapeQuote2($value['pay_to']); ?>" item_comment="<?php echo $html_model->escapeQuote2(($value['reason']!='Other') ? $value['reason'] : $value['reason_other']) ?>">
 										<td><?php echo form_checkbox("items", $value['id'], FALSE); ?></td>
-										<td><?php echo $value['invoice']; ?></td>
-										<td><?php echo $value['service_description']; ?></td>
-										<td><?php echo $value['date_of_service']; ?></td>
-										<td><?php $payArr = explode(":", $value['pay_to']); echo empty($payArr[1]) ? '' : $payArr[1]; ?></td>
+										<td><?php echo htmlspecialchars($value['invoice']); ?></td>
+										<td><?php echo htmlspecialchars($value['service_description']); ?></td>
+										<td><?php echo htmlspecialchars($value['date_of_service']); ?></td>
+										<td><?php $payArr = explode(":", $value['pay_to']); echo empty($payArr[1]) ? '' : htmlspecialchars($payArr[1]); ?></td>
 										<td><?php echo isset($expenses_list[$value['coverage_code']]) ? $expenses_list[$value['coverage_code']] : $value['coverage_code']; ?></td>
-										<!-- td><?php echo $value['diagnosis']; ?></td -->
+										<!-- td><?php echo htmlspecialchars($value['diagnosis']); ?></td -->
 										<td><?php echo $value['amount_billed']?$value['amount_billed']:0; ?></td>
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
 										<td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
 										<td><?php echo $value['status'] ?></td>
-										<td><?php echo $value['cheque'] ?></td>
-										<!-- td><?php echo $value['comment'] ?></td -->
+										<td><?php echo htmlspecialchars($value['cheque']); ?></td>
+										<!-- td><?php echo htmlspecialchars($value['comment']); ?></td -->
 									</tr>
 									<tr class='claim_items_form trinputform' id='item_form_<?php echo $value['id']; ?>'>
 										<td colspan="12">
@@ -199,15 +199,15 @@
 											?>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Provider Name : </label>
-													<div class='col-sm-12'><?php echo $value['provider_name']; ?>&nbsp;</div>
+													<div class='col-sm-12'><?php echo htmlspecialchars($value['provider_name']); ?>&nbsp;</div>
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Service Description : </label>
-													<div class='col-sm-12'><?php echo $value['service_description']; ?>&nbsp;</div>
+													<div class='col-sm-12'><?php echo htmlspecialchars($value['service_description']); ?>&nbsp;</div>
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Date of Service : </label>
-													<div class='col-sm-12'><?php echo $value['date_of_service']; ?>&nbsp;</div>
+													<div class='col-sm-12'><?php echo htmlspecialchars($value['date_of_service']); ?>&nbsp;</div>
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Created: </label>
@@ -235,7 +235,7 @@
 												
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Pay To : </label>
-													<div class='col-sm-12'><?php echo $value['pay_to']; ?>&nbsp;</div>
+													<div class='col-sm-12'><?php echo htmlspecialchars($value['pay_to']); ?>&nbsp;</div>
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Last Update : </label>
@@ -265,7 +265,7 @@
 												
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Recovery Name : </label>
-													<div class='col-sm-12'><input type='text' name='recovery_name' value="<?php echo $value['recovery_name']; ?>"></div>
+													<div class='col-sm-12'><input type='text' name='recovery_name' value="<?php echo htmlspecialchars($value['recovery_name']); ?>"></div>
 												</div>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Recovery Amount : </label>
@@ -277,19 +277,19 @@
 														<select name="reason">
 															<option value=""> -- Select Reason -- </option>
 															<?php foreach ($reasons as $rc):?>
-															<option value="<?php echo $rc; ?>" <?php if ($rc == $value['reason']) { echo "selected"; } ?>><?php echo $rc; ?></option>
+															<option value="<?php echo $rc; ?>" <?php if ($rc == $value['reason']) { echo "selected"; } ?>><?php echo htmlspecialchars($rc); ?></option>
 															<?php endforeach; ?>
 														</select>
 													</div>
 												</div>
 												<div class="form-group col-sm-3" style="display:none;">
 													<label class="col-sm-12">Explain Reason : </label>
-													<div class='col-sm-12'><input type='text' name='reason_other' value="<?php echo $value['reason_other']; ?>"></div>
+													<div class='col-sm-12'><input type='text' name='reason_other' value="<?php echo htmlspecialchars($value['reason_other']); ?>"></div>
 												</div>
 												<div class="clearfix"></div>
 												<!-- div class="form-group col-sm-3">
 													<label class="col-sm-12">Explanation : </label>
-													<div class='col-sm-12'><input type='text' name='comment' value="<?php echo $value['comment']; ?>"></div>
+													<div class='col-sm-12'><input type='text' name='comment' value="<?php echo htmlspecialchars($value['comment']); ?>"></div>
 												</div -->
 												<?php if (($value['status'] != Expenses_model::EXPENSE_STATUS_Paid) && (!$is_insurer)) { ?>
 												<div class="form-group col-sm-3 pull-right">
@@ -319,7 +319,7 @@
 						if ($intnotes && is_array($intnotes) && (sizeof($intnotes) > 0)) {
 							foreach ($intnotes as $r) {
 								echo "<div class='col-sm-12' style=\"background: #eeeeee;\">" . $r['dt'] . " - " . $r['user'] . "</div>\n";
-								echo "<div class='col-sm-12'>" . $r['notes'] . "</div>\n";
+								echo "<div class='col-sm-12'>" . htmlspecialchars($r['notes']) . "</div>\n";
 							}
 						}
 						?>
@@ -460,17 +460,17 @@
 									<tr class="row-link">
 										<td><?php echo $i++; ?></td>
 										<td><?php echo $value['claim_no']; ?></td>
-										<td><?php echo $value['invoice']; ?></td>
-										<td><?php echo $value['service_description']; ?></td>
-										<td><?php echo $value['date_of_service']; ?></td>
-										<td><?php echo isset($expenses_list[$value['coverage_code']]) ? $expenses_list[$value['coverage_code']] : $value['coverage_code']; ?></td>
-										<!-- td><?php echo $value['diagnosis']; ?></td -->
+										<td><?php echo htmlspecialchars($value['invoice']); ?></td>
+										<td><?php echo htmlspecialchars($value['service_description']); ?></td>
+										<td><?php echo htmlspecialchars($value['date_of_service']); ?></td>
+										<td><?php echo isset($expenses_list[$value['coverage_code']]) ? $expenses_list[$value['coverage_code']] : htmlspecialchars($value['coverage_code']); ?></td>
+										<!-- td><?php echo htmlspecialchars($value['diagnosis']); ?></td -->
 										<td><?php echo $value['amount_claimed']?$value['amount_claimed']:0; ?></td>
 										<td><?php echo $value['amt_payable']?$value['amt_payable']:0; ?></td>
 										<td><?php echo $value['amt_deductible']?$value['amt_deductible']:0; ?></td>
 										<!-- td><?php echo $value['amt_insured']?$value['amt_insured']:0; ?></td -->
 										<td><?php echo $value['amt_received']?$value['amt_received']:0; ?></td>
-										<!-- td><?php echo $value['comment']; ?></td -->
+										<!-- td><?php echo htmlspecialchars($value['comment']); ?></td -->
 									</tr>
 									<?php } ?>
 								</tbody>
@@ -591,11 +591,11 @@
 											$policy['policy'],
 											$claim['claim_no'],
 											$claim['case_no'],
-											$claim['insured_first_name'] . ' ' . $claim['insured_last_name'],
+											htmlspecialchars($claim['insured_first_name'] . ' ' . $claim['insured_last_name']),
 											$policy['effective_date'] . ' to ' . $policy['expiry_date'],
 											$claim['assign_to_name'],
 											$this->ion_auth->user()->row()->email,
-											$this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name,
+											htmlspecialchars($this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name),
 											$product_full_name,
 									);
 									echo str_replace($find, $replace, $doc['description']);
@@ -687,14 +687,14 @@
 	src="<?php echo base_url(); ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
 var old_status = '<?php echo !empty($claim_details["status"]) ? $claim_details["status"] : 0; ?>';
-var item_provider_name = '<?php echo str_replace("'", "\\'", $item_provider_name); ?>';
-var item_provider_addr1 = '<?php echo str_replace("'", "\\'", $item_provider_addr1); ?>';
-var item_provider_addr2 = '<?php echo str_replace("'", "\\'", $item_provider_addr2); ?>';
-var item_provider_postcode = '<?php echo str_replace("'", "\\'", $item_provider_postcode); ?>';
-var item_payee_name = '<?php echo str_replace("'", "\\'", $item_payee_name); ?>';
-var item_payee_addr1 = '<?php echo str_replace("'", "\\'", $item_payee_addr1); ?>';
-var item_payee_addr2 = '<?php echo str_replace("'", "\\'", $item_payee_addr2); ?>';
-var item_payee_postcode = '<?php echo str_replace("'", "\\'", $item_payee_postcode); ?>';
+var item_provider_name = '<?php echo $html_model->escapeQuote($item_provider_name); ?>';
+var item_provider_addr1 = '<?php echo $html_model->escapeQuote($item_provider_addr1); ?>';
+var item_provider_addr2 = '<?php echo $html_model->escapeQuote($item_provider_addr2); ?>';
+var item_provider_postcode = '<?php echo $html_model->escapeQuote($item_provider_postcode); ?>';
+var item_payee_name = '<?php echo $html_model->escapeQuote($item_payee_name); ?>';
+var item_payee_addr1 = '<?php echo $html_model->escapeQuote($item_payee_addr1); ?>';
+var item_payee_addr2 = '<?php echo $html_model->escapeQuote($item_payee_addr2); ?>';
+var item_payee_postcode = '<?php echo $html_model->escapeQuote($item_payee_postcode); ?>';
 
 $(document).ready(function() {
 	$("#print_template").on("hidden.bs.modal", function () {
@@ -1101,11 +1101,11 @@ $(document).ready(function() {
 		// get local data
 		if ($(this).is(":checked")) {
 			// fill all json values to address fields
-			$("input[name=email]").val("<?php echo $policy['contact_email']; ?>");
-			$("input[name=post_code_email]").val("<?php echo $policy['postcode']; ?>");
-			$("input[name=street_name_email]").val("<?php echo $policy['street_number'] . " " . $policy['street_name']; ?>");
-			$("input[name=city_email]").val("<?php echo $policy['city']; ?>");
-			$("select[name=province_email]").val("<?php echo $policy['province2']; ?>");
+			$("input[name=email]").val("<?php echo htmlspecialchars($policy['contact_email']); ?>");
+			$("input[name=post_code_email]").val("<?php echo htmlspecialchars($policy['postcode']); ?>");
+			$("input[name=street_name_email]").val("<?php echo htmlspecialchars($policy['street_number'] . " " . $policy['street_name']); ?>");
+			$("input[name=city_email]").val("<?php echo htmlspecialchars($policy['city']); ?>");
+			$("select[name=province_email]").val("<?php echo htmlspecialchars($policy['province2']); ?>");
 		} else {
 			$("input[name=post_code_email],input[name=street_name_email],input[name=city_email],select[name=province_email]").val("");
 		}

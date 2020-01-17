@@ -31,13 +31,13 @@
 								<?php foreach($providers as $key => $value ) : ?>
 								<tr>
 									<td><?php echo anchor('provider/edit/'.$value['id'], $value['id'], array('title'=>'Edit')); ?></td>
-									<td><?php echo $value['name']; ?></td>
-									<td><?php echo $value['city']; ?></td>
-									<td><?php echo $value['province']; ?></td>
-									<td><?php echo $value['country']; ?></td>
-									<td><?php echo $value['postcode']; ?></td>
-									<td><?php echo $value['status']; ?></td>
-									<td><?php echo $value['priority']; ?></td>
+									<td><?php echo htmlspecialchars($value['name']); ?></td>
+									<td><?php echo htmlspecialchars($value['city']); ?></td>
+									<td><?php echo htmlspecialchars($value['province']); ?></td>
+									<td><?php echo htmlspecialchars($value['country']); ?></td>
+									<td><?php echo htmlspecialchars($value['postcode']); ?></td>
+									<td><?php echo htmlspecialchars($value['status']); ?></td>
+									<td><?php echo htmlspecialchars($value['priority']); ?></td>
 								</tr>
 								<?php endforeach; ?>
 							</tbody>
