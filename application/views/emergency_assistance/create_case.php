@@ -852,10 +852,10 @@ $(document).ready(function() {
 
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
 
-               $("input[name=insured_firstname]").val(<?php if ($this->input->get('firstname')) { echo "'".htmlspecialchars($this->input->get('firstname'))."'"; } else { ?>(data.plan_list[0].firstname)<?php } ?>);
-               $("input[name=insured_lastname]").val(<?php if ($this->input->get('lastname')) { echo "'".htmlspecialchars($this->input->get('lastname'))."'"; } else { ?>(data.plan_list[0].lastname)<?php } ?>);
+               $("input[name=insured_firstname]").val(<?php if ($this->input->get('firstname')) { echo '"'.htmlspecialchars($this->input->get('firstname')).'"'; } else { ?>(data.plan_list[0].firstname)<?php } ?>);
+               $("input[name=insured_lastname]").val(<?php if ($this->input->get('lastname')) { echo '"'.htmlspecialchars($this->input->get('lastname')).'"'; } else { ?>(data.plan_list[0].lastname)<?php } ?>);
                $("textarea[name=insured_address]").val(data.plan_list[0].street_number+" "+data.plan_list[0].street_name);
-               $("input[name=dob]").val(<?php if ($this->input->get('birthday')) { echo "'".$this->input->get('birthday')."'"; } else { ?>(data.plan_list[0].birthday)<?php } ?>);  
+               $("input[name=dob]").val(<?php if ($this->input->get('birthday')) { echo '"'.$this->input->get('birthday').'"'; } else { ?>(data.plan_list[0].birthday)<?php } ?>);  
                if(data.plan_list[0].gender == 'M')
                    $("select[name=gender]").val('male');
                else
