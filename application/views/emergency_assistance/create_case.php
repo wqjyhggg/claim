@@ -852,7 +852,7 @@ $(document).ready(function() {
 
                $("input[name=policy_info]").val(JSON.stringify(data.plan_list));
 
-               $("input[name=insured_firstname]").val(<?php if ($this->input->get('firstname')) { echo '\"'.str_replace('"', '"',$this->input->get('firstname')).'"'; } else { ?>(data.plan_list[0].firstname)<?php } ?>);
+               $("input[name=insured_firstname]").val(<?php if ($this->input->get('firstname')) { echo '"'.str_replace('"', '\"',$this->input->get('firstname')).'"'; } else { ?>(data.plan_list[0].firstname)<?php } ?>);
                $("input[name=insured_lastname]").val(<?php if ($this->input->get('lastname')) { echo '"'.str_replace('"', '\"',$this->input->get('lastname')).'"'; } else { ?>(data.plan_list[0].lastname)<?php } ?>);
                $("textarea[name=insured_address]").val(data.plan_list[0].street_number+" "+data.plan_list[0].street_name);
                $("input[name=dob]").val(<?php if ($this->input->get('birthday')) { echo '"'.$this->input->get('birthday').'"'; } else { ?>(data.plan_list[0].birthday)<?php } ?>);  
