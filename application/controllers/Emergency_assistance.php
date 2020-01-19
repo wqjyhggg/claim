@@ -353,6 +353,10 @@ class Emergency_assistance extends CI_Controller {
 							if (!$this->users_model->verify_users_product($case_details['product_short'])) {
 								show_error("Sorry, you don't have permission to create this product's case.");
 							}
+							$case_details['insured_firstname'] = $this->input->get('firstname');
+							$case_details['insured_lastname'] = $this->input->get('lastname');
+							$case_details['dob'] = $this->input->get('birthday');
+							$case_details['gender'] = ($this->input->get('gender')=='F') ? 'female' : 'male';
 						}
 					} else {
 						$case_details['country2'] = $this->data['case_details']['country2'] = 'CA';
