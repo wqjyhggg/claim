@@ -278,12 +278,12 @@
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Country:', 'doctor_country', array("class"=>'col-sm-12')); ?>
-							<?php echo htmlspecialchars($doctor_country); ?>
+							<?php echo $doctor_country; ?>
 							<?php echo form_error("doctor_country"); ?>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Province:', 'doctor_province', array("class"=>'col-sm-12')); ?>
-							<?php echo htmlspecialchars($doctor_province); ?>
+							<?php echo $doctor_province; ?>
 							<?php echo form_error("doctor_province"); ?>
 						</div>
 						<div class="form-group col-sm-4">
