@@ -190,7 +190,7 @@
                                  <td><?php echo htmlspecialchars($value['lastname']); ?></td>
                                  <td><?php echo htmlspecialchars($value['birthday']); ?></td>
                                  <td><?php echo htmlspecialchars($value['gender']); ?></td>
-                                 <td class="policies"><?php echo anchor("emergency_assistance/?result=policy&filter=policy&lastname=".$value['lastname']."&firstname=".$value['firstname'], "View Policies"); ?></td>
+                                 <td class="policies"><?php echo anchor("emergency_assistance/?result=policy&filter=policy&lastname=".urlencode($value['lastname'])."&firstname=".urlencode($value['firstname']), "View Policies"); ?></td>
                               </tr>
                            <?php endforeach; ?>
                         </tbody>
