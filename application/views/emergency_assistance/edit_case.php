@@ -8,7 +8,7 @@
 			<h3>Case Information <?php if (isset($case_details['case_no'])) { echo " - #" . $case_details['case_no']; } ?></h3>
 			<?php
 			if (($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) && empty($case_details['claim_no']) && !empty($case_details['policy_no'])) {
-				echo anchor('claim/create_claim?policy='.$case_details['policy_no'].'&case_no='.$case_details['case_no'].'&product_short='.$case_details['product_short'].'&firstname='.$case_details['insured_firstname'].'&lastname='.$case_details['insured_lastname'].'&birthday='.$case_details['dob'].'&gender='.(($case_details["gender"] == 'female') ? 'F' : 'M'), '<i class="fa fa-plus-circle"></i> Create Claim', array("class"=>'btn btn-primary'));
+				echo anchor('claim/create_claim?policy='.$case_details['policy_no'].'&case_no='.$case_details['case_no'].'&product_short='.$case_details['product_short'].'&firstname='.urlencode($case_details['insured_firstname']).'&lastname='.urlencode($case_details['insured_lastname']).'&birthday='.urlencode($case_details['dob']).'&gender='.(($case_details["gender"] == 'female') ? 'F' : 'M'), '<i class="fa fa-plus-circle"></i> Create Claim', array("class"=>'btn btn-primary'));
 			}
 			?>   
       </div>
