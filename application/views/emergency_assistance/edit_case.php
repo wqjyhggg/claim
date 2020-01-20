@@ -140,7 +140,7 @@
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Province:', 'province', array("class"=>'col-sm-12')); ?>
 							<select name="province" class="form-control">
-								<?php foreach ($province as $key => $val) { ?>
+								<?php foreach ($provinces as $key => $val) { ?>
 								<option value="<?php echo $key; ?>" <?php if ($key == $case_details['province']) { echo "selected"; } ?>><?php echo $val; ?></option>
 								<?php } ?>
 							</select>
@@ -637,7 +637,7 @@
 								$find = array('{otc_logo}', '{otc_logo_big}', '{current_date}');
 								// $replace = array(img(array('src'=>'assets/img/otc.jpg','width'=>'130')), img(array('src'=>'assets/img/otc_big.jpg','width'=>'262')), date("F d, Y"));
 								$replace = array(img(array('src' => 'assets/img/otc.jpg', 'width' => '130')), img(array('src' => 'assets/img/otc_big.jpg', 'width' => '262')), date("F d, Y"));
-								echo htmlspecialchars(str_replace($find, $replace, $doc['description']));
+								echo str_replace($find, $replace, $doc['description']);
 								?>
 							</div>
 						</div>

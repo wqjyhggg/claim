@@ -377,7 +377,7 @@ class Emergency_assistance extends CI_Controller {
 				
 				// load dropdowns data
 				$this->data['country'] = $this->data['country2'] = $this->country_model->get_list(TRUE);
-				$this->data['province'] = $this->province_model->get_list_by_country_short(isset($case_details['country']) ? $case_details['country'] : 'CA');
+				$this->data['provinces'] = $this->province_model->get_list_by_country_short(isset($case_details['country']) ? $case_details['country'] : 'CA');
 				
 				// Load model if needs
 				
@@ -497,6 +497,7 @@ class Emergency_assistance extends CI_Controller {
 				
 				$data['id'] = $id;
 				// insert values to database
+
 				$this->case_model->save($data);
 				
 				$new_case = $this->case_model->get_by_id($id);
@@ -651,7 +652,7 @@ class Emergency_assistance extends CI_Controller {
 				// load dropdowns data
 				$this->data['country'] = $this->country_model->get_list(TRUE);
 				$this->data['country2'] = $this->country_model->get_list(FALSE);
-				$this->data['province'] = $this->province_model->get_list_by_country_short(isset($case_details['country']) ? $case_details['country'] : 'CA');
+				$this->data['provinces'] = $this->province_model->get_list_by_country_short(isset($case_details['country']) ? $case_details['country'] : 'CA');
 				
 				// Load model if needs
 				$vdata = array();
@@ -696,8 +697,6 @@ class Emergency_assistance extends CI_Controller {
 				
 				$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
 				$this->data['seacs'] = $this->schedule_model->get_eacs();
-				
-				$this->data['province2'] = $this->data['province'];
 				
 				$this->load->model('reasons_model');
 				$this->load->model('relations_model');

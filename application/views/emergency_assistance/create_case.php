@@ -245,7 +245,7 @@
 						<?php echo form_label('Province:', 'province', array("class"=>'col-sm-12')); ?>
 							<select name="province" class="form-control">
 								<option value="">-- Select Province --</option>
-								<?php foreach ($province as $key => $val) : ?>
+								<?php foreach ($provinces as $key => $val) : ?>
 								<option value="<?php echo $key; ?>" <?php if ($key == $case_details['province']) { echo "selected"; } ?>><?php echo $val; ?></option>
 								<?php endforeach; ?>
 							</select>
