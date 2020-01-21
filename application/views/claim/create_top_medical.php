@@ -1899,8 +1899,8 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
                    $("input[name=agent_id]").val(data.plan_list[0].agent_id);
                    $("input[name=totaldays]").val(data.plan_list[0].totaldays);
 
-               $("input[name=insured_first_name]").val(<?php if ($this->input->get('firstname')) { echo "'".$this->input->get('firstname')."'"; } else { ?>data.plan_list[0].firstname<?php } ?>);
-               $("input[name=insured_last_name]").val(<?php if ($this->input->get('lastname')) { echo "'".$this->input->get('lastname')."'"; } else { ?>data.plan_list[0].lastname<?php } ?>);
+               $("input[name=insured_first_name]").val(<?php if ($this->input->get('firstname')) { echo "'".str_replace("'", "\'",$this->input->get('firstname'))."'"; } else { ?>data.plan_list[0].firstname<?php } ?>);
+               $("input[name=insured_last_name]").val(<?php if ($this->input->get('lastname')) { echo "'".str_replace("'", "\'",$this->input->get('lastname'))."'"; } else { ?>data.plan_list[0].lastname<?php } ?>);
                if(<?php if ($this->input->get('gender')) { echo "'".$this->input->get('gender')."'"; } else { ?>data.plan_list[0].gender<?php } ?> == 'M')
                   $("input[value=male]").prop('checked', true);
                else
