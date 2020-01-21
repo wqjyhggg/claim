@@ -163,7 +163,7 @@
                         </thead>
                         <tbody>
                            <?php foreach ($cases as $value): ?>
-                              <tr class="view-policies" data='<?php echo str_replace("'", "\'", json_encode($value)); ?>'>
+                              <tr class="view-policies" data="<?php echo htmlspecialchars(json_encode($value)); ?>">
                                  <td><?php echo anchor("emergency_assistance/edit_case/".$value['id'], $value['case_no']); ?></td>
                                  <td><?php echo substr($value['created'], 0, 10); ?></td>
                                  <td><?php echo htmlspecialchars($value['reason']); ?></td>
@@ -200,7 +200,7 @@
                         </thead>
                         <tbody>
                            <?php foreach ($claims as $value): ?>
-                              <tr class="view-policies" data='<?php echo str_replace("'", "\'", json_encode($value)); ?>'>
+                              <tr class="view-policies" data="<?php echo htmlspecialchars(json_encode($value)); ?>">
                                  <td><?php echo anchor("claim/claim_detail/".$value['id'], $value['claim_no']); ?></td>
                                  <td><?php echo substr($value['created'], 0, 10); ?></td>
                                  <td><?php echo htmlspecialchars($value['insured_first_name'] . " " . $value['insured_last_name']); ?></td>
