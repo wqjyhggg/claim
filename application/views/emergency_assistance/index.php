@@ -185,7 +185,7 @@
                         </thead>
                         <tbody>
                            <?php foreach ($policies as $key => $value): ?>
-                              <tr class="view-policies" data="<?php echo htmlspecialchars(json_encode($value)); ?>">
+                              <tr class="view-policies" data='<?php echo str_replace("'", "\'", json_encode($value)); ?>'>
                                  <td><?php echo htmlspecialchars($value['firstname']); ?></td>
                                  <td><?php echo htmlspecialchars($value['lastname']); ?></td>
                                  <td><?php echo htmlspecialchars($value['birthday']); ?></td>
