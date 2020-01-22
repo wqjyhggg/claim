@@ -454,7 +454,7 @@
 							<?php } else { ?>
 							<button type="button" class="btn btn-primary mark_active">Activate</button>
 							<?php } ?>
-							<button insured_address="<?php echo nl2br($case_details['insured_address']) ?>" insured_lastname="<?php echo $case_details['insured_lastname'] ?>" insured_firstname="<?php echo $case_details['insured_firstname'] ?>" policy_no="<?php echo $case_details['policy_no'] ?>" case_no="<?php echo $case_details['case_no'] ?>" casemanager_name="<?php echo isset($case_details['case_manager_name']) ? $case_details['case_manager_name'] : ''; ?>" class="btn btn-primary email_print" type="button" data-toggle="modal" data-target="#print_template">Email/Print</button>
+							<button insured_address="<?php echo nl2br(htmlspecialchars($case_details['insured_address'])); ?>" insured_lastname="<?php echo htmlspecialchars($case_details['insured_lastname']); ?>" insured_firstname="<?php echo htmlspecialchars($case_details['insured_firstname']) ?>" policy_no="<?php echo htmlspecialchars($case_details['policy_no']) ?>" case_no="<?php echo htmlspecialchars($case_details['case_no']) ?>" casemanager_name="<?php echo isset($case_details['case_manager_name']) ? $case_details['case_manager_name'] : ''; ?>" class="btn btn-primary email_print" type="button" data-toggle="modal" data-target="#print_template">Email/Print</button>
 							<?php } ?>
 						</div>
 						<?php } ?>
