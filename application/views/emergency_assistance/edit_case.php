@@ -1099,8 +1099,12 @@ $(document).ready(function() {
             var text = $.trim($(this).html()).replace(/<br>/g, "\n");
 
             $(this).empty();
-            if(!$(this).hasClass("area"))
-               $(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\'") + "'></input>");
+            if(!$(this).hasClass("area")) {
+				console.log("TTTTTTTTTTTTTTTTTT");
+				console.log(text);
+				console.log(text.replace(/'/g, "\'"));
+				$(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\'") + "'></input>");
+			}
             else        
                $(this).append("<textarea  style='width:100%' rows='6'>"+ text +"</textarea>");
          });
