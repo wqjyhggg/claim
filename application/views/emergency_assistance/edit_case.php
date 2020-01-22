@@ -1045,18 +1045,17 @@ $(document).ready(function() {
       var pre_sex = "Mrs."; 
       if ($("select[name=gender]").val() != 'female') pre_sex = "Mr.";
  
-      str = str.replace(/{insured_name}/gi, insured_name)
-      .replace("{claimant_name}", insured_name)
-      .replace("{insured_address}", insured_address)
-      .replace("{insured_address2}", insured_address2)
-      .replace("{insured_postcode}", $("input[name=post_code_email]").val())
-      .replace("{insured_lastname}", $("input[name=last_name_email]").val())
+      str = str.replace(/{insured_name}/gi, insured_name.replace(/'/g, "\'"))
+      .replace("{claimant_name}", insured_name.replace(/'/g, "\'"))
+      .replace("{insured_address}", insured_address.replace(/'/g, "\'"))
+      .replace("{insured_address2}", insured_address2.replace(/'/g, "\'"))
+      .replace("{insured_postcode}", $("input[name=post_code_email]").val().replace(/'/g, "\'"))
+      .replace("{insured_lastname}", $("input[name=last_name_email]").val().replace(/'/g, "\'"))
       .replace("{coverage_period}", '<?php echo $policy['effective_date'] . " to " . $policy['expiry_date']; ?>')
       .replace("{policy_full_name}", '<?php echo $product_full_name?>')
       .replace("{policy_no}", obj.attr("policy_no"))
       .replace("{pre_sex}", pre_sex)
       .replace("{case_no}", obj.attr("case_no"))
-      .replace("{policy_coverage_info}", "{policy_coverage_info}")
       .replace("{casemanager_name}", obj.attr("casemanager_name"));
       if(data)
          str = str.replace("{coverage_period}", data[0].effective_date+" to "+data[0].expiry_date);
