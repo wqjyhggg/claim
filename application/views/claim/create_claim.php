@@ -1318,21 +1318,36 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
-      str = str.replace(/{insured_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
+      str = str.replace(/'{insured_name}'/gi, ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val()).replace('<', '&lt;').replace('>', '&gt;'))
+	  .replace(/{insured_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
+      .replace(/'{claimant_name}'/gi, ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val().val()).replace('<', '&lt;').replace('>', '&gt;'))
       .replace(/{claimant_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
+      .replace("'{insured_address}'", ($("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val()).replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{insured_address}", $("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val())
+      .replace("'{insured_lastname}'", ($("input[name=insured_last_name]").val()).replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{insured_lastname}", $("input[name=insured_last_name]").val())
+      .replace("'{policy_no}'", ($("input[name=policy_no]").val()).replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{policy_no}", $("input[name=policy_no]").val())
+      .replace("'{case_no}'", ($("input[name=case_no]").val()).replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{case_no}", $("input[name=case_no]").val())
-      .replace("{casemanager_name}", '<?php echo $this->ion_auth->user()->row()->first_name ?>')
-      .replace("{claimexaminer_name}", '<?php echo $this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name; ?>')
-      .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')
+      .replace("'{policy_coverage_info}'", ("{policy_coverage_info}").replace('<', '&lt;').replace('>', '&gt;'))
+      .replace("{policy_coverage_info}", "{policy_coverage_info}")
+      .replace("'{casemanager_name}'", ("<?php echo $this->ion_auth->user()->row()->first_name ?>").replace('<', '&lt;').replace('>', '&gt;'))
+      .replace("{casemanager_name}", "<?php echo $this->ion_auth->user()->row()->first_name ?>")
+      .replace("'{claimexaminer_name}'", ("<?php echo $this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name; ?>").replace('<', '&lt;').replace('>', '&gt;'))
+      .replace("{claimexaminer_name}", "<?php echo $this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name; ?>")
+      .replace("{current_date_+_90}", "<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>")
 
+      .replace("'{clinic_name}'", ($("input[name=clinic_name]").val()).replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{clinic_name}", $("input[name=clinic_name]").val())
+      .replace("'{insured_dob}'", ($("input[name=dob]").val()).replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{insured_dob}", $("input[name=dob]").val())
+      //.replace("{insured_diagnosis}", $("input[name='expenses_claimed[diagnosis][]']").val())
 
+      .replace("'{policy_holder}'", ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val()).replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{policy_holder}", $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
-      .replace("{coverage_period}", data[0].effective_date+" to  "+data[0].expiry_date);
+      .replace("'{coverage_period}'", ("<?php echo @$policy_info[0]['effective_date']." to ".@$policy_info[0]['expiry_date'] ?>").replace('<', '&lt;').replace('>', '&gt;'));
+      .replace("{coverage_period}", "<?php echo @$policy_info[0]['effective_date']." to ".@$policy_info[0]['expiry_date'] ?>");
 
       $(".doc-"+id+" .doc-desc").html(str);
 
