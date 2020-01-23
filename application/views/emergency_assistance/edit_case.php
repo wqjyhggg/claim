@@ -1067,7 +1067,7 @@ $(document).ready(function() {
       .replace("{pre_sex}", pre_sex)
       .replace("'{case_no}'", obj.attr("case_no").replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{case_no}", obj.attr("case_no"))
-      .replace("'{casemanager_name}'", obj.attr("casemanager_name").replace('<', '&lt;').replace('>', '&gt;'));
+      .replace("'{casemanager_name}'", obj.attr("casemanager_name").replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{casemanager_name}", obj.attr("casemanager_name"));
       if(data)
          str = str.replace("{coverage_period}", data[0].effective_date+" to "+data[0].expiry_date);
