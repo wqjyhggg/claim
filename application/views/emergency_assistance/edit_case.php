@@ -1045,12 +1045,12 @@ $(document).ready(function() {
       var pre_sex = "Mrs."; 
       if ($("select[name=gender]").val() != 'female') pre_sex = "Mr.";
  
-      str = str.replace(/{insured_name}/gi, insured_name.replace(/'/g, "\'"))
-      .replace("{claimant_name}", insured_name.replace(/'/g, "\'"))
-      .replace("{insured_address}", insured_address.replace(/'/g, "\'"))
-      .replace("{insured_address2}", insured_address2.replace(/'/g, "\'"))
-      .replace("{insured_postcode}", $("input[name=post_code_email]").val().replace(/'/g, "\'"))
-      .replace("{insured_lastname}", $("input[name=last_name_email]").val().replace(/'/g, "\'"))
+      str = str.replace(/{insured_name}/gi, insured_name.replace(/'/g, "\\\'"))
+      .replace("{claimant_name}", insured_name.replace(/'/g, "\\\'"))
+      .replace("{insured_address}", insured_address.replace(/'/g, "\\\'"))
+      .replace("{insured_address2}", insured_address2.replace(/'/g, "\\\'"))
+      .replace("{insured_postcode}", $("input[name=post_code_email]").val().replace(/'/g, "\\\'"))
+      .replace("{insured_lastname}", $("input[name=last_name_email]").val().replace(/'/g, "\\\'"))
       .replace("{coverage_period}", '<?php echo $policy['effective_date'] . " to " . $policy['expiry_date']; ?>')
       .replace("{policy_full_name}", '<?php echo $product_full_name?>')
       .replace("{policy_no}", obj.attr("policy_no"))
@@ -1102,8 +1102,8 @@ $(document).ready(function() {
             if(!$(this).hasClass("area")) {
 				console.log("TTTTTTTTTTTTTTTTTT");
 				console.log(text);
-				console.log(text.replace(/'/g, "\'"));
-				$(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\'") + "'></input>");
+				console.log(text.replace(/'/g, "\\\'"));
+				$(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\\\'") + "'></input>");
 			}
             else        
                $(this).append("<textarea  style='width:100%' rows='6'>"+ text +"</textarea>");
@@ -1294,7 +1294,7 @@ $outer.each(function(){
 
    $(this).empty();
    if(!$(this).hasClass("area"))
-      $(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\'") + "'></input>");
+      $(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\\\'") + "'></input>");
    else        
       $(this).append("<textarea  style='width:100%' rows='6' value=''>"+ text +"</textarea>");
 });

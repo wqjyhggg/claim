@@ -681,7 +681,7 @@ $(document).ready(function() {
 
          $(this).empty();
          if(!$(this).hasClass("area"))
-            $(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\'") + "'></input>");
+            $(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\\\'") + "'></input>");
          else
             $(this).append("<textarea  style='width:100%' rows='6'>"+ text +"</textarea>");
       });
@@ -769,7 +769,7 @@ $outer.each(function(){
 
    $(this).empty();
    if(!$(this).hasClass("area"))
-      $(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\'") + "'></input>");
+      $(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\\\'") + "'></input>");
    else
       $(this).append("<textarea  style='width:100%' rows='6' value=''>"+ text +"</textarea>");
 });
