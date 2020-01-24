@@ -825,8 +825,8 @@ $(document).ready(function() {
 			if (paytype == 'cheque') {
 				$(".doc-desc").each(function () {
 					var str = $(this).html();
-					str = str.replace("'{payto_name}'", payArr[1].replace('<', '&lt;').replace('>', '&gt;')).replace("{payto_name}", payArr[1]);
-					str = str.replace("'{payto_address}'", payArr[2].replace('<', '&lt;').replace('>', '&gt;')).replace("{payto_address}", payArr[2]);
+					str = str.replace(/value="{payto_name}/, 'value="' + payArr[1].replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')).replace("{payto_name}", payArr[1]);
+					str = str.replace(/value="{payto_address}/, 'value="' + payArr[2].replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')).replace("{payto_address}", payArr[2]);
 					$(this).html(str);
 				});
 			} else {
@@ -898,42 +898,42 @@ $(document).ready(function() {
       var pre_sex = "Mrs."; 
       if ($("select[name=gender]").val() != 'female') pre_sex = "Mr.";
 
-      str = str.replace(/'{insured_name}'/gi, insured_name.replace('<', '&lt;').replace('>', '&gt;'))
+      str = str.replace(/value="{insured_name}'/gi, insured_name.replace('<', '&lt;').replace('>', '&gt;'))
 	  .replace(/{insured_name}/gi, insured_name)
-      .replace(/'{claimant_name}'/gi, insured_name.replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{claimant_name}'/gi, insured_name.replace('<', '&lt;').replace('>', '&gt;'))
       .replace(/{claimant_name}/gi, insured_name)
-      .replace("'{insured_address}'", $("input[name=street_name_email]").val().replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{insured_address}/, 'value="' + $("input[name=street_name_email]").val().replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{insured_address}", $("input[name=street_name_email]").val())
-      .replace("'{insured_address2}'", insured_address2.replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{insured_address2}/, 'value="' + insured_address2.replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{insured_address2}", insured_address2)
-      .replace("'{insured_postcode}'", $("input[name=post_code_email]").val().replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{insured_postcode}/, 'value="' + $("input[name=post_code_email]").val().replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{insured_postcode}", $("input[name=post_code_email]").val())
-      .replace("'{insured_lastname}'", $("input[name=last_name_email]").val().replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{insured_lastname}/, 'value="' + $("input[name=last_name_email]").val().replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{insured_lastname}", $("input[name=last_name_email]").val())
-      .replace("'{insured_birth_date}'", $("input[name=dob]").val().replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{insured_birth_date}/, 'value="' + $("input[name=dob]").val().replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{insured_birth_date}", $("input[name=dob]").val())
-      .replace("'{medical_privider_name}'", item_provider_name.replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{medical_privider_name}/, 'value="' + item_provider_name.replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{medical_privider_name}", item_provider_name)
-      .replace("'{medical_privider_address}'", item_provider_addr1.replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{medical_privider_address}/, 'value="' + item_provider_addr1.replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{medical_privider_address}", item_provider_addr1)
-      .replace("'{medical_privider_address2}'", item_provider_addr2.replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{medical_privider_address2}/, 'value="' + item_provider_addr2.replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{medical_privider_address2}", item_provider_addr2)
-      .replace("'{medical_privider_postcode}'", item_provider_postcode.replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{medical_privider_postcode}/, 'value="' + item_provider_postcode.replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{medical_privider_postcode}", item_provider_postcode)
-      .replace("'{payee_name}'", item_payee_name.replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{payee_name}/, 'value="' + item_payee_name.replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{payee_name}", item_payee_name)
-      .replace("'{payee_address1}'", item_payee_addr1.replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{payee_address1}/, 'value="' + item_payee_addr1.replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{payee_address1}", item_payee_addr1)
-      .replace("'{payee_address2}'", item_payee_addr2.replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{payee_address2}/, 'value="' + item_payee_addr2.replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{payee_address2}", item_payee_addr2)
-      .replace("'{payee_postcode}'", item_payee_postcode.replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{payee_postcode}/, 'value="' + item_payee_postcode.replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{payee_postcode}", item_payee_postcode)
-      .replace("'{pre_sex}'", pre_sex.replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{pre_sex}/, 'value="' + pre_sex.replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{pre_sex}", pre_sex)
       .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')
-      .replace("'{clinic_name}'", ("<?php echo $claim['clinic_name']; ?>").replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{clinic_name}/, 'value="' + ("<?php echo $claim['clinic_name']; ?>").replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{clinic_name}", "<?php echo $claim['clinic_name']; ?>")
-      .replace("'{insured_dob}'", ("<?php echo $claim['dob']; ?>").replace('<', '&lt;').replace('>', '&gt;'))
+      .replace(/value="{insured_dob}/, 'value="' + ("<?php echo $claim['dob']; ?>").replace('<', '&lt;').replace('>', '&gt;'))
       .replace("{insured_dob}", "<?php echo $claim['dob']; ?>")
 
       $(".doc-"+id+" .doc-desc").html(str);

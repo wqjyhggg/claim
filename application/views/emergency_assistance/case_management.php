@@ -629,17 +629,17 @@ $(document).ready(function() {
 
    // replace string from casemanager name etc
    var str = $(".doc-"+id+"  .doc-desc").html();
-   str = str.replace(/'{insured_name}'/gi, obj.attr("insured_name").replace('<', '&lt;').replace('>', '&gt;'))
+   str = str.replace(/value="{insured_name}'/gi, 'value="' + obj.attr("insured_name").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
    .replace(/{insured_name}/gi, obj.attr("insured_name"))
-   .replace("'{insured_address}'", obj.attr("insured_address").replace('<', '&lt;').replace('>', '&gt;'))
+   .replace(/value="{insured_address}/, 'value="' + obj.attr("insured_address").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
    .replace("{insured_address}", obj.attr("insured_address"))
-   .replace("'{insured_lastname}'", obj.attr("insured_lastname").replace('<', '&lt;').replace('>', '&gt;'))
+   .replace(/value="{insured_lastname}/, 'value="' + obj.attr("insured_lastname").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
    .replace("{insured_lastname}", obj.attr("insured_lastname"))
-   .replace("'{policy_no}'", obj.attr("policy_no").replace('<', '&lt;').replace('>', '&gt;'))
+   .replace(/value="{policy_no}/, 'value="' + obj.attr("policy_no").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
    .replace("{policy_no}", obj.attr("policy_no"))
-   .replace("'{case_no}'", obj.attr("case_no").replace('<', '&lt;').replace('>', '&gt;'))
+   .replace(/value="{case_no}/, 'value="' + obj.attr("case_no").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
    .replace("{case_no}", obj.attr("case_no"))
-   .replace("'{casemanager_name}'", obj.attr("casemanager_name").replace('<', '&lt;').replace('>', '&gt;'));
+   .replace(/value="{casemanager_name}/, 'value="' + obj.attr("casemanager_name").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'));
    .replace("{casemanager_name}", obj.attr("casemanager_name"));
 
    if(data)
