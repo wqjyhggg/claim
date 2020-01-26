@@ -979,7 +979,6 @@ class Claim extends CI_Controller {
 			$this->data['item_payee_addr1'] = '';
 			$this->data['item_payee_addr2'] = '';
 			$this->data['item_payee_postcode'] = '';
-			$this->data['html_model'] = $this->html_model;
 	
 			// validate form input
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
@@ -1305,6 +1304,7 @@ class Claim extends CI_Controller {
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(1);
 
 				$this->data['is_insurer'] = ($this->ion_auth->in_group(array(Users_model::GROUP_INSURER)) ? 1 : 0);
+				$this->data['html_model'] = $this->html_model;
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Examine Claim', TRUE);
