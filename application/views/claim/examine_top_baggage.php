@@ -1279,11 +1279,11 @@ $(document).ready(function() {
 		// get local data
 		if ($(this).is(":checked")) {
 			// fill all json values to address fields
-			$("input[name=email]").val("<?php echo $policy['contact_email']; ?>");
-			$("input[name=post_code_email]").val("<?php echo $policy['postcode']; ?>");
-			$("input[name=street_name_email]").val("<?php echo $policy['street_number'] . " " . $policy['street_name']; ?>");
-			$("input[name=city_email]").val("<?php echo $policy['city']; ?>");
-			$("select[name=province_email]").val("<?php echo $policy['province2']; ?>");
+			$("input[name=email]").val("<?php echo $html_model->escapeQuote2($policy['contact_email']); ?>");
+			$("input[name=post_code_email]").val("<?php echo $html_model->escapeQuote2($policy['postcode']); ?>");
+			$("input[name=street_name_email]").val("<?php echo $html_model->escapeQuote2($policy['street_number'] . " " . $policy['street_name']); ?>");
+			$("input[name=city_email]").val("<?php echo $html_model->escapeQuote2($policy['city']); ?>");
+			$("select[name=province_email]").val("<?php echo $html_model->escapeQuote2($policy['province2']); ?>");
 		} else {
 			$("input[name=post_code_email],input[name=street_name_email],input[name=city_email],select[name=province_email]").val("");
 		}
