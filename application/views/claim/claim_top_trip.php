@@ -1801,37 +1801,37 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
-      str = str.replace(/value="{insured_name}/gi, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val()).replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
+      str = str.replace(/value="{insured_name}/gi, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
 	  .replace(/{insured_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
-      .replace(/value="{claimant_name}/gi, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val().val()).replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
+      .replace(/value="{claimant_name}/gi, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val().val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{claimant_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
-      .replace(/value="{insured_address}/, 'value="' + ($("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val()).replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_address}", $("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val())
-      .replace(/value="{insured_lastname}/, 'value="' + ($("input[name=insured_last_name]").val()).replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_lastname}", $("input[name=insured_last_name]").val())
-      .replace(/value="{policy_no}/, 'value="' + ($("input[name=policy_no]").val()).replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{policy_no}", $("input[name=policy_no]").val())
-      .replace(/value="{case_no}/, 'value="' + ($("input[name=case_no]").val()).replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{case_no}", $("input[name=case_no]").val())
-      .replace(/value="{policy_coverage_info}/, 'value="' + ("{policy_coverage_info}").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{policy_coverage_info}", "{policy_coverage_info}")
-      .replace(/value="{casemanager_name}/, 'value="' + ("<?php echo $this->ion_auth->user()->row()->first_name ?>").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{casemanager_name}", "<?php echo $this->ion_auth->user()->row()->first_name ?>")
-      .replace(/value="{claimexaminer_name}/, 'value="' + ("<?php echo $this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name; ?>").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{claimexaminer_name}", "<?php echo $this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name; ?>")
+      .replace(/value="{insured_address}/g, 'value="' + ($("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_address}/g, $("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val())
+      .replace(/value="{insured_lastname}/g, 'value="' + ($("input[name=insured_last_name]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_lastname}/g, $("input[name=insured_last_name]").val())
+      .replace(/value="{policy_no}/g, 'value="' + ($("input[name=policy_no]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/policy_no/g, $("input[name=policy_no]").val())
+      .replace(/value="{case_no}/g, 'value="' + ($("input[name=case_no]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/case_no/g, $("input[name=case_no]").val())
+      .replace(/value="{policy_coverage_info}/g, 'value="' + ("{policy_coverage_info}").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/policy_coverage_info/g, "{policy_coverage_info}")
+      .replace(/value="{casemanager_name}/g, 'value="' + ("<?php echo $this->ion_auth->user()->row()->first_name ?>").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/casemanager_name/g, "<?php echo $this->ion_auth->user()->row()->first_name ?>")
+      .replace(/value="{claimexaminer_name}/g, 'value="' + ("<?php echo $this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name; ?>").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/claimexaminer_name/g, "<?php echo $this->ion_auth->user()->row()->first_name . " " . $this->ion_auth->user()->row()->last_name; ?>")
       .replace("{current_date_+_90}", "<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>")
 
-      .replace(/value="{clinic_name}/, 'value="' + ($("input[name=clinic_name]").val()).replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{clinic_name}", $("input[name=clinic_name]").val())
-      .replace(/value="{insured_dob}/, 'value="' + ($("input[name=dob]").val()).replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_dob}", $("input[name=dob]").val())
+      .replace(/value="{clinic_name}/g, 'value="' + ($("input[name=clinic_name]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{clinic_name}/g, $("input[name=clinic_name]").val())
+      .replace(/value="{insured_dob}/g, 'value="' + ($("input[name=dob]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_dob}/g, $("input[name=dob]").val())
       //.replace("{insured_diagnosis}", $("input[name='expenses_claimed[diagnosis][]']").val())
 
-      .replace(/value="{policy_holder}/, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val()).replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{policy_holder}", $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val());
+      .replace(/value="{policy_holder}/g, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/policy_holder/g, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val());
 	  <?php if (!empty($policy_info[0]['effective_date']) && $policy_info[0]['expiry_date']) { ?>
-      str = str.replace(/value="{coverage_period}/, 'value="' + ("<?php echo @$policy_info[0]['effective_date']." to ".@$policy_info[0]['expiry_date'] ?>").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{coverage_period}", "<?php echo @$policy_info[0]['effective_date']." to ".@$policy_info[0]['expiry_date'] ?>");
+      str = str.replace(/value="{coverage_period}/g, 'value="' + ("<?php echo @$policy_info[0]['effective_date']." to ".@$policy_info[0]['expiry_date'] ?>").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/coverage_period/g, "<?php echo @$policy_info[0]['effective_date']." to ".@$policy_info[0]['expiry_date'] ?>");
 	  <?php } ?>
 
       $(".doc-"+id+" .doc-desc").html(str);

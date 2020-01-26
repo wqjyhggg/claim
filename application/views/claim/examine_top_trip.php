@@ -1054,8 +1054,8 @@ $(document).ready(function() {
 			if (paytype == 'cheque') {
 				$(".doc-desc").each(function () {
 					var str = $(this).html();
-					str = str.replace(/value="{payto_name}/, 'value="' + payArr[1].replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')).replace("{payto_name}", payArr[1]);
-					str = str.replace(/value="{payto_address}/, 'value="' + payArr[2].replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')).replace("{payto_address}", payArr[2]);
+					str = str.replace(/value="{payto_name}/g, 'value="' + payArr[1].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')).replace(/{payto_name}/g, payArr[1].replace(/</g, '&lt;').replace(/>/g, '&gt;'));
+					str = str.replace(/value="{payto_address}/g, 'value="' + payArr[2].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')).replace(/{payto_address}/g, payArr[2].replace(/</g, '&lt;').replace(/>/g, '&gt;'));
 					$(this).html(str);
 				});
 			} else {
@@ -1128,43 +1128,43 @@ $(document).ready(function() {
       var pre_sex = "Mrs."; 
       if ($("select[name=gender]").val() != 'female') pre_sex = "Mr.";
 
-      str = str.replace(/value="{insured_name}'/gi, insured_name.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
+      str = str.replace(/value="{insured_name}/gi, insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
 	  .replace(/{insured_name}/gi, insured_name)
-      .replace(/value="{claimant_name}'/gi, insured_name.replace('<', '&lt;').replace('>', '&gt;'.replace('"', '&quot;')))
+      .replace(/value="{claimant_name}/gi, insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;'.replace(/"/g, '&quot;')))
       .replace(/{claimant_name}/gi, insured_name)
-      .replace(/value="{insured_address}/, 'value="' + $("input[name=street_name_email]").val().replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_address}", $("input[name=street_name_email]").val())
-      .replace(/value="{insured_address2}/, 'value="' + insured_address2.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_address2}", insured_address2)
-      .replace(/value="{insured_postcode}/, 'value="' + $("input[name=post_code_email]").val().replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_postcode}", $("input[name=post_code_email]").val())
-      .replace(/value="{insured_lastname}/, 'value="' + $("input[name=last_name_email]").val().replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_lastname}", $("input[name=last_name_email]").val())
-      .replace(/value="{insured_birth_date}/, 'value="' + $("input[name=dob]").val().replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_birth_date}", $("input[name=dob]").val())
-      .replace(/value="{medical_privider_name}/, 'value="' + item_provider_name.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{medical_privider_name}", item_provider_name)
-      .replace(/value="{medical_privider_address}/, 'value="' + item_provider_addr1.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{medical_privider_address}", item_provider_addr1)
-      .replace(/value="{medical_privider_address2}/, 'value="' + item_provider_addr2.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{medical_privider_address2}", item_provider_addr2)
-      .replace(/value="{medical_privider_postcode}/, 'value="' + item_provider_postcode.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{medical_privider_postcode}", item_provider_postcode)
-      .replace(/value="{payee_name}/, 'value="' + item_payee_name.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{payee_name}", item_payee_name)
-      .replace(/value="{payee_address1}/, 'value="' + item_payee_addr1.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{payee_address1}", item_payee_addr1)
-      .replace(/value="{payee_address2}/, 'value="' + item_payee_addr2.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{payee_address2}", item_payee_addr2)
-      .replace(/value="{payee_postcode}/, 'value="' + item_payee_postcode.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{payee_postcode}", item_payee_postcode)
-      .replace(/value="{pre_sex}/, 'value="' + pre_sex.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{pre_sex}", pre_sex)
+      .replace(/value="{insured_address}/g, 'value="' + $("input[name=street_name_email]").val().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_address}/g, $("input[name=street_name_email]").val())
+      .replace(/value="{insured_address2}/g, 'value="' + insured_address2.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_address2}/g, insured_address2)
+      .replace(/value="{insured_postcode}/g, 'value="' + $("input[name=post_code_email]").val().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_postcode}/g, $("input[name=post_code_email]").val())
+      .replace(/value="{insured_lastname}/g, 'value="' + $("input[name=last_name_email]").val().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_lastname}/g, $("input[name=last_name_email]").val())
+      .replace(/value="{insured_birth_date}/g, 'value="' + $("input[name=dob]").val().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_birth_date}/g, $("input[name=dob]").val())
+      .replace(/value="{medical_privider_name}/g, 'value="' + item_provider_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{medical_privider_name}/g, item_provider_name)
+      .replace(/value="{medical_privider_address}/g, 'value="' + item_provider_addr1.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{medical_privider_address}/g, item_provider_addr1)
+      .replace(/value="{medical_privider_address2}/g, 'value="' + item_provider_addr2.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{medical_privider_address2}/g, item_provider_addr2)
+      .replace(/value="{medical_privider_postcode}/g, 'value="' + item_provider_postcode.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{medical_privider_postcode}/g, item_provider_postcode)
+      .replace(/value="{payee_name}/g, 'value="' + item_payee_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{payee_name}/g, item_payee_name)
+      .replace(/value="{payee_address1}/g, 'value="' + item_payee_addr1.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{payee_address1}/g, item_payee_addr1)
+      .replace(/value="{payee_address2}/g, 'value="' + item_payee_addr2.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{payee_address2}/g, item_payee_addr2)
+      .replace(/value="{payee_postcode}/g, 'value="' + item_payee_postcode.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{payee_postcode}/g, item_payee_postcode)
+      .replace(/value="{pre_sex}/g, 'value="' + pre_sex.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{pre_sex}/g, pre_sex)
       .replace("{current_date_+_90}", '<?php echo date('Y-m-d', strtotime(' + 90 days')) ?>')
-      .replace(/value="{clinic_name}/, 'value="' + ("<?php echo $html_model->escapeQuote2($claim['clinic_name']); ?>").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{clinic_name}", "<?php echo $html_model->escapeQuote2($claim['clinic_name']); ?>")
-      .replace(/value="{insured_dob}/, 'value="' + ("<?php echo $claim['dob']; ?>").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_dob}", "<?php echo $claim['dob']; ?>")
+      .replace(/value="{clinic_name}/g, 'value="' + ("<?php echo $html_model->escapeQuote2($claim['clinic_name']); ?>").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{clinic_name}/g, "<?php echo $html_model->escapeQuote2($claim['clinic_name']); ?>")
+      .replace(/value="{insured_dob}/g, 'value="' + ("<?php echo $claim['dob']; ?>").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_dob}/g, "<?php echo $claim['dob']; ?>")
 
       $(".doc-"+id+" .doc-desc").html(str);
 
@@ -1221,7 +1221,7 @@ $(document).ready(function() {
 
             $(this).empty();
             if(!$(this).hasClass("area"))
-               $(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\\\'") + "'></input>");
+				$(this).append('<input class="outer-text" value="' + text.replace(/"/g, '\\\"') + '"></input>');
             else
                $(this).append("<textarea  style='width:100%' rows='6'>"+ text +"</textarea>");
          });

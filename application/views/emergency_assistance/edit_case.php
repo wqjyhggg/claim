@@ -1045,32 +1045,32 @@ $(document).ready(function() {
       var pre_sex = "Mrs."; 
       if ($("select[name=gender]").val() != 'female') pre_sex = "Mr.";
  
-      str = str.replace(/value="{insured_name}/gi, 'value="' + insured_name.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
+      str = str.replace(/value="{insured_name}/gi, 'value="' + insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
 	  .replace(/{insured_name}/gi, insured_name)
-      .replace(/value="{claimant_name}/, 'value="' + insured_name.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
+      .replace(/value="{claimant_name}/, 'value="' + insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace("{claimant_name}", insured_name)
-      .replace(/value="{insured_address}/, 'value="' + insured_address.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_address}", insured_address)
-      .replace(/value="{insured_address2}/, 'value="' + insured_address2.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_address2}", insured_address2)
-      .replace(/value="{insured_postcode}/, 'value="' + $("input[name=post_code_email]").val().replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_postcode}", $("input[name=post_code_email]").val())
-      .replace(/value="{insured_lastname}/, 'value="' + $("input[name=last_name_email]").val().replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{insured_lastname}", $("input[name=last_name_email]").val())
-      .replace(/value="{coverage_period}/, 'value="' + ('<?php echo $policy['effective_date'] . " to " . $policy['expiry_date']; ?>').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{coverage_period}", '<?php echo $policy['effective_date'] . " to " . $policy['expiry_date']; ?>')
-      .replace(/value="{policy_full_name}/, 'value="' + ('<?php echo $product_full_name?>').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{policy_full_name}", '<?php echo $product_full_name?>')
-      .replace(/value="{policy_no}/, 'value="' + obj.attr("policy_no").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{policy_no}", obj.attr("policy_no"))
-      .replace("{pre_sex}", pre_sex)
-      .replace("{case_no}", obj.attr("case_no"))
-      .replace(/value="{casemanager_name}/, 'value="' + obj.attr("casemanager_name").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{casemanager_name}", obj.attr("casemanager_name"));
+      .replace(/value="{insured_address}/g, 'value="' + insured_address.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_address}/g, insured_address)
+      .replace(/value="{insured_address2}/g, 'value="' + insured_address2.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_address2}/g, insured_address2)
+      .replace(/value="{insured_postcode}/g, 'value="' + $("input[name=post_code_email]").val().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_postcode}/g, $("input[name=post_code_email]").val())
+      .replace(/value="{insured_lastname}/g, 'value="' + $("input[name=last_name_email]").val().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_lastname}/g, $("input[name=last_name_email]").val())
+      .replace(/value="{coverage_period}/g, 'value="' + ('<?php echo $policy['effective_date'] . " to " . $policy['expiry_date']; ?>').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/coverage_period/g, '<?php echo $policy['effective_date'] . " to " . $policy['expiry_date']; ?>')
+      .replace(/value="{policy_full_name}/g, 'value="' + ('<?php echo $product_full_name?>').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/policy_full_name/g, '<?php echo $product_full_name?>')
+      .replace(/value="{policy_no}/g, 'value="' + obj.attr("policy_no").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/policy_no/g, obj.attr("policy_no"))
+      .replace(/{pre_sex}/g, pre_sex)
+      .replace(/case_no/g, obj.attr("case_no"))
+      .replace(/value="{casemanager_name}/g, 'value="' + obj.attr("casemanager_name").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/casemanager_name/g, obj.attr("casemanager_name"));
       if(data)
-         str = str.replace("{coverage_period}", data[0].effective_date+" to "+data[0].expiry_date);
+         str = str.replace(/coverage_period/g, data[0].effective_date+" to "+data[0].expiry_date);
       else
-         str = str.replace("{coverage_period}", '');
+         str = str.replace(/coverage_period/g, '');
 
       $(".doc-"+id+" .doc-desc").html(str);
 
@@ -1110,9 +1110,6 @@ $(document).ready(function() {
 
             $(this).empty();
             if(!$(this).hasClass("area")) {
-				console.log("TTTTTTTTTTTTTTTTTT");
-				console.log(text);
-				console.log(text.replace(/'/g, "\\\'"));
 				$(this).append("<input class='outer-text' value='" + text.replace(/'/g, "\\\'") + "'></input>");
 			}
             else        
