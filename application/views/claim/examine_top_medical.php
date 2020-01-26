@@ -1100,9 +1100,9 @@ $(document).ready(function() {
       var pre_sex = "Mrs."; 
       if ($("select[name=gender]").val() != 'female') pre_sex = "Mr.";
 
-      str = str.replace(/value="{insured_name}/gi, insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      str = str.replace(/value="{insured_name}/gi, 'value="' + insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
 	  .replace(/{insured_name}/gi, insured_name)
-      .replace(/value="{claimant_name}/gi, insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;'.replace(/"/g, '&quot;')))
+      .replace(/value="{claimant_name}/gi, 'value="' + insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;'.replace(/"/g, '&quot;')))
       .replace(/{claimant_name}/gi, insured_name)
       .replace(/value="{insured_address}/g, 'value="' + $("input[name=street_name_email]").val().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{insured_address}/g, $("input[name=street_name_email]").val())
