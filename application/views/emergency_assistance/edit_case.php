@@ -1048,7 +1048,7 @@ $(document).ready(function() {
       str = str.replace(/value="{insured_name}/gi, 'value="' + insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
 	  .replace(/{insured_name}/gi, insured_name)
       .replace(/value="{claimant_name}/, 'value="' + insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
-      .replace("{claimant_name}", insured_name)
+      .replace(/{claimant_name}/g, insured_name)
       .replace(/value="{insured_address}/g, 'value="' + insured_address.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{insured_address}/g, insured_address)
       .replace(/value="{insured_address2}/g, 'value="' + insured_address2.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
