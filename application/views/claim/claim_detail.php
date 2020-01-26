@@ -1566,9 +1566,11 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
       //.replace("{insured_diagnosis}", $("input[name='expenses_claimed[diagnosis][]']").val())
 
       .replace(/value="{policy_holder}/, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val()).replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
-      .replace("{policy_holder}", $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
-      .replace(/value="{coverage_period}/, 'value="' + ("<?php echo @$policy_info[0]['effective_date']." to ".@$policy_info[0]['expiry_date'] ?>").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'));
+      .replace("{policy_holder}", $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val());
+	  <?php if (!empty($policy_info[0]['effective_date']) && $policy_info[0]['expiry_date']) { ?>}
+      str = str.replace(/value="{coverage_period}/, 'value="' + ("<?php echo @$policy_info[0]['effective_date']." to ".@$policy_info[0]['expiry_date'] ?>").replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'));
       .replace("{coverage_period}", "<?php echo @$policy_info[0]['effective_date']." to ".@$policy_info[0]['expiry_date'] ?>");
+	  <?php } ?>}
 
       $(".doc-"+id+" .doc-desc").html(str);
 
