@@ -346,12 +346,12 @@
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Province:', 'outpatient_province', array("class"=>'col-sm-12')); ?>
-							<?php echo htmlspecialchars($outpatient_province); ?>
+							<?php echo $outpatient_province; ?>
 							<?php echo form_error("outpatient_province"); ?>
 						</div>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Country:', 'outpatient_country', array("class"=>'col-sm-12')); ?>
-							<?php echo htmlspecialchars($outpatient_country); ?>
+							<?php echo $outpatient_country; ?>
 							<?php echo form_error("outpatient_country"); ?>
 						</div>
 						<div class="form-group col-sm-4">
