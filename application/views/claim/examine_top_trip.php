@@ -1221,7 +1221,7 @@ $(document).ready(function() {
 
             $(this).empty();
             if(!$(this).hasClass("area"))
-				$(this).append('<input class="outer-text" value="' + text.replace(/"/g, '\\\"') + '"></input>');
+				$(this).append('<input class="outer-text" value="' + text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') + '"></input>');
             else
                $(this).append("<textarea  style='width:100%' rows='6'>"+ text +"</textarea>");
          });
