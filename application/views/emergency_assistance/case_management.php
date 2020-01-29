@@ -122,7 +122,7 @@
 							<tbody>
 								<?php foreach ($cases as $key => $value): ?>
 								<!-- placing all attributes in table row to replace feature in doc via js -->
-								<tr class="row-link" alt="<?php echo $value['id']; ?>" insured_address="<?php echo nl2br($value['insured_address']) ?>" insured_lastname="<?php echo $value['insured_lastname'] ?>" insured_firstname="<?php echo $value['insured_firstname'] ?>" policy_no="<?php echo $value['policy_no'] ?>" policy_info="<?php echo $value['policy_info'] ?>" case_no="<?php echo $value['case_no'] ?>" casemanager_name="<?php echo $value['case_manager_name'] ?>">
+								<tr class="row-link" alt="<?php echo $value['id']; ?>" insured_address="<?php echo $html_model->escapeQuote2($value['insured_address']) ?>" insured_lastname="<?php echo $html_model->escapeQuote2($value['insured_lastname']); ?>" insured_firstname="<?php echo $html_model->escapeQuote2($value['insured_firstname']); ?>" policy_no="<?php echo $html_model->escapeQuote2($value['policy_no']); ?>" policy_info="<?php echo $html_model->escapeQuote2($value['policy_info']); ?>" case_no="<?php echo $html_model->escapeQuote2($value['case_no']); ?>" casemanager_name="<?php echo $html_model->escapeQuote2($value['case_manager_name']); ?>">
 									<td><?php echo form_checkbox("case", $value['id'], FALSE, array('class'=>((($case_manager != $value['case_manager']) && (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN))) )?'own_by_other':''), ($value['status'] == 'C'?'disabled':'')=>'')); ?></td>
 									<td><?php echo $value['case_no']; ?></td>
 									<td><?php echo date('d/m/Y', strtotime($value['created'])); ?></td>
@@ -639,7 +639,7 @@ $(document).ready(function() {
    .replace(/policy_no/g, obj.attr("policy_no"))
    .replace(/value="{case_no}/g, 'value="' + obj.attr("case_no").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
    .replace(/case_no/g, obj.attr("case_no"))
-   .replace(/value="{casemanager_name}/g, 'value="' + obj.attr("casemanager_name").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'));
+   .replace(/value="{casemanager_name}/g, 'value="' + obj.attr("casemanager_name").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
    .replace(/casemanager_name/g, obj.attr("casemanager_name"));
 
    if(data)

@@ -704,7 +704,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['reasons'] = $this->reasons_model->get_list2();
 				$this->data['relationships'] = $this->relations_model->get_list();
 				$this->data['products'] = $this->common_model->get_products($field_name = "product_short", $selected = $this->input->post($field_name), FALSE, FALSE);
-				$this->data['product_full_name'] = $this->product_model->get_full_name($this->data['policy']['product_short']);
+				$this->data['product_full_name'] = $this->product_model->get_full_name(empty($this->data['policy']['product_short'])?'':$this->data['policy']['product_short']);
 
 				// get intake forms
 				$this->data['intake_forms'] = $this->intakeform_model->get_list_by_case_id($id);
@@ -749,6 +749,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->load->model('template_model');
 			$this->load->model('product_model');
 			$this->load->model('mytask_model');
+			$this->load->model('html_model');
 				
 			// initialize variables
 			$this->data['cases'] = [];
@@ -942,6 +943,7 @@ class Emergency_assistance extends CI_Controller {
 			
 			// get products list
 			$this->data['products'] = $this->product_model->get_list(TRUE);
+			$this->data['html_model'] = $this->html_model;
 			
 			// render view data
 			$this->template->write('title', SITE_TITLE . ' - Case Management', TRUE);
