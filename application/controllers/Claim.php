@@ -28,6 +28,7 @@ class Claim extends CI_Controller {
 			$this->load->model('case_model');
 			$this->load->model('claim_model');
 			$this->load->model('users_model');
+			$this->load->model('html_model');
 			
 			$post = $this->input->post();
 			if (empty($post)) $post = $this->input->get();
@@ -74,6 +75,7 @@ class Claim extends CI_Controller {
 
 			// get claim examiners
 			$this->data['claim_examiner'] = ''; // $this->users_model->search(array('groups' => Users_model::GROUP_EXAMINER, 'active' => 1)); $this->common_model->getrusers($field_name = "assign_user", "", $group = array("'claimexaminer'"), $empty = "--Select Claim Examiner--", $additional_conditions = " and active = '1'");
+			$this->data['html_model'] = $this->html_model;
 			                                    
 			// render view data
 			$this->template->write('title', SITE_TITLE . ' - Claim', TRUE);

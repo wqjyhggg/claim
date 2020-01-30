@@ -170,7 +170,7 @@
 							</thead>
 							<tbody>
 								<?php foreach ($policies as $key => $value): ?>
-								<tr data='<?php echo json_encode($value); ?>'>
+								<tr data='<?php echo $html_model->escapeQuote(json_encode($value)); ?>'>
 									<td><?php echo $value['policy']; ?></td>
 									<td><?php echo htmlspecialchars($value['firstname']." ".$value['lastname']); ?></td>
 									<td><?php echo htmlspecialchars($value['birthday']); ?></td>
