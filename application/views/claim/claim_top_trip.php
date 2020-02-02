@@ -371,7 +371,7 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<div class="input-group date">
-									<?php echo form_input("exinfo[first occured_date]", isset($exinfo["occured_date"]) ? $exinfo["occured_date"] : '', array("class" => "form-control datepicker")); ?>
+									<?php echo form_input("exinfo[occured_date]", isset($exinfo["occured_date"]) ? $exinfo["occured_date"] : '', array("class" => "form-control datepicker")); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
