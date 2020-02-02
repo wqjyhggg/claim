@@ -285,13 +285,13 @@
 							<?php echo form_label('To whom was loss reported:', 'exinfo_loss_report_to', array("class" => 'col-sm-12')); ?>
 							<select name="exinfo[loss_report_to]" class="form-control">
 								<option value=""> -- Select Report To -- </option>
-								<option value="Airline" <?php if ('Airline' == $this->input->post("exinfo[loss_report_to")) { echo "selected"; } ?>>Airline</option>
-								<option value="Cruise line" <?php if ('Cruise line' == $this->input->post("exinfo[loss_report_to")) { echo "selected"; } ?>>Cruise line</option>
-								<option value="Bus line" <?php if ('Bus line' == $this->input->post("exinfo[loss_report_to")) { echo "selected"; } ?>>Bus line</option>
-								<option value="Tour Guide" <?php if ('Tour Guide' == $this->input->post("exinfo[loss_report_to")) { echo "selected"; } ?>>Tour Guide</option>
-								<option value="Hotel" <?php if ('Hotel' == $this->input->post("exinfo[loss_report_to")) { echo "selected"; } ?>>Hotel</option>
-								<option value="Police" <?php if ('Police' == $this->input->post("exinfo[loss_report_to")) { echo "selected"; } ?>>Police</option>
-								<option value="Other" <?php if ('Other' == $exinfo["loss_report_to"]) { echo "selected"; } ?>>Other</option>
+								<option value="Airline" <?php if ('Airline' == $this->input->post("exinfo[loss_report_to]")) { echo "selected"; } ?>>Airline</option>
+								<option value="Cruise line" <?php if ('Cruise line' == $this->input->post("exinfo[loss_report_to]")) { echo "selected"; } ?>>Cruise line</option>
+								<option value="Bus line" <?php if ('Bus line' == $this->input->post("exinfo[loss_report_to]")) { echo "selected"; } ?>>Bus line</option>
+								<option value="Tour Guide" <?php if ('Tour Guide' == $this->input->post("exinfo[loss_report_to]")) { echo "selected"; } ?>>Tour Guide</option>
+								<option value="Hotel" <?php if ('Hotel' == $this->input->post("exinfo[loss_report_to]")) { echo "selected"; } ?>>Hotel</option>
+								<option value="Police" <?php if ('Police' == $this->input->post("exinfo[loss_report_to]")) { echo "selected"; } ?>>Police</option>
+								<option value="Other" <?php if ('Other' == $this->input->post("exinfo[loss_report_to]")) { echo "selected"; } ?>>Other</option>
 							</select>
 						</div>
 						<div class="form-group col-sm-3">
