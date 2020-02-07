@@ -105,9 +105,8 @@ class Common_model extends CI_Model
                 $data_array['records'] = $q->result_array();
 
                 // get no of records
-                $no_of_rows = $this->db->query("SELECT FOUND_ROWS() as rows");
-                $result = $no_of_rows->row_array();
-                $data_array['rows'] = $result['rows'];
+                $data_array['rows'] = $this->db->query("SELECT FOUND_ROWS() as linenumber")->row()->linenumber;
+
                 return $data_array;
             }
         }

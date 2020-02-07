@@ -199,7 +199,7 @@ class Claim_model extends CI_Model {
 	}
 
 	public function last_rows() {
-		return $this->db->query("SELECT FOUND_ROWS() as rows")->row()->rows;
+		return $this->db->query("SELECT FOUND_ROWS() as linenumber")->row()->linenumber;
 	}
 	
 	/**
@@ -272,7 +272,7 @@ class Claim_model extends CI_Model {
 			if ($key == 'cheque') {
 				$key = $key . " : " . $val['payee_name'] . " : " . $val['address'] . " : " . $val['city'] . " : " . $val['province'] . " : " . $val['country'] . " : " . $val['postcode'] . " : " . $val['type'];
 			} else {
-				$key = $key . " : " . $val['payee_name'] . " : " + $val['bank'] . " : " . $val['account_cheque'];
+				$key = $key . " : " . $val['payee_name'] . " : " . $val['bank'];
 			}
 			$rarr[$key] = $val;
 		}

@@ -323,7 +323,7 @@ class Expenses_model extends CI_Model {
 	}
 
 	public function last_rows() {
-		return $this->db->query("SELECT FOUND_ROWS() as rows")->row()->rows;
+		return $this->db->query("SELECT FOUND_ROWS() as linenumber")->row()->linenumber;
 	}
 	
 	/**

@@ -70,7 +70,7 @@ class Auth extends CI_Controller {
 					$this->data['records'][$key]['policy_no'] = $claim['policy_no'];
 				}
 				$ctuser = $this->users_model->get_by_id($rc['created_by']);
-				$this->data['records'][$key]['created_email'] = $ctuser['email'];
+				$this->data['records'][$key]['created_email'] = isset($ctuser['email']) ? $ctuser['email'] : '';
 				$user = $this->users_model->get_by_id($rc['user_id']);
 				$this->data['records'][$key]['assign_name'] = $user['email'];
 			}
