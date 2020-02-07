@@ -398,10 +398,10 @@
 											<?php echo form_input("payees[payee_name][]", $value ["payee_name"], array("class" => "form-control required", 'placeholder' => 'Payee Name', "readonly" => "readonly")); ?>
 										</div>
 										<div class="col-sm-3 wire_transfer_section" <?php echo ($value["payment_type"] == 'cheque'?'style="display:none"':''); ?>>
-											<?php echo form_label('Bank Name:', 'Bank Name', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("payees[bank][]", $value ["bank"], array("class" => "form-control", 'placeholder' => 'Bank Name', "readonly" => "readonly")); ?>
+											<?php echo form_label('Email Address:', 'Email Address', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("payees[bank][]", $value ["bank"], array("class" => "form-control", 'placeholder' => 'Email Address', "readonly" => "readonly")); ?>
 										</div>
-										<div class="col-sm-3 wire_transfer_section" <?php echo ($value["payment_type"] == 'cheque'?'style="display:none"':''); ?>>
+										<div class="col-sm-3" style="display:none">
 											<?php echo form_label('Account#:', 'Account', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("payees[account_cheque][]", $value ["account_cheque"], array("class" => "form-control", 'placeholder' => 'Account#', "readonly" => "readonly")); ?>
 										</div>
@@ -675,7 +675,7 @@
 												<?php if ($payee['payment_type'] == 'cheque') { ?> 
 												<option value="<?php echo $payee['id']; ?>" <?php echo (($payee['id'] == $value['payee']) ? "Selected" : ""); ?>><?php echo htmlspecialchars($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address']  . " " . $payee['city'] . ", " . $payee['province'] . " " . $payee['country'] . " " . $payee['postcode']); ?></option>
 												<?php } else { ?> 
-												<option value="<?php echo $payee['id']; ?>" <?php echo (($payee['id'] == $value['payee']) ? "Selected" : ""); ?>><?php echo htmlspecialchars($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['bank'] . ", " . $payee['account_cheque']); ?></option>
+												<option value="<?php echo $payee['id']; ?>" <?php echo (($payee['id'] == $value['payee']) ? "Selected" : ""); ?>><?php echo htmlspecialchars($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['bank']); ?></option>
 												<?php } ?>
 												<?php } ?>
 											<?php } ?>
@@ -1056,7 +1056,7 @@
 					<?php if ($payee['payment_type'] == 'cheque') { ?> 
 					<option value="<?php echo $payee['id']; ?>"><?php echo htmlspecialchars($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address']  . " " . $payee['city'] . ", " . $payee['province'] . " " . $payee['country'] . " " . $payee['postcode']); ?></option>
 					<?php } else { ?> 
-					<option value="<?php echo $payee['id']; ?>"><?php echo htmlspecialchars($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['bank'] . ", " . $payee['account_cheque']); ?></option>
+					<option value="<?php echo $payee['id']; ?>"><?php echo htmlspecialchars($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['bank']); ?></option>
 					<?php } ?>
 					<?php } ?>
 				</select>
@@ -1090,7 +1090,7 @@
 				<?php echo form_label('Payment Type', 'payment_type'); ?>
 				<select name="payees[payment_type][]" class="form-control payees_payment_type">
 					<option value="cheque" selected>Cheque </option>
-					<option value="deposit">Deposit</option>
+					<option value="email">Email Transfer</option>
 				</select>
 				<?php echo form_hidden('payees[id][]', ''); ?>
 			</div>
@@ -1099,10 +1099,10 @@
 				<?php echo form_input("payees[payee_name][]", "", array("class" => "form-control", 'placeholder' => 'Payee Name')); ?>
 			</div>
 			<div class="col-sm-3 wire_transfer_section" style="display: none">
-				<?php echo form_label('Bank Name:', 'Bank Name', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("payees[bank][]", "", array("class" => "form-control", 'placeholder' => 'Bank Name')); ?>
+				<?php echo form_label('Email Transfer:', 'Email Transfer', array("class" => 'col-sm-12')); ?>
+				<?php echo form_input("payees[bank][]", "", array("class" => "form-control", 'placeholder' => 'Email Transfer')); ?>
 			</div>
-			<div class="col-sm-6 wire_transfer_section" style="display: none">
+			<div class="col-sm-6" style="display: none">
 				<?php echo form_label('Account#:', 'Account', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("payees[account_cheque][]", "", array("class" => "form-control", 'placeholder' => 'Account#')); ?>
 			</div>
@@ -1265,7 +1265,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		<?php if ($val['payment_type'] == 'cheque') { ?>
 		epayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo htmlspecialchars($val['payment_type'] . " : " . $val['payee_name'] . " : " . $val['address'] . " " . $val['city'] . ", " . $val['province'] . " " . $val['country'] . " " . $val['postcode']); ?></option>"
 		<?php } else { ?>
-		epayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo htmlspecialchars($val['payment_type'] . " : " . $val['payee_name'] . " : " . $val['bank'] . ", " . $val['account_cheque']); ?></option>"
+		epayee_html +=  "<option value='<?php echo $val['id']?>'><?php echo htmlspecialchars($val['payment_type'] . " : " . $val['payee_name'] . " : " . $val['bank']); ?></option>"
 		<?php } ?>
 	<?php } ?>
 <?php } ?>
@@ -2023,7 +2023,7 @@ function remapping_payee() {
 			if (v == 'cheque') {
 				v = v + " : " + p.find("input[name^='payees[payee_name]']").val() + " : " + p.find("input[name^='payees[address]']").val() + " " + p.find("input[name^='payees[city]']").val() + ", " + p.find("input[name^='payees[province]']").val() + " " + p.find("input[name^='payees[country]']").val() + " " + p.find("input[name^='payees[postcode]']").val();
 			} else { // deposit
-				v = v + " : " + p.find("input[name^='payees[payee_name]']").val() + " : " + p.find("input[name^='payees[bank]']").val() + ", " + p.find("input[name^='payees[account_cheque]']").val();
+				v = v + " : " + p.find("input[name^='payees[payee_name]']").val() + " : " + p.find("input[name^='payees[bank]']").val();
 			}
 			html += '<option value="'+id+'">'+v+'</option>';
 		}

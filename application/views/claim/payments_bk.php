@@ -137,20 +137,20 @@
 					<?php echo form_label('Cheque:', 'Cheque'); ?>
 				</div>
 				<div class="col-sm-2">
-					<?php echo form_radio("payment_type", "direct deposit", FALSE, array('class' => 'setpremium')); ?>
-					<?php echo form_label('Direct Deposit', 'Direct Deposit'); ?>
+					<?php echo form_radio("payment_type", "email transfer", FALSE, array('class' => 'setpremium')); ?>
+					<?php echo form_label('Email Transfer', 'Email Transfer'); ?>
 				</div>
 			</div>
 			<br />
 			<div class="col-sm-3 wire_transfer_section" style="display: none">
-				<?php echo form_label('Bank Name:', 'Bank Name', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("payees[bank][]", $this->input->post("bank"), array("class" => "form-control", 'placeholder' => 'Bank Name')); ?>
+				<?php echo form_label('Email Transfer:', 'Email Transfer', array("class" => 'col-sm-12')); ?>
+				<?php echo form_input("payees[bank][]", $this->input->post("bank"), array("class" => "form-control", 'placeholder' => 'Email Transfer')); ?>
 			</div>
 			<div class="col-sm-3 cheque_section wire_transfer_section">
 				<?php echo form_label('Payee Name:', 'Payee Name', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("payees[payee_name][]", $this->input->post("payee_name"), array("class" => "form-control", 'placeholder' => 'Payee Name')); ?>
 			</div>
-			<div class="col-sm-3 wire_transfer_section" style="display: none">
+			<div class="col-sm-3" style="display: none">
 				<?php echo form_label('Account#:', 'Account', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("payees[account_cheque][]", $this->input->post("account_cheque"), array("class" => "form-control", 'placeholder' => 'Account#')); ?>
 			</div>

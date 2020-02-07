@@ -432,6 +432,8 @@ class Api extends CI_Controller {
 						$this->claim_model->payees_save($payee_data);
 						if ($payee_data['payment_type'] == 'cheque') {
 							$payee_str = "cheque : ".$payee_data['payee_name']." : ".$payee_data['address']." : ".$payee_data['city']." : ".$payee_data['province']." : ".$payee_data['country']." : ".$payee_data['postcode']." : ";
+						} else if ($payee_data['payment_type'] == 'email') {
+							$payee_str = "email : ".$payee_data['payee_name'];
 						} else {
 							$payee_str = "direct deposit : ".$payee_data['payee_name']." : ".$payee_data['bank']." : ".$payee_data['account_cheque'];
 						}
