@@ -1,0 +1,132 @@
+<div>
+	<?php echo $message; ?>
+	
+	<!-- Policy search and List Section -->
+	<div class="row">
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<div class="x_panel">
+				<div class="x_title">
+					<h2>Filters<small></small></h2>
+					<div class="clearfix"></div>
+				</div>
+				<div class="x_content">
+					<!-- search filter start -->
+					<?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>
+					<div class="row">
+                        <div class="form-group col-sm-3">
+							<?php echo form_label ( 'ID number:', 'id number', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input ( "eclaim_id", $this->input->post_get("eclaim_id"), array("class" => "form-control",'placeholder' => 'Eclaim ID') ); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label ( 'Policy Number:', 'policy', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input ( "policy_no", $this->input->post_get("policy_no"), array("class" => "form-control",'placeholder' => 'Policy Number') ); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Created From:', 'created_from', array("class"=>'col-sm-12')); ?>
+							<div class="input-group date">
+								<?php echo form_input ( "created_from", $this->input->post_get( "created_from" ), array ("class" => "form-control datepicker", 'placeholder' => 'Created From') ); ?>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Created To:', 'created_to', array("class"=>'col-sm-12')); ?>
+							<div class="input-group date">
+								<?php echo form_input ( "created_to", $this->input->post_get( "created_to" ), array ("class" => "form-control datepicker", 'placeholder' => 'Created To') ); ?>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="row">
+						<div class="form-group col-sm-3">
+							<?php echo form_label ( 'Claim No:', 'claim_no', array ("class" => 'col-sm-12')); ?>
+							<?php echo form_input ( "claim_no", $this->input->post_get("claim_no"), array("class" => "form-control", 'placeholder' => 'Claim No') );?>
+						</div>
+                        <div class="form-group col-sm-3">
+							<?php echo form_label ( 'First Nmae:', 'first_name', array ("class" => 'col-sm-12')); ?>
+							<?php echo form_input ( "insured_first_name", $this->input->post_get("insured_first_name"), array("class" => "form-control", 'placeholder' => 'First Name') );?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label ( 'Last Nmae:', 'last_name', array ("class" => 'col-sm-12')); ?>
+							<?php echo form_input ( "insured_last_name", $this->input->post_get("insured_last_name"), array("class" => "form-control", 'placeholder' => 'Last Name') );?>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label ( 'Status:', 'status', array ("class" => 'col-sm-12') ); ?>
+							<?php echo form_dropdown ( "status", array(0 => "Unprocessed", 1 => "Processed", 2 => "Refused"), $this->input->post_get( "status" ), array ("class" => 'form-control') );?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-3">
+							<label class="col-sm-12">&nbsp;</label>
+						</div>
+						<div class="col-sm-3">
+							<label class="col-sm-12">&nbsp;</label>
+						</div>
+						<div class="col-sm-3">
+							<label class="col-sm-12">&nbsp;</label>
+						</div>
+						<div class="col-sm-3">
+							<label class="col-sm-12">&nbsp;</label>
+							<button class="btn btn-primary" name="filter" value="eclaim">Search</button>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<?php echo form_close(); ?>
+					<!-- search filter end -->
+				</div><!-- x_content -->
+            </div><!-- x_panel -->
+            <div class="x_panel">
+				<div class="x_title">
+					<h2>Eclaim Search Result<small></small></h2>
+					<div class="clearfix"></div>
+				</div>
+                <div class="x_content">
+                    <div class="table-responsive">
+						<table class="table table-hover table-bordered">
+							<thead>
+								<tr>
+                                    <th>ID</th>
+									<th>Policy</th>
+									<th>Claim No</th>
+									<th>First Name</th>
+									<th>Last Name</th>
+									<th>Gender</th>
+									<th>Birth Date</th>
+									<th>Apply Date</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($eclaims as $key => $value): ?>
+								<tr>
+									<td><?php echo $value['id']; ?></td>
+									<td><?php echo $value['policy_no']; ?></td>
+									<td><?php echo $value['claim_no']; ?></td>
+									<td><?php echo htmlspecialchars($value['insured_first_name']); ?></td>
+									<td><?php echo htmlspecialchars($value['insured_last_name']); ?></td>
+									<td><?php echo $value['gender']; ?></td>
+									<td><?php echo htmlspecialchars($value['dob']); ?></td>
+									<td><?php echo htmlspecialchars($value['created']); ?></td>
+									<td><?php echo anchor("eclaim/detail/".$value['id'], "View"); ?></td>
+								</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+                        <?php echo $pagination; ?>
+					</div>
+                </div>
+			</div><!-- x_panel -->
+		</div><!-- col-md-12 col-sm-12 col-xs-12 -->
+	</div><!-- row -->
+</div>
+
+<?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
+<script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
+<script>
+$(document).ready(function() {
+	$(".datepicker").datepicker({
+		startDate: '-105y',
+		endDate: '+2y',
+	});
+})
+</script>

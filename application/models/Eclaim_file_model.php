@@ -45,4 +45,20 @@ class Eclaim_file_model extends CI_Model {
 		$this->active_model->log_new('eclaim_file', $id, $data, $sql);
 		return $id;
 	}
+
+	/**
+	 * Get all Eclaim files by ID
+	 *
+	 * @param int $eclaim_id     	claim ID
+	 * @return array				resultes
+	 */
+	public function get_files_by_id($eclaim_id) {
+		$this->db->where('eclaim_id', $eclaim_id);
+		$rt = $this->db->get('eclaim_file')->result_array();
+		$r = array();
+		foreach ($rt as $rc) {
+			$r[$rc['id']] = $rc;
+		}
+		return $r;
+	}
 }

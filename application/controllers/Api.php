@@ -204,21 +204,20 @@ class Api extends CI_Controller {
 			$this->load->model('eclaim_file_model');
 			
 			$data = array();
-			$path = 'eclaim_files/' . date('Y') . "/" . date("m");
+			$path = 'eclaim_files/' . date('Y') . '/' . date("m");
 			// create directory to copy/shift files
-			@mkdir(UPLOADFULLPATH . $path, 0777);
+			mkdir(UPLOADFULLPATH . $path, 0777, TRUE);
 
 			// load upload class
-			$config['upload_path'] = UPLOADFULLPATH . '/' . $path;
+			$config['upload_path'] = UPLOADFULLPATH . $path;
 			$config['allowed_types'] = 'gif|jpg|png|jpeg';
 			$config['overwrite'] = FALSE;
 			$config['max_size'] = 15000;	// 15M
 			$this->load->library('upload', $config);
-			
 			if ($this->upload->do_upload('userfile')) {
 				$file_data = $this->upload->data();
 				$data['name'] = $file_data['file_name'];
-				$date['path'] = $path;
+				$data['path'] = $path;
 				$file_id = $this->eclaim_file_model->save($data);
 				if ($file_id) {
 					$rdata['file_id'] = $file_id;
@@ -245,7 +244,7 @@ class Api extends CI_Controller {
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('eclaim_model');
 			
-			$file_id = $this->eclaim_file_model->save($this->input->post());
+			$file_id = $this->eclaim_model->save($this->input->post());
 			if ($file_id) {
 				$rdata['application_id'] = $file_id;
 			} else {

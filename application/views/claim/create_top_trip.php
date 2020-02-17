@@ -467,7 +467,7 @@
 						</div>
 						<div class="form-group col-sm-6">
 							<?php echo form_label('Name and Address of Insurance Company:', 'exinfo_group_insurance', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("exinfo[group_insurance]", isset($exinfo["group_insurance"]) ? $exinfo["group_insurance"] :'', array("class" => "form-control", 'placeholder' => 'Name and Address of Insurance Company')); ?>
+							<?php echo form_input("exinfo[group_insurance_company]", isset($exinfo["group_insurance_company"]) ? $exinfo["group_insurance_company"] :'', array("class" => "form-control", 'placeholder' => 'Name and Address of Insurance Company')); ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Policy #:', 'exinfo_group_insurance_policy', array("class" => 'col-sm-12')); ?>
