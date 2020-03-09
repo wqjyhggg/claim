@@ -1198,6 +1198,13 @@
 		</div>
 	</div>
 </div>
+<?php
+$default_country_province_list = array();
+foreach ($country_list as $key1 => $country) {
+	$default_country_province_list = $country['province'];
+	break;
+}
+?>
 <div style="display: none">
 	<div class="payee-buffer">
 		<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin-bottom: 9px">
@@ -1229,13 +1236,24 @@
 				<label for="City" class="col-sm-12">City:</label>
 				<?php echo form_input("payees[city][]", "", array("class" => "form-control", 'placeholder' => 'City')); ?>
 			</div>
-			<div class="col-sm-3 cheque_section">
+			<div class="col-sm-3 cheque_section div_select_province">
 				<label for="Province" class="col-sm-12">Province:</label>
-				<?php echo form_input("payees[province][]", "", array("class" => "form-control", 'placeholder' => 'Province')); ?>
+				<select name="select_province" class="form-control select_province">
+					<option value=""> -- Select Province -- </option>
+				</select>
+				<?php echo form_hidden("payees[province][]", "", array("class" => "form-control", 'placeholder' => 'Province')); ?>
 			</div>
 			<div class="col-sm-3 cheque_section">
 				<label for="Country" class="col-sm-12">Country:</label>
-				<?php echo form_input("payees[country][]", "", array("class" => "form-control", 'placeholder' => 'Country')); ?>
+				<select name="select_country" class="form-control select_country">
+					<option value=""> -- Select Country -- </option>
+					<?php
+					foreach ($country_list as $key => $country) {
+						echo "<option value=\"".$key."\">".$country['name']."</option>\n";
+					}
+					?>
+				</select>
+				<?php echo form_hidden("payees[country][]", "", array("class" => "form-control", 'placeholder' => 'Country')); ?>
 			</div>
 			<div class="col-sm-3 cheque_section">
 				<label for="Postcode" class="col-sm-12">Postcode:</label>
@@ -1264,13 +1282,24 @@
 				<label for="City" class="col-sm-12">City:</label>
 				<?php echo form_input("eprovider[city][]", "", array("class" => "form-control required", 'placeholder' => 'City')); ?>
 			</div>
-			<div class="col-sm-2">
+			<div class="col-sm-2 div_select_province">
 				<label for="Province" class="col-sm-12">Province:</label>
-				<?php echo form_input("eprovider[province][]", "", array("class" => "form-control required", 'placeholder' => 'Province')); ?>
+				<select name="select_province" class="form-control select_province">
+					<option value=""> -- Select Province -- </option>
+				</select>
+				<?php echo form_hidden("eprovider[province][]", "", array("class" => "form-control required", 'placeholder' => 'Province')); ?>
 			</div>
 			<div class="col-sm-2">
 				<label for="Country" class="col-sm-12">Country:</label>
-				<?php echo form_input("eprovider[country][]", "", array("class" => "form-control required", 'placeholder' => 'Country')); ?>
+				<select name="select_country" class="form-control select_country">
+					<option value=""> -- Select Country -- </option>
+					<?php
+					foreach ($country_list as $key => $country) {
+						echo "<option value=\"".$key."\">".$country['name']."</option>\n";
+					}
+					?>
+				</select>
+				<?php echo form_hidden("eprovider[country][]", "", array("class" => "form-control required", 'placeholder' => 'Country')); ?>
 			</div>
 			<div class="col-sm-2">
 				<label for="Postcode" class="col-sm-12">Postcode:</label>
@@ -1341,6 +1370,29 @@
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
+var country_list = new Object();
+<?php
+foreach ($country_list as $key1 => $country) {
+	echo "country_list.".$key1." = {name:\"".$country['name']."\"};\n";
+	if (empty($country['province'])) {
+		$str  = "country_list." . $key1;
+		$str .= ".province_list = null;\n";
+		echo $str;
+		continue;
+	}
+	foreach ($country['province'] as $key2 => $province) {
+		if (empty($key2)) {
+			$str  = "country_list." . $key1 . ".province_list = {};\n";
+		} else {
+			$str  = "country_list." . $key1;
+			$str .= ".province_list." . $key2;
+			$str .= " = \"" . $province . "\";\n";
+		}
+		echo $str;
+	}
+}
+?>
+
 function get_policy() {
 	var policy_no = '<?php echo $claim_details['policy_no']; ?>';
 	$.ajax({
@@ -1427,6 +1479,32 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
       $(this).children("i").toggleClass("fa-angle-up").toggleClass("fa-angle-down");
    })
 
+	.on("change", ".select_province", function(){
+		var p = $(this).parent().parent();
+		var v = $(this).val();
+		p.find("input[name^='payees[province]']").val(v);
+		p.find("input[name^='eprovider[province]']").val(v);
+	})
+	.on("change", ".select_country", function(){
+		var p = $(this).parent().parent();
+		var v = $(this).val();
+		var key, value;
+		var province = p.find("select[name='select_province']");
+		province.empty();
+		if ((country_list[v] != 'undefined') && (country_list[v].province_list != null)) {
+			province.append("<option value=\"\"> -- Select Province -- </option>");
+			for (const [key,value] of Object.entries(country_list[v].province_list)) {
+				province.append("<option value=\""+key+"\">"+value+"</option>");
+			}
+			p.find(".div_select_province").show();
+		} else {
+			p.find(".div_select_province").hide();
+		}
+		p.find("input[name^='payees[province]']").val('');
+		p.find("input[name^='payees[country]']").val(v);
+		p.find("input[name^='eprovider[province]']").val('');
+		p.find("input[name^='eprovider[country]']").val(v);
+	})
    // fuzzy search
    //.on("click", ".autocomplete_field", function() {
    //   $(".autocomplete_field").autocomplete({
@@ -2227,6 +2305,8 @@ function validate_form(){
 
       return false;
    }
+   $('.select_province').attr('disabled', 'disabled');
+   $('.select_country').attr('disabled', 'disabled');
    return true;
 }
 
