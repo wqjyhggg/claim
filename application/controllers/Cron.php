@@ -485,6 +485,7 @@ class Cron extends CI_Controller {
 				*/
 				echo "Save to : " . $outfile . "\n";
 				$uploaded = FALSE;
+				if (0) {
 				for ($i = 0; $i < 5; $i++) {
 					$uploaded = $this->ftp($outfile, $uploadFilename);
 					if ($uploaded) {
@@ -497,6 +498,10 @@ class Cron extends CI_Controller {
 					$this->load->model("mymail_model");
 					$this->mymail_model->send_mymail('wqjyhggg@gmail.com', 'JF upload error', "File: " . $outfile);
 					$this->mymail_model->send_mymail('cosmo@jfgroup.ca', 'JF upload error', "File: " . $outfile, array($outfile));
+				}
+				} else {	
+					$this->load->model("mymail_model");
+					$this->mymail_model->send_mymail('willance@jfgroup.ca', 'JF upload file', "File: " . $outfile, array($outfile));
 				}
 			}
 		}
