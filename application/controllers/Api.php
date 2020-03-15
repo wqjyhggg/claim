@@ -215,7 +215,7 @@ class Api extends CI_Controller {
 			$data = array();
 			$path = 'eclaim_files/' . date('Y') . '/' . date("m");
 			// create directory to copy/shift files
-			mkdir(UPLOADFULLPATH . $path, 0777, TRUE);
+			@mkdir(UPLOADFULLPATH . $path, 0777, TRUE);
 
 			// load upload class
 			$config['upload_path'] = UPLOADFULLPATH . $path;
@@ -230,8 +230,7 @@ class Api extends CI_Controller {
 				$file_id = $this->eclaim_file_model->save($data);
 				if ($file_id) {
 					$rdata['file_id'] = $file_id;
-					$rdata['name'] = $data['name'];
-					$rdata['path'] = $data['path'];
+					$rdata['path'] = "/assets/uploads/".$data['path']."/".$data['name'];
 				} else {
 					$rdata['status'] = Api_model::STATUS_ERROR;
 					$rdata['message'] = 'Insert DB error';
