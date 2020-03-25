@@ -250,6 +250,11 @@ class Api extends CI_Controller {
 	}
 
 	public function submit() {
+		header('Content-Type: application/json');
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+
 		$this->load->model('api_model');
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
@@ -265,10 +270,6 @@ class Api extends CI_Controller {
 			}
 		}
 
-		header('Content-Type: application/json');
-		header('Access-Control-Allow-Origin: *');
-		header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
-		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 		echo json_encode($rdata);
 	}
 
