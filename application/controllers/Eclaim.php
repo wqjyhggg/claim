@@ -31,7 +31,7 @@ class Eclaim extends CI_Controller {
 			$offset = $this->uri->segment(3);
 
 			$post = $this->input->get();
-			$this->data['eclaims'] = $this->eclaim_model->search($post, $this->limit);
+			$this->data['eclaims'] = $this->eclaim_model->search($post, $this->limit, $offset);
 			// if ($this->data['eclaims'] && (sizeof($this->data['eclaims']) == 1)) {
 			// 	redirect('eclaim/detail/'.$this->data['eclaims'][0]['id'], 'refresh');
 			// }
