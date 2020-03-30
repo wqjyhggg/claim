@@ -437,6 +437,7 @@
 									$expenses_claimed_date_of_services = json_decode($eclaim["expenses_claimed_date_of_service"], TRUE);
 									$expenses_claimed_amount_client_paid_orgs = json_decode($eclaim["expenses_claimed_amount_client_paid_org"], TRUE);
 									$expenses_claimed_amount_claimed_orgs = json_decode($eclaim["expenses_claimed_amount_claimed_org"], TRUE);
+									if ($expenses_claimed_service_descriptions && is_array($expenses_claimed_service_description)) {
 									?>
 									<?php foreach ( $expenses_claimed_service_descriptions as $key => $value ) : ?>
 									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
@@ -469,6 +470,7 @@
 										<div class="clearfix"></div>
 									</div>
 									<?php endforeach; ?>
+									<?php } ?>
 								</div>
 							</div>
 						</div>
