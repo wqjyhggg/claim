@@ -312,9 +312,6 @@ class Eclaim_model extends CI_Model {
         if (!empty($post['intnotes'])) {
             $data['intnotes'] = $post['intnotes'];
         }
-        if (!empty($post['imgfile'])) {
-            $data['imgfile'] = $post['imgfile'];
-        }
         if (!empty($post['sign_name'])) {
             $data['sign_name'] = $post['sign_name'];
         }
