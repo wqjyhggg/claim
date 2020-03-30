@@ -484,6 +484,11 @@
 								<div class="col-sm-12">
 									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>">
 								</div>
+								<?php if (!empty($eclaim['sign_image2'])) { ?>
+								<div class="col-sm-12">
+									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image2']]['path'] . "/" . $eclaim_files[$eclaim['sign_image2']]['name']; ?>">
+								</div>
+								<?php } ?>
 							</div>
 						</div>
 						<br />

@@ -493,6 +493,20 @@ class Eclaim_model extends CI_Model {
 		$sql = $this->db->last_query();
 		$id = $this->db->insert_id();
 		$this->active_model->log_new('eclaim', $id, $data, $sql);
+		if ($id && !empty($post['imgfile'])) {
+		    foreach ($post['imgfile'] as $fid) {
+		        $this->db->where('id', $fid);
+		        $this->db->update('eclaim_file', array('eclaim_id' => $id));
+		    }
+		    if (!empty($post['sign_image'])) {
+		        $this->db->where('id', $post['sign_image']);
+		        $this->db->update('eclaim_file', array('eclaim_id' => $id));
+		    }
+		    if (!empty($post['sign_image2'])) {
+		        $this->db->where('id', $post['sign_image2']);
+		        $this->db->update('eclaim_file', array('eclaim_id' => $id));
+		    }
+		}
 		return $id;
 	}
 }
