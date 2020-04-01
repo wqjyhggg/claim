@@ -44,7 +44,7 @@ class Api extends CI_Controller {
 			$policies = $this->api_model->get_policy(array('policy' => $data['policy']));
 			if (empty($policies)) {
 				$rdata['status'] = Api_model::STATUS_ERROR;
-				$rdata['message'] = 'Invilad Policy';
+				$rdata['message'] = 'Policy number is not valid';
 			} else {
 				$hasbirthday = 0;
 				if ($policies[0]['birthday'] == $data['birthday']) {
@@ -70,7 +70,7 @@ class Api extends CI_Controller {
 					$rdata['birthday'] = $birthday;
 				} else {
 					$rdata['status'] = Api_model::STATUS_ERROR;
-					$rdata['message'] = 'No Matched Policy';
+					$rdata['message'] = 'Birthday does not match our records';
 				}
 			}
 		}
