@@ -496,6 +496,7 @@
 						<div class="row intake-forms-list col-sm-12" style="display: none">
 							<?php $images = json_decode($eclaim['imgfile'], TRUE); ?>
 							<?php foreach ( $images as $key => $value ) : ?>
+							<?php     if (!isset($eclaim_files[$value])) continue; ?>
 							<div class="col-sm-12 intake-forms">
 								<div class="col-sm-12">
 									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>">

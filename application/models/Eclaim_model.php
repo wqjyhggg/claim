@@ -82,25 +82,32 @@ class Eclaim_model extends CI_Model {
 	public function save($post) {
 		$data = array();
         if (!empty($post['imgfile'])) {
-            $data['imgfile'] = json_encode($post['imgfile']);
+            //$data['imgfile'] = json_encode($post['imgfile']);
+            $data['imgfile'] = $post['imgfile'];
         }
         if (!empty($post['expenses_claimed_service_description'])) {
-            $data['expenses_claimed_service_description'] = json_encode($post['expenses_claimed_service_description']);
+            //$data['expenses_claimed_service_description'] = json_encode($post['expenses_claimed_service_description']);
+            $data['expenses_claimed_service_description'] = $post['expenses_claimed_service_description'];
         }
         if (!empty($post['expenses_claimed_provider_name'])) {
-            $data['expenses_claimed_provider_name'] = json_encode($post['expenses_claimed_provider_name']);
+            //$data['expenses_claimed_provider_name'] = json_encode($post['expenses_claimed_provider_name']);
+            $data['expenses_claimed_provider_name'] = $post['expenses_claimed_provider_name'];
         }
         if (!empty($post['expenses_claimed_referencing_physician'])) {
-            $data['expenses_claimed_referencing_physician'] = json_encode($post['expenses_claimed_referencing_physician']);
+            //$data['expenses_claimed_referencing_physician'] = json_encode($post['expenses_claimed_referencing_physician']);
+            $data['expenses_claimed_referencing_physician'] = $post['expenses_claimed_referencing_physician'];
         }
         if (!empty($post['expenses_claimed_date_of_service'])) {
-            $data['expenses_claimed_date_of_service'] = json_encode($post['expenses_claimed_date_of_service']);
+            //$data['expenses_claimed_date_of_service'] = json_encode($post['expenses_claimed_date_of_service']);
+            $data['expenses_claimed_date_of_service'] = $post['expenses_claimed_date_of_service'];
         }
         if (!empty($post['expenses_claimed_amount_client_paid_org'])) {
-            $data['expenses_claimed_amount_client_paid_org'] = json_encode($post['expenses_claimed_amount_client_paid_org']);
+            //$data['expenses_claimed_amount_client_paid_org'] = json_encode($post['expenses_claimed_amount_client_paid_org']);
+            $data['expenses_claimed_amount_client_paid_org'] = $post['expenses_claimed_amount_client_paid_org'];
         }
         if (!empty($post['expenses_claimed_amount_claimed_org'])) {
-            $data['expenses_claimed_amount_claimed_org'] = json_encode($post['expenses_claimed_amount_claimed_org']);
+            //$data['expenses_claimed_amount_claimed_org'] = json_encode($post['expenses_claimed_amount_claimed_org']);
+            $data['expenses_claimed_amount_claimed_org'] = $post['expenses_claimed_amount_claimed_org'];
         }
         if (!empty($post['eclaim_no'])) {
             $data['eclaim_no'] = $post['eclaim_no'];
@@ -121,7 +128,7 @@ class Eclaim_model extends CI_Model {
             $data['insured_last_name'] = $post['insured_last_name'];
         }
         if (!empty($post['gender'])) {
-            $data['gender'] = $post['gender'];
+            $data['gender'] = ($post['gender'] == 'F') ? "female" : "male";
         }
         if (!empty($post['dob'])) {
             $data['dob'] = $post['dob'];
@@ -493,8 +500,16 @@ class Eclaim_model extends CI_Model {
 		$sql = $this->db->last_query();
 		$id = $this->db->insert_id();
 		$this->active_model->log_new('eclaim', $id, $data, $sql);
+	        $rfrid = $id;
+
+		if ($id) {
+		    $rfrid = "RFR".str_pad($id, 6, "0", STR_PAD_LEFT);
+		    $this->db->where('id', $id);
+		    $this->db->update('eclaim', array('eclaim_no' => $rfrid));
+		}
 		if ($id && !empty($post['imgfile'])) {
-		    foreach ($post['imgfile'] as $fid) {
+		    $imgfile = json_decode($post['imgfile'], TRUE);
+		    foreach ($imgfile as $fid) {
 		        $this->db->where('id', $fid);
 		        $this->db->update('eclaim_file', array('eclaim_id' => $id));
 		    }
@@ -507,6 +522,6 @@ class Eclaim_model extends CI_Model {
 		        $this->db->update('eclaim_file', array('eclaim_id' => $id));
 		    }
 		}
-		return $id;
+		return $rfrid;
 	}
 }
