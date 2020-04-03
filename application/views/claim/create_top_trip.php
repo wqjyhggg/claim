@@ -205,6 +205,7 @@
 								<option value="Trip Cancellation" <?php if ('Trip Cancellation' == $this->input->post("exinfo[loss_type")) { echo "selected"; } ?>>Trip Cancellation</option>
 								<option value="Trip Intrruption" <?php if ('Trip Intrruption' == $this->input->post("exinfo[loss_type")) { echo "selected"; } ?>>Trip Intrruption</option>
 								<option value="Delays" <?php if ('Delays' == $this->input->post("exinfo[loss_type")) { echo "selected"; } ?>>Delays</option>
+								<option value="Other" <?php if ('Other' == $this->input->post("exinfo[loss_type")) { echo "selected"; } ?>>Other</option>
 							</select>
 						</div>
 						<div class="clearfix"></div>
@@ -286,6 +287,22 @@
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_input("exinfo[patient_name]", isset($exinfo["patient_name"]) ? $exinfo["patient_name"] : '', array("class" => "form-control")); ?>
+						</div>
+						<div class="clearfix"></div>
+						<div class="form-group col-sm-3">
+							If loss is due to other, please provide details: 
+						</div>
+						<div class="form-group col-sm-9">
+							<?php echo form_input("exinfo[other_reason]", isset($exinfo["other_reason"]) ? $exinfo["other_reason"] : '', array("class" => "form-control")); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							Date symptoms or injury first appeared: 
+						</div>
+						<div class="form-group col-sm-3">
+							<div class="input-group date">
+								<?php echo form_input("exinfo[other_occurred_date]", isset($exinfo["other_occurred_date"]) ? $exinfo["other_occurred_date"] : '', array("class" => "form-control datepicker")); ?>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
 						</div>
 						<div class="clearfix"></div>
 	
