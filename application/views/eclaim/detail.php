@@ -483,11 +483,15 @@
 									<?php echo $eclaim['sign_name']; ?>
 								</div>
 								<div class="col-sm-12">
+								<?php if (isset($eclaim_files[$eclaim['sign_image']])) { ?>
 									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>">
+								<?php } ?>
 								</div>
 								<?php if (!empty($eclaim['sign_image2'])) { ?>
 								<div class="col-sm-12">
+								<?php if (isset($eclaim_files[$eclaim['sign_image2']])) { ?>
 									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image2']]['path'] . "/" . $eclaim_files[$eclaim['sign_image2']]['name']; ?>">
+								<?php } ?>
 								</div>
 								<?php } ?>
 							</div>
@@ -496,14 +500,17 @@
 						<h2 class="modal-title intake-heading move_down">Images: <i class="fa fa-angle-down pull-right"></i></h2>
 						<div class="row intake-forms-list col-sm-12" style="display: none">
 							<?php $images = json_decode($eclaim['imgfile'], TRUE); ?>
+							<?php if (!empty($images)) { ?>
 							<?php foreach ( $images as $key => $value ) : ?>
-							<?php     if (!isset($eclaim_files[$value])) continue; ?>
 							<div class="col-sm-12 intake-forms">
 								<div class="col-sm-12">
+								<?php if (isset($eclaim_files[$value])) { ?>
 									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>">
+								<?php } ?>
 								</div>
 							</div>
 							<?php endforeach; ?>
+							<?php } ?>
 						</div>
 					</div>
 					<div class="row">

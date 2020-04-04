@@ -378,7 +378,6 @@ class Eclaim extends CI_Controller {
 			$this->data['country'] = $this->country_model->get_list();
 
 			// load view data
-			$this->template->write('title', SITE_TITLE . ' - Eclaim Details', TRUE);
 			switch ($this->data['eclaim']['exinfo_type']) {
 				case "top_baggage":
 					$html = $this->load->view('eclaim/top_baggage_pdf', $this->data);
@@ -393,10 +392,6 @@ class Eclaim extends CI_Controller {
 					$html = $this->load->view('eclaim/detail_pdf', $this->data);
 					break;
 			}
-			$this->template->render();
-
-			$this->load->model('pdf_model');
-			$this->pdf_model->htmloutput($html, $this->data);
 		}
 	}
 }
