@@ -339,4 +339,64 @@ class Eclaim extends CI_Controller {
 			$this->template->render();
 		}
 	}
+
+	public function export($id) {
+		if (! $this->ion_auth->logged_in()) {
+			redirect('auth/login', 'refresh');
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EAC, Users_model::GROUP_CLAIMER))) {
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		} else {
+			$this->load->model('api_model');
+			$this->load->model('eclaim_model');
+			$this->load->model('eclaim_file_model');
+			$this->load->model('html_model');
+			$this->load->model('country_model');
+
+			// get claim details
+			$this->data['eclaim'] = $this->eclaim_model->get_by_id($id);
+			$this->data['html_model'] = $this->html_model;
+			$this->data['eclaim_file_model'] = $this->eclaim_file_model;
+			if (empty($this->data['eclaim'])) {
+				// send error message
+				$this->session->set_flashdata('error', "Can't find Eclaim.");
+				
+				// redirect them to the claim
+				redirect('eclaim');
+			}
+			if ($policies = $this->api_model->get_policy(array('policy' => $this->data['eclaim']["policy_no"]))) {
+				$this->data['policy'] = $policies[0];
+			} else {
+				// send error message
+				$this->session->set_flashdata('error', "Can't find Policy(".$this->data['eclaim']["policy_no"].".");
+				
+				// redirect them to the claim
+				redirect('eclaim');
+			}
+			// get all related files
+			$this->data['eclaim_files'] = $this->eclaim_file_model->get_files_by_id($id);
+
+			$this->data['country'] = $this->country_model->get_list();
+
+			// load view data
+			$this->template->write('title', SITE_TITLE . ' - Eclaim Details', TRUE);
+			switch ($this->data['eclaim']['exinfo_type']) {
+				case "top_baggage":
+					$html = $this->load->view('eclaim/top_baggage_pdf', $this->data);
+					break;
+				case "top_medical":
+					$html = $this->load->view('eclaim/top_medical_pdf', $this->data);
+					break;
+				case "top_trip":
+					$html = $this->load->view('eclaim/top_trip_pdf', $this->data);
+					break;
+				default:
+					$html = $this->load->view('eclaim/detail_pdf', $this->data);
+					break;
+			}
+			$this->template->render();
+
+			$this->load->model('pdf_model');
+			$this->pdf_model->htmloutput($html, $this->data);
+		}
+	}
 }

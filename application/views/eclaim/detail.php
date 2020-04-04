@@ -2,7 +2,8 @@
 	<div class="page-title">
 		<div class="title_left">
 			<h3>Eclaim - ID#<?php echo $eclaim['id']; ?></h3>
-      </div>
+	  </div>
+	  <span style="float: right; margin-right: 8rem; margin-top: 1rem;"><?php echo anchor("eclaim/export/".$eclaim['id'], "Print", "target='_blank'"); ?></span>
 	</div>
 	<div class="clearfix"></div>
 	<!-- Policy search and List Section -->
