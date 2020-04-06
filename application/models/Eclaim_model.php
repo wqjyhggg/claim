@@ -27,8 +27,12 @@ class Eclaim_model extends CI_Model {
 	 * @return array result array, maybe null
 	 */
 	public function search($data, $count=-1, $limit=-1, $sortby=array()) {
+
 		$this->db->select('SQL_CALC_FOUND_ROWS *', FALSE);
 		$this->db->where("status ", isset($data["status"])?$data["status"]:0);
+		if (!empty($data["eclaim_id"])) {
+			$this->db->like("id", $data["eclaim_id"]);
+		}
 		if (!empty($data["policy_no"])) {
 			$this->db->where("policy_no", $data["policy_no"]);
 		}

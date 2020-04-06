@@ -85,7 +85,7 @@ class Eclaim extends CI_Controller {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			// validate form input
-			$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
+			//$this->form_validation->set_rules('diagnosis', 'Diagnosis ', 'required');
 			$this->form_validation->set_rules('date_symptoms', 'Date symptoms or injury first appeared ', 'required');
 			$this->form_validation->set_rules('insured_first_name', 'Insured First Name ', 'required');
 			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'required');
@@ -165,11 +165,12 @@ class Eclaim extends CI_Controller {
 
 				$expenses=[];
 
-				if (empty($array['expenses_claimed_provider_name'])) {
+				if (empty($array['expenses_claimed_service_description'])) {
 					$this->session->set_flashdata('error', "No Eclaim expenses exists");
-					$error = TRUE;
+					$id = $this->input->post('id');
+					redirect("eclaim/detail/".$id);
 				} else {
-					foreach ($array['expenses_claimed_provider_name'] as $key => $val) {
+					foreach ($array['expenses_claimed_service_description'] as $key => $val) {
 						$expenses[] = array(
 							'claim_id' => 0,
 							'claim_no' => '',
@@ -273,11 +274,13 @@ class Eclaim extends CI_Controller {
 				// print_r($this->db->last_query());
 				// send success message
 				$this->session->set_flashdata('success', "Claim successfully created (" . $data['claim_no'] . ")");
+
 				redirect("eclaim");
 			}
 			// echo validation_errors();
 			$id = $this->input->post('id');
-			$this->session->set_flashdata('error', "Can't process Eclaim. Because some error");
+			//$this->session->set_flashdata('error', "Can't process Eclaim. Because some error");
+			$this->session->set_flashdata('error', validation_errors());
 			redirect("eclaim/detail/".$id);
 		}
 	}
