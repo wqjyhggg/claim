@@ -456,7 +456,7 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed_date_of_service[]", $expenses_claimed_service_descriptions[$key]); ?>
+											<?php echo form_input("expenses_claimed_date_of_service[]", $expenses_claimed_date_of_services[$key]); ?>
 										</div>
 										<div class="clearfix"></div>
 

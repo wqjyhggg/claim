@@ -176,7 +176,7 @@ class Eclaim extends CI_Controller {
 							'claim_no' => '',
 							'claim_item_no' => '',
 							'invoice' => '',
-							'provider_name' => $val,
+							'provider_name' => $array['expenses_claimed_provider_name'][$key],
 							'provider_type' => 0,
 							'expenses_provider_id' => 0,
 							'referencing_physician' => $array['expenses_claimed_referencing_physician'][$key],
