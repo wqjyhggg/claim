@@ -11,7 +11,7 @@
 				</div>
 				<div class="x_content">
 					<!-- search filter start -->
-					<?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>
+					<?php echo form_open("eclaim/index", array('class'=>'form-horizontal', 'method'=>'get')); ?>
 					<div class="row">
                         <div class="form-group col-sm-3">
 							<?php echo form_label ( 'ID number:', 'id number', array("class" => 'col-sm-12')); ?>
