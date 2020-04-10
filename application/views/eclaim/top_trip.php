@@ -685,6 +685,7 @@
 									$expenses_claimed_date_of_services = json_decode($eclaim["expenses_claimed_date_of_service"], TRUE);
 									$expenses_claimed_amount_client_paid_orgs = json_decode($eclaim["expenses_claimed_amount_client_paid_org"], TRUE);
 									$expenses_claimed_amount_claimed_orgs = json_decode($eclaim["expenses_claimed_amount_claimed_org"], TRUE);
+									if (!empty($expenses_claimed_service_descriptions)) :
 									?>
 									<?php foreach ( $expenses_claimed_service_descriptions as $key => $value ) : ?>
 									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
@@ -702,7 +703,7 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed_date_of_service[]", $expenses_claimed_service_descriptions[$key]); ?>
+											<?php echo form_input("expenses_claimed_date_of_service[]", $expenses_claimed_date_of_services[$key]); ?>
 										</div>
 										<div class="clearfix"></div>
 
@@ -712,11 +713,12 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed_amount_claimed_org[]", $expenses_claimed_amount_client_paid_orgs[$key]); ?>
+											<?php echo form_input("expenses_claimed_amount_claimed_org[]", $expenses_claimed_amount_claimed_orgs[$key]); ?>
 										</div>
 										<div class="clearfix"></div>
 									</div>
 									<?php endforeach; ?>
+									<?php endif; ?>
 								</div>
 							</div>
 						</div>

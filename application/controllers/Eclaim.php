@@ -166,9 +166,10 @@ class Eclaim extends CI_Controller {
 				$expenses=[];
 
 				if (empty($array['expenses_claimed_service_description'])) {
+					/* no check has expenses for now
 					$this->session->set_flashdata('error', "No Eclaim expenses exists");
 					$id = $this->input->post('id');
-					redirect("eclaim/detail/".$id);
+					redirect("eclaim/detail/".$id); */
 				} else {
 					foreach ($array['expenses_claimed_service_description'] as $key => $val) {
 						$expenses[] = array(
@@ -195,14 +196,14 @@ class Eclaim extends CI_Controller {
 							'currency' => 'CAD'
 						);
 					}
-					unset($array['expenses_claimed_provider_name']);
-					unset($array['expenses_claimed_referencing_physician']);
-					unset($array['expenses_claimed_service_description']);
-					unset($array['expenses_claimed_date_of_service']);
-					unset($array['expenses_claimed_amount_client_paid_org']);
-					unset($array['expenses_claimed_amount_claimed_org']);
-					unset($array['expenses_claimed_provider_name']);
 				}
+				unset($array['expenses_claimed_provider_name']);
+				unset($array['expenses_claimed_referencing_physician']);
+				unset($array['expenses_claimed_service_description']);
+				unset($array['expenses_claimed_date_of_service']);
+				unset($array['expenses_claimed_amount_client_paid_org']);
+				unset($array['expenses_claimed_amount_claimed_org']);
+				unset($array['expenses_claimed_provider_name']);
 
 				$data = $array;
 				$data['created'] = date('Y-m-d H:i:s');

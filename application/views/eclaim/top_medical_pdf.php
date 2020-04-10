@@ -132,9 +132,9 @@ if (isset($expenses_claimed_service_descriptions)) { ?>
 <div><b>Name of Provider: </b><?php echo isset($expenses_claimed_provider_names[$key]) ? $expenses_claimed_provider_names[$key] : ''; ?></div>
 <div><b>Name of Referring Physician: </b><?php echo isset($expenses_claimed_referencing_physicians[$key]) ? $expenses_claimed_referencing_physicians[$key] : ''; ?></div>
 <div><b>Description of Services: </b><?php echo isset($expenses_claimed_service_descriptions[$key]) ? $expenses_claimed_service_descriptions[$key] : ''; ?></div>
-<div><b>Date of Service: </b><?php echo isset($expenses_claimed_service_descriptions[$key]) ? $expenses_claimed_service_descriptions[$key] : ''; ?></div>
+<div><b>Date of Service: </b><?php echo isset($expenses_claimed_date_of_services[$key]) ? $expenses_claimed_date_of_services[$key] : ''; ?></div>
 <div><b>Amount Client Paid: </b><?php echo isset($expenses_claimed_amount_client_paid_orgs[$key]) ? $expenses_claimed_amount_client_paid_orgs[$key] : ''; ?></div>
-<div><b>Amount Claimed: </b><?php echo isset($expenses_claimed_amount_client_paid_orgs[$key]) ? $expenses_claimed_amount_client_paid_orgs[$key] : ''; ?></div>
+<div><b>Amount Claimed: </b><?php echo isset($expenses_claimed_amount_claimed_orgs[$key]) ? $expenses_claimed_amount_claimed_orgs[$key] : ''; ?></div>
 <?php 
     }
 }

@@ -65,6 +65,11 @@ class Api extends CI_Controller {
 				}
 				if ($hasbirthday) {
 					$rdata['policy'] = $policies[0];
+					if (($rdata['policy']['product_short'] == 'TOP') && ($rdata['policy']['package'] == 'all_inclusive')) {
+						$rdata['policy']['ad_and_d_insured'] = 50000;
+						$rdata['policy']['medical_insured'] = 10000000;
+						$rdata['policy']['flight_accident_insured'] = 100000;
+					}
 					$data['firstname'] = $firstname;
 					$data['lastname'] = $lastname;
 					$rdata['birthday'] = $birthday;

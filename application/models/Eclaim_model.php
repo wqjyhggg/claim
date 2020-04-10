@@ -368,17 +368,21 @@ class Eclaim_model extends CI_Model {
         if (!empty($post['exinfo_destination'])) {
             $data['exinfo_destination'] = $post['exinfo_destination'];
         }
-        if (!empty($post['exinfo_other_medical_insurance'])) {
-            $data['exinfo_other_medical_insurance'] = $post['exinfo_other_medical_insurance'];
+        $data['exinfo_other_medical_insurance'] = 0;
+        if (!empty($post['exinfo_other_medical_insurance']) && ($post['exinfo_other_medical_insurance'] == 'Y')) {
+            $data['exinfo_other_medical_insurance'] = 1;
         }
-        if (!empty($post['exinfo_spouse_insurance'])) {
-            $data['exinfo_spouse_insurance'] = $post['exinfo_spouse_insurance'];
+        $data['exinfo_spouse_insurance'] = 0;
+        if (!empty($post['exinfo_spouse_insurance']) && ($post['exinfo_spouse_insurance'] == 'Y')) {
+            $data['exinfo_spouse_insurance'] = 1;
         }
-        if (!empty($post['exinfo_credit_card_insurance'])) {
-            $data['exinfo_credit_card_insurance'] = $post['exinfo_credit_card_insurance'];
+        $data['exinfo_credit_card_insurance'] = 0;
+        if (!empty($post['exinfo_credit_card_insurance']) && ($post['exinfo_credit_card_insurance'] == 'Y')) {
+            $data['exinfo_credit_card_insurance'] = 1;
         }
-        if (!empty($post['exinfo_group_insurance'])) {
-            $data['exinfo_group_insurance'] = $post['exinfo_group_insurance'];
+        $data['exinfo_group_insurance'] = 0;
+        if (!empty($post['exinfo_group_insurance']) && ($post['exinfo_group_insurance'] == 'Y')) {
+            $data['exinfo_group_insurance'] = 1;
         }
         if (!empty($post['exinfo_other_insurance_name'])) {
             $data['exinfo_other_insurance_name'] = $post['exinfo_other_insurance_name'];
