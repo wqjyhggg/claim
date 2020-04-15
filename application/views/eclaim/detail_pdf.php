@@ -103,18 +103,22 @@ if ($expenses_claimed_service_descriptions && is_array($expenses_claimed_service
 ?>
 <br />
 <div><b>Sign: </b><?php echo $eclaim['sign_name']; ?></div>
+<?php if (!empty($eclaim['sign_image'])) { ?>
 <div><img src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>"></div>
+<?php } ?>
 <?php if (!empty($eclaim['sign_image2'])) { ?>
 <div><img src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image2']]['path'] . "/" . $eclaim_files[$eclaim['sign_image2']]['name']; ?>"></div>
 <?php } ?>
 <div><b>Images: </b></div>
 <?php 
 $images = json_decode($eclaim['imgfile'], TRUE);
+if ($images) {
 foreach ( $images as $key => $value ) {
     if (!isset($eclaim_files[$value])) continue;
 ?>
 <div><img src="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"></div>
 <?php
+}
 }
 ?>
 <script type="text/javascript">
