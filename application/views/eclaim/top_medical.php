@@ -59,6 +59,7 @@
 								<?php echo form_input("policy_no", $eclaim["policy_no"], array("class" => "form-control required", 'placeholder' => 'Policy#', 'readonly' => 'readonly')); ?>
 								<?php echo form_error("policy_no"); ?>
 								<?php echo form_hidden("id", $eclaim['id']); ?>
+								<?php echo form_hidden("exinfo_type", 'top_medical'); ?>
 								<?php echo form_hidden("product_short", $eclaim['product_short']); ?>
 							</div>
 							<div class="form-group col-sm-3" style="display: none">

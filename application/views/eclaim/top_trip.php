@@ -86,6 +86,7 @@
 								<?php echo form_input("policy_no", $eclaim["policy_no"], array("class" => "form-control required", 'placeholder' => 'Policy#', 'readonly' => 'readonly')); ?>
 								<?php echo form_error("policy_no"); ?>
 								<?php echo form_hidden("id", $eclaim['id']); ?>
+								<?php echo form_hidden("exinfo_type", 'top_trip'); ?>
 								<?php echo form_hidden("product_short", $eclaim['product_short']); ?>
 							</div>
 							<div class="form-group col-sm-3" style='display:none;'>
@@ -207,6 +208,7 @@
 							<div class="form-group col-sm-3">
 								<div class="input-group date">
 									<?php echo form_input("exinfo[injury1_date]", isset($eclaim["exinfo_injury1_date"]) ? $eclaim["exinfo_injury1_date"] : '', array("class" => "form-control datepicker")); ?>
+									<?php echo form_hidden("date_symptoms", isset($eclaim["exinfo_injury1_date"]) ? $eclaim["exinfo_injury1_date"] : ''); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
@@ -544,77 +546,6 @@
 									<div class="col-sm-3">
 										<?php echo form_label('Telephone:', 'employee_telephone', array("class" => 'col-sm-12')); ?>
 										<?php echo form_input("employee_telephone", $eclaim["employee_telephone"], array("class" => "form-control", 'placeholder' => 'Telephone')); ?>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<h2 class="move_down" style="display: none">Medical Information <small></small> <i class="fa fa-angle-down pull-right"></i></h2>
-						<div class="row" style="display: none">
-							<div class="col-sm-12">
-								<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("diagnosis", $eclaim["diagnosis"], array("class" => "form-control", 'placeholder' => 'Diagnosis')); ?>
-								<?php echo form_error("diagnosis"); ?>
-							</div>
-							<div class="form-group col-sm-12">
-								<?php echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class" => 'col-sm-12')); ?>
-								<?php echo form_textarea("medical_description", $eclaim["medical_description"], array("class" => "form-control", 'placeholder' => 'Brief description of your sickness or injury')); ?>
-							</div>
-							<div class="col-sm-6">
-								<?php echo form_label('Date symptoms or injury first appeared:', 'date_symptoms', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("date_symptoms", $eclaim["date_symptoms"], array("class" => "form-control dob", 'placeholder' => 'Date symptoms or injury first appeared')); ?>
-								<?php echo form_error("date_symptoms"); ?>
-							</div>
-							<div class="col-sm-6">
-								<?php echo form_label('Date you first saw physician for this condition:', 'date_first_physician', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("date_first_physician", $eclaim["date_first_physician"], array("class" => "form-control dob", 'placeholder' => 'Date you first saw physician for this condition')); ?>
-							</div>
-							<div class="col-sm-12" style="margin-top: 20px">
-								<div class="col-sm-7">Have you ever been treated for this or a similar condition before?</div>
-								<div class="col-sm-1">
-									<?php echo form_radio("treatment_before", "Y", $eclaim["treatment_before"], array('class' => 'setpremium')); ?>  Yes
-								</div>
-								<div class="col-sm-1">
-									<?php echo form_radio("treatment_before", "N", $eclaim["treatment_before"], array('class' => 'setpremium')); ?>  No
-								</div>
-								<div class="col-sm-12">If you answered “yes”, provide all dates of treatment and list all medications taken before the effective date of the current policy:</div>
-								<div class="form-group col-sm-12">
-									<div class="col-sm-3">
-										<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_1', array("class"=>'col-sm-12'));   ?>
-										<div class="input-group date">
-											<?php echo form_input("medication_date_1", $eclaim["medication_date_1"], array("class" => "form-control datepicker", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
-											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-										</div>
-									</div>
-									<div class="col-sm-3">
-										<?php echo form_label('Medication:', 'medication_1', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("medication_1", $eclaim["medication_1"], array("class" => "form-control", 'placeholder' => 'Medication')); ?>
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<div class="col-sm-3">
-										<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_2', array("class"=>'col-sm-12'));   ?>
-										<div class="input-group date">
-											<?php echo form_input("medication_date_2", $eclaim["medication_date_2"], array("class" => "form-control datepicker", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
-											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-										</div>
-									</div>
-									<div class="col-sm-3">
-										<?php echo form_label('Medication:', 'medication_2', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("medication_2", $eclaim["medication_2"], array("class" => "form-control", 'placeholder' => 'Medication')); ?>
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<div class="col-sm-3">
-										<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_3', array("class"=>'col-sm-12'));   ?>
-										<div class="input-group date">
-											<?php echo form_input("medication_date_3", $eclaim["medication_date_3"], array("class" => "form-control datepicker", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
-											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-										</div>
-									</div>
-									<div class="col-sm-3">
-										<?php echo form_label('Medication:', 'medication_3', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("medication_3", $eclaim["medication_3"], array("class" => "form-control", 'placeholder' => 'Medication')); ?>
 									</div>
 								</div>
 							</div>

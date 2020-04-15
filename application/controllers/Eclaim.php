@@ -205,6 +205,10 @@ class Eclaim extends CI_Controller {
 				unset($array['expenses_claimed_amount_claimed_org']);
 				unset($array['expenses_claimed_provider_name']);
 
+				$exinfo = $array['exinfo'];
+				unset($array['exinfo']);
+				$array['exinfo'] = json_encode($exinfo);
+
 				$data = $array;
 				$data['created'] = date('Y-m-d H:i:s');
 				$data['created_by'] = $this->ion_auth->get_user_id();
