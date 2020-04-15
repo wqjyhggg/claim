@@ -205,9 +205,13 @@ class Eclaim extends CI_Controller {
 				unset($array['expenses_claimed_amount_claimed_org']);
 				unset($array['expenses_claimed_provider_name']);
 
-				$exinfo = $array['exinfo'];
-				unset($array['exinfo']);
-				$array['exinfo'] = json_encode($exinfo);
+				if (!empty($array['exinfo'])) {
+					$exinfo = $array['exinfo'];
+					unset($array['exinfo']);
+					$array['exinfo'] = json_encode($exinfo);
+				} else {
+					$array['exinfo'] = json_encode(array());
+				}
 
 				$data = $array;
 				$data['created'] = date('Y-m-d H:i:s');
