@@ -3,7 +3,6 @@
 		<div class="title_left">
 			<h3>Eclaim - ID#<?php echo $eclaim['id']; ?></h3>
       </div>
-	  <span style="float: right; margin-right: 8rem; margin-top: 1rem;"><?php echo anchor("eclaim/export/".$eclaim['id'], "Print", "target='_blank'"); ?></span>
 	</div>
 	<div class="clearfix"></div>
 	<!-- Policy search and List Section -->
@@ -59,6 +58,7 @@
 								<?php echo form_input("policy_no", $eclaim["policy_no"], array("class" => "form-control required", 'placeholder' => 'Policy#', 'readonly' => 'readonly')); ?>
 								<?php echo form_error("policy_no"); ?>
 								<?php echo form_hidden("id", $eclaim['id']); ?>
+								<?php echo form_hidden("case_no", $eclaim['case_no']); ?>
 								<?php echo form_hidden("exinfo_type", 'top_baggage'); ?>
 								<?php echo form_hidden("product_short", $eclaim['product_short']); ?>
 							</div>
@@ -672,11 +672,29 @@
 					</div>
 					<div class="row" style="margin-top: 20px">
 						<div class="row">
+							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER)) && empty($eclaim['status'])) { ?>
 							<div class="col-sm-2">
 								<input class="btn btn-primary" name="Save" value="Save as Claim" type="submit">
 							</div>
 							<div class="col-sm-2">
 								<input class="btn btn-primary" name="Refuse" value="Refuse Claim" type="button">
+							</div>
+							<?php } ?>
+							<div class="col-sm-2">
+								<?php echo anchor("eclaim/export/".$eclaim['id'], "Print", "target='_blank' class='btn btn-primary'"); ?>
+							</div>
+						</div>
+					</div>
+					<?php echo form_close(); ?>
+					<?php echo form_open("eclaim/setcaseno", array('class'=>'form-horizontal', 'method'=>'post')); ?>
+					<div class="row" style="margin-top: 20px">
+						<div class="row">
+							<div class="col-sm-2">
+								<?php echo form_input("case_no", $eclaim['case_no']); ?>
+								<?php echo form_hidden("id", $eclaim['id']); ?>
+							</div>
+							<div class="col-sm-2">
+								<button class="btn btn-primary" name="csubmit" value="eclaim">Save Case No</button>
 							</div>
 						</div>
 					</div>

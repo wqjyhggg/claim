@@ -97,6 +97,14 @@ class Claim_model extends CI_Model {
 		
 		$where = '';
 		
+		if (!empty($post["eclaim_sls"])) {
+			if ($post["eclaim_sls"] == 1) {
+				$where .= ' claim.eclaim_no=\'\'';
+			} else {
+				$where .= ' claim.eclaim_no!=\'\'';
+			}
+		}
+
 		if (!empty($post["claim_no"])) {
 			$where .= ' claim.claim_no=' . $this->db->escape($post["claim_no"]);
 		}

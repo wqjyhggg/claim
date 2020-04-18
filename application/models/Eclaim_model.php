@@ -29,9 +29,19 @@ class Eclaim_model extends CI_Model {
 	public function search($data, $count=-1, $limit=-1, $sortby=array()) {
 
 		$this->db->select('SQL_CALC_FOUND_ROWS *', FALSE);
-		$this->db->where("status ", isset($data["status"])?$data["status"]:0);
+		if (!empty($data["status"])) {
+            $this->db->where("status ", $data["status"]);
+        }
 		if (!empty($data["eclaim_id"])) {
 			$this->db->like("id", $data["eclaim_id"]);
+		}
+		if (!empty($data["eclaim_no"])) {
+			$this->db->like("eclaim_no", $data["eclaim_no"]);
+		}
+		if (!empty($data["cdob"])) {
+			$this->db->where("dob", $data["cdob"]);
+		} else if (!empty($data["dob"])) {
+			$this->db->where("dob", $data["dob"]);
 		}
 		if (!empty($data["policy_no"])) {
 			$this->db->where("policy_no", $data["policy_no"]);
@@ -53,11 +63,7 @@ class Eclaim_model extends CI_Model {
 		}
 
 		if (empty($sortby)) {
-			if (isset($data["status"]) && ($data["status"]==1)) {
-				$this->db->order_by('id', 'DESC');
-			} else {
-				$this->db->order_by('id', 'ASC');
-			}
+			$this->db->order_by('id', 'DESC');
 		} else {
 			foreach ($sortby as $key => $val) {
 				$this->db->order_by($key, $val);
@@ -119,12 +125,12 @@ class Eclaim_model extends CI_Model {
         if (!empty($post['processed_by'])) {
             $data['processed_by'] = $post['processed_by'];
         }
-        if (!empty($post['lastupdate'])) {
-            $data['lastupdate'] = $post['lastupdate'];
-        }
-        if (!empty($post['created'])) {
-            $data['created'] = $post['created'];
-        }
+        // if (!empty($post['lastupdate'])) {
+        //     $data['lastupdate'] = $post['lastupdate'];
+        // }
+        // if (!empty($post['created'])) {
+        //     $data['created'] = $post['created'];
+        // }
         if (!empty($post['insured_first_name'])) {
             $data['insured_first_name'] = $post['insured_first_name'];
         }
@@ -492,11 +498,29 @@ class Eclaim_model extends CI_Model {
         if (!empty($post['exinfo_occured_date'])) {
             $data['exinfo_occured_date'] = $post['exinfo_occured_date'];
         }
+        if (!empty($post['case_no'])) {
+            $data['case_no'] = $post['case_no'];
+        }
+        if (!empty($post['logs'])) {
+            $data['logs'] = $post['logs'];
+        }
 		if (!empty($post['id'])) {
 			$id = $post['id'];
 			if ($cur = $this->get_by_id($id)) {
 				// Update
-				
+                if (!isset($data['exinfo_other_medical_insurance'])) {
+                    unset($data['exinfo_other_medical_insurance']);
+                }
+                if (!isset($data['exinfo_spouse_insurance'])) {
+                    unset($data['exinfo_spouse_insurance']);
+                }
+                if (!isset($data['exinfo_credit_card_insurance'])) {
+                    unset($data['exinfo_credit_card_insurance']);
+                }
+                if (!isset($data['exinfo_group_insurance'])) {
+                    unset($data['exinfo_group_insurance']);
+                }
+                        
 				$this->db->where('id', $id);
 				$this->db->update('eclaim', $data);
 				$this->active_model->log_update('eclaim', $id, $cur, $data, $this->db->last_query());
@@ -504,11 +528,12 @@ class Eclaim_model extends CI_Model {
 			}
 		}
 
+        $data['created'] = date("Y-m-d H:i:s");
 		$this->db->insert('eclaim', $data);
 		$sql = $this->db->last_query();
 		$id = $this->db->insert_id();
 		$this->active_model->log_new('eclaim', $id, $data, $sql);
-	        $rfrid = $id;
+        $rfrid = $id;
 
 		if ($id) {
 		    $rfrid = "RFR".str_pad($id, 6, "0", STR_PAD_LEFT);

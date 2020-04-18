@@ -6,7 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * Description of user
  */
 class Eclaim extends CI_Controller {
-	private $limit = 10;
+	private $limit = 20;
 	
 	public function __construct() {
 		parent::__construct();
@@ -20,7 +20,7 @@ class Eclaim extends CI_Controller {
 		if (! $this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_INSURER, Users_model::GROUP_CLAIMER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
 			// redirect them to the home page because they must be an claim manager or claim examiner to view this
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
@@ -56,6 +56,32 @@ class Eclaim extends CI_Controller {
 		}
 	}
 
+	public function setcaseno() {
+		if ($this->ion_auth->logged_in()) {
+			$this->load->model('eclaim_model');
+
+			$post = $this->input->post();
+			if (!empty($post['id']) && !empty($post['case_no'])) {
+				$ec = $this->eclaim_model->get_by_id($post['id']);
+				if ($ec) {
+					$logs = json_decode($ec['logs'], true);
+					$logs[] = date("Y-m-d H:i:s").' - update case_no to '.$post['case_no'].' processed_by '.$this->ion_auth->get_user_id();
+					$data = array(
+						'id' => $post['id'], 
+						'case_no' => $post['case_no'],
+						'logs' => json_encode($logs),
+					);
+					$id = $this->eclaim_model->save($data);
+					$this->session->set_flashdata('success', "EClaim successfully updated.");
+				}
+			} else {
+				$this->session->set_flashdata('error', 'post data has something wrong.');
+			}
+			redirect("eclaim/detail/".$post['id']);
+		}
+		redirect("eclaim");
+	}
+
 	public function disapprove($id) {
 		$json = array("status" => 0, "message" => 'Sorry, you don\'t have any permission to access this function.');
 		if ($this->ion_auth->logged_in()) {
@@ -63,12 +89,17 @@ class Eclaim extends CI_Controller {
 
 			$post = $this->input->post();
 			if (!empty($post['id']) && ($post['id'] == $id)) {
-				$data = array('id' => $post['id'], 'status' => 2);
-				$data['notes'] = empty($post['notes']) ? '' : $post['notes'];
-				$data['processed_by'] = $this->ion_auth->get_user_id();
-				$data['intnotes'] = 'Refuse this claim by ' . $this->ion_auth->get_user_id();
-				$id = $this->eclaim_model->save($data);
-				$json = array("status" => 1);
+				$ec = $this->eclaim_model->get_by_id($post['id']);
+				if ($ec) {
+					$logs = json_decode($ec['logs'], true);
+					$logs[] = date("Y-m-d H:i:s").' - Refuse this Eclaim by '.$this->ion_auth->get_user_id();
+					$data = array('id' => $post['id'], 'status' => 2);
+					$data['notes'] = empty($post['notes']) ? '' : $post['notes'];
+					$data['processed_by'] = $this->ion_auth->get_user_id();
+					$data['intnotes'] = 'Refuse this claim by ' . $this->ion_auth->get_user_id();
+					$data['logs'] = json_encode($logs);
+					$id = $this->eclaim_model->save($data);
+				}
 			}
 		}
 		header('Content-Type: application/json');
@@ -215,6 +246,7 @@ class Eclaim extends CI_Controller {
 
 				$data = $array;
 				$data['created'] = date('Y-m-d H:i:s');
+				$data['logs'] = json_encode(array(date("Y-m-d H:i:s").' - Transfered this Eclaim by '.$this->ion_auth->get_user_id()));
 				$data['created_by'] = $this->ion_auth->get_user_id();
 				
 				// set default status processing
@@ -222,8 +254,11 @@ class Eclaim extends CI_Controller {
 
 				//$eclaim = $this->eclaim_model->get_by_id($data['id']);
 				//$data['files'] = join(",", json_decode($eclaim['imgfile'], TRUE));
-				$data['case_no'] = '';
-				$data['id'] = $this->master_model->get_id('claim'); // Get new id
+				if (empty($data['case_no'])) {
+					$data['id'] = $this->master_model->get_id('claim'); // Get new id
+				} else {
+					$data['id'] = ltrim(substr($data['case_no'], 1), '0');
+				}
 				$data['claim_no'] = $this->claim_model->generate_claim_no($data['id']);
 
 				$payee['claim_id'] = $data['id'];
@@ -298,7 +333,7 @@ class Eclaim extends CI_Controller {
 	public function detail($id) {
 		if (! $this->ion_auth->logged_in()) {
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EAC, Users_model::GROUP_CLAIMER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			$this->load->model('api_model');
@@ -355,7 +390,7 @@ class Eclaim extends CI_Controller {
 	public function export($id) {
 		if (! $this->ion_auth->logged_in()) {
 			redirect('auth/login', 'refresh');
-		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EAC, Users_model::GROUP_CLAIMER))) {
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
 			return show_error('Sorry, you don\'t have any permission to access this page.');
 		} else {
 			$this->load->model('api_model');
