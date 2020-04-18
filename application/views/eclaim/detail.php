@@ -57,6 +57,7 @@
 								<?php echo form_error("policy_no"); ?>
 								<?php echo form_hidden("id", $eclaim['id']); ?>
 								<?php echo form_hidden("case_no", $eclaim['case_no']); ?>
+								<?php echo form_hidden("eclaim_no", $eclaim['eclaim_no']); ?>
 								<?php echo form_hidden("product_short", $eclaim['product_short']); ?>
 							</div>
 							<div class="form-group col-sm-3">
@@ -523,7 +524,7 @@
 					</div>
 					<div class="row" style="margin-top: 20px">
 						<div class="row">
-							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER)) && empty($eclaim['status'])) { ?>
+							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER)) && ($eclaim['status'] == 1)) { ?>
 							<div class="col-sm-2">
 								<input class="btn btn-primary" name="Save" value="Transfer to Claim" type="submit">
 							</div>
@@ -590,7 +591,7 @@ $(document).ready(function() {
 				data:$('#main_form').serialize(),
 				dataType: "json",
 				success: function(data) {
-					if (data.status == 1) {
+					if (data.status == 2) {
 						window.location = "<?php echo base_url("eclaim"); ?>";
 					}
 				}

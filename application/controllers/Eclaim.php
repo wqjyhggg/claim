@@ -93,7 +93,7 @@ class Eclaim extends CI_Controller {
 				if ($ec) {
 					$logs = json_decode($ec['logs'], true);
 					$logs[] = date("Y-m-d H:i:s").' - Refuse this Eclaim by '.$this->ion_auth->get_user_id();
-					$data = array('id' => $post['id'], 'status' => 2);
+					$data = array('id' => $post['id'], 'status' => 3);
 					$data['notes'] = empty($post['notes']) ? '' : $post['notes'];
 					$data['processed_by'] = $this->ion_auth->get_user_id();
 					$data['intnotes'] = 'Refuse this claim by ' . $this->ion_auth->get_user_id();
@@ -310,7 +310,7 @@ class Eclaim extends CI_Controller {
 				// insert values to database
 				$this->mytask_model->save($task_data);
 
-				$edata = array('id' => $this->input->post('id'), 'status' => 1);
+				$edata = array('id' => $this->input->post('id'), 'status' => 2);
 				$edata['claim_no'] = $data['claim_no'];
 				$edata['processed_by'] = $this->ion_auth->get_user_id();
 				$edata['intnotes'] = 'Accept this claim by ' . $this->ion_auth->get_user_id();

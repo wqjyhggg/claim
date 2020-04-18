@@ -108,7 +108,7 @@
 									<td><?php echo $value['claim_no']; ?></td>
 									<td><?php echo htmlspecialchars($value['insured_first_name']); ?></td>
 									<td><?php echo htmlspecialchars($value['insured_last_name']); ?></td>
-									<td><?php echo (($value['status']==1)?'Transferred':(($value['status']==2)?'Refused':'Received')); ?></td>
+									<td><?php echo (($value['status']==2)?'Transferred':(($value['status']==3)?'Refused':'Received')); ?></td>
 									<td><?php echo htmlspecialchars($value['dob']); ?></td>
 									<td><?php echo htmlspecialchars($value['created']); ?></td>
 									<td><?php echo anchor("eclaim/detail/".$value['id'], "View"); ?></td>
