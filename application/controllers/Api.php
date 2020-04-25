@@ -211,6 +211,45 @@ class Api extends CI_Controller {
 		echo json_encode($rdata);
 	}
 
+	public function imagepng() {
+		$this->load->model('api_model');
+		$rdata = $this->conn_verify();
+		if ($rdata['status'] == Api_model::STATUS_OK) {
+			$this->load->model('eclaim_file_model');
+			
+			$data = array();
+			$fdata = $this->input->post('data');
+			$path = 'eclaim_files/' . date('Y') . '/' . date("m");
+			// create directory to copy/shift files
+			@mkdir(UPLOADFULLPATH . $path, 0777, TRUE);
+
+			$fn = date("YmdHis").rand(100,1000).".png";
+			$fdataArr = explode(',', $fdata);
+			if (is_array($fdataArr) && (sizeof($fdataArr) == 2) && file_put_contents(UPLOADFULLPATH.$path."/".$fn, base64_decode($fdataArr[1]))) {
+				$data['name'] = $fn;
+				$data['path'] = $path;
+				$file_id = $this->eclaim_file_model->save($data);
+				if ($file_id) {
+					$rdata['file_id'] = $file_id;
+					$rdata['path'] = "/assets/uploads/".$data['path']."/".$data['name'];
+				} else {
+					$rdata['status'] = Api_model::STATUS_ERROR;
+					$rdata['message'] = 'Insert DB error';
+				}
+			} else {
+				$rdata['status'] = Api_model::STATUS_ERROR;
+				$rdata['error'] = $this->upload->display_errors();
+				$rdata['message'] = 'Upload file error';
+			}
+		}
+
+		header('Content-Type: application/json');
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+		echo json_encode($rdata);
+	}
+
 	public function image() {
 		$this->load->model('api_model');
 		$rdata = $this->conn_verify();
