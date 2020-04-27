@@ -206,8 +206,8 @@ class Api extends CI_Controller {
 
 			$eclaims = $this->eclaim_model->search(array('policy_no' => $this->api['policy'], 'insured_first_name' => $this->api['firstname'], 'insured_last_name' => $this->api['lastname'], 'dob' => $this->api['birthday']));
 			if ($eclaims) {
-				$rdata['eclaims'][] = array();
-				foreach ($claims as $cl) {
+				$rdata['eclaims'] = array();
+				foreach ($eclaims as $cl) {
 					if ($cl['claim_no']) continue;
 					$rdata['eclaims'][] = $cl;
 				}
