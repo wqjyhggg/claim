@@ -209,7 +209,7 @@ class Api extends CI_Controller {
 				$rdata['eclaims'][] = array();
 				foreach ($claims as $cl) {
 					if ($cl['claim_no']) continue;
-					$rdata['claims'][] = $cl;
+					$rdata['eclaims'][] = $cl;
 				}
 			}
 		}
