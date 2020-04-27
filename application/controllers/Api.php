@@ -167,6 +167,7 @@ class Api extends CI_Controller {
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('claim_model');
 			$this->load->model('expenses_model');
+			$this->load->model('eclaim_model');
 			$claims = $this->claim_model->search(array('policy_no' => $this->api['policy'], 'insured_first_name' => $this->api['firstname'], 'insured_last_name' => $this->api['lastname'], 'dob' => $this->api['birthday']));
 			$rdata['claims'] = array();
 			foreach ($claims as $cl) {
@@ -201,6 +202,15 @@ class Api extends CI_Controller {
 				}
 				$ncl['items'] = $items;
 				$rdata['claims'][] = $ncl;
+			}
+
+			$eclaims = $this->eclaim_model->search(array('policy_no' => $this->api['policy'], 'insured_first_name' => $this->api['firstname'], 'insured_last_name' => $this->api['lastname'], 'dob' => $this->api['birthday']));
+			if ($eclaims) {
+				$rdata['eclaims'][] = array();
+				foreach ($claims as $cl) {
+					if ($cl['claim_no']) continue;
+					$rdata['claims'][] = $cl;
+				}
 			}
 		}
 
