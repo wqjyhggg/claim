@@ -52,7 +52,7 @@
 								<?php echo form_error("dob"); ?>
 							</div>
 							<div class="clearfix"></div>
-
+<?php if (0) { ?>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Second Insured First Name:', 'exinfo_insured2_first_name', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("exinfo[insured2_first_name]", isset($eclaim["exinfo_insured2_first_name"]) ? $eclaim["exinfo_insured2_first_name"] : '', array("class" => "form-control", 'placeholder' => 'Second Insured First Name')); ?>
@@ -79,6 +79,7 @@
 								</div>
 							</div>
 							<div class="clearfix"></div>
+<?php } ?>
 
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Policy#:', 'policy_no', array("class" => 'col-sm-12')); ?>

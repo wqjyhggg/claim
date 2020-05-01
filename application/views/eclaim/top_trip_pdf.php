@@ -15,10 +15,12 @@ border-bottom: 1px solid #000;
 <div><b>Gender: </b><?php echo ucfirst($eclaim["gender"]); ?></div>
 <div><b>ID : </b><?php echo $policy["student_id"]; ?></div>
 <div><b>Date of Birth: </b><?php echo $eclaim["dob"]; ?></div>
-<div><b>Second Insured First Name: </b><?php echo $eclaim["exinfo_insured2_first_name"]; ?></div>
-<div><b>Second Insured Last Name: </b><?php echo $eclaim["exinfo_insured2_last_name"]; ?></div>
-<div><b>Gender: </b><?php echo ucfirst($eclaim["exinfo_gender2"]); ?></div>
-<div><b>Date of Birth: </b><?php echo $eclaim["exinfo_dob2"]; ?></div>
+<?php if (0 && !empty($family)) { ?>
+<div><b>Second Insured First Name: </b><?php echo $policy["firstname"]; ?></div>
+<div><b>Second Insured Last Name: </b><?php echo $policy["lastname"]; ?></div>
+<div><b>Gender: </b><?php echo ucfirst($policy["gender"]); ?></div>
+<div><b>Date of Birth: </b><?php echo $policy["birthday"]; ?></div>
+<?php } ?>
 <div><b>Policy#: </b><?php echo $eclaim["policy_no"]; ?></div>
 <div><b>School Name: </b><?php echo $eclaim["school_name"]; ?></div>
 <div><b>Group ID: </b><?php echo $eclaim["group_id"]; ?></div>
@@ -110,7 +112,7 @@ border-bottom: 1px solid #000;
 <div><b>Employer Name: </b><?php echo isset($eclaim["employee_name"]) ? $eclaim["employee_name"] : ''; ?></div>
 <div><b>Street Address: </b><?php echo isset($eclaim["employee_street_address"]) ? $eclaim["employee_street_address"] : ''; ?></div>
 <div><b>City/Town: </b><?php echo isset($eclaim["city_town"]) ? $eclaim["city_town"] : ''; ?></div>
-<div><b>Country: </b><?php foreach ($country2 as $key => $val) { if (($key == $eclaim['country2']) || ($val == $eclaim['country2'])) { echo $val; } } ?></div>
+<div><b>Country: </b><?php foreach ($country as $key => $val) { if (($key == $eclaim['country2']) || ($val == $eclaim['country2'])) { echo $val; } } ?></div>
 <div><b>Telephone: </b><?php echo isset($eclaim["employee_telephone"]) ? $eclaim["employee_telephone"] : ''; ?></div>
 <br />
 <h3>Medical Information</h3>
@@ -137,7 +139,7 @@ $expenses_claimed_referencing_physicians = json_decode($eclaim["expenses_claimed
 $expenses_claimed_date_of_services = json_decode($eclaim["expenses_claimed_date_of_service"], TRUE);
 $expenses_claimed_amount_client_paid_orgs = json_decode($eclaim["expenses_claimed_amount_client_paid_org"], TRUE);
 $expenses_claimed_amount_claimed_orgs = json_decode($eclaim["expenses_claimed_amount_claimed_org"], TRUE);
-if (isset($expenses_claimed_service_descriptions)) { ?>
+if (isset($expenses_claimed_service_descriptions)) {
     foreach ( $expenses_claimed_service_descriptions as $key => $value ) { ?>
 <div><b>Name of Provider: </b><?php echo isset($expenses_claimed_provider_names[$key]) ? $expenses_claimed_provider_names[$key] : ''; ?></div>
 <div><b>Name of Referring Physician: </b><?php echo isset($expenses_claimed_referencing_physicians[$key]) ? $expenses_claimed_referencing_physicians[$key] : ''; ?></div>
