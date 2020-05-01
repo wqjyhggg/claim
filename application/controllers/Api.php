@@ -209,6 +209,13 @@ class Api extends CI_Controller {
 				$rdata['eclaims'] = array();
 				foreach ($eclaims as $cl) {
 					if ($cl['claim_no']) continue;
+					if ($cl['status'] == 1) {
+						$cl['status'] = 'Waiting for process';
+					} else if ($cl['status'] == 2) {
+                                                $cl['status'] = 'Accepted';
+                                        } else {
+                                                $cl['status'] = 'Declined';
+					}
 					$rdata['eclaims'][] = $cl;
 				}
 			}

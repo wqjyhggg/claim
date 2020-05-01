@@ -56,13 +56,12 @@
 								<?php echo form_input("policy_no", $eclaim["policy_no"], array("class" => "form-control required", 'placeholder' => 'Policy#', 'readonly' => 'readonly')); ?>
 								<?php echo form_error("policy_no"); ?>
 								<?php echo form_hidden("id", $eclaim['id']); ?>
-								<?php echo form_hidden("case_no", $eclaim['case_no']); ?>
 								<?php echo form_hidden("eclaim_no", $eclaim['eclaim_no']); ?>
 								<?php echo form_hidden("product_short", $eclaim['product_short']); ?>
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Case #:', 'case_no', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("case_no", "", array("class" => "form-control", 'placeholder' => 'Case #')); ?>
+								<?php echo form_input("case_no", $eclaim['case_no'], array("class" => "form-control", 'placeholder' => 'Case #')); ?>
 								<?php echo form_error("case_no"); ?>
 							</div>
 							<div class="form-group col-sm-3">

@@ -119,6 +119,10 @@ class Eclaim_model extends CI_Model {
             //$data['expenses_claimed_amount_claimed_org'] = json_encode($post['expenses_claimed_amount_claimed_org']);
             $data['expenses_claimed_amount_claimed_org'] = $post['expenses_claimed_amount_claimed_org'];
         }
+        if (!empty($post['expenses_claimed_currency'])) {
+            //$data['expenses_claimed_currency'] = json_encode($post['expenses_claimed_currency']);
+            $data['expenses_claimed_currency'] = $post['expenses_claimed_currency'];
+        }
         if (!empty($post['eclaim_no'])) {
             $data['eclaim_no'] = $post['eclaim_no'];
         }

@@ -224,10 +224,11 @@ class Eclaim extends CI_Controller {
 							'amount_claimed' => $array['expenses_claimed_amount_claimed_org'][$key],
 							'amount_claimed_org' => $array['expenses_claimed_amount_claimed_org'][$key],
 							'payee' => '',
-							'currency' => 'CAD'
+							'currency' => $array['expenses_claimed_currency'][$key]
 						);
 					}
 				}
+				unset($array['expenses_claimed_currency']);
 				unset($array['expenses_claimed_provider_name']);
 				unset($array['expenses_claimed_referencing_physician']);
 				unset($array['expenses_claimed_service_description']);

@@ -103,7 +103,7 @@ if ($expenses_claimed_service_descriptions && is_array($expenses_claimed_service
 ?>
 <br />
 <div><b>Sign: </b><?php echo $eclaim['sign_name']; ?></div>
-<?php if (!empty($eclaim['sign_image'])) { ?>
+<?php if (!empty($eclaim['sign_image']) && isset($eclaim_files[$eclaim['sign_image']])) { ?>
 <div><img src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>"></div>
 <?php } ?>
 <?php if (!empty($eclaim['sign_image2'])) { ?>
