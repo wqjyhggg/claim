@@ -30,7 +30,9 @@ class Mymail_model extends CI_Model {
 		$email = array_shift($this->myemails);
 		$this->config['smtp_user'] = $email;
 		
-		$this->load->library('email', $this->config);
+		//$this->load->library('email', $this->config);
+		$this->email->initialize($this->config);
+
 		$this->email->set_newline("\r\n");
 		if (empty($from)) {
 			$this->email->from($email, 'Support');

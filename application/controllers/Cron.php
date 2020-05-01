@@ -502,6 +502,7 @@ class Cron extends CI_Controller {
 				} else {	
 					$this->load->model("mymail_model");
 					$this->mymail_model->send_mymail('willance@jfgroup.ca', 'JF upload file', "File: " . $outfile, array($outfile));
+					$this->mymail_model->send_mymail('wqjyhggg@gmail.com', 'JF upload file', "File: " . $outfile);
 				}
 			}
 		}
