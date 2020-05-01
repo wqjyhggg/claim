@@ -1633,22 +1633,6 @@ class Claim extends CI_Controller {
 				$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id, "status" => 1));
 				$this->data['payees_list'] = $this->claim_model->payee_search(array("claim_id" => $id));
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
-
-				$country_list = $this->data['country'];
-				foreach($country_list as $this_key => $this_country) {
-					$country_list[$this_key] = array(
-						'name' => $this_country, 
-						'province' => $this->province_model->get_list_by_country_short($this_key)
-					);
-				}
-				foreach($this->data['country2'] as $this_key => $this_country) {
-					if (isset($country_list[$this_key])) continue;
-					$country_list[$this_key] = array(
-						'name' => $this_country, 
-						'province' => array()
-					);
-				}
-				$this->data['country_list'] = $country_list;
 				
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(1);
 				
