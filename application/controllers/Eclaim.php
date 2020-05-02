@@ -259,6 +259,9 @@ class Eclaim extends CI_Controller {
 					$data['id'] = $this->master_model->get_id('claim'); // Get new id
 				} else {
 					$data['id'] = ltrim(substr($data['case_no'], 1), '0');
+					if ($this->claim_model->get_by_id($data['id'])) {
+						return show_error('The case has claimed already, you can\'t transfer this eclaim with same case number.');
+					}
 				}
 				$data['claim_no'] = $this->claim_model->generate_claim_no($data['id']);
 
