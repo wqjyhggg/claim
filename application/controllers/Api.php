@@ -174,6 +174,7 @@ class Api extends CI_Controller {
 				$ncl = array();
 				$ncl['id'] = $cl['id'];
 				$ncl['claim_no'] = $cl['claim_no'];
+				$ncl['eclaim_no'] = $cl['eclaim_no'];
 				$ncl['status'] = $cl['status'];
 				//$ncl['claim_date'] = $cl['apply_date'];
 				$ncl['claim_date'] = substr($cl['created'], 0, 10);
@@ -209,6 +210,7 @@ class Api extends CI_Controller {
 				$rdata['eclaims'] = array();
 				foreach ($eclaims as $cl) {
 					if ($cl['claim_no']) continue;
+/*
 					if ($cl['status'] == 1) {
 						$cl['status'] = 'Waiting for process';
 					} else if ($cl['status'] == 2) {
@@ -216,6 +218,7 @@ class Api extends CI_Controller {
                                         } else {
                                                 $cl['status'] = 'Declined';
 					}
+*/
 					$rdata['eclaims'][] = $cl;
 				}
 			}
