@@ -205,6 +205,39 @@ class Api_model extends CI_Model {
 	 * @param array $para        	
 	 * @return void
 	 */
+	function checklogin($para) {
+		$now = time() - (5 * 60); // 5 mintues
+		$data = array ('tm' => time(), 'api_id' => '', 'policy' => '', 'ip' => '');
+		if (isset( $para['api_id'] ))	$data['api_id'] = $this->db->escape( $para ['api_id'] );
+		if (isset( $para['policy'] ))	$data['policy'] = $this->db->escape( $para ['policy'] );
+		if (isset( $para['ip'] ))	$data['ip'] = $this->db->escape( $para ['ip'] );
+
+                $sql = "SELECT COUNT(*) as cnt FROM api_login_try WHERE tm>'".$now."' AND (api_id=".$data['api_id']." OR policy=".$data['policy']." OR ip=".$data['ip'].")";
+                $rc = $this->db->query($sql)->row_array();
+
+		return $rc['cnt'];
+	}
+
+	/**
+	 *
+	 * @param array $para        	
+	 * @return void
+	 */
+	function errupdate($para) {
+		$data = array ('tm' => time(), 'api_id' => '', 'policy' => '', 'ip' => '');
+		if (isset( $para['api_id'] ))	$data['api_id'] = $this->db->escape( $para ['api_id'] );
+		if (isset( $para['policy'] ))	$data['policy'] = $this->db->escape( $para ['policy'] );
+		if (isset( $para['ip'] ))	$data['ip'] = $this->db->escape( $para ['ip'] );
+		
+		$sql = "INSERT INTO api_login_try (" . join(",", array_keys($data)) . ") values (" . join(",", array_values($data)) . ") ";
+		$this->db->query ( $sql );
+	}
+
+	/**
+	 *
+	 * @param array $para        	
+	 * @return void
+	 */
 	function update($para) {
 		$data = array ();
 		if (isset( $para['api_id'] ))	$data['api_id'] = $this->db->escape( $para ['api_id'] );

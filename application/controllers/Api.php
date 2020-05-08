@@ -37,6 +37,13 @@ class Api extends CI_Controller {
 			$rdata['status'] = Api_model::STATUS_ERROR;
 			$rdata['message'] = 'Invilad Parameter';
 		}
+		if ($rdata['status'] == Api_model::STATUS_OK) {
+			$try_cnt = $this->api_model->checklogin($data);
+			if ($try_cnt > 5) {
+				$rdata['status'] = Api_model::STATUS_ERROR;
+				$rdata['message'] = 'Too many logins';
+			}
+		}
 
 		$policy = array();
 		$firstname = $lastname = $birthday='';
@@ -84,7 +91,10 @@ class Api extends CI_Controller {
 			$rdata['token'] = $this->api_model->get_token($data['api_id']);
 			$data['token'] = $rdata['token'];
 			$this->api_model->update($data);
+		} else {
+			$this->api_model->errupdate($data);
 		}
+
 		
 		header('Content-Type: application/json');
 		header('Access-Control-Allow-Origin: *');

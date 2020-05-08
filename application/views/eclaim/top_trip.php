@@ -757,7 +757,7 @@ $(document).ready(function() {
 })
 // when clicked over deny button
 .on("click", "input[name=Refuse]", function(e) {
-	if (confirm('Are you sure you want to accept Eclaim?')) {
+	if (confirm('Are you sure you want to refuse this Eclaim?')) {
 		e.preventDefault();
 		$.ajax({
 				url: "<?php echo base_url("eclaim/disapprove/".$eclaim['id']); ?>",

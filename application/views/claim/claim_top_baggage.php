@@ -918,6 +918,15 @@
 							<?php endif; ?>
 						</div>
 					</div>
+                                        <?php if (!empty($claim_details['logs']) && ($logArr = json_decode($claim_details['logs'], true))) { ?>
+                                        <?php foreach ($logArr as $log) { ?>
+                                        <div class="row" style="margin-top: 20px">
+                                                <div class="col-sm-12">
+                                                        <?php echo htmlspecialchars($log); ?>
+                                                </div>
+                                        </div>
+                                        <?php } ?>
+                                        <?php } ?>
 					<?php echo form_close(); ?>
 				</div>
 			</div>
