@@ -492,6 +492,10 @@
 								<?php echo form_label('Telephone:', 'exinfo_other_travel_insurance_phone', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("exinfo[other_insurance_phone]", isset($eclaim["exinfo_other_insurance_phone"]) ? $eclaim["exinfo_other_insurance_phone"] : '', array("class" => "form-control", 'placeholder' => 'Telephone')); ?>
 							</div>
+							<div class="form-group col-sm-3">
+								<?php echo form_label('Policy #:', 'exinfo_other_travel_insurance_explanation', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[exinfo_other_travel_insurance_explanation]", isset($eclaim["exinfo_other_travel_insurance_explanation"]) ? $eclaim["exinfo_other_insurance_number"] : '', array("class" => "form-control", 'placeholder' => 'Policy #')); ?>
+							</div>
 							<div class="clearfix"></div>
 						</div>
 	
@@ -663,7 +667,16 @@
 								</div>
 								<div class="col-sm-12">
 									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>">
+									<?php echo form_hidden("sign_image", $eclaim['sign_image']); ?>
+									<?php echo form_hidden("sign_image2", $eclaim['sign_image2']); ?>
 								</div>
+								<?php if (!empty($eclaim['sign_image2'])) { ?>
+								<div class="col-sm-12">
+								<?php if (isset($eclaim_files[$eclaim['sign_image2']])) { ?>
+									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image2']]['path'] . "/" . $eclaim_files[$eclaim['sign_image2']]['name']; ?>">
+								<?php } ?>
+								</div>
+								<?php } ?>
 							</div>
 						</div>
 						<br />
@@ -674,6 +687,7 @@
 						<div class="row" style="display: none">
 							<div class="col-sm-12">
 								<div class="col-sm-12 uploaded_files">
+									<?php echo form_hidden("images", $eclaim['images']); ?>
 									<?php $images = json_decode($eclaim['imgfile'], TRUE); ?>
 									<?php foreach ( $images as $key => $value ) : ?>
 									<div class="col-sm-12 intake-forms">
