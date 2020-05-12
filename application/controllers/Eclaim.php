@@ -225,7 +225,7 @@ class Eclaim extends CI_Controller {
 							'amount_claimed' => $array['expenses_claimed_amount_claimed_org'][$key],
 							'amount_claimed_org' => $array['expenses_claimed_amount_claimed_org'][$key],
 							'payee' => '',
-							'currency' => $array['expenses_claimed_currency'][$key]
+							'currency' => isset($array['expenses_claimed_currency'][$key])?$array['expenses_claimed_currency'][$key]:'CAD',
 						);
 					}
 				}
@@ -269,6 +269,7 @@ class Eclaim extends CI_Controller {
 				// copy files
 				$data['files'] = "";
 				if (!empty($data['sign_image']) && ($imgfile = $this->eclaim_file_model->get_by_id($data['sign_image']))) {
+					@mkdir(UPLOADFULLPATH . "claim_files/".$data['id']."/");
 					if (copy(UPLOADFULLPATH . $imgfile["path"] . "/" . $imgfile["name"], UPLOADFULLPATH . "claim_files/".$data['id']."/".$imgfile["name"])) {
 						if ($data['files']) $data['files'] .= ',';
 						$data['files'] .= $imgfile["name"];
@@ -276,6 +277,7 @@ class Eclaim extends CI_Controller {
 				}
 				unset($data['sign_image']);
 				if (!empty($data['sign_image2']) && ($imgfile = $this->eclaim_file_model->get_by_id($data['sign_image2']))) {
+					@mkdir(UPLOADFULLPATH . "claim_files/".$data['id']."/");
 					if (copy(UPLOADFULLPATH . $imgfile["path"] . "/" . $imgfile["name"], UPLOADFULLPATH . "claim_files/".$data['id']."/".$imgfile["name"])) {
 						if ($data['files']) $data['files'] .= ',';
 						$data['files'] .= $imgfile["name"];
@@ -285,6 +287,7 @@ class Eclaim extends CI_Controller {
 
 				$otherimages = json_decode($data['imgfile'], true);
 				if (is_array($otherimages)) {
+					@mkdir(UPLOADFULLPATH . "claim_files/".$data['id']."/");
 					foreach ($otherimages as $oneimg) {
 						if ($imgfile = $this->eclaim_file_model->get_by_id($oneimg)) {
 							if (copy(UPLOADFULLPATH . $imgfile["path"] . "/" . $imgfile["name"], UPLOADFULLPATH . "claim_files/".$data['id']."/".$imgfile["name"])) {
@@ -295,7 +298,6 @@ class Eclaim extends CI_Controller {
 					}
 				}
 				unset($data['imgfile']);
-
 				$payee['claim_id'] = $data['id'];
 				$payee_id = $this->claim_model->payees_save($payee);
 
