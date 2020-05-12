@@ -293,7 +293,7 @@ class Api extends CI_Controller {
 
 			// load upload class
 			$config['upload_path'] = UPLOADFULLPATH . $path;
-			$config['allowed_types'] = 'gif|jpg|png|jpeg';
+			$config['allowed_types'] = 'gif|jpg|png|jpeg|pdf';
 			$config['overwrite'] = FALSE;
 			$config['max_size'] = 15000;	// 15M
 			$this->load->library('upload', $config);
