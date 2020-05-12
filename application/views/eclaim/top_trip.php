@@ -687,7 +687,7 @@
 						<div class="row" style="display: none">
 							<div class="col-sm-12">
 								<div class="col-sm-12 uploaded_files">
-									<?php echo form_hidden("images", $eclaim['images']); ?>
+									<?php echo form_hidden("imgfile", $eclaim['imgfile']); ?>
 									<?php $images = json_decode($eclaim['imgfile'], TRUE); ?>
 									<?php foreach ( $images as $key => $value ) : ?>
 									<div class="col-sm-12 intake-forms">

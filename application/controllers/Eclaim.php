@@ -283,7 +283,7 @@ class Eclaim extends CI_Controller {
 				}
 				unset($data['sign_image2']);
 
-				$otherimages = json_decode($data['images'], true);
+				$otherimages = json_decode($data['imgfile'], true);
 				if (is_array($otherimages)) {
 					foreach ($otherimages as $oneimg) {
 						if ($imgfile = $this->eclaim_file_model->get_by_id($oneimg)) {
@@ -294,7 +294,7 @@ class Eclaim extends CI_Controller {
 						}
 					}
 				}
-				unset($data['images']);
+				unset($data['imgfile']);
 
 				$payee['claim_id'] = $data['id'];
 				$payee_id = $this->claim_model->payees_save($payee);
