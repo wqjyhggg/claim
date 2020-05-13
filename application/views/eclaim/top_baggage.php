@@ -463,7 +463,7 @@
 							</div>
 						</div>
 
-						<h2 class="move_down" style="display: none">Medical Information <small></small> <i class="fa fa-angle-down pull-right"></i></h2>
+						<h2 class="move_down">Medical Information <small></small> <i class="fa fa-angle-down pull-right"></i></h2>
 						<div class="row" style="display: none">
 							<div class="col-sm-12">
 								<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
@@ -662,7 +662,7 @@
 						<div class="row" style="display: none">
 							<div class="col-sm-12">
 								<div class="col-sm-12 uploaded_files">
-									<?php echo form_hidden("images", $eclaim['images']); ?>
+									<?php echo form_hidden("imgfile", $eclaim['imgfile']); ?>
 									<?php $images = json_decode($eclaim['imgfile'], TRUE); ?>
 									<?php foreach ( $images as $key => $value ) : ?>
 									<div class="col-sm-12 intake-forms">

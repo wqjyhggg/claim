@@ -501,7 +501,7 @@
 						<br />
 						<h2 class="modal-title intake-heading move_down">Images: <i class="fa fa-angle-down pull-right"></i></h2>
 						<div class="row intake-forms-list col-sm-12" style="display: none">
-							<?php echo form_hidden("images", $eclaim['images']); ?>
+							<?php echo form_hidden("imgfile", $eclaim['imgfile']); ?>
 							<?php $images = json_decode($eclaim['imgfile'], TRUE); ?>
 							<?php if (!empty($images)) { ?>
 							<?php foreach ( $images as $key => $value ) : ?>
