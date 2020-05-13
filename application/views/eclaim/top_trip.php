@@ -421,42 +421,24 @@
 
 						<h2 class="move_down">SECTION D: OTHER INSURANCE COVERAGE <small></small><i class="fa fa-angle-down pull-right"></i></h2>
 						<div class="row" style="display: none">
-							<div class="col-sm-5">Do you have credit card insurance coverage?</div>
-							<div class="col-sm-1">
-								<?php echo form_radio("exinfo[credit_card_insurance]", "Y", isset($eclaim['exinfo_credit_card_insurance']) ? $eclaim['exinfo_credit_card_insurance'] : '', array('class' => 'setpremium'));?> Yes
-							</div>
-							<div class="col-sm-1">
-								<?php echo form_radio("exinfo[credit_card_insurance]", "N", isset($eclaim['exinfo_credit_card_insurance']) ? $eclaim['exinfo_credit_card_insurance'] : '', array('class' => 'setpremium'));?> No
-							</div>
-							<div class="col-sm-5">If ‘Yes’, please provide the following information</div>
-							<div class="clearfix"></div>
-	
-							<div class="form-group col-sm-3">
-								Name of the financial Institution: 
-							</div>
-							<div class="form-group col-sm-9">
-								<?php echo form_input("exinfo[credit_card_name]", isset($eclaim["exinfo_credit_card_name"]) ? $eclaim["exinfo_credit_card_name"] : '', array("class" => "form-control")); ?>
-							</div>
-	
-							<div class="form-group col-sm-3">
-								First 6 digits of credit card: 
+							<div class="col-sm-12">
+								Do you have credit card insurance coverage? <input type="checkbox" name="exinfo[credit_card_insurance]" value="1" <?php if (! empty($eclaim["exinfo_credit_card_insurance"])) { echo "checked"; } ?>> Yes. If 'yes', please provide the following information:_
 							</div>
 							<div class="form-group col-sm-3">
-								<?php echo form_input("exinfo[credit_card_number]", isset($eclaim["exinfo_credit_card_number"]) ? $eclaim["exinfo_credit_card_number"] : '', array("class" => "form-control")); ?>
-							</div>
-	
-							<div class="form-group col-sm-3">
-								Expiry Date(MM/YYYY): 
+								<?php echo form_label('Name of the financial Institution:', 'exinfo_other_insurance_name', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[credit_card_insurance_name]", isset($eclaim["exinfo_credit_card_name"]) ? $eclaim["exinfo_credit_card_name"] : '', array("class" => "form-control", 'placeholder' => 'Name of the financial Institution')); ?>
 							</div>
 							<div class="form-group col-sm-3">
-								<?php echo form_input("exinfo[credit_card_expire]", isset($eclaim["exinfo_credit_card_expire"]) ? $eclaim["exinfo_credit_card_expire"] : '', array("class" => "form-control")); ?>
-							</div>
-	
-							<div class="form-group col-sm-3">
-								Name of Cardholder: 
+								<?php echo form_label('First 6 digits of credit card:', 'exinfo_credit_card_number', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[credit_card_number]", isset($eclaim["exinfo_credit_card_number"]) ? $eclaim["exinfo_credit_card_number"] : '', array("class" => "form-control", 'placeholder' => 'First 6 digits of credit card')); ?>
 							</div>
 							<div class="form-group col-sm-3">
-								<?php echo form_input("exinfo[credit_card_holder]", isset($eclaim["exinfo_credit_card_holder"]) ? $eclaim["exinfo_credit_card_holder"] : '', array("class" => "form-control")); ?>
+								<?php echo form_label('Expiry Date(MM/YYYY):', 'exinfo_credit_card_expire', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[credit_card_expire]", isset($eclaim["exinfo_credit_card_expire"]) ? $eclaim["exinfo_credit_card_expire"] : '', array("class" => "form-control", 'placeholder' => 'Expiry Date(MM/YYYY)')); ?>
+							</div>
+							<div class="form-group col-sm-3">
+								<?php echo form_label('Name of Cardholder:', 'exinfo_credit_card_holder', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[credit_card_holder]", isset($eclaim["exinfo_credit_card_holder"]) ? $eclaim["exinfo_credit_card_holder"] : '', array("class" => "form-control", 'placeholder' => 'Name of Cardholder')); ?>
 							</div>
 							<div class="clearfix"></div>
 							<div class="col-sm-12">
