@@ -137,7 +137,7 @@ $expenses_claimed_referencing_physicians = json_decode($eclaim["expenses_claimed
 $expenses_claimed_date_of_services = json_decode($eclaim["expenses_claimed_date_of_service"], TRUE);
 $expenses_claimed_amount_client_paid_orgs = json_decode($eclaim["expenses_claimed_amount_client_paid_org"], TRUE);
 $expenses_claimed_amount_claimed_orgs = json_decode($eclaim["expenses_claimed_amount_claimed_org"], TRUE);
-if (isset($expenses_claimed_service_descriptions)) { ?>
+if (isset($expenses_claimed_service_descriptions)) {
     foreach ( $expenses_claimed_service_descriptions as $key => $value ) { ?>
 <div><b>Name of Provider: </b><?php echo isset($expenses_claimed_provider_names[$key]) ? $expenses_claimed_provider_names[$key] : ''; ?></div>
 <div><b>Name of Referring Physician: </b><?php echo isset($expenses_claimed_referencing_physicians[$key]) ? $expenses_claimed_referencing_physicians[$key] : ''; ?></div>
