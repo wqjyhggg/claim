@@ -170,10 +170,10 @@ class Claim_model extends CI_Model {
 	 *        	search parameter
 	 * @return array result array, maybe null
 	 */
-	public function search($data, $count=-1, $limit=-1, $sortby=array()) {
+	public function search($data, $count=-1, $limit=-1, $sortby=array(), $force=FALSE) {
 		$products = FALSE;
 		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT, Users_model::GROUP_EXAMINER))) {
-			if ($this->ion_auth->get_user_id()) {
+			if (!$force && $this->ion_auth->get_user_id()) {
 				$products = $this->ion_auth->get_users_products();
 			}
 		}

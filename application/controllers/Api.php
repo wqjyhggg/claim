@@ -601,4 +601,60 @@ class Api extends CI_Controller {
 		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 		echo json_encode($rdata);
 	}
+
+	public function check_claims() {
+		$this->load->model('api_model');
+		$ips = array('127.0.0.1', '54.89.143.155', '52.205.81.107', '54.164.58.203');
+		$keys = array('qqnzcPfp', 'H5FqpJdc');
+		
+		$key = $this->input->get_post('key');
+		$rdata = array('status' => Api_model::STATUS_ERROR, 'message' => 'Unknown Error');
+		if (! in_array($_SERVER['REMOTE_ADDR'], $ips) || ! in_array($key, $keys)) {
+			die(json_encode($rdata));
+		}
+		$this->load->model('claim_model');
+		$rdata = array('status' => Api_model::STATUS_ERROR, 'message' => 'Unknown Error');
+		$policy_no = $this->input->get_post('policy_no');
+		
+		$claims = $this->claim_model->search(array('policy_no' => $policy_no), -1, 3, array(), TRUE);
+		$rdata['query'] = $this->db->last_query();
+		$rdata['claims'] = array();
+		$rdata['policy_no'] = $policy_no;
+		foreach ($claims as $cl) {
+			$ncl = array();
+			$ncl['id'] = $cl['id'];
+			$ncl['claim_no'] = $cl['claim_no'];
+			$ncl['status'] = $cl['status'];
+			//$ncl['claim_date'] = $cl['apply_date'];
+			$ncl['claim_date'] = substr($cl['created'], 0, 10);
+			$ncl['insured_first_name'] = $cl['insured_first_name'];
+			$ncl['insured_last_name'] = $cl['insured_last_name'];
+			$ncl['dob'] = $cl['dob'];
+			$ncl['policy_no'] = $cl['policy_no'];
+			$ncl['product_short'] = $cl['product_short'];
+			$ncl['physician_name'] = $cl['physician_name'];
+			$ncl['clinic_name'] = $cl['clinic_name'];
+			$ncl['physician_name_canada'] = $cl['physician_name_canada'];
+			$ncl['clinic_name_canada'] = $cl['clinic_name_canada'];
+			$ncl['payment_type'] = $cl['payment_type'];
+			$ncl['reason'] = $cl['reason'];
+			$amt = $this->claim_model->expenses_summary($cl['id']);
+			$ncl['billed'] = isset($amt['billed']) ? (float)$amt['billed'] : 0;
+			$ncl['client_paid'] = isset($amt['client_paid']) ? (float)$amt['client_paid'] : 0;
+			$ncl['claimed'] = isset($amt['claimed']) ? (float)$amt['claimed'] : 0;
+			$ncl['deductible'] = isset($amt['deductible']) ? (float)$amt['deductible'] : 0;
+			$ncl['received'] = isset($amt['received']) ? (float)$amt['received'] : 0;
+			$ncl['payable'] = isset($amt['payable']) ? (float)$amt['payable'] : 0;
+			$ncl['exceptional'] = isset($amt['exceptional']) ? (float)$amt['exceptional'] : 0;
+			$rdata['claims'][] = $ncl;
+		}
+		$rdata['status'] = Api_model::STATUS_OK;
+		$rdata['message'] = '';
+
+		header('Content-Type: application/json');
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+		echo json_encode($rdata);
+	}
 }
