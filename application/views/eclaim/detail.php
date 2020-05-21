@@ -508,7 +508,12 @@
 							<div class="col-sm-12 intake-forms">
 								<div class="col-sm-12">
 								<?php if (isset($eclaim_files[$value])) { ?>
-									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>">
+									<?php $ext = strtolower(substr($eclaim_files[$value]['name'], -3)); ?>
+									<?php if ($ext == 'pdf') { ?>
+										<a class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"><?php echo $eclaim_files[$value]['name']; ?></a>
+									<?php } else { ?>
+										<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>">
+									<?php } ?>
 								<?php } ?>
 								</div>
 							</div>
