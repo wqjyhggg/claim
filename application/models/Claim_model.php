@@ -209,6 +209,9 @@ class Claim_model extends CI_Model {
 	 * @return int				inserted array ID
 	 */
 	public function save($data) {
+		foreach ($data as $key => $val) {
+			$data[$key] = trim($val);
+		}
 		if (!empty($data['id'])) {
 			$id = $data['id'];
 			if ($cur = $this->get_by_id($id)) {
