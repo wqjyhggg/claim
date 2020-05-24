@@ -150,7 +150,7 @@ class Eclaim extends CI_Controller {
 			$this->form_validation->set_rules('amount_billed_org', 'amount billed ', 'numeric');
 			$this->form_validation->set_rules('account_cheque', 'account no ', 'numeric');
 			$this->form_validation->set_rules('amount_client_paid_org', 'amount client paid ', 'numeric');
-			$this->form_validation->set_rules('physician_name_canada', 'physician name canada ', '');
+			//$this->form_validation->set_rules('physician_name_canada', 'physician name canada ', '');
 			$this->form_validation->set_rules('physician_city', 'physician city ', '');
 			$this->form_validation->set_rules('payee_name', 'payee name ', '');
 			$this->form_validation->set_rules('bank', 'bank name ', '');

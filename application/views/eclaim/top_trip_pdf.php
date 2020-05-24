@@ -103,6 +103,10 @@ border-bottom: 1px solid #000;
 <div><b>Name and Address of Insurance Company: </b><?php echo isset($eclaim["exinfo_other_insurance_name"]) ? $eclaim["exinfo_other_insurance_name"] :''; ?></div>
 <div><b>Policy #: </b><?php echo isset($eclaim["exinfo_other_insurance_number"]) ? $eclaim["exinfo_other_insurance_number"] : ''; ?></div>
 <div><b>Telephone: </b><?php echo isset($eclaim["exinfo_other_insurance_phone"]) ? $eclaim["exinfo_other_insurance_phone"] : ''; ?></div>
+<div><b>Have you claimed from any other party? <?php if (! empty($exinfo["other_party_reimbursed_refunded"])) { echo "Yes"; } ?></b></div>
+<idv><b>If 'yes', please provide details below:</b></div>
+<div><b>Explanation of not reported : <?php echo isset($exinfo["other_travel_insurance_explanation"]) ? htmlspecialchars($exinfo["other_travel_insurance_explanation"]) : ''; ?></b></div>
+<div><b>Amount reimbursed / refunded by other party: </b></div><div><?php echo isset($exinfo["other_party_reimbursed_refunded_amount"]) ? $exinfo["other_party_reimbursed_refunded_amount"] : ''; ?></div>
 <br />
 <h3>Other Insurance Coverage</h3>
 <div><b>Do you have other insurance coverage including Canadian government health insurance? </b><?php echo ($eclaim["other_insurance_coverage"] == 'Y') ? 'Yes' : 'No'; ?></div>

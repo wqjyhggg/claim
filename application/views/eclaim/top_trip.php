@@ -474,9 +474,17 @@
 								<?php echo form_label('Telephone:', 'exinfo_other_travel_insurance_phone', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("exinfo[other_insurance_phone]", isset($eclaim["exinfo_other_insurance_phone"]) ? $eclaim["exinfo_other_insurance_phone"] : '', array("class" => "form-control", 'placeholder' => 'Telephone')); ?>
 							</div>
+							<div class="clearfix"></div>
+							<div class="col-sm-12">
+								Have you claimed from any other party? <input type="checkbox" name="exinfo[other_party_reimbursed_refunded]" value="1" <?php if (! empty($eclaim["exinfo_other_party_reimbursed_refunded"])) { echo "checked"; } ?>> Yes. If 'yes', please provide details below:_
+							</div>
 							<div class="form-group col-sm-3">
-								<?php echo form_label('Policy #:', 'exinfo_other_travel_insurance_explanation', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("exinfo[exinfo_other_travel_insurance_explanation]", isset($eclaim["exinfo_other_travel_insurance_explanation"]) ? $eclaim["exinfo_other_insurance_number"] : '', array("class" => "form-control", 'placeholder' => 'Policy #')); ?>
+								<?php echo form_label('Explanation of not reported:', 'exinfo_other_travel_insurance_explanation', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[other_travel_insurance_explanation]", isset($eclaim["exinfo_other_travel_insurance_explanation"]) ? $eclaim["exinfo_other_travel_insurance_explanation"] : '', array("class" => "form-control", 'placeholder' => 'Policy #')); ?>
+							</div>
+							<div class="form-group col-sm-3">
+								<?php echo form_label('Amount reimbursed / refunded by other party:', 'exinfo_other_party_reimbursed_refunded_amount', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[other_party_reimbursed_refunded_amount]", isset($eclaim["exinfo_other_party_reimbursed_refunded_amount"]) ? $eclaim["exinfo_other_party_reimbursed_refunded_amount"] : '', array("class" => "form-control", 'placeholder' => 'Claimed third Party Amount')); ?>
 							</div>
 							<div class="clearfix"></div>
 						</div>

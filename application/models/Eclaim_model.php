@@ -394,6 +394,16 @@ class Eclaim_model extends CI_Model {
         if (!empty($post['exinfo_group_insurance']) && ($post['exinfo_group_insurance'] == 'Y')) {
             $data['exinfo_group_insurance'] = 1;
         }
+        $data['exinfo_other_party_reimbursed_refunded'] = 0;
+        if (!empty($post['exinfo_other_party_reimbursed_refunded']) && ($post['exinfo_other_party_reimbursed_refunded'] == 'Y')) {
+            $data['exinfo_other_party_reimbursed_refunded'] = 1;
+        }
+        if (!empty($post['exinfo_other_travel_insurance_explanation'])) {
+            $data['exinfo_other_travel_insurance_explanation'] = $post['exinfo_other_travel_insurance_explanation'];
+        }
+        if (!empty($post['exinfo_other_party_reimbursed_refunded_amount'])) {
+            $data['exinfo_other_party_reimbursed_refunded_amount'] = $post['exinfo_other_party_reimbursed_refunded_amount'];
+        }
         if (!empty($post['exinfo_other_insurance_name'])) {
             $data['exinfo_other_insurance_name'] = $post['exinfo_other_insurance_name'];
         }
@@ -501,6 +511,12 @@ class Eclaim_model extends CI_Model {
         }
         if (!empty($post['exinfo_occured_date'])) {
             $data['exinfo_occured_date'] = $post['exinfo_occured_date'];
+        }
+        if (!empty($post['exinfo_other_reason'])) {
+            $data['exinfo_other_reason'] = $post['exinfo_other_reason'];
+        }
+        if (!empty($post['exinfo_other_occurred_date'])) {
+            $data['exinfo_other_occurred_date'] = $post['exinfo_other_occurred_date'];
         }
         if (!empty($post['case_no'])) {
             $data['case_no'] = $post['case_no'];
