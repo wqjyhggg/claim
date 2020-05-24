@@ -99,6 +99,22 @@ class Eclaim extends CI_Controller {
 					$data['intnotes'] = 'Refuse this claim by ' . $this->ion_auth->get_user_id();
 					$data['logs'] = json_encode($logs);
 					$id = $this->eclaim_model->save($data);
+
+					$this->load->library('email');
+					$config = array('mailtype' => 'html');
+					$this->email->initialize($config);
+					$this->email->from(FROM_EMAIL, SITE_TITLE);
+					$this->email->to($ec['contact_email']);
+					
+					$this->email->subject("You Eclaim has been disapproved");
+					$this->email->message("You Eclaim information doesn't reatched requirement, and has been disapproved");
+					$this->email->send();
+					echo json_encode(array(
+							"data_intake" => implode(", ", $intake_notes),
+							'file' => UPLOADFULLPATH . "temp/$filename",
+							'file_name' => $filename 
+					));
+			
 				}
 			}
 		}
@@ -354,6 +370,16 @@ class Eclaim extends CI_Controller {
 				$this->eclaim_model->save($edata);
 				// print_r($this->db->last_query());
 				// send success message
+				$this->load->library('email');
+				$config = array('mailtype' => 'html');
+				$this->email->initialize($config);
+				$this->email->from(FROM_EMAIL, SITE_TITLE);
+				$this->email->to($array['contact_email']);
+				
+				$this->email->subject("You Eclaim has been approved");
+				$this->email->message("You Eclaim (" . $array['eclaim_no'] . ") has been approved, the Claim Number is : " . $data['claim_no']);
+				$this->email->send();
+
 				$this->session->set_flashdata('success', "Claim successfully created (" . $data['claim_no'] . ")");
 
 				redirect("eclaim");
