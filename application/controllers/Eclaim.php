@@ -100,15 +100,18 @@ class Eclaim extends CI_Controller {
 					$data['logs'] = json_encode($logs);
 					$id = $this->eclaim_model->save($data);
 
-					$this->load->library('email');
-					$config = array('mailtype' => 'html');
-					$this->email->initialize($config);
-					$this->email->from(FROM_EMAIL, SITE_TITLE);
-					$this->email->to($ec['contact_email']);
-					
-					$this->email->subject("You Eclaim has been disapproved");
-					$this->email->message("You Eclaim information doesn't reatched requirement, and has been disapproved");
-					$this->email->send();
+					$this->load->model("mymail_model");
+					$subject = "Web claim ";
+					$to = $ec['contact_email'];
+					$body  = "Dear " . $ec['insured_first_name'] . ",<br /><br />\n"; 
+					$body  .= "The web claim you submitted on date has been disapproved. <br /><br />\n"; 
+					$body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies. <br /><br />\n"; 
+					$body  .= "Best regards,<br />\n"; 
+					$body  .= "Ontime Care Worldwide Inc. <br />\n"; 
+					$body  .= "Telephone: 905-707-3555<br />\n"; 
+					$body  .= "Email: claim@otcww.com <br />\n"; 
+					$this->mymail_model->send_mymail($to, $subject, $body, array(), 'Ontime Care Worldwide Inc.');
+						
 					echo json_encode(array(
 							"data_intake" => implode(", ", $intake_notes),
 							'file' => UPLOADFULLPATH . "temp/$filename",
@@ -370,15 +373,19 @@ class Eclaim extends CI_Controller {
 				$this->eclaim_model->save($edata);
 				// print_r($this->db->last_query());
 				// send success message
-				$this->load->library('email');
-				$config = array('mailtype' => 'html');
-				$this->email->initialize($config);
-				$this->email->from(FROM_EMAIL, SITE_TITLE);
-				$this->email->to($array['contact_email']);
-				
-				$this->email->subject("You Eclaim has been approved");
-				$this->email->message("You Eclaim (" . $array['eclaim_no'] . ") has been approved, the Claim Number is : " . $data['claim_no']);
-				$this->email->send();
+				$this->load->model("mymail_model");
+				$subject = "Web claim under review – " . $data['claim_no'] . " - " . $data['insured_first_name'];
+				$to = $data['contact_email'];
+				$body  = "Dear " . $data['insured_first_name'] . ",<br /><br />\n"; 
+				$body  .= "The web claim you submitted on date has been accepted and is being reviewed. Your claim number is " . $data['claim_no'] . ". It will take approximately 5 business days for us to process your claim. <br /><br />\n"; 
+				$body  .= "You can check the status of your claim by logging into the customer portal (hyperlink) with your policy number and birthday and selecting 'Check Claim Status' on the main menu.<br />\n"; 
+				$body  .= "This is an system-generated email, please do not reply directly. Should you have any questions, please contact us by email at claim@otcww.com.<br /><br />\n"; 
+				$body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies. <br /><br />\n"; 
+				$body  .= "Best regards,<br />\n"; 
+				$body  .= "Ontime Care Worldwide Inc. <br />\n"; 
+				$body  .= "Telephone: 905-707-3555<br />\n"; 
+				$body  .= "Email: claim@otcww.com <br />\n"; 
+				$this->mymail_model->send_mymail($to, $subject, $body, array(), 'Ontime Care Worldwide Inc.');
 
 				$this->session->set_flashdata('success', "Claim successfully created (" . $data['claim_no'] . ")");
 
