@@ -330,7 +330,7 @@
 							<div class="clearfix"></div>
 						</div>
 
-						<h4 class="move_down" style='display:none'>Name and Address of Family Physician in Canada <i class="fa fa-angle-down pull-right"></i></h4>
+						<h4 class="move_down">Name and Address of Family Physician in Canada <i class="fa fa-angle-down pull-right"></i></h4>
 						<div class="row" style="display: none">
 							<div class="col-sm-12">
 								<div class="form-group col-sm-3">
