@@ -517,10 +517,6 @@
 							<?php echo form_label('Explanation of not reported:', 'exinfo[other_travel_insurance_explanation]', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("exinfo[other_travel_insurance_explanation]", isset($exinfo["other_travel_insurance_explanation"]) ? $exinfo["other_travel_insurance_explanation"] : '', array("class" => "form-control", 'placeholder' => 'Explanation of not reported')); ?>
 						</div>
-						<div class="form-group col-sm-3">
-							<?php echo form_label('Amount reimbursed / refunded by other party:', 'exinfo_other_party_reimbursed_refunded_amount', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("exinfo[other_party_reimbursed_refunded_amount]", isset($exinfo["other_party_reimbursed_refunded_amount"]) ? $exinfo["other_party_reimbursed_refunded_amount"] : '', array("class" => "form-control", 'placeholder' => 'Claimed third Party Amount')); ?>
-						</div>
 						<div class="clearfix"></div>
 					</div>
 
@@ -824,6 +820,11 @@
 										<?php echo form_input("expenses_claimed[amount_billed_org][]", $arr['amount_billed_org'][$key], array("class" => "form-control ")); ?>
 										<?php echo form_hidden("expenses_claimed[amount_billed][]", $arr['amount_billed'][$key]); ?>
 										<?php echo form_error("amount_billed_org"); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Amount reimbursed / refunded by other party:', 'other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("expenses_claimed[other_reimbursed_amount][]", $arr["other_reimbursed_amount"][$key], array("class" => "form-control ")); ?>
+										<?php echo form_error("other_reimbursed_amount"); ?>
 									</div>
 									<div class="clearfix"></div>
 
@@ -1143,6 +1144,11 @@
 				<?php echo form_input("expenses_claimed[amount_billed_org][]", '', array("class" => "form-control ")); ?>
 				<?php echo form_hidden("expenses_claimed[amount_billed][]", ''); ?>
 				<?php echo form_error("amount_billed_org"); ?>
+			</div>
+			<div class="col-sm-3">
+				<?php echo form_label('Amount reimbursed / refunded by other party:', 'other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
+				<?php echo form_input("expenses_claimed[other_reimbursed_amount][]", '', array("class" => "form-control ")); ?>
+				<?php echo form_error("other_reimbursed_amount"); ?>
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Amount Paid:', 'amount_client_paid_org', array("class" => 'col-sm-12')); ?>
@@ -2071,7 +2077,9 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 
                $("input[name=insured_first_name]").val(<?php if ($this->input->get('firstname')) { echo "'".str_replace("'", "\'",$this->input->get('firstname'))."'"; } else { ?>data.plan_list[0].firstname<?php } ?>);
                $("input[name=insured_last_name]").val(<?php if ($this->input->get('lastname')) { echo "'".str_replace("'", "\'",$this->input->get('lastname'))."'"; } else { ?>data.plan_list[0].lastname<?php } ?>);
-               if(<?php if ($this->input->get('gender')) { echo "'".$this->input->get('gender')."'"; } else { ?>data.plan_list[0].gender<?php } ?> == 'M')
+			   var gender = data.plan_list[0].gender;
+			   <?php if ($this->input->get('gender')) { echo "gender = \"".$this->input->get('gender')."\";"; } ?>
+               if (gender == 'M')
                   $("input[value=male]").prop('checked', true);
                else
                   $("input[value=female]").prop('checked', true);

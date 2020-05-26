@@ -509,10 +509,6 @@
 								<?php echo form_label('Explanation of not reported:', 'exinfo[other_travel_insurance_explanation]', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("exinfo[other_travel_insurance_explanation]", isset($exinfo["other_travel_insurance_explanation"]) ? $exinfo["other_travel_insurance_explanation"] : '', array("class" => "form-control", 'placeholder' => 'Explanation of not reported')); ?>
 							</div>
-							<div class="form-group col-sm-3">
-								<?php echo form_label('Amount reimbursed / refunded by other party:', 'exinfo_other_party_reimbursed_refunded_amount', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("exinfo[other_party_reimbursed_refunded_amount]", isset($exinfo["other_party_reimbursed_refunded_amount"]) ? $exinfo["other_party_reimbursed_refunded_amount"] : '', array("class" => "form-control", 'placeholder' => 'Claimed third Party Amount')); ?>
-							</div>
 						</div>
 	
 						<h2 class="move_down" style="display: none">Other Insurance Coverage <i class="fa fa-angle-down pull-right"></i></h2>
@@ -811,6 +807,11 @@
 											<?php echo form_hidden("expenses_claimed[amount_billed_org][]", $value ['amount_billed_org']); ?>
 											<?php echo form_hidden("expenses_claimed[amount_billed][]", $value ['amount_billed']); ?>
 										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Amount reimbursed / refunded by other party:', 'other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
+											<?php echo $value["other_reimbursed_amount"]; ?>
+											<?php echo form_hidden("expenses_claimed[other_reimbursed_amount][]", $value ["other_reimbursed_amount"]); ?>
+										</div>
 										<div class="clearfix"></div>
 
 										<div class="col-sm-3">
@@ -907,6 +908,11 @@
 											<?php echo form_input("expenses_claimed[amount_billed_org][]", $value ['amount_billed_org'], array("class" => "form-control ")); ?>
 											<?php echo form_hidden("expenses_claimed[amount_billed][]", $value ['amount_billed']); ?>
 											<?php echo form_error("amount_billed_org"); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Amount reimbursed / refunded by other party:', 'other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("expenses_claimed[other_reimbursed_amount][]", $value ["other_reimbursed_amount"], array("class" => "form-control ")); ?>
+											<?php echo form_error("other_reimbursed_amount"); ?>
 										</div>
 										<div class="clearfix"></div>
 
@@ -1304,6 +1310,10 @@
 				<?php echo form_label('Amount Billed:', 'amount_billed', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[amount_billed_org][]", $this->input->post("amount_billed_org"), array("class" => "form-control ")); ?>
 				<?php echo form_hidden("expenses_claimed[amount_billed][]", $this->input->post("amount_billed")); ?>
+			</div>
+			<div class="col-sm-3">
+				<?php echo form_label('Amount reimbursed / refunded by other party:', 'other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
+				<?php echo form_input("expenses_claimed[other_reimbursed_amount][]", $this->input->post("other_reimbursed_amount"), array("class" => "form-control ")); ?>
 			</div>
 			<div class="clearfix"></div>
 

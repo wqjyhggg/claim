@@ -544,6 +544,11 @@
 											<?php echo form_hidden("expenses_claimed[amount_billed_org][]", $value ['amount_billed_org']); ?>
 											<?php echo form_hidden("expenses_claimed[amount_billed][]", $value ['amount_billed']); ?>
 										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Amount reimbursed / refunded by other party:', 'other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
+											<?php echo htmlspecialchars($value["other_reimbursed_amount"]); ?>
+											<?php echo form_hidden("expenses_claimed[other_reimbursed_amount][]", $value ["other_reimbursed_amount"]); ?>
+										</div>
 										<div class="clearfix"></div>
 
 										<div class="col-sm-3">
@@ -640,6 +645,11 @@
 											<?php echo form_input("expenses_claimed[amount_billed_org][]", $value ['amount_billed_org'], array("class" => "form-control required")); ?>
 											<?php echo form_hidden("expenses_claimed[amount_billed][]", $value ['amount_billed']); ?>
 											<?php echo form_error("amount_billed_org"); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Amount reimbursed / refunded by other party:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("expenses_claimed[other_reimbursed_amount][]", $value ["other_reimbursed_amount"], array("class" => "form-control required")); ?>
+											<?php echo form_error("other_reimbursed_amount"); ?>
 										</div>
 										<div class="clearfix"></div>
 
@@ -1037,6 +1047,10 @@
 				<?php echo form_label('Amount Billed:', 'amount_billed', array("class" => 'col-sm-12')); ?>
 				<?php echo form_input("expenses_claimed[amount_billed_org][]", $this->input->post("amount_billed_org"), array("class" => "form-control required")); ?>
 				<?php echo form_hidden("expenses_claimed[amount_billed][]", $this->input->post("amount_billed")); ?>
+			</div>
+			<div class="col-sm-3">
+				<?php echo form_label('Amount reimbursed / refunded by other party:', 'other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
+				<?php echo form_input("expenses_claimed[other_reimbursed_amount][]", $this->input->post("other_reimbursed_amount"), array("class" => "form-control required")); ?>
 			</div>
 			<div class="clearfix"></div>
 

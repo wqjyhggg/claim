@@ -311,6 +311,7 @@ class Claim extends CI_Controller {
 								'amount_client_paid_org' => $array['expenses_claimed']['amount_client_paid_org'][$key],
 								'amount_client_paid' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_client_paid_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 								'amount_claimed_org' => $array['expenses_claimed']['amount_claimed_org'][$key],
+								'other_reimbursed_amount' => $array['expenses_claimed']['other_reimbursed_amount'][$key],
 								'amount_claimed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_claimed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 								'payee' => $array['expenses_claimed']['payee'][$key],
 								'pay_to' => $array['expenses_claimed']['pay_to'][$key],
@@ -703,6 +704,7 @@ class Claim extends CI_Controller {
 									'amount_client_paid_org' => $array['expenses_claimed']['amount_client_paid_org'][$key],
 									'amount_client_paid' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_client_paid_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 									'amount_claimed_org' => $array['expenses_claimed']['amount_claimed_org'][$key],
+									'other_reimbursed_amount' => $array['expenses_claimed']['other_reimbursed_amount'][$key],
 									'amount_claimed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_claimed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 									'payee' => $array['expenses_claimed']['payee'][$key],
 									'pay_to' => $array['expenses_claimed']['pay_to'][$key],
@@ -1529,6 +1531,7 @@ class Claim extends CI_Controller {
 								'amount_client_paid_org' => $array['expenses_claimed']['amount_client_paid_org'][$key],
 								'amount_client_paid' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_client_paid_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 								'amount_claimed_org' => $array['expenses_claimed']['amount_claimed_org'][$key],
+								'other_reimbursed_amount' => $array['expenses_claimed']['other_reimbursed_amount'][$key],
 								'amount_claimed' => $this->expenses_model->get_currency_exchange($array['expenses_claimed']['amount_claimed_org'][$key], $array['expenses_claimed']['currency'][$key], $array['expenses_claimed']['date_of_service'][$key]),
 								'status' => $array['expenses_claimed']['status'][$key],
 								'payee' => $array['expenses_claimed']['payee'][$key],
@@ -1709,6 +1712,7 @@ class Claim extends CI_Controller {
 								'amount_client_paid_org' => $arr['amount_client_paid_org'][$key],
 								'amount_client_paid' => $this->expenses_model->get_currency_exchange($arr['amount_client_paid_org'][$key], $arr['currency'][$key], $arr['date_of_service'][$key]),
 								'amount_claimed_org' => $arr['amount_claimed_org'][$key],
+								'other_reimbursed_amount' => $arr['other_reimbursed_amount'][$key],
 								'amount_claimed' => $this->expenses_model->get_currency_exchange($arr['amount_claimed_org'][$key], $arr['currency'][$key], $arr['date_of_service'][$key]),
 								'payee' => $arr['payee'][$key],
 								'pay_to' => $arr['pay_to'][$key],
@@ -1920,7 +1924,6 @@ class Claim extends CI_Controller {
 			} else {
 				$arr = array($iarr);
 			}
-			$array['intnotes'] = json_encode($intnotesArr); 
 			$data['intnotes'] = json_encode($arr);
 			$this->claim_model->save($data);
 		}

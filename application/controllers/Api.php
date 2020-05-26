@@ -569,6 +569,7 @@ class Api extends CI_Controller {
 								'amount_billed_org'=> isset($expenses_claimed['amount_billed_org'][$key]) ? $expenses_claimed['amount_billed_org'][$key] : '',
 								'amount_client_paid_org'=> isset($expenses_claimed['amount_client_paid_org'][$key]) ? $expenses_claimed['amount_client_paid_org'][$key] : '',
 								'amount_claimed_org'=> isset($expenses_claimed['amount_claimed_org'][$key]) ? $expenses_claimed['amount_claimed_org'][$key] : '',
+								'other_reimbursed_amount'=> isset($expenses_claimed['other_reimbursed_amount'][$key]) ? $expenses_claimed['other_reimbursed_amount'][$key] : '',
 								'currency'=> isset($expenses_claimed['currency'][$key]) ? $expenses_claimed['currency'][$key] : 'CAD',
 								'comment'=> isset($expenses_claimed['comment'][$key]) ? $expenses_claimed['comment'][$key] : '',
 								'pay_to'=>$payee_str,

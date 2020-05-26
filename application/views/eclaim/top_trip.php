@@ -482,10 +482,6 @@
 								<?php echo form_label('Explanation of not reported:', 'exinfo_other_travel_insurance_explanation', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("exinfo[other_travel_insurance_explanation]", isset($eclaim["exinfo_other_travel_insurance_explanation"]) ? $eclaim["exinfo_other_travel_insurance_explanation"] : '', array("class" => "form-control", 'placeholder' => 'Policy #')); ?>
 							</div>
-							<div class="form-group col-sm-3">
-								<?php echo form_label('Amount reimbursed / refunded by other party:', 'exinfo_other_party_reimbursed_refunded_amount', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("exinfo[other_party_reimbursed_refunded_amount]", isset($eclaim["exinfo_other_party_reimbursed_refunded_amount"]) ? $eclaim["exinfo_other_party_reimbursed_refunded_amount"] : '', array("class" => "form-control", 'placeholder' => 'Claimed third Party Amount')); ?>
-							</div>
 							<div class="clearfix"></div>
 						</div>
 	
@@ -612,6 +608,7 @@
 									$expenses_claimed_date_of_services = json_decode($eclaim["expenses_claimed_date_of_service"], TRUE);
 									$expenses_claimed_amount_client_paid_orgs = json_decode($eclaim["expenses_claimed_amount_client_paid_org"], TRUE);
 									$expenses_claimed_amount_claimed_orgs = json_decode($eclaim["expenses_claimed_amount_claimed_org"], TRUE);
+									$expenses_claimed_other_reimbursed_amounts = json_decode($eclaim["expenses_claimed_other_reimbursed_amount"], TRUE);
 									if (!empty($expenses_claimed_service_descriptions)) :
 									?>
 									<?php foreach ( $expenses_claimed_service_descriptions as $key => $value ) : ?>
@@ -641,6 +638,10 @@
 										<div class="col-sm-3">
 											<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed_amount_claimed_org[]", $expenses_claimed_amount_claimed_orgs[$key]); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Amount reimbursed / refunded by other party:', 'expenses_claimed_other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("expenses_claimed_other_reimbursed_amount[]", $expenses_claimed_other_reimbursed_amounts[$key]); ?>
 										</div>
 										<div class="clearfix"></div>
 									</div>
@@ -682,7 +683,12 @@
 									<?php foreach ( $images as $key => $value ) : ?>
 									<div class="col-sm-12 intake-forms">
 										<div class="col-sm-12">
+										<?php $ext = strtolower(substr($eclaim_files[$value]['name'], -3)); ?>
+										<?php if ($ext == 'pdf') { ?>
+											<a class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"><?php echo $eclaim_files[$value]['name']; ?></a>
+										<?php } else { ?>
 											<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>">
+										<?php } ?>
 										</div>
 									</div>
 									<?php endforeach; ?>

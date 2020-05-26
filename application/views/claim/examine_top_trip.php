@@ -351,10 +351,6 @@
 						<div class="form-group col-sm-12">
 							Explanation of not reported : <?php echo isset($exinfo["other_travel_insurance_explanation"]) ? htmlspecialchars($exinfo["other_travel_insurance_explanation"]) : ''; ?>
 						</div>
-						<div class="form-group col-sm-3">
-							<?php echo form_label('Amount reimbursed / refunded by other party:', 'exinfo_other_party_reimbursed_refunded_amount', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("exinfo[other_party_reimbursed_refunded_amount]", isset($exinfo["other_party_reimbursed_refunded_amount"]) ? $exinfo["other_party_reimbursed_refunded_amount"] : '', array("class" => "form-control", 'placeholder' => 'Claimed third Party Amount')); ?>
-						</div>
 						<div class="clearfix"></div>
 	
 						<div class="form-group col-sm-3">

@@ -90,12 +90,14 @@ $expenses_claimed_referencing_physicians = json_decode($eclaim["expenses_claimed
 $expenses_claimed_date_of_services = json_decode($eclaim["expenses_claimed_date_of_service"], TRUE);
 $expenses_claimed_amount_client_paid_orgs = json_decode($eclaim["expenses_claimed_amount_client_paid_org"], TRUE);
 $expenses_claimed_amount_claimed_orgs = json_decode($eclaim["expenses_claimed_amount_claimed_org"], TRUE);
+$expenses_claimed_other_reimbursed_amounts = json_decode($eclaim["expenses_claimed_other_reimbursed_amount"], TRUE);
 if ($expenses_claimed_service_descriptions && is_array($expenses_claimed_service_descriptions)) {
     foreach ( $expenses_claimed_service_descriptions as $key => $value ) { ?>
 <div><b>Description of Services: </b><?php echo $expenses_claimed_service_descriptions[$key]; ?></div>
 <div><b>Date of Service: </b><?php echo $expenses_claimed_service_descriptions[$key]; ?></div>
 <div><b>Amount Client Paid: </b><?php echo $expenses_claimed_amount_client_paid_orgs[$key]; ?></div>
 <div><b>Amount Claimed: </b><?php echo $expenses_claimed_amount_client_paid_orgs[$key]; ?></div>
+<div><b>Amount reimbursed / refunded by other party : </b><?php echo $expenses_claimed_other_reimbursed_amounts[$key]; ?></div>
 <br />
 <?php
     }
@@ -115,6 +117,8 @@ $images = json_decode($eclaim['imgfile'], TRUE);
 if ($images) {
 foreach ( $images as $key => $value ) {
     if (!isset($eclaim_files[$value])) continue;
+    $ext = strtolower(substr($eclaim_files[$value]['name'], -3));
+    if ($ext == 'pdf') continue;
 ?>
 <div><img src="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"></div>
 <?php

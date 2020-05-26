@@ -438,6 +438,7 @@
 									$expenses_claimed_date_of_services = json_decode($eclaim["expenses_claimed_date_of_service"], TRUE);
 									$expenses_claimed_amount_client_paid_orgs = json_decode($eclaim["expenses_claimed_amount_client_paid_org"], TRUE);
 									$expenses_claimed_amount_claimed_orgs = json_decode($eclaim["expenses_claimed_amount_claimed_org"], TRUE);
+									$expenses_claimed_other_reimbursed_amounts = json_decode($eclaim["expenses_claimed_other_reimbursed_amount"], TRUE);
 									if ($expenses_claimed_service_descriptions && is_array($expenses_claimed_service_descriptions)) {
 									?>
 									<?php foreach ( $expenses_claimed_service_descriptions as $key => $value ) : ?>
@@ -467,6 +468,10 @@
 										<div class="col-sm-3">
 											<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed_amount_claimed_org[]", $expenses_claimed_amount_client_paid_orgs[$key]); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Amount reimbursed / refunded by other party:', 'expenses_claimed_other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("expenses_claimed_other_reimbursed_amount[]", $expenses_claimed_other_reimbursed_amounts[$key]); ?>
 										</div>
 										<div class="clearfix"></div>
 									</div>

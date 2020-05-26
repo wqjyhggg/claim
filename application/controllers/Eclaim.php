@@ -112,11 +112,7 @@ class Eclaim extends CI_Controller {
 					$body  .= "Email: claim@otcww.com <br />\n"; 
 					$this->mymail_model->send_mymail($to, $subject, $body, array(), 'Ontime Care Worldwide Inc.');
 						
-					echo json_encode(array(
-							"data_intake" => implode(", ", $intake_notes),
-							'file' => UPLOADFULLPATH . "temp/$filename",
-							'file_name' => $filename 
-					));
+					$json["message"] = "Success";
 			
 				}
 			}
@@ -243,6 +239,7 @@ class Eclaim extends CI_Controller {
 							'reason_other' => '',
 							'amount_claimed' => $array['expenses_claimed_amount_claimed_org'][$key],
 							'amount_claimed_org' => $array['expenses_claimed_amount_claimed_org'][$key],
+							'other_reimbursed_amount' => $array['expenses_claimed_other_reimbursed_amount'][$key],
 							'payee' => '',
 							'currency' => isset($array['expenses_claimed_currency'][$key])?$array['expenses_claimed_currency'][$key]:'CAD',
 						);
@@ -255,6 +252,7 @@ class Eclaim extends CI_Controller {
 				unset($array['expenses_claimed_date_of_service']);
 				unset($array['expenses_claimed_amount_client_paid_org']);
 				unset($array['expenses_claimed_amount_claimed_org']);
+				unset($array['expenses_claimed_other_reimbursed_amount']);
 				unset($array['expenses_claimed_provider_name']);
 
 				if (!empty($array['exinfo'])) {

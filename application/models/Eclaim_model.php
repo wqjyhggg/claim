@@ -119,6 +119,9 @@ class Eclaim_model extends CI_Model {
             //$data['expenses_claimed_amount_claimed_org'] = json_encode($post['expenses_claimed_amount_claimed_org']);
             $data['expenses_claimed_amount_claimed_org'] = $post['expenses_claimed_amount_claimed_org'];
         }
+        if (!empty($post['expenses_claimed_other_reimbursed_amount'])) {
+            $data['expenses_claimed_other_reimbursed_amount'] = $post['expenses_claimed_other_reimbursed_amount'];
+        }
         if (!empty($post['expenses_claimed_currency'])) {
             //$data['expenses_claimed_currency'] = json_encode($post['expenses_claimed_currency']);
             $data['expenses_claimed_currency'] = $post['expenses_claimed_currency'];
@@ -400,9 +403,6 @@ class Eclaim_model extends CI_Model {
         }
         if (!empty($post['exinfo_other_travel_insurance_explanation'])) {
             $data['exinfo_other_travel_insurance_explanation'] = $post['exinfo_other_travel_insurance_explanation'];
-        }
-        if (!empty($post['exinfo_other_party_reimbursed_refunded_amount'])) {
-            $data['exinfo_other_party_reimbursed_refunded_amount'] = $post['exinfo_other_party_reimbursed_refunded_amount'];
         }
         if (!empty($post['exinfo_other_insurance_name'])) {
             $data['exinfo_other_insurance_name'] = $post['exinfo_other_insurance_name'];
