@@ -11,7 +11,7 @@
 			<div class="x_panel">
 				<?php echo $message; ?>
 				<div class="x_title">
-					<h2>Trip Cancellation and Intrruption Claim Details</h2>
+					<h2>Trip Cancellation</h2>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
@@ -194,6 +194,7 @@
 									<option value="Trip Cancellation" <?php if ('Trip Cancellation' == $eclaim["exinfo_loss_type"]) { echo "selected"; } ?>>Trip Cancellation</option>
 									<option value="Trip Intrruption" <?php if ('Trip Intrruption' == $eclaim["exinfo_loss_type"]) { echo "selected"; } ?>>Trip Intrruption</option>
 									<option value="Delays" <?php if ('Delays' == $eclaim["exinfo_loss_type"]) { echo "selected"; } ?>>Delays</option>
+									<option value="Other" <?php if ('Other' == $eclaim["exinfo_loss_type"]) { echo "selected"; } ?>>Other</option>
 								</select>
 							</div>
 							<div class="clearfix"></div>
@@ -209,8 +210,8 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<div class="input-group date">
-									<?php echo form_input("exinfo[injury1_date]", isset($eclaim["exinfo_injury1_date"]) ? $eclaim["exinfo_injury1_date"] : '', array("class" => "form-control datepicker")); ?>
-									<?php echo form_hidden("date_symptoms", isset($eclaim["exinfo_injury1_date"]) ? $eclaim["exinfo_injury1_date"] : ''); ?>
+									<?php echo form_input("exinfo[injury1_date]", isset($eclaim["exinfo_injury1_date"]) ? $eclaim["exinfo_injury1_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''), array("class" => "form-control datepicker")); ?>
+									<?php echo form_hidden("date_symptoms", isset($eclaim["exinfo_injury1_date"]) ? $eclaim["exinfo_injury1_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : '')); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
@@ -220,7 +221,7 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<div class="input-group date">
-									<?php echo form_input("exinfo[physician_date]", isset($eclaim["exinfo_physician_date"]) ? $eclaim["exinfo_physician_date"] : '', array("class" => "form-control datepicker")); ?>
+									<?php echo form_input("exinfo[physician_date]", isset($eclaim["exinfo_physician_date"]) ? $eclaim["exinfo_physician_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''), array("class" => "form-control datepicker")); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
@@ -244,7 +245,7 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<div class="input-group date">
-									<?php echo form_input("exinfo[injury_date]", isset($eclaim["exinfo_injury_date"]) ? $eclaim["exinfo_injury_date"] : '', array("class" => "form-control datepicker")); ?>
+									<?php echo form_input("exinfo[injury_date]", isset($eclaim["exinfo_injury_date"]) ? $eclaim["exinfo_injury_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''), array("class" => "form-control datepicker")); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
@@ -261,7 +262,7 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<div class="input-group date">
-									<?php echo form_input("exinfo[death_date]", isset($eclaim["exinfo_death_date"]) ? $eclaim["exinfo_death_date"] : '', array("class" => "form-control datepicker")); ?>
+									<?php echo form_input("exinfo[death_date]", isset($eclaim["exinfo_death_date"]) ? $eclaim["exinfo_death_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''), array("class" => "form-control datepicker")); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
