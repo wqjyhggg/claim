@@ -163,7 +163,7 @@ class Eclaim extends CI_Controller {
 			
 			$this->form_validation->set_rules('contact_first_name', 'First Name', '');
 			$this->form_validation->set_rules('contact_last_name', 'Last Name', '');
-			$this->form_validation->set_rules('contact_email', 'Email', 'valid_email');
+			//$this->form_validation->set_rules('contact_email', 'Email', 'valid_email');
 			//$this->form_validation->set_rules('contact_phone', 'physician alt telephone ', 'numeric');
 			
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');

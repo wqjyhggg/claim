@@ -7,7 +7,7 @@ border-bottom: 1px solid #000;
     <h1 style="text-align:center; width:100%">Eclaim - <?php echo empty($eclaim['eclaim_no']) ? "ID#".$eclaim['id'] : $eclaim['eclaim_no']; ?></h1>
 </div>
 <div>
-    <h1>Trip Cancellation and Intrruption Claim Details</h1>
+    <h1>Trip Cancellation</h1>
 </div>
 <h3>SECTION A: INSURED’S INFORMATION</h3>
 <div><b>Insured First Name: </b><?php echo $eclaim["insured_first_name"]; ?></div>
@@ -44,14 +44,14 @@ border-bottom: 1px solid #000;
 <br />
 <h3>SECTION B: TYPE OF LOSS</h3>
 <div><b>Type: </b><?php echo isset($eclaim["exinfo_loss_type"]) ? $eclaim["exinfo_loss_type"] : ''; ?></div>
-<div><b>If loss is due to sickness, please provide details: </b><?php echo isset($eclaim["exinfo_sickness"]) ? $eclaim["exinfo_sickness"] : ''; ?></div>
+<div><b>If loss is due to sickness, please provide details: </b><?php echo isset($eclaim["exinfo_sickness"]) ? $eclaim["exinfo_sickness"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''); ?></div>
 <div><b>Date symptoms or injury first appeared: </b><?php echo isset($eclaim["exinfo_injury1_date"]) ? $eclaim["exinfo_injury1_date"] : ''; ?></div>
-<div><b>Date you first saw physician for this condition: </b><?php echo isset($eclaim["exinfo_physician_date"]) ? $eclaim["exinfo_physician_date"] : ''; ?></div>
+<div><b>Date you first saw physician for this condition: </b><?php echo isset($eclaim["exinfo_physician_date"]) ? $eclaim["exinfo_physician_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''); ?></div>
 <div><b>If loss is due to injury, please provide details: </b><?php echo isset($eclaim["exinfo_injury_details"]) ? $eclaim["exinfo_injury_details"] : ''; ?></div>
 <div><b>Describe how the injury/accident occured: </b><?php echo isset($eclaim["exinfo_injury_describe"]) ? $eclaim["exinfo_injury_describe"] : ''; ?></div>
-<div><b>Date of injury/accident: </b><?php echo isset($eclaim["exinfo_injury_date"]) ? $eclaim["exinfo_injury_date"] : ''; ?></div>
+<div><b>Date of injury/accident: </b><?php echo isset($eclaim["exinfo_injury_date"]) ? $eclaim["exinfo_injury_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''); ?></div>
 <div><b>If loss is due to death, please provide details: </b><?php echo isset($eclaim["exinfo_death_describe"]) ? $eclaim["exinfo_death_describe"] : ''; ?></div>
-<div><b>Date of death: </b><?php echo isset($eclaim["exinfo_death_date"]) ? $eclaim["exinfo_death_date"] : ''; ?></div>
+<div><b>Date of death: </b><?php echo isset($eclaim["exinfo_death_date"]) ? $eclaim["exinfo_death_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''); ?></div>
 <div><b>Cause of death: </b><?php echo isset($eclaim["exinfo_death_cause"]) ? $eclaim["exinfo_death_cause"] : ''; ?></div>
 <div><b>Your relationship to sick, injured or deceased person: </b><?php echo isset($eclaim["exinfo_relation"]) ? $eclaim["exinfo_relation"] : ''; ?></div>
 <div><b>Name of patient or deceased: </b><?php echo isset($eclaim["exinfo_patient_name"]) ? $eclaim["exinfo_patient_name"] : ''; ?></div>
