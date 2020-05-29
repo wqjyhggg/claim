@@ -963,7 +963,7 @@
 			</div>
 			<div class="col-sm-3">
 				<?php echo form_label('Amount reimbursed / refunded by other party:', 'other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
-				<?php echo form_input("expenses_claimed[other_reimbursed_amount][]", '', array("class" => "form-control required")); ?>
+				<?php echo form_input("expenses_claimed[other_reimbursed_amount][]", '', array("class" => "form-control")); ?>
 				<?php echo form_error("other_reimbursed_amount"); ?>
 			</div>
 			<div class="col-sm-3">
