@@ -68,7 +68,7 @@ border-bottom: 1px solid #000;
 
 <div><b>Do you have credit card insurance coverage? </b><?php if (!empty($eclaim["exinfo_credit_card_insurance"])) { echo "Yes"; } ?></div>
 <div><b>If 'yes', please provide the following information: </b></div>
-<div><b>Name of the financial Institution: </b><?php echo isset($eclaim["exinfo_credit_card_name"]) ? $eclaim["exinfo_credit_card_name"] : ''; ?></div>
+<div><b>Name of the financial Institution: </b><?php echo isset($eclaim["exinfo_credit_card_insurance_name"]) ? $eclaim["exinfo_credit_card_insurance_name"] : ''; ?></div>
 <div><b>First 6 digits of credit card: </b><?php echo isset($eclaim["exinfo_credit_card_number"]) ? $eclaim["exinfo_credit_card_number"] : ''; ?></div>
 <div><b>Expiry Date(MM/YYYY): </b><?php echo isset($eclaim["exinfo_credit_card_expire"]) ? $eclaim["exinfo_credit_card_expire"] : ''; ?></div>
 <div><b>Name of Cardholder: </b><?php echo isset($eclaim["exinfo_credit_card_holder"]) ? $eclaim["exinfo_credit_card_holder"] : ''; ?></div>

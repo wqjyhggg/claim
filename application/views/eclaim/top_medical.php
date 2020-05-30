@@ -275,7 +275,7 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Name of the financial Institution:', 'exinfo_other_insurance_name', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("exinfo[credit_card_insurance_name]", isset($eclaim["exinfo_credit_card_name"]) ? $eclaim["exinfo_credit_card_name"] : '', array("class" => "form-control", 'placeholder' => 'Name of the financial Institution')); ?>
+								<?php echo form_input("exinfo[credit_card_insurance_name]", isset($eclaim["exinfo_credit_card_insurance_name"]) ? $eclaim["exinfo_credit_card_insurance_name"] : '', array("class" => "form-control", 'placeholder' => 'Name of the financial Institution')); ?>
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('First 6 digits of credit card:', 'exinfo_credit_card_number', array("class" => 'col-sm-12')); ?>
