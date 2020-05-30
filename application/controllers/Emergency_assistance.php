@@ -2297,6 +2297,8 @@ class Emergency_assistance extends CI_Controller {
 				curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false);
 				curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2);
 				curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+				curl_setopt ( $curl, CURLOPT_SSL_VERIFYPEER, FALSE );
+				curl_setopt ( $curl, CURLOPT_SSL_VERIFYHOST, FALSE );
 				
 				$result = curl_exec($curl);
 				$result = json_decode($result, TRUE);
@@ -2353,6 +2355,8 @@ class Emergency_assistance extends CI_Controller {
 		curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false);
 		curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 2);
 		curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+		curl_setopt ( $curl, CURLOPT_SSL_VERIFYPEER, FALSE );
+		curl_setopt ( $curl, CURLOPT_SSL_VERIFYHOST, FALSE );
 		
 		$result = curl_exec($curl);
 		if ($result) {
