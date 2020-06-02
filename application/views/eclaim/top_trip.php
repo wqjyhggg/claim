@@ -11,7 +11,7 @@
 			<div class="x_panel">
 				<?php echo $message; ?>
 				<div class="x_title">
-					<h2>Trip Cancellation and Intrruption Claim Details</h2>
+					<h2>Trip Cancellation</h2>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
@@ -52,7 +52,7 @@
 								<?php echo form_error("dob"); ?>
 							</div>
 							<div class="clearfix"></div>
-
+<?php if (0) { ?>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Second Insured First Name:', 'exinfo_insured2_first_name', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("exinfo[insured2_first_name]", isset($eclaim["exinfo_insured2_first_name"]) ? $eclaim["exinfo_insured2_first_name"] : '', array("class" => "form-control", 'placeholder' => 'Second Insured First Name')); ?>
@@ -79,12 +79,16 @@
 								</div>
 							</div>
 							<div class="clearfix"></div>
+<?php } ?>
 
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Policy#:', 'policy_no', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("policy_no", $eclaim["policy_no"], array("class" => "form-control required", 'placeholder' => 'Policy#', 'readonly' => 'readonly')); ?>
 								<?php echo form_error("policy_no"); ?>
 								<?php echo form_hidden("id", $eclaim['id']); ?>
+								<?php echo form_hidden("case_no", $eclaim['case_no']); ?>
+								<?php echo form_hidden("eclaim_no", $eclaim['eclaim_no']); ?>
+								<?php echo form_hidden("exinfo_type", 'top_trip'); ?>
 								<?php echo form_hidden("product_short", $eclaim['product_short']); ?>
 							</div>
 							<div class="form-group col-sm-3" style='display:none;'>
@@ -190,6 +194,7 @@
 									<option value="Trip Cancellation" <?php if ('Trip Cancellation' == $eclaim["exinfo_loss_type"]) { echo "selected"; } ?>>Trip Cancellation</option>
 									<option value="Trip Intrruption" <?php if ('Trip Intrruption' == $eclaim["exinfo_loss_type"]) { echo "selected"; } ?>>Trip Intrruption</option>
 									<option value="Delays" <?php if ('Delays' == $eclaim["exinfo_loss_type"]) { echo "selected"; } ?>>Delays</option>
+									<option value="Other" <?php if ('Other' == $eclaim["exinfo_loss_type"]) { echo "selected"; } ?>>Other</option>
 								</select>
 							</div>
 							<div class="clearfix"></div>
@@ -205,7 +210,8 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<div class="input-group date">
-									<?php echo form_input("exinfo[injury1_date]", isset($eclaim["exinfo_injury1_date"]) ? $eclaim["exinfo_injury1_date"] : '', array("class" => "form-control datepicker")); ?>
+									<?php echo form_input("exinfo[injury1_date]", isset($eclaim["exinfo_injury1_date"]) ? $eclaim["exinfo_injury1_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''), array("class" => "form-control datepicker")); ?>
+									<?php echo form_hidden("date_symptoms", isset($eclaim["exinfo_injury1_date"]) ? $eclaim["exinfo_injury1_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : '')); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
@@ -215,7 +221,7 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<div class="input-group date">
-									<?php echo form_input("exinfo[physician_date]", isset($eclaim["exinfo_physician_date"]) ? $eclaim["exinfo_physician_date"] : '', array("class" => "form-control datepicker")); ?>
+									<?php echo form_input("exinfo[physician_date]", isset($eclaim["exinfo_physician_date"]) ? $eclaim["exinfo_physician_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''), array("class" => "form-control datepicker")); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
@@ -239,7 +245,7 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<div class="input-group date">
-									<?php echo form_input("exinfo[injury_date]", isset($eclaim["exinfo_injury_date"]) ? $eclaim["exinfo_injury_date"] : '', array("class" => "form-control datepicker")); ?>
+									<?php echo form_input("exinfo[injury_date]", isset($eclaim["exinfo_injury_date"]) ? $eclaim["exinfo_injury_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''), array("class" => "form-control datepicker")); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
@@ -256,7 +262,7 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<div class="input-group date">
-									<?php echo form_input("exinfo[death_date]", isset($eclaim["exinfo_death_date"]) ? $eclaim["exinfo_death_date"] : '', array("class" => "form-control datepicker")); ?>
+									<?php echo form_input("exinfo[death_date]", isset($eclaim["exinfo_death_date"]) ? $eclaim["exinfo_death_date"] : (isset($eclaim["exinfo_loss_date"]) ? $eclaim["exinfo_loss_date"] : ''), array("class" => "form-control datepicker")); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
@@ -416,42 +422,24 @@
 
 						<h2 class="move_down">SECTION D: OTHER INSURANCE COVERAGE <small></small><i class="fa fa-angle-down pull-right"></i></h2>
 						<div class="row" style="display: none">
-							<div class="col-sm-5">Do you have credit card insurance coverage?</div>
-							<div class="col-sm-1">
-								<?php echo form_radio("exinfo[credit_card_insurance]", "Y", isset($eclaim['exinfo_credit_card_insurance']) ? $eclaim['exinfo_credit_card_insurance'] : '', array('class' => 'setpremium'));?> Yes
-							</div>
-							<div class="col-sm-1">
-								<?php echo form_radio("exinfo[credit_card_insurance]", "N", isset($eclaim['exinfo_credit_card_insurance']) ? $eclaim['exinfo_credit_card_insurance'] : '', array('class' => 'setpremium'));?> No
-							</div>
-							<div class="col-sm-5">If ‘Yes’, please provide the following information</div>
-							<div class="clearfix"></div>
-	
-							<div class="form-group col-sm-3">
-								Name of the financial Institution: 
-							</div>
-							<div class="form-group col-sm-9">
-								<?php echo form_input("exinfo[credit_card_name]", isset($eclaim["exinfo_credit_card_name"]) ? $eclaim["exinfo_credit_card_name"] : '', array("class" => "form-control")); ?>
-							</div>
-	
-							<div class="form-group col-sm-3">
-								First 6 digits of credit card: 
+							<div class="col-sm-12">
+								Do you have credit card insurance coverage? <input type="checkbox" name="exinfo[credit_card_insurance]" value="1" <?php if (! empty($eclaim["exinfo_credit_card_insurance"])) { echo "checked"; } ?>> Yes. If 'yes', please provide the following information:_
 							</div>
 							<div class="form-group col-sm-3">
-								<?php echo form_input("exinfo[credit_card_number]", isset($eclaim["exinfo_credit_card_number"]) ? $eclaim["exinfo_credit_card_number"] : '', array("class" => "form-control")); ?>
-							</div>
-	
-							<div class="form-group col-sm-3">
-								Expiry Date(MM/YYYY): 
+								<?php echo form_label('Name of the financial Institution:', 'exinfo_other_insurance_name', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[credit_card_insurance_name]", isset($eclaim["exinfo_credit_card_insurance_name"]) ? $eclaim["exinfo_credit_card_insurance_name"] : '', array("class" => "form-control", 'placeholder' => 'Name of the financial Institution')); ?>
 							</div>
 							<div class="form-group col-sm-3">
-								<?php echo form_input("exinfo[credit_card_expire]", isset($eclaim["exinfo_credit_card_expire"]) ? $eclaim["exinfo_credit_card_expire"] : '', array("class" => "form-control")); ?>
-							</div>
-	
-							<div class="form-group col-sm-3">
-								Name of Cardholder: 
+								<?php echo form_label('First 6 digits of credit card:', 'exinfo_credit_card_number', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[credit_card_number]", isset($eclaim["exinfo_credit_card_number"]) ? $eclaim["exinfo_credit_card_number"] : '', array("class" => "form-control", 'placeholder' => 'First 6 digits of credit card')); ?>
 							</div>
 							<div class="form-group col-sm-3">
-								<?php echo form_input("exinfo[credit_card_holder]", isset($eclaim["exinfo_credit_card_holder"]) ? $eclaim["exinfo_credit_card_holder"] : '', array("class" => "form-control")); ?>
+								<?php echo form_label('Expiry Date(MM/YYYY):', 'exinfo_credit_card_expire', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[credit_card_expire]", isset($eclaim["exinfo_credit_card_expire"]) ? $eclaim["exinfo_credit_card_expire"] : '', array("class" => "form-control", 'placeholder' => 'Expiry Date(MM/YYYY)')); ?>
+							</div>
+							<div class="form-group col-sm-3">
+								<?php echo form_label('Name of Cardholder:', 'exinfo_credit_card_holder', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[credit_card_holder]", isset($eclaim["exinfo_credit_card_holder"]) ? $eclaim["exinfo_credit_card_holder"] : '', array("class" => "form-control", 'placeholder' => 'Name of Cardholder')); ?>
 							</div>
 							<div class="clearfix"></div>
 							<div class="col-sm-12">
@@ -486,6 +474,14 @@
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Telephone:', 'exinfo_other_travel_insurance_phone', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("exinfo[other_insurance_phone]", isset($eclaim["exinfo_other_insurance_phone"]) ? $eclaim["exinfo_other_insurance_phone"] : '', array("class" => "form-control", 'placeholder' => 'Telephone')); ?>
+							</div>
+							<div class="clearfix"></div>
+							<div class="col-sm-12">
+								Have you claimed from any other party? <input type="checkbox" name="exinfo[other_party_reimbursed_refunded]" value="1" <?php if (! empty($eclaim["exinfo_other_party_reimbursed_refunded"])) { echo "checked"; } ?>> Yes. If 'yes', please provide details below:_
+							</div>
+							<div class="form-group col-sm-3">
+								<?php echo form_label('Explanation of not reported:', 'exinfo_other_travel_insurance_explanation', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[other_travel_insurance_explanation]", isset($eclaim["exinfo_other_travel_insurance_explanation"]) ? $eclaim["exinfo_other_travel_insurance_explanation"] : '', array("class" => "form-control", 'placeholder' => 'Policy #')); ?>
 							</div>
 							<div class="clearfix"></div>
 						</div>
@@ -543,77 +539,6 @@
 									<div class="col-sm-3">
 										<?php echo form_label('Telephone:', 'employee_telephone', array("class" => 'col-sm-12')); ?>
 										<?php echo form_input("employee_telephone", $eclaim["employee_telephone"], array("class" => "form-control", 'placeholder' => 'Telephone')); ?>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<h2 class="move_down" style="display: none">Medical Information <small></small> <i class="fa fa-angle-down pull-right"></i></h2>
-						<div class="row" style="display: none">
-							<div class="col-sm-12">
-								<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("diagnosis", $eclaim["diagnosis"], array("class" => "form-control", 'placeholder' => 'Diagnosis')); ?>
-								<?php echo form_error("diagnosis"); ?>
-							</div>
-							<div class="form-group col-sm-12">
-								<?php echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class" => 'col-sm-12')); ?>
-								<?php echo form_textarea("medical_description", $eclaim["medical_description"], array("class" => "form-control", 'placeholder' => 'Brief description of your sickness or injury')); ?>
-							</div>
-							<div class="col-sm-6">
-								<?php echo form_label('Date symptoms or injury first appeared:', 'date_symptoms', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("date_symptoms", $eclaim["date_symptoms"], array("class" => "form-control dob", 'placeholder' => 'Date symptoms or injury first appeared')); ?>
-								<?php echo form_error("date_symptoms"); ?>
-							</div>
-							<div class="col-sm-6">
-								<?php echo form_label('Date you first saw physician for this condition:', 'date_first_physician', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("date_first_physician", $eclaim["date_first_physician"], array("class" => "form-control dob", 'placeholder' => 'Date you first saw physician for this condition')); ?>
-							</div>
-							<div class="col-sm-12" style="margin-top: 20px">
-								<div class="col-sm-7">Have you ever been treated for this or a similar condition before?</div>
-								<div class="col-sm-1">
-									<?php echo form_radio("treatment_before", "Y", $eclaim["treatment_before"], array('class' => 'setpremium')); ?>  Yes
-								</div>
-								<div class="col-sm-1">
-									<?php echo form_radio("treatment_before", "N", $eclaim["treatment_before"], array('class' => 'setpremium')); ?>  No
-								</div>
-								<div class="col-sm-12">If you answered “yes”, provide all dates of treatment and list all medications taken before the effective date of the current policy:</div>
-								<div class="form-group col-sm-12">
-									<div class="col-sm-3">
-										<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_1', array("class"=>'col-sm-12'));   ?>
-										<div class="input-group date">
-											<?php echo form_input("medication_date_1", $eclaim["medication_date_1"], array("class" => "form-control datepicker", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
-											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-										</div>
-									</div>
-									<div class="col-sm-3">
-										<?php echo form_label('Medication:', 'medication_1', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("medication_1", $eclaim["medication_1"], array("class" => "form-control", 'placeholder' => 'Medication')); ?>
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<div class="col-sm-3">
-										<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_2', array("class"=>'col-sm-12'));   ?>
-										<div class="input-group date">
-											<?php echo form_input("medication_date_2", $eclaim["medication_date_2"], array("class" => "form-control datepicker", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
-											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-										</div>
-									</div>
-									<div class="col-sm-3">
-										<?php echo form_label('Medication:', 'medication_2', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("medication_2", $eclaim["medication_2"], array("class" => "form-control", 'placeholder' => 'Medication')); ?>
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<div class="col-sm-3">
-										<?php echo form_label('Date (MM/DD/YYYY):', 'medication_date_3', array("class"=>'col-sm-12'));   ?>
-										<div class="input-group date">
-											<?php echo form_input("medication_date_3", $eclaim["medication_date_3"], array("class" => "form-control datepicker", 'placeholder' => 'Date (MM/DD/YYYY)')); ?>
-											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-										</div>
-									</div>
-									<div class="col-sm-3">
-										<?php echo form_label('Medication:', 'medication_3', array("class" => 'col-sm-12')); ?>
-										<?php echo form_input("medication_3", $eclaim["medication_3"], array("class" => "form-control", 'placeholder' => 'Medication')); ?>
 									</div>
 								</div>
 							</div>
@@ -684,6 +609,8 @@
 									$expenses_claimed_date_of_services = json_decode($eclaim["expenses_claimed_date_of_service"], TRUE);
 									$expenses_claimed_amount_client_paid_orgs = json_decode($eclaim["expenses_claimed_amount_client_paid_org"], TRUE);
 									$expenses_claimed_amount_claimed_orgs = json_decode($eclaim["expenses_claimed_amount_claimed_org"], TRUE);
+									$expenses_claimed_other_reimbursed_amounts = json_decode($eclaim["expenses_claimed_other_reimbursed_amount"], TRUE);
+									if (!empty($expenses_claimed_service_descriptions)) :
 									?>
 									<?php foreach ( $expenses_claimed_service_descriptions as $key => $value ) : ?>
 									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
@@ -701,7 +628,7 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed_date_of_service[]", $expenses_claimed_service_descriptions[$key]); ?>
+											<?php echo form_input("expenses_claimed_date_of_service[]", $expenses_claimed_date_of_services[$key]); ?>
 										</div>
 										<div class="clearfix"></div>
 
@@ -711,11 +638,16 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed_amount_claimed_org[]", $expenses_claimed_amount_client_paid_orgs[$key]); ?>
+											<?php echo form_input("expenses_claimed_amount_claimed_org[]", $expenses_claimed_amount_claimed_orgs[$key]); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Amount reimbursed / refunded by other party:', 'expenses_claimed_other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("expenses_claimed_other_reimbursed_amount[]", $expenses_claimed_other_reimbursed_amounts[$key]); ?>
 										</div>
 										<div class="clearfix"></div>
 									</div>
 									<?php endforeach; ?>
+									<?php endif; ?>
 								</div>
 							</div>
 						</div>
@@ -727,7 +659,16 @@
 								</div>
 								<div class="col-sm-12">
 									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>">
+									<?php echo form_hidden("sign_image", $eclaim['sign_image']); ?>
+									<?php echo form_hidden("sign_image2", $eclaim['sign_image2']); ?>
 								</div>
+								<?php if (!empty($eclaim['sign_image2'])) { ?>
+								<div class="col-sm-12">
+								<?php if (isset($eclaim_files[$eclaim['sign_image2']])) { ?>
+									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image2']]['path'] . "/" . $eclaim_files[$eclaim['sign_image2']]['name']; ?>">
+								<?php } ?>
+								</div>
+								<?php } ?>
 							</div>
 						</div>
 						<br />
@@ -738,11 +679,17 @@
 						<div class="row" style="display: none">
 							<div class="col-sm-12">
 								<div class="col-sm-12 uploaded_files">
+									<?php echo form_hidden("imgfile", $eclaim['imgfile']); ?>
 									<?php $images = json_decode($eclaim['imgfile'], TRUE); ?>
 									<?php foreach ( $images as $key => $value ) : ?>
 									<div class="col-sm-12 intake-forms">
 										<div class="col-sm-12">
+										<?php $ext = strtolower(substr($eclaim_files[$value]['name'], -3)); ?>
+										<?php if ($ext == 'pdf') { ?>
+											<a class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"><?php echo $eclaim_files[$value]['name']; ?></a>
+										<?php } else { ?>
 											<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>">
+										<?php } ?>
 										</div>
 									</div>
 									<?php endforeach; ?>
@@ -762,11 +709,29 @@
 					</div>
 					<div class="row" style="margin-top: 20px">
 						<div class="row">
+							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER)) && ($eclaim['status'] == 1)) { ?>
 							<div class="col-sm-2">
 								<input class="btn btn-primary" name="Save" value="Save as Claim" type="submit">
 							</div>
 							<div class="col-sm-2">
 								<input class="btn btn-primary" name="Refuse" value="Refuse Claim" type="button">
+							</div>
+							<?php } ?>
+							<div class="col-sm-2">
+								<?php echo anchor("eclaim/export/".$eclaim['id'], "Print", "target='_blank' class='btn btn-primary'"); ?>
+							</div>
+						</div>
+					</div>
+					<?php echo form_close(); ?>
+					<?php echo form_open("eclaim/setcaseno", array('class'=>'form-horizontal', 'method'=>'post')); ?>
+					<div class="row" style="margin-top: 20px">
+						<div class="row">
+							<div class="col-sm-2">
+								<?php echo form_input("case_no", $eclaim['case_no']); ?>
+								<?php echo form_hidden("id", $eclaim['id']); ?>
+							</div>
+							<div class="col-sm-2">
+								<button class="btn btn-primary" name="csubmit" value="eclaim">Save Case No</button>
 							</div>
 						</div>
 					</div>
@@ -803,7 +768,7 @@ $(document).ready(function() {
 })
 // when clicked over deny button
 .on("click", "input[name=Refuse]", function(e) {
-	if (confirm('Are you sure you want to accept Eclaim?')) {
+	if (confirm('Are you sure you want to refuse this Eclaim?')) {
 		e.preventDefault();
 		$.ajax({
 				url: "<?php echo base_url("eclaim/disapprove/".$eclaim['id']); ?>",
@@ -811,7 +776,7 @@ $(document).ready(function() {
 				data:$('#main_form').serialize(),
 				dataType: "json",
 				success: function(data) {
-					if (data.status == 1) {
+					if (data.status == 2) {
 						window.location = "<?php echo base_url("eclaim"); ?>";
 					}
 				}

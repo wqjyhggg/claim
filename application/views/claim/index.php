@@ -86,6 +86,10 @@
 								<?php endforeach; ?>
 							</select>
 						</div>
+						<div class="form-group col-sm-2">
+							<?php echo form_label ( 'EClaim:', 'eclaim_sls', array ("class" => 'col-sm-12') ); ?>
+							<?php echo form_dropdown ( "eclaim_sls", array(0 => '', 0 => 'No', 0 => 'Yes'), $this->input->post_get( "eclaim_sls" ), array ("class" => 'form-control') );?>
+						</div>
 						<div class="col-sm-3">
 							<label class="col-sm-12">&nbsp;</label>
 							<button class="btn btn-primary" name="filter" value="policy">Search</button>
@@ -247,10 +251,11 @@
 								<tr>
 									<th title='Check for assign to claim examiner'><?php echo form_checkbox("selectall", 1, FALSE, "alt='Check for assign to claim examiner'"); ?></th>
 									<th>Claim Number</th>
+									<th>EClaim Number</th>
 									<th>Policy Number</th>
 									<th>First Name</th>
 									<th>Last Name</th>
-									<th>Gender</th>
+									<!-- th>Gender</th -->
 									<th>Birth Date</th>
 									<th>Claim Date</th>
 									<th>Claim Amount</th>
@@ -265,10 +270,11 @@
 								<tr>
 									<td title='Check for assign to claim examiner'><?php echo form_checkbox("claim", $value['id'], FALSE, "alt='Check for assign to claim examiner'"); ?></td>
 									<td><?php echo $value['claim_no']; ?></td>
+									<td><?php echo $value['eclaim_no']; ?></td>
 									<td><?php echo htmlspecialchars($value['policy_no']); ?></td>
 									<td><?php echo htmlspecialchars($value['insured_first_name']); ?></td>
 									<td><?php echo htmlspecialchars($value['insured_last_name']); ?></td>
-									<td><?php echo $value['gender']; ?></td>
+									<!-- td><?php echo $value['gender']; ?></td -->
 									<td><?php echo htmlspecialchars($value['dob']); ?></td>
 									<td><?php echo htmlspecialchars($value['created']); ?></td>
 									<td><?php echo number_format($value['amount_claimed'], 2); ?></td>

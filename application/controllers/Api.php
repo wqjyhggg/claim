@@ -37,6 +37,13 @@ class Api extends CI_Controller {
 			$rdata['status'] = Api_model::STATUS_ERROR;
 			$rdata['message'] = 'Invilad Parameter';
 		}
+		if ($rdata['status'] == Api_model::STATUS_OK) {
+			$try_cnt = $this->api_model->checklogin($data);
+			if ($try_cnt > 5) {
+				$rdata['status'] = Api_model::STATUS_ERROR;
+				$rdata['message'] = 'Too many logins';
+			}
+		}
 
 		$policy = array();
 		$firstname = $lastname = $birthday='';
@@ -44,7 +51,7 @@ class Api extends CI_Controller {
 			$policies = $this->api_model->get_policy(array('policy' => $data['policy']));
 			if (empty($policies)) {
 				$rdata['status'] = Api_model::STATUS_ERROR;
-				$rdata['message'] = 'Invilad Policy';
+				$rdata['message'] = 'Policy number is not valid';
 			} else {
 				$hasbirthday = 0;
 				if ($policies[0]['birthday'] == $data['birthday']) {
@@ -65,12 +72,17 @@ class Api extends CI_Controller {
 				}
 				if ($hasbirthday) {
 					$rdata['policy'] = $policies[0];
+					if (($rdata['policy']['product_short'] == 'TOP') && ($rdata['policy']['package'] == 'all_inclusive')) {
+						$rdata['policy']['ad_and_d_insured'] = 50000;
+						$rdata['policy']['medical_insured'] = 10000000;
+						$rdata['policy']['flight_accident_insured'] = 100000;
+					}
 					$data['firstname'] = $firstname;
 					$data['lastname'] = $lastname;
 					$rdata['birthday'] = $birthday;
 				} else {
 					$rdata['status'] = Api_model::STATUS_ERROR;
-					$rdata['message'] = 'No Matched Policy';
+					$rdata['message'] = 'Birthday does not match our records';
 				}
 			}
 		}
@@ -79,7 +91,10 @@ class Api extends CI_Controller {
 			$rdata['token'] = $this->api_model->get_token($data['api_id']);
 			$data['token'] = $rdata['token'];
 			$this->api_model->update($data);
+		} else {
+			$this->api_model->errupdate($data);
 		}
+
 		
 		header('Content-Type: application/json');
 		header('Access-Control-Allow-Origin: *');
@@ -162,12 +177,14 @@ class Api extends CI_Controller {
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('claim_model');
 			$this->load->model('expenses_model');
+			$this->load->model('eclaim_model');
 			$claims = $this->claim_model->search(array('policy_no' => $this->api['policy'], 'insured_first_name' => $this->api['firstname'], 'insured_last_name' => $this->api['lastname'], 'dob' => $this->api['birthday']));
 			$rdata['claims'] = array();
 			foreach ($claims as $cl) {
 				$ncl = array();
 				$ncl['id'] = $cl['id'];
 				$ncl['claim_no'] = $cl['claim_no'];
+				$ncl['eclaim_no'] = $cl['eclaim_no'];
 				$ncl['status'] = $cl['status'];
 				//$ncl['claim_date'] = $cl['apply_date'];
 				$ncl['claim_date'] = substr($cl['created'], 0, 10);
@@ -197,6 +214,63 @@ class Api extends CI_Controller {
 				$ncl['items'] = $items;
 				$rdata['claims'][] = $ncl;
 			}
+
+			$eclaims = $this->eclaim_model->search(array('policy_no' => $this->api['policy'], 'insured_first_name' => $this->api['firstname'], 'insured_last_name' => $this->api['lastname'], 'dob' => $this->api['birthday']));
+			if ($eclaims) {
+				$rdata['eclaims'] = array();
+				foreach ($eclaims as $cl) {
+					if ($cl['claim_no']) continue;
+/*
+					if ($cl['status'] == 1) {
+						$cl['status'] = 'Waiting for process';
+					} else if ($cl['status'] == 2) {
+                                                $cl['status'] = 'Accepted';
+                                        } else {
+                                                $cl['status'] = 'Declined';
+					}
+*/
+					$rdata['eclaims'][] = $cl;
+				}
+			}
+		}
+
+		header('Content-Type: application/json');
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+		echo json_encode($rdata);
+	}
+
+	public function imagepng() {
+		$this->load->model('api_model');
+		$rdata = $this->conn_verify();
+		if ($rdata['status'] == Api_model::STATUS_OK) {
+			$this->load->model('eclaim_file_model');
+			
+			$data = array();
+			$fdata = $this->input->post('data');
+			$path = 'eclaim_files/' . date('Y') . '/' . date("m");
+			// create directory to copy/shift files
+			@mkdir(UPLOADFULLPATH . $path, 0777, TRUE);
+
+			$fn = date("YmdHis").rand(100,1000).".png";
+			$fdataArr = explode(',', $fdata);
+			if (is_array($fdataArr) && (sizeof($fdataArr) == 2) && file_put_contents(UPLOADFULLPATH.$path."/".$fn, base64_decode($fdataArr[1]))) {
+				$data['name'] = $fn;
+				$data['path'] = $path;
+				$file_id = $this->eclaim_file_model->save($data);
+				if ($file_id) {
+					$rdata['file_id'] = $file_id;
+					$rdata['path'] = "/assets/uploads/".$data['path']."/".$data['name'];
+				} else {
+					$rdata['status'] = Api_model::STATUS_ERROR;
+					$rdata['message'] = 'Insert DB error';
+				}
+			} else {
+				$rdata['status'] = Api_model::STATUS_ERROR;
+				$rdata['error'] = $this->upload->display_errors();
+				$rdata['message'] = 'Upload file error';
+			}
 		}
 
 		header('Content-Type: application/json');
@@ -215,11 +289,11 @@ class Api extends CI_Controller {
 			$data = array();
 			$path = 'eclaim_files/' . date('Y') . '/' . date("m");
 			// create directory to copy/shift files
-			mkdir(UPLOADFULLPATH . $path, 0777, TRUE);
+			@mkdir(UPLOADFULLPATH . $path, 0777, TRUE);
 
 			// load upload class
 			$config['upload_path'] = UPLOADFULLPATH . $path;
-			$config['allowed_types'] = 'gif|jpg|png|jpeg';
+			$config['allowed_types'] = 'gif|jpg|png|jpeg|pdf';
 			$config['overwrite'] = FALSE;
 			$config['max_size'] = 15000;	// 15M
 			$this->load->library('upload', $config);
@@ -230,8 +304,7 @@ class Api extends CI_Controller {
 				$file_id = $this->eclaim_file_model->save($data);
 				if ($file_id) {
 					$rdata['file_id'] = $file_id;
-					$rdata['name'] = $data['name'];
-					$rdata['path'] = $data['path'];
+					$rdata['path'] = "/assets/uploads/".$data['path']."/".$data['name'];
 				} else {
 					$rdata['status'] = Api_model::STATUS_ERROR;
 					$rdata['message'] = 'Insert DB error';
@@ -251,6 +324,11 @@ class Api extends CI_Controller {
 	}
 
 	public function submit() {
+		header('Content-Type: application/json');
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+
 		$this->load->model('api_model');
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
@@ -266,10 +344,6 @@ class Api extends CI_Controller {
 			}
 		}
 
-		header('Content-Type: application/json');
-		header('Access-Control-Allow-Origin: *');
-		header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
-		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 		echo json_encode($rdata);
 	}
 
@@ -495,6 +569,7 @@ class Api extends CI_Controller {
 								'amount_billed_org'=> isset($expenses_claimed['amount_billed_org'][$key]) ? $expenses_claimed['amount_billed_org'][$key] : '',
 								'amount_client_paid_org'=> isset($expenses_claimed['amount_client_paid_org'][$key]) ? $expenses_claimed['amount_client_paid_org'][$key] : '',
 								'amount_claimed_org'=> isset($expenses_claimed['amount_claimed_org'][$key]) ? $expenses_claimed['amount_claimed_org'][$key] : '',
+								'other_reimbursed_amount'=> isset($expenses_claimed['other_reimbursed_amount'][$key]) ? $expenses_claimed['other_reimbursed_amount'][$key] : '',
 								'currency'=> isset($expenses_claimed['currency'][$key]) ? $expenses_claimed['currency'][$key] : 'CAD',
 								'comment'=> isset($expenses_claimed['comment'][$key]) ? $expenses_claimed['comment'][$key] : '',
 								'pay_to'=>$payee_str,

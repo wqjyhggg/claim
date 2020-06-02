@@ -58,6 +58,9 @@
 								<?php echo form_input("policy_no", $eclaim["policy_no"], array("class" => "form-control required", 'placeholder' => 'Policy#', 'readonly' => 'readonly')); ?>
 								<?php echo form_error("policy_no"); ?>
 								<?php echo form_hidden("id", $eclaim['id']); ?>
+								<?php echo form_hidden("case_no", $eclaim['case_no']); ?>
+								<?php echo form_hidden("eclaim_no", $eclaim['eclaim_no']); ?>
+								<?php echo form_hidden("exinfo_type", 'top_medical'); ?>
 								<?php echo form_hidden("product_short", $eclaim['product_short']); ?>
 							</div>
 							<div class="form-group col-sm-3" style="display: none">
@@ -272,7 +275,7 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Name of the financial Institution:', 'exinfo_other_insurance_name', array("class" => 'col-sm-12')); ?>
-								<?php echo form_input("exinfo[credit_card_insurance_name]", isset($eclaim["exinfo_credit_card_name"]) ? $eclaim["exinfo_credit_card_name"] : '', array("class" => "form-control", 'placeholder' => 'Name of the financial Institution')); ?>
+								<?php echo form_input("exinfo[credit_card_insurance_name]", isset($eclaim["exinfo_credit_card_insurance_name"]) ? $eclaim["exinfo_credit_card_insurance_name"] : '', array("class" => "form-control", 'placeholder' => 'Name of the financial Institution')); ?>
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('First 6 digits of credit card:', 'exinfo_credit_card_number', array("class" => 'col-sm-12')); ?>
@@ -320,10 +323,14 @@
 								<?php echo form_label('Telephone:', 'exinfo_other_travel_insurance_phone', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("exinfo[other_insurance_phone]", isset($eclaim["exinfo_other_insurance_phone"]) ? $eclaim["exinfo_other_insurance_phone"] : '', array("class" => "form-control", 'placeholder' => 'Telephone')); ?>
 							</div>
+							<div class="form-group col-sm-3">
+								<?php echo form_label('Policy #:', 'exinfo_other_travel_insurance_explanation', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("exinfo[exinfo_other_travel_insurance_explanation]", isset($eclaim["exinfo_other_travel_insurance_explanation"]) ? $eclaim["exinfo_other_insurance_number"] : '', array("class" => "form-control", 'placeholder' => 'Policy #')); ?>
+							</div>
 							<div class="clearfix"></div>
 						</div>
 
-						<h4 class="move_down" style='display:none'>Name and Address of Family Physician in Canada <i class="fa fa-angle-down pull-right"></i></h4>
+						<h4 class="move_down">Name and Address of Family Physician in Canada <i class="fa fa-angle-down pull-right"></i></h4>
 						<div class="row" style="display: none">
 							<div class="col-sm-12">
 								<div class="form-group col-sm-3">
@@ -551,6 +558,8 @@
 									$expenses_claimed_date_of_services = json_decode($eclaim["expenses_claimed_date_of_service"], TRUE);
 									$expenses_claimed_amount_client_paid_orgs = json_decode($eclaim["expenses_claimed_amount_client_paid_org"], TRUE);
 									$expenses_claimed_amount_claimed_orgs = json_decode($eclaim["expenses_claimed_amount_claimed_org"], TRUE);
+									$expenses_claimed_other_reimbursed_amounts = json_decode($eclaim["expenses_claimed_other_reimbursed_amount"], TRUE);
+									if ($expenses_claimed_service_descriptions && is_array($expenses_claimed_service_descriptions)) {
 									?>
 									<?php foreach ( $expenses_claimed_service_descriptions as $key => $value ) : ?>
 									<div class="row" style="border: 1px solid rgb(204, 204, 204); padding: 10px;">
@@ -568,7 +577,7 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Date of Service:', 'date_of_service', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed_date_of_service[]", $expenses_claimed_service_descriptions[$key]); ?>
+											<?php echo form_input("expenses_claimed_date_of_service[]", $expenses_claimed_date_of_services[$key]); ?>
 										</div>
 										<div class="clearfix"></div>
 
@@ -578,11 +587,16 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Amount Claimed:', 'amount_claimed', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed_amount_claimed_org[]", $expenses_claimed_amount_client_paid_orgs[$key]); ?>
+											<?php echo form_input("expenses_claimed_amount_claimed_org[]", $expenses_claimed_amount_claimed_orgs[$key]); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Amount reimbursed / refunded by other party:', 'expenses_claimed_other_reimbursed_amount', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("expenses_claimed_other_reimbursed_amount[]", $expenses_claimed_other_reimbursed_amounts[$key]); ?>
 										</div>
 										<div class="clearfix"></div>
 									</div>
 									<?php endforeach; ?>
+									<?php } ?>
 								</div>
 							</div>
 						</div>
@@ -594,7 +608,16 @@
 								</div>
 								<div class="col-sm-12">
 									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>">
+									<?php echo form_hidden("sign_image", $eclaim['sign_image']); ?>
+									<?php echo form_hidden("sign_image2", $eclaim['sign_image2']); ?>
 								</div>
+								<?php if (!empty($eclaim['sign_image2'])) { ?>
+								<div class="col-sm-12">
+								<?php if (isset($eclaim_files[$eclaim['sign_image2']])) { ?>
+									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image2']]['path'] . "/" . $eclaim_files[$eclaim['sign_image2']]['name']; ?>">
+								<?php } ?>
+								</div>
+								<?php } ?>
 							</div>
 						</div>
 						<br />
@@ -605,11 +628,17 @@
 						<div class="row" style="display: none">
 							<div class="col-sm-12">
 								<div class="col-sm-12 uploaded_files">
+									<?php echo form_hidden("imgfile", $eclaim['imgfile']); ?>
 									<?php $images = json_decode($eclaim['imgfile'], TRUE); ?>
 									<?php foreach ( $images as $key => $value ) : ?>
 									<div class="col-sm-12 intake-forms">
 										<div class="col-sm-12">
+										<?php $ext = strtolower(substr($eclaim_files[$value]['name'], -3)); ?>
+										<?php if ($ext == 'pdf') { ?>
+											<a class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"><?php echo $eclaim_files[$value]['name']; ?></a>
+										<?php } else { ?>
 											<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>">
+										<?php } ?>
 										</div>
 									</div>
 									<?php endforeach; ?>
@@ -629,11 +658,29 @@
 					</div>
 					<div class="row" style="margin-top: 20px">
 						<div class="row">
+							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER)) && ($eclaim['status'] == 1)) { ?>
 							<div class="col-sm-2">
 								<input class="btn btn-primary" name="Save" value="Save as Claim" type="submit">
 							</div>
 							<div class="col-sm-2">
 								<input class="btn btn-primary" name="Refuse" value="Refuse Claim" type="button">
+							</div>
+							<?php } ?>
+							<div class="col-sm-2">
+								<?php echo anchor("eclaim/export/".$eclaim['id'], "Print", "target='_blank' class='btn btn-primary'"); ?>
+							</div>
+						</div>
+					</div>
+					<?php echo form_close(); ?>
+					<?php echo form_open("eclaim/setcaseno", array('class'=>'form-horizontal', 'method'=>'post')); ?>
+					<div class="row" style="margin-top: 20px">
+						<div class="row">
+							<div class="col-sm-2">
+								<?php echo form_input("case_no", $eclaim['case_no']); ?>
+								<?php echo form_hidden("id", $eclaim['id']); ?>
+							</div>
+							<div class="col-sm-2">
+								<button class="btn btn-primary" name="csubmit" value="eclaim">Save Case No</button>
 							</div>
 						</div>
 					</div>
@@ -670,7 +717,7 @@ $(document).ready(function() {
 })
 // when clicked over deny button
 .on("click", "input[name=Refuse]", function(e) {
-	if (confirm('Are you sure you want to accept Eclaim?')) {
+	if (confirm('Are you sure you want to refuse this Eclaim?')) {
 		e.preventDefault();
 		$.ajax({
 				url: "<?php echo base_url("eclaim/disapprove/".$eclaim['id']); ?>",
@@ -678,7 +725,7 @@ $(document).ready(function() {
 				data:$('#main_form').serialize(),
 				dataType: "json",
 				success: function(data) {
-					if (data.status == 1) {
+					if (data.status == 2) {
 						window.location = "<?php echo base_url("eclaim"); ?>";
 					}
 				}

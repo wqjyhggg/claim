@@ -607,6 +607,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->load->model('product_model');
 				
 				$this->data['policy'] = array();
+				$this->data['hasclaim'] = array();
 				
 				if (empty($case_details)) {
 					$policy = $this->input->get('policy');
@@ -626,11 +627,13 @@ class Emergency_assistance extends CI_Controller {
 						}
 					}
 				} else {
+					$this->load->model('claim_model');
 					if ($policies = $this->api_model->get_policy(array(
 							'policy' => $case_details['policy_no'] 
 					))) {
 						$this->data['policy'] = $policies[0];
 					}
+					$this->data['hasclaim'] = $this->claim_model->get_by_id($case_details['id']);
 				}
 				if ($this->data['policy'] && isset($this->data['policy']['effective_date'])) {
 					$this->data['customer_ages'] = round((strtotime($this->data['policy']['effective_date']) - strtotime($this->data['case_details']["dob"])) / (3600*24*365.25));

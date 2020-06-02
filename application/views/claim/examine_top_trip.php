@@ -345,6 +345,12 @@
 						<div class="form-group col-sm-3">
 							Telephone : <?php echo isset($exinfo["group_insurance"]) ? htmlspecialchars($exinfo["other_travel_insurance_phone"]) : ''; ?>
 						</div>
+						<div class="col-sm-12">
+							Have you claimed from any other party? <input type="checkbox" name="exinfo[other_party_reimbursed_refunded]" value="1" <?php if (! empty($exinfo["other_party_reimbursed_refunded"])) { echo "checked"; } ?>> Yes. If 'yes', please provide details below:_
+						</div>
+						<div class="form-group col-sm-12">
+							Explanation of not reported : <?php echo isset($exinfo["other_travel_insurance_explanation"]) ? htmlspecialchars($exinfo["other_travel_insurance_explanation"]) : ''; ?>
+						</div>
 						<div class="clearfix"></div>
 	
 						<div class="form-group col-sm-3">

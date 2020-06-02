@@ -38,6 +38,12 @@
                            <td><a href="#" class="btn btn-info">Search</a></td>
                         </tr>
                         <tr>
+                           <td>JFP</td>
+                           <td>JF Protection International Student to Canada</td>
+                           <td><a href="#" class="btn btn-primary">Claim</a></td>
+                           <td><a href="#" class="btn btn-info">Search</a></td>
+                        </tr>
+                        <tr>
                            <td>JFR</td>
                            <td>JF Royal Visitor to Canada</td>
                            <td><a href="#" class="btn btn-primary">Claim</a></td>

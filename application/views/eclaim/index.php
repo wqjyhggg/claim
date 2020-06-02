@@ -11,11 +11,11 @@
 				</div>
 				<div class="x_content">
 					<!-- search filter start -->
-					<?php echo form_open("", array('class'=>'form-horizontal', 'method'=>'get')); ?>
+					<?php echo form_open("eclaim/index", array('class'=>'form-horizontal', 'method'=>'get')); ?>
 					<div class="row">
                         <div class="form-group col-sm-3">
-							<?php echo form_label ( 'ID number:', 'id number', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input ( "eclaim_id", $this->input->post_get("eclaim_id"), array("class" => "form-control",'placeholder' => 'Eclaim ID') ); ?>
+							<?php echo form_label ( 'Eclaim No:', 'Eclaim number', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input ( "eclaim_no", $this->input->post_get("eclaim_no"), array("class" => "form-control",'placeholder' => 'Eclaim ID') ); ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label ( 'Policy Number:', 'policy', array("class" => 'col-sm-12')); ?>
@@ -43,21 +43,25 @@
 							<?php echo form_input ( "claim_no", $this->input->post_get("claim_no"), array("class" => "form-control", 'placeholder' => 'Claim No') );?>
 						</div>
                         <div class="form-group col-sm-3">
-							<?php echo form_label ( 'First Nmae:', 'first_name', array ("class" => 'col-sm-12')); ?>
+							<?php echo form_label ( 'First Name:', 'first_name', array ("class" => 'col-sm-12')); ?>
 							<?php echo form_input ( "insured_first_name", $this->input->post_get("insured_first_name"), array("class" => "form-control", 'placeholder' => 'First Name') );?>
 						</div>
 						<div class="form-group col-sm-3">
-							<?php echo form_label ( 'Last Nmae:', 'last_name', array ("class" => 'col-sm-12')); ?>
+							<?php echo form_label ( 'Last Name:', 'last_name', array ("class" => 'col-sm-12')); ?>
 							<?php echo form_input ( "insured_last_name", $this->input->post_get("insured_last_name"), array("class" => "form-control", 'placeholder' => 'Last Name') );?>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label ( 'Status:', 'status', array ("class" => 'col-sm-12') ); ?>
-							<?php echo form_dropdown ( "status", array(0 => "Unprocessed", 1 => "Processed", 2 => "Refused"), $this->input->post_get( "status" ), array ("class" => 'form-control') );?>
+							<?php echo form_dropdown ( "status", array(0 => "-- Select Status --", 1 => "Received", 2 => "Transferred", 3 => "Refused"), $this->input->post_get( "status" ), array ("class" => 'form-control') );?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-3">
-							<label class="col-sm-12">&nbsp;</label>
+							<?php echo form_label('Date of Birth:', 'Date of Birth', array("class"=>'col-sm-12')); ?>
+							<div class="input-group date">
+								<?php echo form_input ( "cdob", $this->input->post_get( "cdob" ), array ("class" => "form-control datepicker", 'placeholder' => 'Date of Birth') ); ?>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
 						</div>
 						<div class="col-sm-3">
 							<label class="col-sm-12">&nbsp;</label>
@@ -85,26 +89,26 @@
 						<table class="table table-hover table-bordered">
 							<thead>
 								<tr>
-                                    <th>ID</th>
+                                    <th>RefID</th>
 									<th>Policy</th>
 									<th>Claim No</th>
 									<th>First Name</th>
 									<th>Last Name</th>
-									<th>Gender</th>
+									<th>Status</th>
 									<th>Birth Date</th>
-									<th>Apply Date</th>
+									<th>Create Date</th>
 									<th>Action</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php foreach ($eclaims as $key => $value): ?>
 								<tr>
-									<td><?php echo $value['id']; ?></td>
+									<td><?php echo $value['eclaim_no']; ?></td>
 									<td><?php echo $value['policy_no']; ?></td>
 									<td><?php echo $value['claim_no']; ?></td>
 									<td><?php echo htmlspecialchars($value['insured_first_name']); ?></td>
 									<td><?php echo htmlspecialchars($value['insured_last_name']); ?></td>
-									<td><?php echo $value['gender']; ?></td>
+									<td><?php echo (($value['status']==2)?'Transferred':(($value['status']==3)?'Refused':'Received')); ?></td>
 									<td><?php echo htmlspecialchars($value['dob']); ?></td>
 									<td><?php echo htmlspecialchars($value['created']); ?></td>
 									<td><?php echo anchor("eclaim/detail/".$value['id'], "View"); ?></td>

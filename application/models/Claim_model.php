@@ -97,6 +97,14 @@ class Claim_model extends CI_Model {
 		
 		$where = '';
 		
+		if (!empty($post["eclaim_sls"])) {
+			if ($post["eclaim_sls"] == 1) {
+				$where .= ' claim.eclaim_no=\'\'';
+			} else {
+				$where .= ' claim.eclaim_no!=\'\'';
+			}
+		}
+
 		if (!empty($post["claim_no"])) {
 			$where .= ' claim.claim_no=' . $this->db->escape($post["claim_no"]);
 		}
@@ -153,7 +161,7 @@ class Claim_model extends CI_Model {
 			return array();
 		}
 		
-		$sql  = "SELECT u1.email, concat_ws(' ', u1.first_name, u1.last_name) as claim_examiner, claim.id, claim.policy_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.created, claim.diagnosis, claim.status, sum(expenses_claimed.amount_claimed) as amount_claimed FROM claim";
+		$sql  = "SELECT u1.email, concat_ws(' ', u1.first_name, u1.last_name) as claim_examiner, claim.id, claim.policy_no, claim.eclaim_no, claim.claim_no, claim.insured_first_name, claim.insured_last_name, claim.gender, claim.dob, claim.created, claim.diagnosis, claim.status, sum(expenses_claimed.amount_claimed) as amount_claimed FROM claim";
 		$sql .= " LEFT JOIN users u1 ON u1.id = claim.assign_to";
 		$sql .= " LEFT JOIN expenses_claimed ON claim.id = expenses_claimed.claim_id";
 		$sql .= " WHERE ". $where;

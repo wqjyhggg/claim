@@ -262,6 +262,9 @@
 						<div class="form-group col-sm-3">
 							<label>Telephone : </label><?php echo isset($exinfo["other_travel_insurance_phone"]) ? htmlspecialchars($exinfo["other_travel_insurance_phone"]) : ''; ?>
 						</div>
+						<div class="form-group col-sm-12">
+							<label>Explanation of not reported: </label><?php echo isset($exinfo["other_travel_insurance_explanation"]) ? htmlspecialchars($exinfo["other_travel_insurance_explanation"]) : ''; ?>
+						</div>
 						<div class="clearfix"></div>
 					</div>
 
