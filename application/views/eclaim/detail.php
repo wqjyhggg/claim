@@ -489,7 +489,7 @@
 								</div>
 								<div class="col-sm-12">
 								<?php if (isset($eclaim_files[$eclaim['sign_image']])) { ?>
-									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>">
+									<a target='_blank' class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>"><?php echo $eclaim_files[$eclaim['sign_image']]['name']; ?></a>
 									<?php echo form_hidden("sign_image", $eclaim['sign_image']); ?>
 									<?php echo form_hidden("sign_image2", $eclaim['sign_image2']); ?>
 								<?php } ?>
@@ -497,7 +497,7 @@
 								<?php if (!empty($eclaim['sign_image2'])) { ?>
 								<div class="col-sm-12">
 								<?php if (isset($eclaim_files[$eclaim['sign_image2']])) { ?>
-									<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image2']]['path'] . "/" . $eclaim_files[$eclaim['sign_image2']]['name']; ?>">
+									<a target='_blank' class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image2']]['path'] . "/" . $eclaim_files[$eclaim['sign_image2']]['name']; ?>"><?php echo $eclaim_files[$eclaim['sign_image2']]['name']; ?></a>
 								<?php } ?>
 								</div>
 								<?php } ?>
@@ -517,7 +517,7 @@
 									<?php if ($ext == 'pdf') { ?>
 										<a class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"><?php echo $eclaim_files[$value]['name']; ?></a>
 									<?php } else { ?>
-										<img class="img-responsive" src="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>">
+										<a target='_blank' class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"><?php echo $eclaim_files[$value]['name']; ?></a>
 									<?php } ?>
 								<?php } ?>
 								</div>
