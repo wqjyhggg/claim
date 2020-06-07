@@ -100,6 +100,11 @@
 								<?php echo form_label('Guardian Phone#:', 'guardian_phone', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("guardian_phone", $claim_details["guardian_phone"], array("class" => "form-control", 'placeholder' => 'Guardian Phone#')); ?>
 							</div>
+							<div class="clearfix"></div>
+							<div class="form-group col-sm-6">
+								<?php echo form_label('Policy Note:', 'policy_note', array("class" => 'col-sm-12')); ?>
+								<?php echo form_textarea ( "policy_note", $claim_details["policy_note"], array ("class" => "form-control", "id" => "policy_note", 'placeholder' => 'Policy Note', 'style' => "height:100px") ); ?>
+							</div>
 						</div>
 
 						<h4 class="move_down">Address in Canada <i class="fa fa-angle-down pull-right"></i></h4>

@@ -99,6 +99,11 @@
 								<?php echo form_input("guardian_phone", $claim_details["guardian_phone"], array("class" => "form-control", 'placeholder' => 'Guardian Phone#')); ?>
 							</div>
 							<div class="clearfix"></div>
+							<div class="form-group col-sm-6">
+								<?php echo form_label('Policy Note:', 'policy_note', array("class" => 'col-sm-12')); ?>
+								<?php echo form_textarea ( "policy_note", $claim_details["policy_note"], array ("class" => "form-control", "id" => "policy_note", 'placeholder' => 'Policy Note', 'style' => "height:100px") ); ?>
+							</div>
+							<div class="clearfix"></div>
 							
 							<h4>Address in Canada </h4>
 							<div class="form-group col-sm-3">

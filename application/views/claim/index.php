@@ -87,8 +87,8 @@
 							</select>
 						</div>
 						<div class="form-group col-sm-2">
-							<?php echo form_label ( 'EClaim:', 'eclaim_sls', array ("class" => 'col-sm-12') ); ?>
-							<?php echo form_dropdown ( "eclaim_sls", array(0 => '', 0 => 'No', 0 => 'Yes'), $this->input->post_get( "eclaim_sls" ), array ("class" => 'form-control') );?>
+							<?php echo form_label ( 'Is EClaim:', 'eclaim_sls', array ("class" => 'col-sm-12') ); ?>
+							<?php echo form_dropdown ( "eclaim_sls", array(0 => '', 1 => 'No', 2 => 'Yes'), $this->input->post_get( "eclaim_sls" ), array ("class" => 'form-control') );?>
 						</div>
 						<div class="col-sm-3">
 							<label class="col-sm-12">&nbsp;</label>
