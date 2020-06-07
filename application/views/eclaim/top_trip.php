@@ -372,7 +372,7 @@
 								If loss is due to other circumstances, please provide description of loss: 
 							</div>
 							<div class="form-group col-sm-6">
-								<?php echo form_input("exinfo[circumstances]", isset($eclaim["exinfo_circumstances"]) ? $eclaim["exinfo_circumstances"] : '', array("class" => "form-control")); ?>
+								<?php echo form_input("exinfo[circumstances]", isset($eclaim["exinfo_circumstances"]) ? $eclaim["exinfo_circumstances"] : (isset($eclaim["exinfo_other_reason"]) ? $eclaim["exinfo_other_reason"] : ''), array("class" => "form-control")); ?>
 							</div>
 							<div class="clearfix"></div>
 							<div class="form-group col-sm-3">
