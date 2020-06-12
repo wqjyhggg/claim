@@ -105,6 +105,7 @@ class Eclaim extends CI_Controller {
 					$to = $ec['email'];
 					$body  = "Dear " . $ec['insured_first_name'] . ",<br /><br />\n"; 
 					$body  .= "The web claim you submitted on ".date("Y-m-d")." has been disapproved. <br /><br />\n"; 
+					$body  .= "This is an auto-generated email, please do not reply directly. Should you have any questions, please contact us by phone at 905-707-3555 or email at claim@otcww.com. <br /><br />\n"; 
 					$body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies. <br /><br />\n"; 
 					$body  .= "Best regards,<br />\n"; 
 					$body  .= "Ontime Care Worldwide Inc. <br />\n"; 
