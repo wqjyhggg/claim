@@ -101,7 +101,7 @@ class Eclaim extends CI_Controller {
 					$id = $this->eclaim_model->save($data);
 
 					$this->load->model("mymail_model");
-					$subject = "Web claim - “ " . $data['claim_no'] . " - " . $data['insured_first_name'];
+					$subject = "Web claim - " . $data['claim_no'] . " - " . $data['insured_first_name'];
 					$to = $ec['email'];
 					$body  = "Dear " . $ec['insured_first_name'] . ",<br /><br />\n"; 
 					$body  .= "The web claim you submitted on ".date("Y-m-d")." has been disapproved. <br /><br />\n"; 
@@ -372,11 +372,11 @@ class Eclaim extends CI_Controller {
 				// print_r($this->db->last_query());
 				// send success message
 				$this->load->model("mymail_model");
-				$subject = "Web claim under review - “ " . $data['claim_no'] . " - " . $data['insured_first_name'];
+				$subject = "Web claim under review - " . $data['claim_no'] . " - " . $data['insured_first_name'];
 				$to = $data['email'];
 				$body  = "Dear " . $data['insured_first_name'] . ",<br /><br />\n"; 
-				$body  .= "The web claim you submitted on date has been accepted and is being reviewed. Your claim number is " . $data['claim_no'] . ". It will take approximately 5 business days for us to process your claim. <br /><br />\n"; 
-				$body  .= "You can check the status of your claim by logging into the customer portal (hyperlink) with your policy number and birthday and selecting 'Check Claim Status' on the main menu.<br />\n"; 
+				$body  .= "The web claim you submitted on ".date("Y-m-d")." has been accepted and is being reviewed. Your claim number is " . $data['claim_no'] . ". It will take approximately 5 business days for us to process your claim. <br /><br />\n"; 
+				$body  .= "You can check the status of your claim by logging into the <a href='https://eclaim.jfgroup.ca'>eclaim.jfgroup.ca</a> with your policy number and birthday and selecting 'Check Claim Status' on the main menu.<br />\n"; 
 				$body  .= "This is an system-generated email, please do not reply directly. Should you have any questions, please contact us by email at claim@otcww.com.<br /><br />\n"; 
 				$body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies. <br /><br />\n"; 
 				$body  .= "Best regards,<br />\n"; 
