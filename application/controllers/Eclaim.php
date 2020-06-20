@@ -104,7 +104,11 @@ class Eclaim extends CI_Controller {
 					$subject = "Web claim - " . $data['claim_no'] . " - " . $data['insured_first_name'];
 					$to = $ec['email'];
 					$body  = "Dear " . $ec['insured_first_name'] . ",<br /><br />\n"; 
-					$body  .= "The web claim you submitted on ".date("Y-m-d")." has been disapproved. <br /><br />\n"; 
+					$body  .= "The web claim you submitted on ".date("Y-m-d")." has been reviewed and cannot be processed due to the one of the following reasons: <br /><br />\n"; 
+					$body  .= "- You have submitted a duplicate claim. <br /><br />\n"; 
+					$body  .= "- Your claim was submitted under an incorrect policy. You are not required to do anything further as a claim examiner will make the necessary corrections. <br /><br />\n"; 
+					$body  .= "- You have submitted additional documentation(s) related to an existing claim. You may refer to the details under your claim history by logging into your web claim account. <br /><br />\n"; 
+					$body  .= "- Your total claim amount exceeds $500. You are required to mail your claim to our office. Please see the instruction https://www.jfgroup.ca/how_to_claim. <br /><br />\n"; 
 					$body  .= "This is an auto-generated email, please do not reply directly. Should you have any questions, please contact us by phone at 905-707-3555 or email at claim@otcww.com. <br /><br />\n"; 
 					$body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies. <br /><br />\n"; 
 					$body  .= "Best regards,<br />\n"; 
