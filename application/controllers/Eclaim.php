@@ -270,7 +270,7 @@ class Eclaim extends CI_Controller {
 
 				$data = $array;
 				$data['created'] = date('Y-m-d H:i:s');
-				$data['logs'] = json_encode(array(date("Y-m-d H:i:s").' - Transfered this Eclaim by '.$this->ion_auth->get_user_id()));
+				$data['logs'] = json_encode(array(date("Y-m-d H:i:s").' - Transferred this Eclaim by ' . $this->ion_auth->user()->row()->first_name." ".$this->ion_auth->user()->row()->last_name . " (". $this->ion_auth->get_user_id() .")"));
 				$data['created_by'] = $this->ion_auth->get_user_id();
 				
 				// set default status processing
