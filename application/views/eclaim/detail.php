@@ -534,6 +534,12 @@
 						</div>
 						<div class="form-group col-sm-12 files"></div>
 					</div>
+					<div class="row">
+						<div class="form-group col-sm-12">
+							<strong>Created at : <?php echo $eclaim["created"]; ?>
+							<?php if (!empty($eclaim['intnotes'])) { echo "<br />".$eclaim['intnotes']; } ?>
+						</div>
+					</div>
 					<div class="row" style="margin-top: 20px">
 						<div class="row">
 							<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER)) && ($eclaim['status'] == 1)) { ?>
