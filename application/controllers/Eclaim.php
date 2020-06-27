@@ -101,7 +101,7 @@ class Eclaim extends CI_Controller {
 					$id = $this->eclaim_model->save($data);
 
 					$this->load->model("mymail_model");
-					$subject = "Web claim - " . $data['claim_no'] . " - " . $data['insured_first_name'];
+					$subject = "Web claim - " . $ec['eclaim_no'] . " - " . $ec['insured_first_name'];
 					$to = $ec['email'];
 					$body  = "Dear " . $ec['insured_first_name'] . ",<br /><br />\n"; 
 					$body  .= "The web claim you submitted on ".date("Y-m-d")." has been reviewed and cannot be processed due to the one of the following reasons: <br /><br />\n"; 
@@ -118,7 +118,7 @@ class Eclaim extends CI_Controller {
 					$this->mymail_model->send_mymail($to, $subject, $body, array(), 'Ontime Care Worldwide Inc.');
 						
 					$json["message"] = "Success";
-			
+					$json["status"] = 2;
 				}
 			}
 		}
