@@ -94,7 +94,7 @@
                </div>
                <!-- Content top navigation End-->
                <!-- page content -->
-               <div class="right_col" role="main" style="min-height: 644px;">
+               <div class="right_col" role="main" style="min-height: 680px;">
                   {content}
                </div>
             </div>

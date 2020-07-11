@@ -32,6 +32,12 @@
                            <td><a href="#" class="btn btn-info">Search</a></td>
                         </tr>
                         <tr>
+                           <td>JESP</td>
+                           <td>JF Elite Plus International Student to Canada</td>
+                           <td><a href="#" class="btn btn-primary">Claim</a></td>
+                           <td><a href="#" class="btn btn-info">Search</a></td>
+                        </tr>
+                        <tr>
                            <td>JFC</td>
                            <td>JF Care International Student to Canada</td>
                            <td><a href="#" class="btn btn-primary">Claim</a></td>
