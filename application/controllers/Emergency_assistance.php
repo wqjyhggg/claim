@@ -1054,8 +1054,10 @@ class Emergency_assistance extends CI_Controller {
 			$this->load->model('api_model');
 			$this->load->model('case_model');
 			$this->load->model('claim_model');
+			$this->load->model('policy_model');
 				
 			$policies = $this->api_model->get_policy(array('policy' => $policy));
+			$this->data['policy_local_note'] = '';
 			if ($policies) {
 				$this->data['policy'] = $policies[0];
 				$para = array();
@@ -1078,6 +1080,9 @@ class Emergency_assistance extends CI_Controller {
 						$this->data['policy']['family'][$key]['create_claim_url'] = base_url('claim/create_claim') . "?" . http_build_query($para);
 						$this->data['policy']['family'][$key]['create_case_url'] = base_url('emergency_assistance/create_case') . "?" . http_build_query($para);
 					}
+				}
+				if ($pn = $this->policy_model->get_by_no($policies[0]['policy'])) {
+					$this->data['policy_local_note'] = $pn['note'];
 				}
 			}
 			$this->data['policy_status'] = $this->api_model->status_list;
@@ -1470,6 +1475,18 @@ class Emergency_assistance extends CI_Controller {
 		redirect('emergency_assistance');
 	}
 	
+	public function update_policy_note() {
+		if (!$this->ion_auth->logged_in()) {
+			header('HTTP/1.0 403 Forbidden');
+			echo "1";
+		}
+		$policy_no = $this->input->post("policy_no");
+		$note_txt = $this->input->post("note_txt");
+		$this->load->model('policy_model');
+		$this->policy_model->save($policy_no, $note_txt);
+		echo "0";
+	}
+
 	// delete intake form here for ajax request
 	public function deleteform($form_id) {
 		

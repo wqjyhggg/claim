@@ -140,6 +140,10 @@
 					<div class="form-group col-sm-12">
 						<label style="text-transform: capitalize;"><span>Notes: </span></label> <?php echo isset($policy['note']) ? htmlspecialchars($policy['note']) : ''; ?>
 					</div>
+					<div class="clearfix"></div>
+					<div class="form-group col-sm-12">
+						<label style="text-transform: capitalize;"><span>Internal Notes: </span></label> <button class="btn btn-primary" onclick="update_policy_note('<?php echo $policy["policy"]; ?>')">Update Note</button> <textarea style='width:100%' rows='6' id='policy_note'><?php echo $policy_local_note; ?></textarea>
+					</div>
 				</div>
 				<br>
 				<div class="row">
@@ -416,4 +420,19 @@
 		</div>
 	</div>
 </div>
+<script>
+function update_policy_note(policy_no) {
+	var note_txt = $('#policy_note').val();
+	$.ajax({
+		url: '<?php echo base_url('emergency_assistance/update_policy_note'); ?>',
+		type: 'POST',
+		datatype: 'json',
+		data: {note_txt : note_txt, policy_no : policy_no},
+		success: function(result) {
+			alert('Note has been updated');
+		}
+	});
+}
+</script>
+
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
