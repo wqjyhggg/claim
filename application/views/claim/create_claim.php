@@ -36,7 +36,7 @@
 							</div>
 						</div>
 						<div class="col-sm-3">
-							<?php echo form_label('ID', 'id', array("class" => 'col-sm-12')); ?>
+							<?php echo form_label('ID (Student Name for JESP)', 'id', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("personal_id", $this->input->post("personal_id"), array("class" => "form-control", 'placeholder' => 'ID')); ?>
 							<?php echo form_error("personal_id"); ?>
 						</div>

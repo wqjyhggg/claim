@@ -37,7 +37,11 @@
 								</div>
 							</div>
 							<div class="col-sm-3">
+								<?php if ($eclaim["product_short"] == 'JESP') { ?>
+								<?php echo form_label('Student Name:', 'id', array("class" => 'col-sm-12')); ?>
+								<?php } else { ?>
 								<?php echo form_label('ID', 'id', array("class" => 'col-sm-12')); ?>
+								<?php } ?>
 								<?php echo form_input("personal_id", $policy["student_id"], array("class" => "form-control", 'placeholder' => 'ID')); ?>
 								<?php echo form_error("personal_id"); ?>
 							</div>
