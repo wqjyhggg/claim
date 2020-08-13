@@ -49,9 +49,13 @@ class Api extends CI_Controller {
 		$firstname = $lastname = $birthday='';
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$policies = $this->api_model->get_policy(array('policy' => $data['policy']));
+			$allow_policies = array("JES","JESP","JFC","JFP","JFR","JUS","NUS","OPL","TOL");
 			if (empty($policies)) {
 				$rdata['status'] = Api_model::STATUS_ERROR;
 				$rdata['message'] = 'Policy number is not valid';
+			} else if (!in_array($policies[0]['product_short'], $allow_policies)) {
+				$rdata['status'] = Api_model::STATUS_ERROR;
+				$rdata['message'] = 'Unsupported Policy Type';
 			} else {
 				$hasbirthday = 0;
 				if ($policies[0]['birthday'] == $data['birthday']) {
