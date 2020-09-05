@@ -338,6 +338,15 @@ class Api extends CI_Controller {
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('eclaim_model');
 			
+			$lrc = $this->eclaim_model->get_last_record();
+			$ltm = strtotime($lrc['created']);
+			$ntm = time();
+			$tpolicy_no = $this->input->post('policy_no');
+			if (($ntm < ($ltm + 180)) && ($lrc['policy_no'] == $tpolicy_no)) {
+				$rdata['status'] = Api_model::STATUS_ERROR;
+				$rdata['error'] = 'To fast to submit';
+				$rdata['message'] = 'To fast to submit';
+			} else {
 			$file_id = $this->eclaim_model->save($this->input->post());
 			if ($file_id) {
 				$rdata['application_id'] = $file_id;
@@ -345,6 +354,7 @@ class Api extends CI_Controller {
 				$rdata['error'] = $error;
 				$rdata['status'] = Api_model::STATUS_ERROR;
 				$rdata['message'] = 'Something wrong with data';
+			}
 			}
 		}
 

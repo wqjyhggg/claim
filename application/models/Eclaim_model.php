@@ -19,6 +19,11 @@ class Eclaim_model extends CI_Model {
 		return $this->db->get('eclaim')->row_array();
 	}
 
+	public function get_last_record() {
+		$this->db->order_by('id', 'DESC')->limit(1);
+		return $this->db->get('eclaim')->row_array();
+	}
+
 	/**
 	 * Return a list of Claim
 	 *
