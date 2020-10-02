@@ -516,13 +516,13 @@
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Firstname:', 'first_name_email', array("class"=>'col-sm-12')); ?>
 							<div class="form-group col-sm-12">
-								<?php echo form_input("first_name_email", $claim['insured_first_name'], array("class"=>"form-control form-group email required", 'placeholder'=>'First Name')); ?>
+								<?php echo form_input("first_name_email", $claim['insured_first_name'], array("class"=>"form-control form-group required", 'placeholder'=>'First Name')); ?>
 							</div>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('lastname:', 'last_name_email', array("class"=>'col-sm-12')); ?>
 							<div class="form-group col-sm-12">
-								<?php echo form_input("last_name_email", $claim['insured_last_name'], array("class"=>"form-control form-group email required", 'placeholder'=>'Last Name')); ?>
+								<?php echo form_input("last_name_email", $claim['insured_last_name'], array("class"=>"form-control form-group required", 'placeholder'=>'Last Name')); ?>
 							</div>
 						</div>
 					</div>
@@ -1192,7 +1192,7 @@ $(document).ready(function() {
                province:$("#send_print_email  select[name=province_email]").val(),
                postcode:$("#send_print_email  select[name=post_code_email]").val(),
                template:template,
-               case_id: $(".select_claim.active-green").attr('alt'),
+               case_id: '<?php echo $claim["id"]; ?>',
                claim_item_id:$(".edit_claim.active-green").attr('alt'),
                doc: $("#send_print_email .select-doc.active").text(),
                type: $("#send_print_email input[name=type]").val()

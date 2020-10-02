@@ -2050,6 +2050,9 @@ class Claim extends CI_Controller {
 			$this->session->set_flashdata('success', "Email successfully sent.");
 		}
 		
+		$this->load->model("mymail_model");
+		$this->mymail_model->send_mymail($email, "Received $doc", $data_intake['notes'], array(UPLOADFULLPATH . "intake_forms/$intake_form_id/$filename"));
+		/*
 		// send email notification to provider email address
 		$this->load->library('email');
 		$config['mailtype'] = 'html';
@@ -2061,6 +2064,7 @@ class Claim extends CI_Controller {
 		$this->email->message($data_intake['notes']);
 		$this->email->attach(UPLOADFULLPATH . "intake_forms/$intake_form_id/$filename");
 		// $this->email->send();
+		*/
 		echo TRUE;
 	}
 	
