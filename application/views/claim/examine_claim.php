@@ -687,6 +687,16 @@
 	src="<?php echo base_url(); ?>/assets/js/bootstrap-datetimepicker.js"></script>
 <script>
 var old_status = '<?php echo !empty($claim_details["status"]) ? $claim_details["status"] : 0; ?>';
+<?php if (empty($item_provider_name)) { ?>
+var item_provider_name = '';
+var item_provider_addr1 = '';
+var item_provider_addr2 = '';
+var item_provider_postcode = '';
+var item_payee_name = '';
+var item_payee_addr1 = '';
+var item_payee_addr2 = '';
+var item_payee_postcode = '';
+<?php } else { ?>
 var item_provider_name = '<?php echo $html_model->escapeQuote($item_provider_name); ?>';
 var item_provider_addr1 = '<?php echo $html_model->escapeQuote($item_provider_addr1); ?>';
 var item_provider_addr2 = '<?php echo $html_model->escapeQuote($item_provider_addr2); ?>';
@@ -695,6 +705,7 @@ var item_payee_name = '<?php echo $html_model->escapeQuote($item_payee_name); ?>
 var item_payee_addr1 = '<?php echo $html_model->escapeQuote($item_payee_addr1); ?>';
 var item_payee_addr2 = '<?php echo $html_model->escapeQuote($item_payee_addr2); ?>';
 var item_payee_postcode = '<?php echo $html_model->escapeQuote($item_payee_postcode); ?>';
+<?php } ?>
 
 $(document).ready(function() {
 	$("#print_template").on("hidden.bs.modal", function () {

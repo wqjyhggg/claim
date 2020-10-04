@@ -2003,7 +2003,7 @@ class Claim extends CI_Controller {
 		$dompdf->load_html($template);
 		$dompdf->render();
 		$output = $dompdf->output();
-		$filename = trim($doc) . rand(999, 999999) . '.pdf';
+		$filename = 'file'. rand(999, 999999) . '.pdf';
 		$filepath = UPLOADFULLPATH . "temp/" . $filename;
 		file_put_contents($filepath, $output);
 		
@@ -2051,7 +2051,7 @@ class Claim extends CI_Controller {
 		}
 		
 		$this->load->model("mymail_model");
-		$this->mymail_model->send_mymail($email, "Received $doc", $data_intake['notes'], array(UPLOADFULLPATH . "intake_forms/$intake_form_id/$filename"));
+		$this->mymail_model->send_mymail($email, "Received $doc", $data_intake['notes'], array($filename => UPLOADFULLPATH . "intake_forms/$intake_form_id/$filename"));
 		/*
 		// send email notification to provider email address
 		$this->load->library('email');
