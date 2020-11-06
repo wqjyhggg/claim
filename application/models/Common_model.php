@@ -420,16 +420,16 @@ class Common_model extends CI_Model
 
         // join groups table to get group name
         $join[] = array(
-            'table'=>'groups',
-            'on'=>'groups.id = users_groups.group_id',
+            'table'=>'`groups`',
+            'on'=>'`groups`.id = users_groups.group_id',
             'type'=>'INNER'
             );
 
         // to check user type
         if(is_array($group)) // for multiple groups
-            $conditions = "groups.name in(".implode(',' , $group).")";
+            $conditions = "`groups`.name in(".implode(',' , $group).")";
         else
-            $conditions = "groups.name='$group'";
+            $conditions = "`groups`.name='$group'";
         
         // if additional conditions exists
         if($additional_conditions)
@@ -470,16 +470,16 @@ class Common_model extends CI_Model
 
         // join groups table to get group name
         $join[] = array(
-            'table'=>'groups',
-            'on'=>'groups.id = users_groups.group_id',
+            'table'=>'`groups`',
+            'on'=>'`groups`.id = users_groups.group_id',
             'type'=>'INNER'
             );
 
         // to check user type
         if(is_array($group)) // for multiple groups
-            $conditions = "groups.name in(".implode(',' , $group).")";
+            $conditions = "`groups`.name in(".implode(',' , $group).")";
         else
-            $conditions = "groups.name='$group'";
+            $conditions = "`groups`.name='$group'";
         
         // for today schedule only
         $conditions = "schedule.date='".date('Y-m-d')."'";

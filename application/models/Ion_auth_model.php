@@ -1263,11 +1263,11 @@ class Ion_auth_model extends CI_Model {
 			$or_where_in = (!empty($group_ids) && !empty($group_names)) ? 'or_where_in' : 'where_in';
 			// if group name was used we do one more join with groups
 			if (!empty($group_names)) {
-				$this->db->join($this->tables['groups'], $this->tables['users_groups'] . '.' . $this->join['groups'] . ' = ' . $this->tables['groups'] . '.id', 'inner');
-				$this->db->where_in($this->tables['groups'] . '.name', $group_names);
+				$this->db->join($this->tables['`groups`'], $this->tables['users_groups'] . '.' . $this->join['`groups`'] . ' = ' . $this->tables['`groups`'] . '.id', 'inner');
+				$this->db->where_in($this->tables['`groups`'] . '.name', $group_names);
 			}
 			if (!empty($group_ids)) {
-				$this->db->{$or_where_in}($this->tables['users_groups'] . '.' . $this->join['groups'], $group_ids);
+				$this->db->{$or_where_in}($this->tables['users_groups'] . '.' . $this->join['`groups`'], $group_ids);
 			}
 		}
 		
@@ -1393,7 +1393,7 @@ class Ion_auth_model extends CI_Model {
 		// Then insert each into the database
 		foreach ( $group_ids as $group_id ) {
 			if ($this->db->insert($this->tables['users_groups'], array(
-					$this->join['groups'] => (float)$group_id,
+					$this->join['`groups`'] => (float)$group_id,
 					$this->join['users'] => (float)$user_id 
 			))) {
 				if (isset($this->_cache_groups[$group_id])) {
@@ -1438,7 +1438,7 @@ class Ion_auth_model extends CI_Model {
 			
 			foreach ( $group_ids as $group_id ) {
 				$this->db->delete($this->tables['users_groups'], array(
-						$this->join['groups'] => (float)$group_id,
+						$this->join['`groups`'] => (float)$group_id,
 						$this->join['users'] => (float)$user_id 
 				));
 				if (isset($this->_cache_user_in_group[$user_id]) && isset($this->_cache_user_in_group[$user_id][$group_id])) {
@@ -1466,7 +1466,7 @@ class Ion_auth_model extends CI_Model {
 	 *        
 	 */
 	public function groups() {
-		$this->trigger_events('groups');
+		$this->trigger_events('`groups`');
 		
 		// run each where that was passed
 		if (isset($this->_ion_where) && !empty($this->_ion_where)) {
@@ -1492,7 +1492,7 @@ class Ion_auth_model extends CI_Model {
 			$this->db->order_by($this->_ion_order_by, $this->_ion_order);
 		}
 		
-		$this->response = $this->db->get($this->tables['groups']);
+		$this->response = $this->db->get($this->tables['`groups`']);
 		
 		return $this;
 	}
@@ -1508,7 +1508,7 @@ class Ion_auth_model extends CI_Model {
 		$this->trigger_events('group');
 		
 		if (isset($id)) {
-			$this->where($this->tables['groups'] . '.id', $id);
+			$this->where($this->tables['`groups`'] . '.id', $id);
 		}
 		
 		$this->limit(1);
@@ -1812,7 +1812,7 @@ class Ion_auth_model extends CI_Model {
 		}
 		
 		// bail if the group name already exists
-		$existing_group = $this->db->get_where($this->tables['groups'], array(
+		$existing_group = $this->db->get_where($this->tables['`groups`'], array(
 				'name' => $group_name 
 		))->num_rows();
 		if ($existing_group !== 0) {
@@ -1828,12 +1828,12 @@ class Ion_auth_model extends CI_Model {
 		// filter out any data passed that doesnt have a matching column in the groups table
 		// and merge the set group data and the additional data
 		if (!empty($additional_data))
-			$data = array_merge($this->_filter_data($this->tables['groups'], $additional_data), $data);
+			$data = array_merge($this->_filter_data($this->tables['`groups`'], $additional_data), $data);
 		
 		$this->trigger_events('extra_group_set');
 		
 		// insert the new group
-		$this->db->insert($this->tables['groups'], $data);
+		$this->db->insert($this->tables['`groups`'], $data);
 		$group_id = $this->db->insert_id();
 		
 		// report success
@@ -1859,7 +1859,7 @@ class Ion_auth_model extends CI_Model {
 			// we are changing the name, so do some checks
 			
 			// bail if the group name already exists
-			$existing_group = $this->db->get_where($this->tables['groups'], array(
+			$existing_group = $this->db->get_where($this->tables['`groups`'], array(
 					'name' => $group_name 
 			))->row();
 			if (isset($existing_group->id) && $existing_group->id != $group_id) {
@@ -1871,7 +1871,7 @@ class Ion_auth_model extends CI_Model {
 		}
 		
 		// restrict change of name of the admin group
-		$group = $this->db->get_where($this->tables['groups'], array(
+		$group = $this->db->get_where($this->tables['`groups`'], array(
 				'id' => $group_id 
 		))->row();
 		if ($this->config->item('admin_group', 'ion_auth') === $group->name && $group_name !== $group->name) {
@@ -1889,9 +1889,9 @@ class Ion_auth_model extends CI_Model {
 			// filter out any data passed that doesnt have a matching column in the groups table
 			// and merge the set group data and the additional data
 		if (!empty($additional_data))
-			$data = array_merge($this->_filter_data($this->tables['groups'], $additional_data), $data);
+			$data = array_merge($this->_filter_data($this->tables['`groups`'], $additional_data), $data);
 		
-		$this->db->update($this->tables['groups'], $data, array(
+		$this->db->update($this->tables['`groups`'], $data, array(
 				'id' => $group_id 
 		));
 		
@@ -1928,10 +1928,10 @@ class Ion_auth_model extends CI_Model {
 		
 		// remove all users from this group
 		$this->db->delete($this->tables['users_groups'], array(
-				$this->join['groups'] => $group_id 
+				$this->join['`groups`'] => $group_id 
 		));
 		// remove the group itself
-		$this->db->delete($this->tables['groups'], array(
+		$this->db->delete($this->tables['`groups`'], array(
 				'id' => $group_id 
 		));
 		

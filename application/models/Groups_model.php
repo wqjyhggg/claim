@@ -16,7 +16,7 @@ class Groups_model extends CI_Model {
 	 */
 	public function get_list($flag=FALSE) {
 		$this->db->order_by('description', 'ASC');
-		$rt = $this->db->get('groups')->result_array();
+		$rt = $this->db->get('`groups`')->result_array();
 		$rArr = array();
 		if ($flag) {
 			$rArr[0] = '-- Select Group--';

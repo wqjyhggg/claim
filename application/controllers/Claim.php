@@ -65,9 +65,9 @@ class Claim extends CI_Controller {
 			$this->data['claim_status'] = $this->claim_model->get_claim_status_list(1);
 			
 			// send case manager and eac managers list
-			$this->data['eacs'] = $this->users_model->search(array('groups' => Users_model::GROUP_EAC, 'active' => 1));
-			$this->data['mamagers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
-			$this->data['examiners'] = $this->users_model->search(array('groups' => Users_model::GROUP_EXAMINER, 'active' => 1));
+			$this->data['eacs'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EAC, 'active' => 1));
+			$this->data['mamagers'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_MANAGER, 'active' => 1));
+			$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1));
 			
 			$this->data['products'] = $this->api_model->get_indexed_products();
 
@@ -504,7 +504,7 @@ class Claim extends CI_Controller {
 				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(TRUE);
 				
-				$this->data['examiners'] = $this->users_model->search(array('groups' => Users_model::GROUP_EXAMINER, 'active' => 1));
+				$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1));
 				
 				// get all word documents
 				$fields = "id, title, content";
@@ -904,7 +904,7 @@ class Claim extends CI_Controller {
 				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(TRUE);
 	
-				$this->data['examiners'] = $this->users_model->search(array('groups' => Users_model::GROUP_EXAMINER, 'active' => 1));
+				$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1));
 	
 				$this->data['getpara'] = '';
 				if ($this->input->get()) {
@@ -1720,7 +1720,7 @@ class Claim extends CI_Controller {
 				if ($examiner = $this->users_model->get_by_id($this->data['claim_details']['assign_to'])) {
 					$this->data['examiner_email'] = $examiner['email'];
 				}
-				$this->data['examiners'] = $this->users_model->search(array('groups' => Users_model::GROUP_EXAMINER, 'active' => 1));
+				$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1));
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Claim Details', TRUE);
@@ -2631,11 +2631,11 @@ class Claim extends CI_Controller {
 		$id = $this->ion_auth->get_user_id();
 		
 		$joins[] = array(
-				'table' => 'groups',
-				'on' => 'groups.id = users_groups.group_id',
+				'table' => '`groups`',
+				'on' => '`groups`.id = users_groups.group_id',
 				'type' => 'INNER' 
 		);
-		$roles = $this->common_model->select($record = "list", $typecast = "array", $table = "users_groups", $fields = "groups.name", $conditions = array(
+		$roles = $this->common_model->select($record = "list", $typecast = "array", $table = "users_groups", $fields = "`groups`.name", $conditions = array(
 				'users_groups.user_id' => $id 
 		), $joins);
 		

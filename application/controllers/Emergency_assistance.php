@@ -58,7 +58,7 @@ class Emergency_assistance extends CI_Controller {
 			}
 			
 			// send case manager and eac managers list
-			$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
+			$this->data['managers'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_MANAGER, 'active' => 1));
 			// send countries and province list
 			$this->data['country'] = $this->country_model->get_list(TRUE);
 			$this->data['province'] = $this->province_model->get_list_by_country_short('CA');
@@ -417,7 +417,7 @@ class Emergency_assistance extends CI_Controller {
 				$vdata['loadurl'] = '';
 				$this->data['outpatient_province'] = $this->load->view('template/selection', $vdata, TRUE);
 				
-				$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
+				$this->data['managers'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_MANAGER, 'active' => 1));
 				
 				$this->data['reasons'] = $this->reasons_model->get_list2();
 				$this->data['relationships'] = $this->relations_model->get_list();
@@ -698,7 +698,7 @@ class Emergency_assistance extends CI_Controller {
 				$vdata['loadurl'] = '';
 				$this->data['outpatient_province'] = $this->load->view('template/selection', $vdata, TRUE);
 				
-				$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
+				$this->data['managers'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_MANAGER, 'active' => 1));
 				$this->data['seacs'] = $this->schedule_model->get_eacs();
 				
 				$this->load->model('reasons_model');
@@ -881,7 +881,7 @@ class Emergency_assistance extends CI_Controller {
 			                                                               
 			// get login user id
 			$this->data['case_manager'] = $case_manager = $this->ion_auth->get_user_id();
-			$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
+			$this->data['managers'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_MANAGER, 'active' => 1));
 			$this->data['priorities'] = $this->mytask_model->get_priorities();
 
 			// timing shifts array
@@ -931,11 +931,11 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['employees_' . $key] = $this->common_model->shift_users($field_name = "assign_to", $selected = $this->input->get($field_name), $group = "eacmanager", $empty = "--Select Employee--", $additional_conditions);
 			}
 			*/
-			$this->data['eacs'] = $this->users_model->search(array('groups' => Users_model::GROUP_EAC, 'active' => 1));
+			$this->data['eacs'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EAC, 'active' => 1));
 			// get all case managers list
 			$additional_conditions = " and users.active = '1'";
 			//XXXXXXXXXXXXXXX $this->data['casemanagers'] = $this->common_model->getrusers($field_name = "case_manager", $selected = $this->input->get($field_name), $group = "casemamager", $empty = "--Select Case Manager--", $additional_conditions);
-			$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
+			$this->data['managers'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_MANAGER, 'active' => 1));
 				
 			//$this->data['docs'] = $this->common_model->select($record = "list", $typecast = "array", $table = "template", $fields, $conditions);
 			$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CASE));
@@ -1515,10 +1515,10 @@ class Emergency_assistance extends CI_Controller {
 		$this->load->model('schedule_model');
 		if ($eac) {
 			// get all eac
-			$eacs = $this->users_model->search(array('id' => $eac, 'groups' => Users_model::GROUP_EAC, 'active' => 1), 100);
+			$eacs = $this->users_model->search(array('id' => $eac, '`groups`' => Users_model::GROUP_EAC, 'active' => 1), 100);
 		} else {
 			// get all eac's list
-			$eacs = $this->users_model->search(array('groups' => Users_model::GROUP_EAC, 'active' => 1));
+			$eacs = $this->users_model->search(array('`groups`' => Users_model::GROUP_EAC, 'active' => 1));
 		}
 
 		$dataStrArr = $this->schedule_model->get_shift_options();
@@ -1702,7 +1702,7 @@ class Emergency_assistance extends CI_Controller {
 			
 			// get countries list
 			$this->data['countries'] = $this->country_model->get_list(FALSE);
-			$this->data['eacs'] = $this->users_model->search(array('groups' => Users_model::GROUP_EAC, 'active' => 1));
+			$this->data['eacs'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EAC, 'active' => 1));
 			$this->data['upload_url'] = base_url("emergency_assistance/uploadschedule");
 			/*
 			$this->data['countries'] = $this->common_model->getcountries($field_name = "country2", $selected = $this->input->get("country2"), $key = "short_code", $value = "name");
@@ -2287,7 +2287,7 @@ class Emergency_assistance extends CI_Controller {
 				if ($this->input->get("case_manager"))
 					$conditions['case.case_manager'] = $this->input->get("case_manager");
 				
-				$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='0000-00-00', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
+				$fields = "concat_ws(' ', u2.first_name, u2.last_name) as case_manager_name, concat_ws(' ', u1.first_name, u1.last_name) as assign_to_name, case.case_no, DATE_FORMAT(case.created, '%Y-%m-%d') as created, case.province, case.reason, case.policy_no, concat_ws(' ', case.insured_firstname, case.insured_lastname) as insured_name, IF(case.dob='1970-01-01', 'N/A', DATE_FORMAT(case.dob, '%Y-%m-%d')) as dob, case.assign_to, case.case_manager, case.priority, case.id";
 				$this->data['cases'] = $this->common_model->select($record = "list", $typecast = "array", $table = "case", $fields, $conditions, $joins, $order_by, $group_by = array());
 			} else if ($this->input->get("filter") == 'policy') {
 				

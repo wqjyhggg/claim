@@ -66,7 +66,7 @@ class Users_model extends CI_Model {
 			$where[] = "first_name LIKE " . $this->db->escape('%'.trim($data["first_name"]).'%');
 		}
 		if (!empty($data["groups"])) {
-			$where[] = "groups LIKE " . $this->db->escape('%'.$data["groups"].'%');
+			$where[] = "`groups` LIKE " . $this->db->escape('%'.$data["groups"].'%');
 		}
 		
 		if (!empty($where)) {
@@ -171,8 +171,8 @@ class Users_model extends CI_Model {
 		$this->db->select("users.username");
 		$this->db->from('users');
 		$this->db->join('users_groups', 'users.id=users_groups.user_id');
-		$this->db->join('groups', 'groups.id=users_groups.group_id');
-		$this->db->where('groups.name', $type);
+		$this->db->join('`groups`', '`groups`.id=users_groups.group_id');
+		$this->db->where('`groups`.name', $type);
 		$this->db->order_by('users.id', 'ASC');
 		$this->db->distinct();
 		
