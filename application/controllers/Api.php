@@ -672,6 +672,8 @@ class Api extends CI_Controller {
 			die(json_encode($rdata));
 		}
 		
+		$this->session->set_userdata('user_id',1);
+
 		$this->load->model('claim_model');
 		$this->load->model('case_model');
 		
