@@ -673,10 +673,15 @@ class Api extends CI_Controller {
 		}
 		
 		$this->load->model('claim_model');
+		$this->load->model('case_model');
 		
 		$policy = strtolower($this->input->get_post('policy'));
 		
 		$rdata['claims'] = $this->claim_model->search(array('policy_no' => $policy));
+		if (empty($rdata['claims'])) {
+			// From ticket "setup reminder for refund if case created in OTC"
+			$rdata['claims'] = $this->case_model->search(array('policy_no' => $policy));
+		}
 		$rdata['status'] = Api_model::STATUS_OK;
 		$rdata['message'] = '';
 		
