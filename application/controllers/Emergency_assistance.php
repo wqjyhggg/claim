@@ -58,7 +58,7 @@ class Emergency_assistance extends CI_Controller {
 			}
 			
 			// send case manager and eac managers list
-			$this->data['managers'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_MANAGER, 'active' => 1));
+			$this->data['managers'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_MANAGER, 'active' => 1), 100);
 			// send countries and province list
 			$this->data['country'] = $this->country_model->get_list(TRUE);
 			$this->data['province'] = $this->province_model->get_list_by_country_short('CA');
