@@ -67,7 +67,7 @@ class Claim extends CI_Controller {
 			// send case manager and eac managers list
 			$this->data['eacs'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EAC, 'active' => 1));
 			$this->data['mamagers'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_MANAGER, 'active' => 1));
-			$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1));
+			$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1), 100);
 			
 			$this->data['products'] = $this->api_model->get_indexed_products();
 
@@ -1720,7 +1720,7 @@ class Claim extends CI_Controller {
 				if ($examiner = $this->users_model->get_by_id($this->data['claim_details']['assign_to'])) {
 					$this->data['examiner_email'] = $examiner['email'];
 				}
-				$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1));
+				$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1), 100);
 				
 				// load view data
 				$this->template->write('title', SITE_TITLE . ' - Claim Details', TRUE);
