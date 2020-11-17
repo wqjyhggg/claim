@@ -504,7 +504,7 @@ class Claim extends CI_Controller {
 				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(TRUE);
 				
-				$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1));
+				$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1), 100);
 				
 				// get all word documents
 				$fields = "id, title, content";
@@ -904,7 +904,7 @@ class Claim extends CI_Controller {
 				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
 				$this->data['status_list'] = $this->claim_model->get_claim_status_list(TRUE);
 	
-				$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1));
+				$this->data['examiners'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EXAMINER, 'active' => 1), 100);
 	
 				$this->data['getpara'] = '';
 				if ($this->input->get()) {
