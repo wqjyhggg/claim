@@ -122,13 +122,13 @@ class Expenses_model extends CI_Model {
 		$this->db->where('name', $currency);
 		$this->db->where('dt', $dt);
 		if ($rc = $this->db->get('currency_exchange')->row_array()) {
-			return ($amount * $rc['rate']);
+			return ((float)$amount * (float)$rc['rate']);
 		}
 		$this->db->where('name', $currency);
 		$this->db->order_by('dt', 'DESC');
 		$this->db->limit(1);
 		if ($rc = $this->db->get('currency_exchange')->row_array()) {
-			return ($amount * $rc['rate']);
+			return ((float)$amount * (float)$rc['rate']);
 		}
 		return $amount;
 	}
