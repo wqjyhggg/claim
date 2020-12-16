@@ -30,6 +30,7 @@
 							<li style='line-height: 2em;'><?php echo anchor("report/claim_review", ' Large Loss Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/expenses", ' Claim Summary Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/expenses2", ' Claim Summary Report2</a>', array("class"=>'leftmeun h4')) ?> </li>
+							<li style='line-height: 2em;'><?php echo anchor("report/claim_sla", ' Claim SLA Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 						</ul>
 						<ul>
 							<li style='line-height: 2em;'><?php echo anchor("report/agent_activity", ' Agent Activity Report</a>', array("class"=>'leftmeun h4')) ?> </li>

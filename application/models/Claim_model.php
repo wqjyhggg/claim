@@ -369,4 +369,47 @@ class Claim_model extends CI_Model {
 			return $id;
 		}
 	}
+
+	public function get_sla_report($product_short, $start_dt, $end_dt, $is_eclaim) {
+		if ($is_eclaim) {
+			$sql  = "SELECT c.status, DATEDIFF(ec.created,c.apply_date) as eclaim_tf_days, DATEDIFF(CURDATE(),c.apply_date) as pending_days, DATEDIFF(c.last_update,c.apply_date) as close_days, (SELECT SUM(e.amount_claimed) FROM expenses_claimed e WHERE e.claim_id=c.id) as amount FROM claim c";
+			$sql .= " JOIN eclaim ec ON (c.eclaim_no=ec.eclaim_no)";
+		} else {
+			$sql  = "SELECT c.status, 0 as eclaim_tf_days, DATEDIFF(CURDATE(),c.apply_date) as pending_days, DATEDIFF(c.last_update,c.apply_date) as close_days, (SELECT SUM(e.amount_claimed) FROM expenses_claimed e WHERE e.claim_id=c.id) as amount FROM claim c";
+		}
+		$sql .= " WHERE c.apply_date>=".$this->db->escape($start_dt)." AND c.apply_date<=".$this->db->escape($end_dt);
+		if (!empty($product_short)) {
+			$sql .= " AND c.product_short=".$this->db->escape($product_short);
+		}
+		if ($is_eclaim) {
+			$sql .= " AND c.eclaim_no!=''";
+		} else {
+			$sql .= " AND c.eclaim_no=''";
+		}
+
+		return $this->db->query($sql)->result_array();
+	}
+
+	public function get_sla_examiner_report($examiner_id, $product_short, $start_dt, $end_dt, $is_eclaim) {
+		if ($is_eclaim) {
+			$sql  = "SELECT c.status, DATEDIFF(ec.created,c.apply_date) as eclaim_tf_days, DATEDIFF(CURDATE(),c.apply_date) as pending_days, DATEDIFF(c.last_update,c.apply_date) as close_days, (SELECT SUM(e.amount_claimed) FROM expenses_claimed e WHERE e.claim_id=c.id) as amount, (SELECT SUM(e.amt_payable) FROM expenses_claimed e WHERE e.claim_id=c.id AND (e.status='Paid' OR e.status='Received')) as paid_avg FROM claim c";
+			$sql .= " JOIN eclaim ec ON (c.eclaim_no=ec.eclaim_no)";
+		} else {
+			$sql  = "SELECT c.status, 0 as eclaim_tf_days, DATEDIFF(CURDATE(),c.apply_date) as pending_days, DATEDIFF(c.last_update,c.apply_date) as close_days, (SELECT SUM(e.amount_claimed) FROM expenses_claimed e WHERE e.claim_id=c.id) as amount, (SELECT SUM(e.amt_payable) FROM expenses_claimed e WHERE e.claim_id=c.id AND (e.status='Paid' OR e.status='Received')) as paid_avg FROM claim c";
+		}
+		$sql .= " WHERE c.apply_date>=".$this->db->escape($start_dt)." AND c.apply_date<=".$this->db->escape($end_dt);
+		if (!empty($product_short)) {
+			$sql .= " AND c.assign_to='".(int)$examiner_id."'";
+		}
+		if (!empty($product_short)) {
+			$sql .= " AND c.product_short=".$this->db->escape($product_short);
+		}
+		if ($is_eclaim) {
+			$sql .= " AND c.eclaim_no!=''";
+		} else {
+			$sql .= " AND c.eclaim_no=''";
+		}
+
+		return $this->db->query($sql)->result_array();
+	}
 }

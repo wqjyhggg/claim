@@ -32,8 +32,8 @@ class Cases extends CI_Controller {
 			if ($this->input->get('priority')) $para['priority'] = $this->input->get('priority');
 			if ($this->input->get('status')) $para['status'] = $this->input->get('status');
 
-			$this->data['managers'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_MANAGER, 'active' => 1));
-			$this->data['eacs'] = $this->users_model->search(array('`groups`' => Users_model::GROUP_EAC, 'active' => 1));
+			$this->data['managers'] = $this->users_model->search(array('groups' => Users_model::GROUP_MANAGER, 'active' => 1));
+			$this->data['eacs'] = $this->users_model->search(array('groups' => Users_model::GROUP_EAC, 'active' => 1));
 			$this->data['priorities'] = $this->mytask_model->get_priorities();
 			$this->data['statuses'] = $this->case_model->get_status_list();
 			$this->data['export_url'] = site_url('report/cases/export');
