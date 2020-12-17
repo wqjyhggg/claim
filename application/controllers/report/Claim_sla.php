@@ -100,57 +100,57 @@ class Claim_sla extends CI_Controller {
             9 => array('low' => 75000, 'height' => 100000),
             10 => array('low' => 100000, 'height' => 1000000000),
           );
-          if ($this->data['is_examiner']) {
-            foreach ($arr as $key => $tm) {
-              $this->data['reports'][$key] = array(
-                'key' => $tm['low']."-".(($tm['height'] > 100000)?"-":$tm['height']), // Claim Amount
-                'count' => 0,           // Total Number of Claims
-                'open' => 0,            // Number of Open Claims
-                'closed' => 0,          // Number of Closed Claims
-                'total_open' => 0,      // Value of Open Claims
-                'total_closed' => 0,    // Value of Closed Claims
-                'eclaim_tf_days' => 0,  // Eclaim  Avg. Transfer Time
-                'pending_days' => 0,    // Open Claims Pending Time
-                'close_days' => 0,      // Closed Claims Avg. Close Time
-                );
-            }
-            $rt = $this->claim_model->get_sla_report($this->data['product_short'], $this->data['start_dt'], $this->data['end_dt'], $this->data['is_eclaim']);
-            if ($rt) {
-              foreach ($rt as $rc) {
-                if ((float)$rc['amount'] <= 0) continue;
-                foreach ($arr as $key => $tm) {
-                  if ((float)$rc['amount'] <= $tm['height']) {
-                    $this->data['reports'][$key]['count']++;
-                    if (($rc['status'] == 'Processed') || ($rc['status'] == 'Paid')) {
-                      $this->data['reports'][$key]['closed']++;
-                      $this->data['reports'][$key]['total_closed'] += (float)$rc['amount'];
-                    } else {
-                      $this->data['reports'][$key]['open']++;
-                      $this->data['reports'][$key]['total_open'] += (float)$rc['amount'];
-                    }
-                    if ($this->data['is_eclaim']) {
-                      $this->data['reports'][$key]['eclaim_tf_days'] += (int)$rc['eclaim_tf_days'];
-                    }
-                    $this->data['reports'][$key]['pending_days'] += (int)$rc['pending_days'];
-                    $this->data['reports'][$key]['close_days'] += (int)$rc['close_days'];
-                    break;                    
+          foreach ($arr as $key => $tm) {
+            $this->data['reports'][$key] = array(
+              'key' => $tm['low']."-".(($tm['height'] > 100000)?"-":$tm['height']), // Claim Amount
+              'count' => 0,           // Total Number of Claims
+              'open' => 0,            // Number of Open Claims
+              'closed' => 0,          // Number of Closed Claims
+              'total_open' => 0,      // Value of Open Claims
+              'total_closed' => 0,    // Value of Closed Claims
+              'eclaim_tf_days' => 0,  // Eclaim  Avg. Transfer Time
+              'pending_days' => 0,    // Open Claims Pending Time
+              'close_days' => 0,      // Closed Claims Avg. Close Time
+              );
+          }
+          $rt = $this->claim_model->get_sla_report($this->data['product_short'], $this->data['start_dt'], $this->data['end_dt'], $this->data['is_eclaim']);
+          if ($rt) {
+            foreach ($rt as $rc) {
+              if ((float)$rc['amount'] <= 0) continue;
+              foreach ($arr as $key => $tm) {
+                if ((float)$rc['amount'] <= $tm['height']) {
+                  $this->data['reports'][$key]['count']++;
+                  if (($rc['status'] == 'Processed') || ($rc['status'] == 'Paid')) {
+                    $this->data['reports'][$key]['closed']++;
+                    $this->data['reports'][$key]['total_closed'] += (float)$rc['amount'];
+                  } else {
+                    $this->data['reports'][$key]['open']++;
+                    $this->data['reports'][$key]['total_open'] += (float)$rc['amount'];
                   }
+                  if ($this->data['is_eclaim']) {
+                    $this->data['reports'][$key]['eclaim_tf_days'] += (int)$rc['eclaim_tf_days'];
+                  }
+                  $this->data['reports'][$key]['pending_days'] += (int)$rc['pending_days'];
+                  $this->data['reports'][$key]['close_days'] += (int)$rc['close_days'];
+                  break;                    
                 }
               }
-              foreach ($arr as $key => $tm) {
-                if ($this->data['is_eclaim']) {
-                  $this->data['reports'][$key]['eclaim_tf_days'] = number_format($this->data['reports'][$key]['eclaim_tf_days'] / $this->data['reports'][$key]['count'], 2);
-                }
-                if ($this->data['reports'][$key]['open'] > 0) {
-                  $this->data['reports'][$key]['pending_days'] = number_format($this->data['reports'][$key]['pending_days'] / $this->data['reports'][$key]['open'], 2);
-                } else {
-                  $this->data['reports'][$key]['pending_days'] = "N/A";
-                }
-                if ($this->data['reports'][$key]['closed'] > 0) {
-                  $this->data['reports'][$key]['close_days'] = number_format($this->data['reports'][$key]['close_days'] / $this->data['reports'][$key]['closed'], 2);
-                } else {
-                  $this->data['reports'][$key]['close_days'] = "N/A";
-                }
+            }
+            foreach ($arr as $key => $tm) {
+              if ($this->data['reports'][$key]['count'] > 0) {
+                $this->data['reports'][$key]['eclaim_tf_days'] = number_format($this->data['reports'][$key]['eclaim_tf_days'] / $this->data['reports'][$key]['count'], 2);
+              } else {
+                $this->data['reports'][$key]['eclaim_tf_days'] = "N/A";
+              }
+              if ($this->data['reports'][$key]['open'] > 0) {
+                $this->data['reports'][$key]['pending_days'] = number_format($this->data['reports'][$key]['pending_days'] / $this->data['reports'][$key]['open'], 2);
+              } else {
+                $this->data['reports'][$key]['pending_days'] = "N/A";
+              }
+              if ($this->data['reports'][$key]['closed'] > 0) {
+                $this->data['reports'][$key]['close_days'] = number_format($this->data['reports'][$key]['close_days'] / $this->data['reports'][$key]['closed'], 2);
+              } else {
+                $this->data['reports'][$key]['close_days'] = "N/A";
               }
             }
           }
@@ -158,43 +158,62 @@ class Claim_sla extends CI_Controller {
 			}
       $this->data['products'] = $this->product_model->get_list();
 
-      $this->data['ispdf'] = $this->input->get('export')?1:0;
+      $this->data['iscsv'] = $this->input->get('iscsv')?1:0;
 
-      $this->data['export_url'] = site_url('report/claim_sla')."?ispdf=1";
+      $this->data['export_url'] = site_url('report/claim_sla')."?iscsv=1&submit=1";
       $this->data['export_url'] .= "&product_short=".urlencode($this->input->get('product_short'));
       $this->data['export_url'] .= "&is_eclaim=".urlencode($this->input->get('is_eclaim'));
       $this->data['export_url'] .= "&start_dt=".urlencode($this->input->get('start_dt'));
       $this->data['export_url'] .= "&end_dt=".urlencode($this->input->get('end_dt'));
       $this->data['export_url'] .= "&is_examiner=".urlencode($this->input->get('is_examiner'));
       $this->data['export_url'] .= "&examiner_id=".urlencode($this->input->get('examiner_id'));
-
       $this->data['current_url'] = site_url('report/claim_sla');
-      if ($this->data['ispdf']) {
-        $html = $this->load->view('report/claim_sla', $this->data, true);
-
-        $this->load->model('pdf_model');
-        $this->pdf_model->htmloutput($html, $this->data);
+      if ($this->data['iscsv']) {
+        $filename = "sla_".$this->input->get('start_dt')."_".$this->input->get('end_dt');
+        if (!empty($this->data['is_examiner'] == 1)) {
+          $filename .= "examiner";
+        }
+        header('Content-Disposition: attachment;filename="'.$filename.'.csv";');
+        header('Content-Type: application/csv; charset=UTF-8');
+        $fp = fopen("php://output", "w");
+        if (!empty($this->data['is_examiner'] == 1)) {
+          fputcsv($fp, array( 'Examiner',
+                              'Total Number of Claims',
+                              'Number of Open Claims',
+                              'Number of Closed Claims',
+                              'Value of Open Claims',
+                              'Value of Closed Claims',
+                              'Eclaim Avg. Transfer Time',
+                              'Open Claims Pending Time',
+                              'Closed Claims Avg. Close Time',
+                              'Avg. Paid Claim Amount',
+                            ));
+          if (!empty($this->data['reports'])) {
+            foreach ($this->data['reports'] as $value) {
+              fputcsv($fp, array($value['email'],$value['count'],$value['open'],$value['closed'],$value['total_open'],$value['total_closed'],$value['eclaim_tf_days'],$value['pending_days'],$value['close_days'],$value['paid_avg']));
+            }
+          }
+        } else {
+          fputcsv($fp, array( 'Claim Amount',
+                              'Total Number of Claims',
+                              'Number of Open Claims',
+                              'Number of Closed Claims',
+                              'Value of Open Claims',
+                              'Value of Closed Claims',
+                              'Eclaim Avg. Transfer Time',
+                              'Open Claims Pending Time',
+                              'Closed Claims Avg. Close Time',
+                            ));
+          if (!empty($this->data['reports'])) {
+            foreach ($this->data['reports'] as $value) {
+              fputcsv($fp, array($value['key'],$value['count'],$value['open'],$value['closed'],$value['total_open'],$value['total_closed'],$value['eclaim_tf_days'],$value['pending_days'],$value['close_days']));
+            }
+          }
+        }
       } else {
         $this->template->write_view('content', 'report/claim_sla', $this->data);
         $this->template->render();
       }
-		}
-	}
-
-	public function export() {
-		if (!$this->ion_auth->logged_in()) {
-			// redirect them to the login page
-			redirect('auth/login', 'refresh');
-		} else {
-      $this->data['reports'] = array();
-      $this->data['product_short'] = $this->input->get('product_short');
-      $this->data['is_eclaim'] = $this->input->get('is_eclaim');
-      $this->data['start_dt'] = ($this->input->get('start_dt'))?$this->input->get('start_dt'):date("Y-m-d");
-      $this->data['end_dt'] = $this->input->get('end_dt');
-      $this->data['is_examiner'] = $this->input->get('is_examiner');
-      $this->data['examiner_id'] = $this->input->get('examiner_id');
-      
-      $this->data['ispdf'] = 1;
 		}
 	}
 }
