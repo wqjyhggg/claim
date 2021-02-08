@@ -34,14 +34,12 @@
 								</div>
 							</div>
 							<div class="form-group col-sm-3">
-								<div class="col-sm-5">
-									<?php echo form_label('&nbsp;', 'is_eclaim', array("class" => 'col-sm-12')); ?>
-									<?php echo form_radio("is_eclaim", "0", ($is_eclaim != 1), array('class' => 'setpremium')); ?> No EClaim
-								</div>
-								<div class="col-sm-5">
-									<?php echo form_label('&nbsp;', 'is_eclaim', array("class" => 'col-sm-12')); ?>
-									<?php echo form_radio("is_eclaim", "1", ($is_eclaim == 1), array('class' => 'setpremium')); ?> EClaim
-								</div>
+								<?php echo form_label('EClaim condition:', 'is_eclaim', array("class" => 'col-sm-12')); ?>
+								<select name="is_eclaim" class="form-control">
+									<option value="" <?php if (($is_eclaim != 1) || ($is_eclaim != 2)) { echo "selected";} ?>> both </option>
+									<option value="1" <?php if ($is_eclaim == 1) { echo "selected";} ?>> No EClaim </option>
+									<option value="2" <?php if ($is_eclaim == 2) { echo "selected";} ?>> Only EClaim </option>
+								</select>
 							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Product:', 'product_id', array("class" => 'col-sm-12')); ?>
