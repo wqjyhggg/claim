@@ -377,7 +377,7 @@ class Claim_model extends CI_Model {
 		if (strlen($end_dt) == 10) {
 			$end_dt .= " 23:59:59";
 		}
-		if ($is_eclaim) {
+		if ($is_eclaim == 2) {
 			$sql  = "SELECT c.status, DATEDIFF(c.created,ec.created) as eclaim_tf_days, DATEDIFF(CURDATE(),c.created) as pending_days, DATEDIFF(c.last_update,c.created) as close_days, (SELECT SUM(e.amount_claimed) FROM expenses_claimed e WHERE e.claim_id=c.id) as amount FROM claim c";
 			$sql .= " JOIN eclaim ec ON (c.eclaim_no=ec.eclaim_no)";
 		} else {
@@ -387,9 +387,9 @@ class Claim_model extends CI_Model {
 		if (!empty($product_short)) {
 			$sql .= " AND c.product_short=".$this->db->escape($product_short);
 		}
-		if ($is_eclaim) {
+		if ($is_eclaim == 2) {
 			$sql .= " AND c.eclaim_no!=''";
-		} else {
+		} else if ($is_eclaim == 1) {
 			$sql .= " AND c.eclaim_no=''";
 		}
 

@@ -123,15 +123,15 @@ class Claim_sla extends CI_Controller {
                   if (($rc['status'] == 'Processed') || ($rc['status'] == 'Paid')) {
                     $this->data['reports'][$key]['closed']++;
                     $this->data['reports'][$key]['total_closed'] += (float)$rc['amount'];
+                    $this->data['reports'][$key]['close_days'] += (int)$rc['close_days'];
                   } else {
                     $this->data['reports'][$key]['open']++;
                     $this->data['reports'][$key]['total_open'] += (float)$rc['amount'];
+                    $this->data['reports'][$key]['pending_days'] += (int)$rc['pending_days'];
                   }
                   if ($this->data['is_eclaim']) {
                     $this->data['reports'][$key]['eclaim_tf_days'] += (int)$rc['eclaim_tf_days'];
                   }
-                  $this->data['reports'][$key]['pending_days'] += (int)$rc['pending_days'];
-                  $this->data['reports'][$key]['close_days'] += (int)$rc['close_days'];
                   break;                    
                 }
               }
