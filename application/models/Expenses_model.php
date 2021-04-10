@@ -559,7 +559,20 @@ class Expenses_model extends CI_Model {
 		if (!empty($data['product_short'])) {
 			$sql .= " AND c.product_short=".$this->db->escape($data['product_short']);
 		}
-		if (!empty($data['agent_id'])) {
+		if (!empty($data['products']) && is_array($data['products'])) {
+      $pStr = "'".join("','", $data['products'])."'";
+			$sql .= " AND c.product_short IN (".$pStr.")";
+		}
+		if (isset($data['invoice_status'])) {
+      if ($data['invoice_status'] == 'P') {
+        $sql .= " AND e.status NOT IN ('".self::EXPENSE_STATUS_Paid."','".self::EXPENSE_STATUS_Declined."','".self::EXPENSE_STATUS_Duplicated."')";
+      } else if ($data['invoice_status'] == 'D') {
+        $sql .= " AND e.status IN ('".self::EXPENSE_STATUS_Declined."','".self::EXPENSE_STATUS_Duplicated."')";
+      } else if ($data['invoice_status'] == 'F') {
+        $sql .= " AND e.status='".self::EXPENSE_STATUS_Paid."'";
+      }
+		}
+    if (!empty($data['agent_id'])) {
 			$sql .= " AND c.agent_id='". (int)$data['agent_id']."'";
 		}
 		if (!empty($nozero)) {

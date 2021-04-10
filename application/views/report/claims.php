@@ -46,15 +46,6 @@
 						</div>
 						<div class="clearfix"><br /></div>
 						<div class="form-group col-sm-3">
-							<?php echo form_label('Products:', 'product_short', array ("class" => 'col-sm-12')); ?>
-							<select name="product_short" class="form-control">
-								<option value="">-- Select Product --</option>
-								<?php foreach ($products as $key => $val) { ?>
-								<option value="<?php echo $key; ?>" <?php if ($key == $this->input->get('product_short')) { echo "selected"; } ?>><?php echo /* $val */$key; ?></option>
-								<?php } ?>
-							</select>
-						</div>
-						<div class="form-group col-sm-3">
 							<?php echo form_label('Agent ID:', 'agent_id', array ("class" => 'col-sm-12')); ?>
 							<?php echo form_input ( "agent_id", $this->input->get( "agent_id" ), array ("class" => "form-control", 'placeholder' => 'Agent ID') ); ?>
 						</div>
@@ -67,8 +58,30 @@
 							</select>
 						</div>
 						<div class="form-group col-sm-3">
-							<label class="col-sm-12">&nbsp;</label>
+							<?php echo form_label('Invoice Status:', 'invoice_status', array ("class" => 'col-sm-12')); ?>
+							<select name="invoice_status" class="form-control">
+                <option value=""></option>
+								<option value="P" <?php if ("P" == $this->input->get('invoice_status')) { echo "selected"; } ?>>P</option>
+								<option value="D" <?php if ("D" == $this->input->get('invoice_status')) { echo "selected"; } ?>>D</option>
+								<option value="F" <?php if ("F" == $this->input->get('invoice_status')) { echo "selected"; } ?>>F</option>
+							</select>
+						</div>
+						<div class="form-group col-sm-3">
+						</div>
+						<div class="clearfix"><br /></div>
+						<div class="form-group col-sm-6">
+							<?php echo form_label('Products:', 'product_short', array ("class" => 'col-sm-12')); ?>
+							<?php $curproducts = $this->input->get('products') ? $this->input->get('products') : array();?>
+              <?php foreach ($products as $key => $val) { ?>
+              <span style="margin-left: 1em;">
+              <input type="checkbox" name="products[]" value="<?php echo $key; ?>" <?php if (in_array($key, $curproducts)) { echo "checked"; } ?> /> <?php echo $key; ?>
+              </span>
+              <?php } ?>
+						</div>
+						<div class="form-group col-sm-3 text-center" style="margin-top: 1em;">
 							<button class="btn btn-primary" name="filter" value="1">Search</button>
+						</div>
+						<div class="form-group col-sm-3 text-center" style="margin-top: 1em;">
 							<?php echo anchor($export_url, 'Export', array('title'=>'Export', 'class' => 'btn btn-primary')); ?>
 						</div>
 					</div>

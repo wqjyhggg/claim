@@ -642,12 +642,12 @@ class MetadataWriter implements \Psr\Log\LoggerAwareInterface
 						$annotcolor = ' /C [';
 						if (isset($pl['opt']['c']) && $pl['opt']['c']) {
 							$col = $pl['opt']['c'];
-							if ($col{0} == 3 || $col{0} == 5) {
-								$annotcolor .= sprintf('%.3F %.3F %.3F', ord($col{1}) / 255, ord($col{2}) / 255, ord($col{3}) / 255);
-							} elseif ($col{0} == 1) {
-								$annotcolor .= sprintf('%.3F', ord($col{1}) / 255);
-							} elseif ($col{0} == 4 || $col{0} == 6) {
-								$annotcolor .= sprintf('%.3F %.3F %.3F %.3F', ord($col{1}) / 100, ord($col{2}) / 100, ord($col{3}) / 100, ord($col{4}) / 100);
+							if (substr($col,0,1) == 3 || substr($col,0,1) == 5) {
+								$annotcolor .= sprintf('%.3F %.3F %.3F', ord(substr($col,1,1)) / 255, ord(substr($col,2,1)) / 255, ord(substr($col,3,1)) / 255);
+							} elseif (substr($col,0,1) == 1) {
+								$annotcolor .= sprintf('%.3F', ord(substr($col,1,1)) / 255);
+							} elseif (substr($col,0,1) == 4 || substr($col,0,1) == 6) {
+								$annotcolor .= sprintf('%.3F %.3F %.3F %.3F', ord(substr($col,1,1)) / 100, ord(substr($col,2,1)) / 100, ord(substr($col,3,1)) / 100, ord(substr($col,4,1)) / 100);
 							} else {
 								$annotcolor .= '1 1 0';
 							}

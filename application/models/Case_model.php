@@ -360,6 +360,14 @@ class Case_model extends CI_Model {
 		if (!empty($data['product_short'])) {
 			$sql .= " AND product_short=".$this->db->escape($data['product_short']);
 		}
+		if (!empty($data['products']) && is_array($data['products'])) {
+      $pStr = "'".join("','", $data['products'])."'";
+			$sql .= " AND product_short IN (".$pStr.")";
+		}
+		if (!empty($data['invoice_status']) && ($data['invoice_status'] != 'P')) {
+      // All Case is belong to P
+			return array();
+		}
 		if (!empty($data['agent_id'])) {
 			$sql .= " AND agent_id='". (int)$data['agent_id']."'";
 		}

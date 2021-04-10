@@ -270,7 +270,7 @@ class Protection
 			for ($i = 1; $i <= 19; ++$i) {
 				$key = '';
 				for ($j = 0; $j < $len; ++$j) {
-					$key .= chr(ord($owner_rc4_key{$j}) ^ $i);
+					$key .= chr(ord(substr($owner_rc4_key,$j,1)) ^ $i);
 				}
 				$enc = $this->rc4($key, $enc);
 			}
@@ -288,7 +288,7 @@ class Protection
 			for ($i = 1; $i <= 19; ++$i) {
 				$key = '';
 				for ($j = 0; $j < $len; ++$j) {
-					$key .= chr(ord($this->encryptionKey{$j}) ^ $i);
+					$key .= chr(ord(substr($this->encryptionKey,$j,1)) ^ $i);
 				}
 				$enc = $this->rc4($key, $enc);
 			}
@@ -352,7 +352,7 @@ class Protection
 			++$len;
 		}
 		for ($i = 0; $i < $len; $i += 2) {
-			$s .= chr(hexdec($hs{$i} . $hs{($i + 1)}));
+			$s .= chr(hexdec(substr($hs,$i,1) . substr($hs,($i + 1),1)));
 		}
 
 		return $s;
