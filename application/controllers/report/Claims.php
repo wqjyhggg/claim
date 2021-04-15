@@ -95,6 +95,8 @@ class Claims extends CI_Controller {
 			$para = array();
 			$para['scope'] = $this->input->get('scope');
 			$para['status'] = $this->input->get('status');
+			$para['products'] = $this->input->get('products[]');
+			$para['invoice_status'] = $this->input->get('invoice_status[]');
 			$para['product_short'] = $this->input->get('product_short');
 			$para['agent_id'] = $this->input->get('agent_id');
 			$para['claim_date_type'] = $this->input->get('claim_date_type');
