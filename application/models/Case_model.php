@@ -364,7 +364,8 @@ class Case_model extends CI_Model {
       $pStr = "'".join("','", $data['products'])."'";
 			$sql .= " AND product_short IN (".$pStr.")";
 		}
-		if (!empty($data['invoice_status']) && ($data['invoice_status'] != 'P')) {
+    $curinvoice_status = isset($data['invoice_status']) ? $data['invoice_status'] : array();
+		if (empty($curinvoice_status) || !is_array($curinvoice_status) || !in_array('P',$curinvoice_status)) {
       // All Case is belong to P
 			return array();
 		}

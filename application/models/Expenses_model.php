@@ -563,13 +563,19 @@ class Expenses_model extends CI_Model {
       $pStr = "'".join("','", $data['products'])."'";
 			$sql .= " AND c.product_short IN (".$pStr.")";
 		}
-		if (isset($data['invoice_status'])) {
-      if ($data['invoice_status'] == 'P') {
-        $sql .= " AND e.status NOT IN ('".self::EXPENSE_STATUS_Paid."','".self::EXPENSE_STATUS_Declined."','".self::EXPENSE_STATUS_Duplicated."')";
-      } else if ($data['invoice_status'] == 'D') {
-        $sql .= " AND e.status IN ('".self::EXPENSE_STATUS_Declined."','".self::EXPENSE_STATUS_Duplicated."')";
-      } else if ($data['invoice_status'] == 'F') {
-        $sql .= " AND e.status='".self::EXPENSE_STATUS_Paid."'";
+    $curinvoice_status = isset($data['invoice_status']) ? $data['invoice_status'] : array();
+		if (!empty($curinvoice_status) && is_array($curinvoice_status)) {
+      $inStatus = "";
+      if (in_array('P',$curinvoice_status)) {
+        $inStatus .= "'".self::EXPENSE_STATUS_Received."','".self::EXPENSE_STATUS_Pending."','".self::EXPENSE_STATUS_Approved."',";
+      } else if (in_array('D',$curinvoice_status)) {
+        $inStatus .= "'".self::EXPENSE_STATUS_Declined."','".self::EXPENSE_STATUS_Duplicated."',";
+      } else if (in_array('F',$curinvoice_status)) {
+        $inStatus .= "'".self::EXPENSE_STATUS_Paid."',";
+      }
+      if ($inStatus) {
+        $inStatus = substr($inStatus, 0, -1);
+        $sql .= " AND e.status IN (".$inStatus.")";
       }
 		}
     if (!empty($data['agent_id'])) {

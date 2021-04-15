@@ -59,19 +59,20 @@
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Invoice Status:', 'invoice_status', array ("class" => 'col-sm-12')); ?>
-							<select name="invoice_status" class="form-control">
-                <option value=""></option>
-								<option value="P" <?php if ("P" == $this->input->get('invoice_status')) { echo "selected"; } ?>>P</option>
-								<option value="D" <?php if ("D" == $this->input->get('invoice_status')) { echo "selected"; } ?>>D</option>
-								<option value="F" <?php if ("F" == $this->input->get('invoice_status')) { echo "selected"; } ?>>F</option>
-							</select>
+              <?php $curinvoice_status = empty($this->input->get('invoice_status[]')) ? array() : $this->input->get('invoice_status[]');?>
+              <span style="margin-left: 1em;">
+              <input type="checkbox" name="invoice_status[]" value="P" <?php if (in_array("P", $curinvoice_status)) { echo "checked"; } ?> /> P
+              <span style="margin-left: 1em;">
+              <input type="checkbox" name="invoice_status[]" value="D" <?php if (in_array("D", $curinvoice_status)) { echo "checked"; } ?> /> D
+              <span style="margin-left: 1em;">
+              <input type="checkbox" name="invoice_status[]" value="F" <?php if (in_array("F", $curinvoice_status)) { echo "checked"; } ?> /> F
 						</div>
 						<div class="form-group col-sm-3">
 						</div>
 						<div class="clearfix"><br /></div>
 						<div class="form-group col-sm-6">
 							<?php echo form_label('Products:', 'product_short', array ("class" => 'col-sm-12')); ?>
-							<?php $curproducts = $this->input->get('products') ? $this->input->get('products') : array();?>
+							<?php $curproducts = empty($this->input->get('products[]')) ? array() : $this->input->get('products[]');?>
               <?php foreach ($products as $key => $val) { ?>
               <span style="margin-left: 1em;">
               <input type="checkbox" name="products[]" value="<?php echo $key; ?>" <?php if (in_array($key, $curproducts)) { echo "checked"; } ?> /> <?php echo $key; ?>
