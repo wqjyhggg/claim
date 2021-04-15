@@ -185,6 +185,7 @@
 									<td></td>
 									<td></td>
 									<td></td>
+									<td></td>
 									<td><?php echo sprintf("%0.2f", $t_reserve_amount); ?></td>
 									<td></td>
 									<td><?php echo sprintf("%0.2f", $t_amount_claimed); ?></td>
