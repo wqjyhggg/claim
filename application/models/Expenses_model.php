@@ -568,9 +568,11 @@ class Expenses_model extends CI_Model {
       $inStatus = "";
       if (in_array('P',$curinvoice_status)) {
         $inStatus .= "'".self::EXPENSE_STATUS_Received."','".self::EXPENSE_STATUS_Pending."','".self::EXPENSE_STATUS_Approved."',";
-      } else if (in_array('D',$curinvoice_status)) {
+      }
+      if (in_array('D',$curinvoice_status)) {
         $inStatus .= "'".self::EXPENSE_STATUS_Declined."','".self::EXPENSE_STATUS_Duplicated."',";
-      } else if (in_array('F',$curinvoice_status)) {
+      }
+      if (in_array('F',$curinvoice_status)) {
         $inStatus .= "'".self::EXPENSE_STATUS_Paid."',";
       }
       if ($inStatus) {
