@@ -22,26 +22,50 @@ class Api extends CI_Controller {
 	public function login() {
 		$this->load->model('api_model');
 
+		$lang = $this->input->post_get('lan');
+    if ($lang != 'zh') {
+      $lang = 'en';
+    }
 		$data['api_id'] = $this->input->post('api_id');
 		$data['policy'] = $this->input->post('policy');
 		$data['birthday'] = $this->input->post('birthday');
 		$data['ip'] = $this->input->server('REMOTE_ADDR');
-		$rdata = array('status' => Api_model::STATUS_OK, 'message' => 'Success', 'token' => '');
+    if ($lang == 'zh') {
+      $rdata = array('status' => Api_model::STATUS_OK, 'message' => '成功', 'token' => '');
+    } else {
+      $rdata = array('status' => Api_model::STATUS_OK, 'message' => 'Success', 'token' => '');
+    }
 		if (empty($data['api_id'])) {
 			$rdata['status'] = Api_model::STATUS_ERROR;
-			$rdata['message'] = 'Invilad ID';
+      if ($lang == 'zh') {
+        $rdata['message'] = '无效的ID';
+      } else {
+        $rdata['message'] = 'Invalid ID';
+      }
 		} else if (empty($data['birthday']) || !preg_match('/^[1-2][0-9]{3}-[01][0-9]-[0123][0-9]$/',$data['birthday'])) {
 			$rdata['status'] = Api_model::STATUS_ERROR;
-			$rdata['message'] = 'Unknown Birth Day';
+      if ($lang == 'zh') {
+        $rdata['message'] = '未知的生日';
+      } else {
+        $rdata['message'] = 'Unknown Birth Day';
+      }
 		} else if (empty($data['policy'])) {
 			$rdata['status'] = Api_model::STATUS_ERROR;
-			$rdata['message'] = 'Invilad Parameter';
+      if ($lang == 'zh') {
+        $rdata['message'] = '无效的参数';
+      } else {
+        $rdata['message'] = 'Invalid Parameter';
+      }
 		}
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$try_cnt = $this->api_model->checklogin($data);
 			if ($try_cnt > 5) {
 				$rdata['status'] = Api_model::STATUS_ERROR;
-				$rdata['message'] = 'Too many logins';
+        if ($lang == 'zh') {
+          $rdata['message'] = '太多登录';
+        } else {
+          $rdata['message'] = 'Too many logins';
+        }
 			}
 		}
 
@@ -52,10 +76,18 @@ class Api extends CI_Controller {
 			$allow_policies = array("JES","JESP","JFC","JFP","JFR","JUS","NUS","OPL","TOP");
 			if (empty($policies)) {
 				$rdata['status'] = Api_model::STATUS_ERROR;
-				$rdata['message'] = 'Policy number is not valid';
+        if ($lang == 'zh') {
+          $rdata['message'] = '保单号码无效';
+        } else {
+  				$rdata['message'] = 'Policy number is not valid';
+        }
 			} else if (!in_array($policies[0]['product_short'], $allow_policies)) {
 				$rdata['status'] = Api_model::STATUS_ERROR;
-				$rdata['message'] = 'Unsupported Policy Type';
+        if ($lang == 'zh') {
+          $rdata['message'] = '不支持的保单类型';
+        } else {
+				  $rdata['message'] = 'Unsupported Policy Type';
+        }
 			} else {
 				$hasbirthday = 0;
 				if ($policies[0]['birthday'] == $data['birthday']) {
@@ -86,7 +118,11 @@ class Api extends CI_Controller {
 					$rdata['birthday'] = $birthday;
 				} else {
 					$rdata['status'] = Api_model::STATUS_ERROR;
-					$rdata['message'] = 'Birthday does not match our records';
+          if ($lang == 'zh') {
+            $rdata['message'] = '生日与我们的记录不符';
+          } else {
+            $rdata['message'] = 'Birthday does not match our records';
+          }
 				}
 			}
 		}
@@ -286,6 +322,10 @@ class Api extends CI_Controller {
 
 	public function image() {
 		$this->load->model('api_model');
+		$lang = $this->input->post_get('lan');
+    if ($lang != 'zh') {
+      $lang = 'en';
+    }
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('eclaim_file_model');
@@ -311,12 +351,20 @@ class Api extends CI_Controller {
 					$rdata['path'] = "/assets/uploads/".$data['path']."/".$data['name'];
 				} else {
 					$rdata['status'] = Api_model::STATUS_ERROR;
-					$rdata['message'] = 'Insert DB error';
+          if ($lang == 'zh') {
+            $rdata['message'] = '插入数据库错误';
+          } else {
+  					$rdata['message'] = 'Insert DB error';
+          }
 				}
 			} else {
 				$rdata['status'] = Api_model::STATUS_ERROR;
 				$rdata['error'] = $this->upload->display_errors();
-				$rdata['message'] = 'Upload file error';
+        if ($lang == 'zh') {
+          $rdata['message'] = '上传文件错误';
+        } else {
+          $rdata['message'] = 'Upload file error';
+        }
 			}
 		}
 
@@ -334,6 +382,10 @@ class Api extends CI_Controller {
 		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 
 		$this->load->model('api_model');
+		$lang = $this->input->post_get('lan');
+    if ($lang != 'zh') {
+      $lang = 'en';
+    }
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('eclaim_model');
@@ -345,15 +397,23 @@ class Api extends CI_Controller {
 			if (($ntm < ($ltm + 180)) && ($lrc['policy_no'] == $tpolicy_no)) {
 				$rdata['status'] = Api_model::STATUS_ERROR;
 				$rdata['error'] = 'To fast to submit';
-				$rdata['message'] = 'To fast to submit';
+        if ($lang == 'zh') {
+          $rdata['message'] = '提交太快';
+        } else {
+          $rdata['message'] = 'To fast to submit';
+        }
 			} else {
 			$file_id = $this->eclaim_model->save($this->input->post());
 			if ($file_id) {
 				$rdata['application_id'] = $file_id;
 			} else {
-				$rdata['error'] = $error;
+				$rdata['error'] = 'Something wrong with data';
 				$rdata['status'] = Api_model::STATUS_ERROR;
-				$rdata['message'] = 'Something wrong with data';
+        if ($lang == 'zh') {
+          $rdata['message'] = '数据有问题';
+        } else {
+  				$rdata['message'] = 'Something wrong with data';
+        }
 			}
 			}
 		}
