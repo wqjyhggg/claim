@@ -505,6 +505,7 @@ class Phone_model extends CI_Model {
 				return array();
 			}
 			$this->db->where('agent', $phonenumber);
+      $this->db->limit(200);
 		} else {
 			$this->db->where_in('agent', $this->phone_numbers);
 			$this->db->where('TIME_TO_SEC(TIMEDIFF(now(), newcall))<', 3600*24);
