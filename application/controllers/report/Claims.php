@@ -177,6 +177,7 @@ class Claims extends CI_Controller {
 									'Pay to Name',
 									'Decline Reason',
 									'Claim Status',
+									'Sum Insured',
 			));
 
 			$t_amount_claimed = $t_amt_payable = $t_recovery_amt = $t_reserve_amount = 0;
@@ -213,6 +214,7 @@ class Claims extends CI_Controller {
 									isset($value['pay_to']) ? $value['pay_to'] : '',
 									empty($value['reason']) ? '' : $value['reason'],
 									$value['status2'],
+									$value['sum_insured'],
 						));
 			}
 			fputcsv($output, array(
