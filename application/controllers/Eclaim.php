@@ -190,7 +190,14 @@ class Eclaim extends CI_Controller {
 				$data =[];
 				$expenses=[];
 				$array = $this->input->post();
-				
+
+        $policy_info_arr = $this->api_model->get_policy(array('policy' => $array['policy_no']));
+
+				if (empty($policy_info_arr)) {
+					return show_error('Unknown policy for this Claim' . $array['policy_no'] . '.');
+				}
+        $array['sum_insured'] = $policy_info_arr[0]['sum_insured'];
+
 				$payee = array(
 					'claim_id' => 0,
 					'payment_type' =>  $array['payees_payment_type'],

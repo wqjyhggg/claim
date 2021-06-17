@@ -108,6 +108,10 @@
 						<div class="form-group col-sm-3">
 							<label>Case No : </label><?php echo $claim['case_no']; ?>
 						</div>
+						<div class="form-group col-sm-3">
+							<label>Reserve Amount : </label>
+              <input type='number' step='0.01' name='reserve_amount' value="<?php echo $claim['reserve_amount']; ?>">
+						</div>
 						<div class="clearfix"></div>
 	
 						<div class="form-group col-sm-3">

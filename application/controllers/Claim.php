@@ -237,10 +237,19 @@ class Claim extends CI_Controller {
 					$case = $this->case_model->get_id_by_case_no($case_no); // Get case
 					if ($case) {
 						$data['id'] = $case['id'];
-						$data['claim_no'] = $claim_no = $data['case_no'];
+						$data['claim_no'] = $claim_no = $case['case_no'];
+						$data['reserve_amount'] = $case['reserve_amount'];
 					}
 				}
-				if (empty($data['id'])) {
+
+        $policy_info_arr = $this->api_model->get_policy(array('policy' => $array['policy_no']));
+
+				if (empty($policy_info_arr)) {
+					return show_error('Unknown policy for this Claim' . $array['policy_no'] . '.');
+				}
+        $data['sum_insured'] = $policy_info_arr[0]['sum_insured'];
+
+        if (empty($data['id'])) {
 					$data['id'] = $this->master_model->get_id('claim'); // Get new id
 					$data['claim_no'] = $claim_no = $this->claim_model->generate_claim_no($data['id']);
 				}
@@ -630,7 +639,8 @@ class Claim extends CI_Controller {
 						$case = $this->case_model->get_id_by_case_no($case_no); // Get case
 						if ($case) {
 							$data['id'] = $case['id'];
-							$data['claim_no'] = $claim_no = $data['case_no'];
+							$data['claim_no'] = $claim_no = $case['case_no'];
+							$data['reserve_amount'] = $case['reserve_amount'];
 						}
 					}
 					if (empty($data['id'])) {

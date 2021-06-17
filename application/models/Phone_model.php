@@ -498,7 +498,7 @@ class Phone_model extends CI_Model {
 	}
 	
 	public function get_today_list() {
-		$phonenumber = $this->ion_auth->get_user_info('phone');
+    $phonenumber = $this->ion_auth->get_user_info('phone');
 		
 		if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER, Users_model::GROUP_EXAMINER))) {
 			if ( ! $phonenumber ) {
@@ -525,12 +525,16 @@ class Phone_model extends CI_Model {
 				if ($list) {
 					foreach ($list['rows'] as $key => $row) {
 						foreach ($rc as $phonekey => $phonert) {
-							if (isset($row['recording_url']) && (strpos($row['recording_url'], $phonert['phone_id']) > 0)) {
-								$row['agent'] = $phonert['agent'];
-								$row['queue'] = $phonert['queue'];
-								$rarr[] = $row;
-								unset($rc[$phonekey]);
-								break;
+							if (isset($row['recording_url']) && isset($row['call_ids']) && is_array($row['call_ids'])) {
+                foreach ($row['call_ids'] as $pid) {
+                  if ($pid == $phonert['phone_id']) {
+                    $row['agent'] = $phonert['agent'];
+                    $row['queue'] = $phonert['queue'];
+                    $rarr[] = $row;
+                    unset($rc[$phonekey]);
+                    break 2;
+                  }
+                }
 							}
 						}
 					}
