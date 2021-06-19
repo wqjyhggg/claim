@@ -159,6 +159,13 @@ class Emergency_assistance extends CI_Controller {
 				$this->load->model('master_model');
 				$data['id'] = $this->master_model->get_id('case'); // Get new id
 				$data['case_no'] = $case_no = $this->case_model->generate_case_no($data['id']);
+
+        $policy_info_arr = $this->api_model->get_policy(array('policy' => $data['policy_no']));
+
+				if (empty($policy_info_arr)) {
+					return show_error('Unknown policy for this Claim' . $data['policy_no'] . '.');
+				}
+        $data['sum_insured'] = $policy_info_arr[0]['sum_insured'];
 				
 				// insert values to database
 				$record_id = $this->case_model->save($data);
