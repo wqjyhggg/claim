@@ -184,6 +184,7 @@ class Claim extends CI_Controller {
 			$this->load->model('mytask_model');
 			$this->load->model('expenses_model');
 			$this->load->model('provider_model');
+			$this->load->model('api_model');
 
 			if ($this->form_validation->run() == TRUE) {
 				// prepare post data array
@@ -448,7 +449,6 @@ class Claim extends CI_Controller {
 					// redirect them to the claim page
 					redirect("claim/claim_detail/$record_id");
 			} else {
-				$this->load->model('api_model');
 				$this->load->model('country_model');
 				$this->load->model('province_model');
 				$this->load->model('template_model');
