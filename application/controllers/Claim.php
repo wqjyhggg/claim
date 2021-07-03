@@ -1926,6 +1926,19 @@ class Claim extends CI_Controller {
 		echo TRUE;
 	}
 	
+	public function reserve_amount($id) {
+		if (! $this->ion_auth->logged_in()) {
+			die("0");
+		}
+		$data['id'] = $id;
+		$data['reserve_amount'] = $this->input->post('reserve_amount');
+
+		$this->load->model('claim_model');
+	
+		$this->claim_model->save($data);
+		echo TRUE;
+	}
+	
 	public function savenotes($id) {
 		if (! $this->ion_auth->logged_in()) {
 			die("0");

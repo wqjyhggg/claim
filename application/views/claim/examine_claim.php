@@ -108,9 +108,10 @@
 						<div class="form-group col-sm-3">
 							<label>Case No : </label><?php echo $claim['case_no']; ?>
 						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-6">
 							<label>Reserve Amount : </label>
-              <input type='number' step='0.01' name='reserve_amount' value="<?php echo $claim['reserve_amount']; ?>">
+              <input type='number' step='0.01' name='reserve_amount' id='reserve_amount_input' value="<?php echo $claim['reserve_amount']; ?>">
+              <input class="btn btn-primary" name="save" value="Save Reserve" type="button" id="reserve_amount_save">
 						</div>
 						<div class="clearfix"></div>
 	
@@ -1222,7 +1223,19 @@ $(document).ready(function() {
       }
    })
 
-   .on("click", "#save_internal_notes", function() {
+   .on("click", "#reserve_amount_save", function() {
+		$.ajax({
+			url: "<?php echo base_url("claim/reserve_amount/".$claim['id']); ?>",
+			method: "post",
+			data:{reserve_amount:$('#reserve_amount_input').val()},
+			beforeSend: function(){
+				$(".modal-content, .main_container").addClass("csspinner load1");
+			},
+			success: function() {
+				window.location.reload();
+			}
+		})
+	  }).on("click", "#save_internal_notes", function() {
 		$.ajax({
 			url: "<?php echo base_url("claim/saveintnotes/".$claim['id']); ?>",
 			method: "post",
