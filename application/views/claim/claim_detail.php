@@ -1484,8 +1484,8 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 	})
 	.on("click", ".add_eprovider", function(e){
 		var length = $(".eprovider-data .row").length;
-		if (length > 20) {
-			alter('maximum eprovider limit to 20');
+		if (length > 30) {
+			alert('maximum eprovider limit to 30');
 			retrun ;
 		}
 
