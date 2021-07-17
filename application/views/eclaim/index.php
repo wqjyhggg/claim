@@ -97,6 +97,7 @@
 									<th>Status</th>
 									<th>Birth Date</th>
 									<th>Create Date</th>
+									<th>Amount</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -111,6 +112,7 @@
 									<td><?php echo (($value['status']==2)?'Transferred':(($value['status']==3)?'Refused':'Received')); ?></td>
 									<td><?php echo htmlspecialchars($value['dob']); ?></td>
 									<td><?php echo htmlspecialchars($value['created']); ?></td>
+									<td><?php echo floatval($value['amount']); ?></td>
 									<td><?php echo anchor("eclaim/detail/".$value['id'], "View"); ?></td>
 								</tr>
 								<?php endforeach; ?>
