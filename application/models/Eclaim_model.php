@@ -143,6 +143,9 @@ class Eclaim_model extends CI_Model {
         // if (!empty($post['created'])) {
         //     $data['created'] = $post['created'];
         // }
+        if (!empty($post['amount'])) {
+            $data['amount'] = $post['amount'];
+        }
         if (!empty($post['insured_first_name'])) {
             $data['insured_first_name'] = $post['insured_first_name'];
         }
