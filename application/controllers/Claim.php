@@ -1278,7 +1278,7 @@ class Claim extends CI_Controller {
 				$this->data['payees'] = $this->claim_model->payee_search(array("claim_id" => $id));
 				//$this->data['bprovider_list'] = $this->provider_model->search(array("status" => Provider_model::ACTIVE));
 				//$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id, "status" => 1));
-				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code2();
+				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
 				
 				$this->data['reasons'] = $this->reasons_model->get_list();
 				
