@@ -487,6 +487,16 @@
 			</div>
 		</div>
 	</div>
+  </div>
+
+<!-- Email mail to doc content here -->
+<div id="mail_to_template" style="display:none">
+<form id="mail_to_from" method="post" action="" enctype="text/plain">
+<input type="hidden" name="subject" id="mail_to_subject" value="">
+<!-- <input type="hidden" name="cc" id="mail_to_cc" value="">
+<input type="hidden" name="bcc" id="mail_to_bcc" value=""> -->
+<input type="hidden" name="body" id="mail_to_body" value="">
+</form>
 </div>
 
 <!-- Email print doc content here -->
@@ -1195,31 +1205,37 @@ $(document).ready(function() {
       {
          $(".preview-template").trigger('click');
          var template = $(".doc-"+doc_id).children("div.doc-desc").html();
-         $.ajax({
-            url: "<?php echo base_url("claim/send_print_email_claim") ?>",
-            method: "post",
-            data:{
-               email:$("#send_print_email input[name=email]").val(),
-               first_name:$("#send_print_email  input[name=first_name_email]").val(),
-               last_name:$("#send_print_email  input[name=last_name_email]").val(),
-               street_no:'',
-               street_name:$("#send_print_email  input[name=street_name_email]").val(),
-               city:$("#send_print_email  input[name=city_email]").val(),
-               province:$("#send_print_email  select[name=province_email]").val(),
-               postcode:$("#send_print_email  select[name=post_code_email]").val(),
-               template:template,
-               case_id: '<?php echo $claim["id"]; ?>',
-               claim_item_id:$(".edit_claim.active-green").attr('alt'),
-               doc: $("#send_print_email .select-doc.active").text(),
-               type: $("#send_print_email input[name=type]").val()
-            },
-            beforeSend: function(){
-               $(".modal-content").addClass("csspinner load1");
-            },
-            success: function() {
-               window.location.reload();
-            }
-         })
+        
+        $('#mail_to_subject').val($("#send_print_email .select-doc.active").text());
+        $('#mail_to_body').val(template);
+        $('#mail_to_from').attr('action', "mailto:" + $("#send_print_email input[name=email]").val()).submit();
+        window.location.reload();
+
+        //  $.ajax({
+        //     url: "<?php echo base_url("claim/send_print_email_claim") ?>",
+        //     method: "post",
+        //     data:{
+        //        email:$("#send_print_email input[name=email]").val(),
+        //        first_name:$("#send_print_email  input[name=first_name_email]").val(),
+        //        last_name:$("#send_print_email  input[name=last_name_email]").val(),
+        //        street_no:'',
+        //        street_name:$("#send_print_email  input[name=street_name_email]").val(),
+        //        city:$("#send_print_email  input[name=city_email]").val(),
+        //        province:$("#send_print_email  select[name=province_email]").val(),
+        //        postcode:$("#send_print_email  select[name=post_code_email]").val(),
+        //        template:template,
+        //        case_id: '<?php echo $claim["id"]; ?>',
+        //        claim_item_id:$(".edit_claim.active-green").attr('alt'),
+        //        doc: $("#send_print_email .select-doc.active").text(),
+        //        type: $("#send_print_email input[name=type]").val()
+        //     },
+        //     beforeSend: function(){
+        //        $(".modal-content").addClass("csspinner load1");
+        //     },
+        //     success: function() {
+        //        window.location.reload();
+        //     }
+        //  })
       }
    })
 
