@@ -183,6 +183,7 @@ class Eclaim extends CI_Controller {
 			$this->load->model('mytask_model');
 			$this->load->model('expenses_model');
 			$this->load->model('provider_model');
+			$this->load->model('api_model');
 
 			if ($this->form_validation->run() == TRUE) {
 				// prepare post data array
