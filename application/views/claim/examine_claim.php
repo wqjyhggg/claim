@@ -487,6 +487,16 @@
 			</div>
 		</div>
 	</div>
+  </div>
+
+<!-- Email mail to doc content here -->
+<div id="mail_to_template" style="display:none">
+<form id="mail_to_from" method="post" action="" enctype="text/plain">
+<input type="hidden" name="subject" id="mail_to_subject" value="">
+<!-- <input type="hidden" name="cc" id="mail_to_cc" value="">
+<input type="hidden" name="bcc" id="mail_to_bcc" value=""> -->
+<input type="hidden" name="body" id="mail_to_body" value="">
+</form>
 </div>
 
 <!-- Email print doc content here -->
@@ -1195,6 +1205,12 @@ $(document).ready(function() {
       {
          $(".preview-template").trigger('click');
          var template = $(".doc-"+doc_id).children("div.doc-desc").html();
+        
+        // $('#mail_to_subject').val($("#send_print_email .select-doc.active").text());
+        // $('#mail_to_body').val(template);
+        // $('#mail_to_from').attr('action', "mailto:" + $("#send_print_email input[name=email]").val()).submit();
+        // window.location.reload();
+
          $.ajax({
             url: "<?php echo base_url("claim/send_print_email_claim") ?>",
             method: "post",
