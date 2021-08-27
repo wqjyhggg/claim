@@ -47,7 +47,7 @@ class Expenses_model extends CI_Model {
       'V11D' => 'Hearing Aids (V11D)',
       'V02AE' => 'Hospital - Emergency Visit (V02AE)',
       'V01' => 'Hospital - Hospitalization (V01)',
-      'V02A' => 'Hospital - Physician Treatment (V02A)',
+      'V02' => 'Hospital - Physician Treatment (V02)',
       'V10A' => 'Maternity (V10A)',
       'V01B' => 'Medical Appliances (V01B)',
       'V02M' => 'Medical Records (V02M)',
