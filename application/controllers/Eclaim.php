@@ -402,7 +402,7 @@ class Eclaim extends CI_Controller {
 				$to = $data['email'];
 				$body  = "Dear " . $data['insured_first_name'] . ",\n\n"; 
 				$body  .= "The web claim you submitted on ".date("Y-m-d")." has been accepted and is being reviewed. Your claim number is " . $data['claim_no'] . ". It will take approximately 5 business days for us to process your claim. \n\n"; 
-				$body  .= "You can check the status of your claim by logging into the <a href='https://eclaim.jfgroup.ca'>eclaim.jfgroup.ca</a> with your policy number and birthday and selecting 'Check Claim Status' on the main menu.\n"; 
+				$body  .= "You can check the status of your claim by logging into the eclaim.jfgroup.ca with your policy number and birthday and selecting 'Check Claim Status' on the main menu.\n"; 
 				$body  .= "This is an system-generated email, please do not reply directly. Should you have any questions, please contact us by email at claim@otcww.com.\n\n"; 
 				$body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies. \n\n"; 
 				$body  .= "Best regards,\n\n"; 
