@@ -148,7 +148,7 @@ function manager_panel() {
 	} else {
 		$(".manager_panel").hide();
 	}
-	if (GROUP_ADMIN || GROUP_ACCOUNTANT) {
+	if (GROUP_ACCOUNTANT) {
 		$("#products_div").hide();
 	} else {
 		$("#products_div").show();
