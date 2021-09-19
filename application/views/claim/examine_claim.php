@@ -491,10 +491,10 @@
 
 <!-- Email mail to doc content here -->
 <div id="mail_to_template" style="display:none">
-<form id="mail_to_from" method="post" action="" enctype="text/plain">
+<form id="mail_to_from" method="get" action="" enctype="text/plain">
 <input type="hidden" name="subject" id="mail_to_subject" value="">
-<!-- <input type="hidden" name="cc" id="mail_to_cc" value="">
-<input type="hidden" name="bcc" id="mail_to_bcc" value=""> -->
+<!-- <input type="hidden" name="cc" id="mail_to_cc" value="" -->
+<!-- input type="hidden" name="bcc" id="mail_to_bcc" value=""> -->
 <!-- <input type="hidden" name="body" id="mail_to_body" value=""> -->
 </form>
 </div>
@@ -625,7 +625,7 @@
 				<label class="col-sm-12">&nbsp;</label>
 				<button type="button" class="btn btn-info preview-template" disabled>Preview</button>
 				<button class="btn btn-primary email-intakeform" disabled>Email</button>
-				<button type="button" class="btn btn-info print" disabled>Print</button>
+				<button type="button" class="btn btn-info print" disabled>PDF</button>
 				<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
 			</div>
       		<?php echo form_close(); ?>
@@ -1249,10 +1249,10 @@ $(document).ready(function() {
          $(".preview-template").trigger('click');
          var template = $(".doc-"+doc_id).children("div.doc-desc").html();
         
-        $('#mail_to_subject').val($("#send_print_email .select-doc.active").text());
+        $('#mail_to_subject').val($("#send_print_email .select-doc.active").text().trim());
         // $('#mail_to_body').val(template);
         $('#mail_to_from').attr('action', "mailto:" + $("#send_print_email input[name=email]").val()).submit();
-        window.location.reload();
+        // window.location.reload();
 
         //  $.ajax({
         //     url: "<?php echo base_url("claim/send_print_email_claim") ?>",
