@@ -495,7 +495,7 @@
 <input type="hidden" name="subject" id="mail_to_subject" value="">
 <!-- <input type="hidden" name="cc" id="mail_to_cc" value="">
 <input type="hidden" name="bcc" id="mail_to_bcc" value=""> -->
-<input type="hidden" name="body" id="mail_to_body" value="">
+<!-- <input type="hidden" name="body" id="mail_to_body" value=""> -->
 </form>
 </div>
 
@@ -698,8 +698,8 @@
 <script src="<?php echo base_url() ?>/assets/js/jQuery.print.js"></script>
 <script src="<?php echo base_url() ?>/assets/js/jquery.validate.min.js"></script>
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
-<script
-	src="<?php echo base_url(); ?>/assets/js/bootstrap-datetimepicker.js"></script>
+<script src="<?php echo base_url(); ?>/assets/js/bootstrap-datetimepicker.js"></script>
+<script src="<?php echo base_url(); ?>/assets/js/jspdf.min.js"></script>
 <script>
 var old_status = '<?php echo !empty($claim_details["status"]) ? $claim_details["status"] : 0; ?>';
 <?php if (empty($item_provider_name)) { ?>
@@ -1049,6 +1049,49 @@ $(document).ready(function() {
    // print button script here
    .on("click", ".print", function(){
       var doc_id = $(".select-doc.active").attr("doc");
+      var pdf = new jsPDF('p', 'pt', 'letter');
+      // source can be HTML-formatted string, or a reference
+      // to an actual DOM element from which the text will be scraped.
+      source = $(".doc-"+doc_id).html();
+
+      // we support special element handlers. Register them with jQuery-style 
+      // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
+      // There is no support for any other type of selectors 
+      // (class, of compound) at this time.
+      specialElementHandlers = {
+          // element with id of "bypass" - jQuery style selector
+          '#bypassme': function (element, renderer) {
+              // true = "handled elsewhere, bypass text extraction"
+              return true
+          }
+      };
+      margins = {
+          top: 80,
+          bottom: 60,
+          left: 40,
+          width: 522
+      };
+      // all coords and widths are in jsPDF instance's declared units
+      // 'inches' in this case
+      pdf.fromHTML(
+          source, // HTML string or DOM elem ref.
+          margins.left, // x coord
+          margins.top, { // y coord
+              'width': margins.width, // max width of content on PDF
+              'elementHandlers': specialElementHandlers
+          },
+
+          function (dispose) {
+              // dispose: object with X, Y of the last line add to the PDF 
+              //          this allow the insertion of new lines after html
+              pdf.save(<?php echo $claim_details['claim_no']."_".date("Y-m-d").".pdf"; ?>);
+          }, margins
+      );
+    })
+
+   // print button script here
+   .on("click", ".print1", function(){
+      var doc_id = $(".select-doc.active").attr("doc");
       $(".doc-"+doc_id).print({
            globalStyles: false,
            mediaPrint: true,
@@ -1206,36 +1249,36 @@ $(document).ready(function() {
          $(".preview-template").trigger('click');
          var template = $(".doc-"+doc_id).children("div.doc-desc").html();
         
-        // $('#mail_to_subject').val($("#send_print_email .select-doc.active").text());
+        $('#mail_to_subject').val($("#send_print_email .select-doc.active").text());
         // $('#mail_to_body').val(template);
-        // $('#mail_to_from').attr('action', "mailto:" + $("#send_print_email input[name=email]").val()).submit();
-        // window.location.reload();
+        $('#mail_to_from').attr('action', "mailto:" + $("#send_print_email input[name=email]").val()).submit();
+        window.location.reload();
 
-         $.ajax({
-            url: "<?php echo base_url("claim/send_print_email_claim") ?>",
-            method: "post",
-            data:{
-               email:$("#send_print_email input[name=email]").val(),
-               first_name:$("#send_print_email  input[name=first_name_email]").val(),
-               last_name:$("#send_print_email  input[name=last_name_email]").val(),
-               street_no:'',
-               street_name:$("#send_print_email  input[name=street_name_email]").val(),
-               city:$("#send_print_email  input[name=city_email]").val(),
-               province:$("#send_print_email  select[name=province_email]").val(),
-               postcode:$("#send_print_email  select[name=post_code_email]").val(),
-               template:template,
-               case_id: '<?php echo $claim["id"]; ?>',
-               claim_item_id:$(".edit_claim.active-green").attr('alt'),
-               doc: $("#send_print_email .select-doc.active").text(),
-               type: $("#send_print_email input[name=type]").val()
-            },
-            beforeSend: function(){
-               $(".modal-content").addClass("csspinner load1");
-            },
-            success: function() {
-               window.location.reload();
-            }
-         })
+        //  $.ajax({
+        //     url: "<?php echo base_url("claim/send_print_email_claim") ?>",
+        //     method: "post",
+        //     data:{
+        //        email:$("#send_print_email input[name=email]").val(),
+        //        first_name:$("#send_print_email  input[name=first_name_email]").val(),
+        //        last_name:$("#send_print_email  input[name=last_name_email]").val(),
+        //        street_no:'',
+        //        street_name:$("#send_print_email  input[name=street_name_email]").val(),
+        //        city:$("#send_print_email  input[name=city_email]").val(),
+        //        province:$("#send_print_email  select[name=province_email]").val(),
+        //        postcode:$("#send_print_email  select[name=post_code_email]").val(),
+        //        template:template,
+        //        case_id: '<?php echo $claim["id"]; ?>',
+        //        claim_item_id:$(".edit_claim.active-green").attr('alt'),
+        //        doc: $("#send_print_email .select-doc.active").text(),
+        //        type: $("#send_print_email input[name=type]").val()
+        //     },
+        //     beforeSend: function(){
+        //        $(".modal-content").addClass("csspinner load1");
+        //     },
+        //     success: function() {
+        //        window.location.reload();
+        //     }
+        //  })
       }
    })
 
