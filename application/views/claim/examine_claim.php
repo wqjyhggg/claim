@@ -1084,7 +1084,7 @@ $(document).ready(function() {
           function (dispose) {
               // dispose: object with X, Y of the last line add to the PDF 
               //          this allow the insertion of new lines after html
-              pdf.save(<?php echo $claim_details['claim_no']."_".date("Y-m-d").".pdf"; ?>);
+              pdf.save('<?php echo $claim_details["claim_no"]."_".date("Y-m-d").".pdf"; ?>');
           }, margins
       );
     })
