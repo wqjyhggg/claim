@@ -972,7 +972,7 @@ $(document).ready(function() {
       $(".print").attr("disabled", "disabled");
       $(".preview-template, .email-intakeform").removeAttr("disabled");
       var hrefurl = "mailto:" + $("#send_print_email input[name=email]").val() + "?subject="+$("#send_print_email .select-doc.active").text().trim();
-      $("#mailtohref").val(hrefurl);
+      $("#mailtohref").attr("href",hrefurl);
       console.log("mailtohref",hrefurl);
    })
 
@@ -1048,7 +1048,7 @@ $(document).ready(function() {
          $(".print").attr("disabled", "disabled");
       }
       var hrefurl = "mailto:" + $("#send_print_email input[name=email]").val() + "?subject="+$("#send_print_email .select-doc.active").text().trim();
-      $("#mailtohref").val(hrefurl);
+      $("#mailtohref").attr("href",hrefurl);
       console.log("mailtohref",hrefurl);
 
    })
