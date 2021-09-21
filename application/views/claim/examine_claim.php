@@ -569,7 +569,7 @@
 						<?php echo form_label ( 'Select Template:', 'select_template', array ("class" => 'col-sm-12') ); ?>
 						<div class="form-group col-sm-12">
 							<?php foreach($docs as $doc): ?>
-							<div class="select-doc col-sm-2" doc="<?php echo $doc['id'] ?>">
+							<div class="select-doc col-sm-2" doc="<?php echo $doc['id'] ?>" shortname="<?php echo $doc['sname'] ?>">
 								<i class="fa fa-file-word-o large"></i>
 								<?php echo $doc['name']?>
 							</div>
@@ -578,7 +578,7 @@
 					</div>
 					<div class="form-group col-sm-12 docfiles">
 						<?php foreach($docs as $doc): ?>
-						<div class="col-sm-12 doc-description doc-<?php echo $doc['id'] ?>" style="display: none">
+						<div class="col-sm-12 doc-description doc-<?php echo $doc['id'] ?>" shortname="<?php echo $doc['sname'] ?>" style="display: none">
 							<!-- div class="col-sm-12 doc_title">
                         		<?php echo heading($doc['name']); ?>
 							</div -->
@@ -624,7 +624,8 @@
 			<div class="modal-footer">
 				<label class="col-sm-12">&nbsp;</label>
 				<button type="button" class="btn btn-info preview-template" disabled>Preview</button>
-				<button class="btn btn-primary email-intakeform" disabled>Email</button>
+        <a href="" id="mailtohref" class="btn btn-primary email-intakeform" disabled>Email</a>
+				<!-- <button class="btn btn-primary email-intakeform" disabled>Email</button> -->
 				<button type="button" class="btn btn-info print" disabled>PDF</button>
 				<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
 			</div>
@@ -970,6 +971,9 @@ $(document).ready(function() {
       // enable disable buttons
       $(".print").attr("disabled", "disabled");
       $(".preview-template, .email-intakeform").removeAttr("disabled");
+      var hrefurl = "mailto:" + $("#send_print_email input[name=email]").val() + "?subject="+$("#send_print_email .select-doc.active").text().trim();
+      $("#mailtohref").val(hrefurl);
+      console.log("mailtohref",hrefurl);
    })
 
    .on("click", ".email_print", function(){
@@ -1043,6 +1047,9 @@ $(document).ready(function() {
          // disable print button
          $(".print").attr("disabled", "disabled");
       }
+      var hrefurl = "mailto:" + $("#send_print_email input[name=email]").val() + "?subject="+$("#send_print_email .select-doc.active").text().trim();
+      $("#mailtohref").val(hrefurl);
+      console.log("mailtohref",hrefurl);
 
    })
 
@@ -1052,7 +1059,8 @@ $(document).ready(function() {
       var pdf = new jsPDF('p', 'pt', 'letter');
       // source can be HTML-formatted string, or a reference
       // to an actual DOM element from which the text will be scraped.
-      source = $(".doc-"+doc_id).html();
+      var source = $(".doc-"+doc_id).html();
+      var filename = $(".doc-"+doc_id).attr("shortname");
 
       // we support special element handlers. Register them with jQuery-style 
       // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
@@ -1066,7 +1074,7 @@ $(document).ready(function() {
           }
       };
       margins = {
-          top: 80,
+          top: 60,
           bottom: 60,
           left: 40,
           width: 522
@@ -1084,7 +1092,7 @@ $(document).ready(function() {
           function (dispose) {
               // dispose: object with X, Y of the last line add to the PDF 
               //          this allow the insertion of new lines after html
-              pdf.save('<?php echo $claim_details["claim_no"]."_".date("Y-m-d").".pdf"; ?>');
+              pdf.save(filename + '_<?php echo $claim_details["claim_no"]."_".date("Y-m-d").".pdf"; ?>');
           }, margins
       );
     })
