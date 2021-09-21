@@ -972,8 +972,7 @@ $(document).ready(function() {
       $(".print").attr("disabled", "disabled");
       $(".preview-template, .email-intakeform").removeAttr("disabled");
       var hrefurl = "mailto:" + $("#send_print_email input[name=email]").val() + "?subject="+$("#send_print_email .select-doc.active").text().trim();
-      $("#mailtohref").attr("href",hrefurl);
-      console.log("mailtohref",hrefurl);
+      $("#mailtohref").val(hrefurl);
    })
 
    .on("click", ".email_print", function(){
@@ -1049,7 +1048,7 @@ $(document).ready(function() {
       }
       var hrefurl = "mailto:" + $("#send_print_email input[name=email]").val() + "?subject="+$("#send_print_email .select-doc.active").text().trim();
       $("#mailtohref").attr("href",hrefurl);
-      console.log("mailtohref",hrefurl);
+      
 
    })
 
@@ -1060,6 +1059,7 @@ $(document).ready(function() {
       // source can be HTML-formatted string, or a reference
       // to an actual DOM element from which the text will be scraped.
       var source = $(".doc-"+doc_id).html();
+      source = source.replace(/<br>/g, "<div> </div>");
       var filename = $(".doc-"+doc_id).attr("shortname");
 
       // we support special element handlers. Register them with jQuery-style 
