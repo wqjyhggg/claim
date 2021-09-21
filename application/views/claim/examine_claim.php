@@ -626,7 +626,8 @@
 				<button type="button" class="btn btn-info preview-template" disabled>Preview</button>
         <a href="" id="mailtohref" class="btn btn-primary email-intakeform" disabled>Email</a>
 				<!-- <button class="btn btn-primary email-intakeform" disabled>Email</button> -->
-				<button type="button" class="btn btn-info print" disabled>PDF</button>
+				<button type="button" class="btn btn-info print" disabled>Print</button>
+				<button type="button" class="btn btn-info downloadpdf" disabled>PDF</button>
 				<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
 			</div>
       		<?php echo form_close(); ?>
@@ -970,6 +971,7 @@ $(document).ready(function() {
 
       // enable disable buttons
       $(".print").attr("disabled", "disabled");
+      $(".downloadpdf").attr("disabled", "disabled");
       $(".preview-template, .email-intakeform").removeAttr("disabled");
       var hrefurl = "mailto:" + $("#send_print_email input[name=email]").val() + "?subject="+$("#send_print_email .select-doc.active").text().trim();
       $("#mailtohref").val(hrefurl);
@@ -1010,6 +1012,7 @@ $(document).ready(function() {
 
          // enable print button
          $(".print").removeAttr("disabled");
+         $(".downloadpdf").removeAttr("disabled");
       }
       else
       {
@@ -1045,6 +1048,7 @@ $(document).ready(function() {
 
          // disable print button
          $(".print").attr("disabled", "disabled");
+         $(".downloadpdf").attr("disabled", "disabled");
       }
       var hrefurl = "mailto:" + $("#send_print_email input[name=email]").val() + "?subject="+$("#send_print_email .select-doc.active").text().trim();
       $("#mailtohref").attr("href",hrefurl);
@@ -1053,7 +1057,7 @@ $(document).ready(function() {
    })
 
    // print button script here
-   .on("click", ".print", function(){
+   .on("click", ".downloadpdf", function(){
       var doc_id = $(".select-doc.active").attr("doc");
       var pdf = new jsPDF('p', 'pt', 'letter');
       // source can be HTML-formatted string, or a reference
@@ -1098,7 +1102,7 @@ $(document).ready(function() {
     })
 
    // print button script here
-   .on("click", ".print1", function(){
+   .on("click", ".print", function(){
       var doc_id = $(".select-doc.active").attr("doc");
       $(".doc-"+doc_id).print({
            globalStyles: false,
