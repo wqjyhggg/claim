@@ -627,7 +627,7 @@
         <a href="" id="mailtohref" class="btn btn-primary email-intakeform" disabled>Email</a>
 				<!-- <button class="btn btn-primary email-intakeform" disabled>Email</button> -->
 				<button type="button" class="btn btn-info print" disabled>Print</button>
-				<button type="button" class="btn btn-info downloadpdf" disabled>PDF</button>
+				<!--button type="button" class="btn btn-info downloadpdf" disabled>PDF</button-->
 				<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
 			</div>
       		<?php echo form_close(); ?>
