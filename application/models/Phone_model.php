@@ -573,8 +573,9 @@ class Phone_model extends CI_Model {
 	
 	public function update_unupdated_url() {
 		$this->db->like('phonefile', 'http://g.download.genvoice.net', 'after');
-		$this->db->limit(10);
+		$this->db->limit(100);
 		$total = 0;
+    $day3old = date("Y-m-d H:i:s", strtotime('-3 days'));
 		if ($rt = $this->db->get('intake_form')->result_array()) {
 			foreach ($rt as $rc) {
 				$finfo = pathinfo($rc['phonefile']);
@@ -585,7 +586,13 @@ class Phone_model extends CI_Model {
 					$this->db->where('id', $rc['id']);
 					$this->db->update('intake_form');
 					$total++;
-				}
+				} else {
+					$newurl = "miss".$rc['phonefile'];
+					$this->db->set('phonefile', $newurl);
+					$this->db->where('id', $rc['id']);
+					$this->db->update('intake_form');
+          echo "MISS phone file !!! ".$rc['phonefile']."\n";
+        }
 			}
 		}
 		return $total;

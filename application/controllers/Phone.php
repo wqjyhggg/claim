@@ -200,6 +200,36 @@ class Phone extends CI_Controller {
 		print_r($data);
 		*/
 	}
+
+  public function file3($s1, $s2, $s3, $s4) {
+		if (!$this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		$this->load->model('phone_model');
+		
+		if ($r = $this->phone_model->get_s3_file($s1 . "/" . urldecode($s2) . "/" . urldecode($s3) . "/" . urldecode($s4))) {
+			header("Content-Type: {$r['ContentType']}");
+			echo $r['Body'];
+		} else {
+			show_404('No such file', TRUE);
+		}
+	}
+	
+	public function file2($s1, $s2, $s3) {
+		if (!$this->ion_auth->logged_in()) {
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
+		$this->load->model('phone_model');
+		
+		if ($r = $this->phone_model->get_s3_file($s1 . "/" . urldecode($s2) . "/" . urldecode($s3))) {
+			header("Content-Type: {$r['ContentType']}");
+			echo $r['Body'];
+		} else {
+			show_404('No such file', TRUE);
+		}
+	}
 	
 	public function file($dt, $filename) {
 		if (!$this->ion_auth->logged_in()) {
@@ -208,7 +238,7 @@ class Phone extends CI_Controller {
 		}
 		$this->load->model('phone_model');
 		
-		if ($r = $this->phone_model->get_s3_file($dt . "/" . $filename)) {
+		if ($r = $this->phone_model->get_s3_file($dt . "/" . urldecode($filename))) {
 			header("Content-Type: {$r['ContentType']}");
 			echo $r['Body'];
 		} else {

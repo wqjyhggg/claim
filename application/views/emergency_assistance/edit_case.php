@@ -495,9 +495,9 @@
 									<?php if (!empty($files)) { ?>
 									<?php foreach ($files as $file) { ?>
 									<div class="col-sm-9" style="">
-										<span class="file-label"><?php echo anchor("file/".$file . '__' . $value['id'], $file, array('target'=>'_blank')); ?></span>
-										<?php echo anchor("file/" . $file . '__' . $value['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
-										<?php echo anchor("download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File','data-id'=>$value['id'])); ?>
+										<span class="file-label"><?php echo anchor((substr($file,0,4)=="http")?$file:"file/".$file . '__' . $value['id'], $file, array('target'=>'_blank')); ?></span>
+										<?php echo anchor((substr($file,0,4)=="http")?$file:"file/" . $file . '__' . $value['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
+										<?php echo anchor((substr($file,0,4)=="http")?$file:"download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File','data-id'=>$value['id'])); ?>
 										<i class="fa fa-remove row-link remove-form pull-right remove_doc" data-id="<?php echo $value['id']; ?>" data-file="<?php echo $file; ?>"></i>
 									</div>
 									<?php } ?>
@@ -521,9 +521,9 @@
 									<?php if (!empty($files)) { ?>
 									<?php foreach ($files as $file) { ?>
 									<div class="col-sm-9" style="">
-										<span class="file-label"><?php echo anchor("file/".$file . '__' . $value['id'], $file, array('target'=>'_blank')); ?></span>
-										<?php echo anchor("file/" . $file . '__' . $value['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
-										<?php echo anchor("download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>
+										<span class="file-label"><?php echo anchor((substr($file,0,4)=="http")?$file:"file/".$file . '__' . $value['id'], $file, array('target'=>'_blank')); ?></span>
+										<?php echo anchor((substr($file,0,4)=="http")?$file:"file/" . $file . '__' . $value['id'], '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
+										<?php echo anchor((substr($file,0,4)=="http")?$file:"download/" . $file . '__' . $value['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>
 									</div>
 									<?php } ?>
 									<?php } ?>

@@ -1159,7 +1159,11 @@ class Claim extends CI_Controller {
 					$flist = explode(',', $claim['files']);
 					foreach ( $flist as $fn ) {
 						if (empty($fn)) continue;
-						$this->data['claim_files'][$fn] = base_url('assets/uploads/claim_files/' . $claim['id'] . "/" . $fn);
+            if (substr($fn, 0, 4) == "http") {
+              $this->data['claim_files'][$fn] = $fn;
+            } else {
+              $this->data['claim_files'][$fn] = base_url('assets/uploads/claim_files/' . $claim['id'] . "/" . $fn);
+            }
 					}
 				}
 				

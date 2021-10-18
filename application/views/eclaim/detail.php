@@ -493,7 +493,7 @@
 								</div>
 								<div class="col-sm-12">
 								<?php if (isset($eclaim_files[$eclaim['sign_image']])) { ?>
-									<a target='_blank' class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>"><?php echo $eclaim_files[$eclaim['sign_image']]['name']; ?></a>
+									<a target='_blank' class="img-responsive" href="<?php echo (substr($eclaim_files[$eclaim['sign_image']]['name'],0,4)=="http")?$eclaim_files[$eclaim['sign_image']]['name']:base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>"><?php echo $eclaim_files[$eclaim['sign_image']]['name']; ?></a>
 									<?php echo form_hidden("sign_image", $eclaim['sign_image']); ?>
 									<?php echo form_hidden("sign_image2", $eclaim['sign_image2']); ?>
 								<?php } ?>
@@ -501,7 +501,7 @@
 								<?php if (!empty($eclaim['sign_image2'])) { ?>
 								<div class="col-sm-12">
 								<?php if (isset($eclaim_files[$eclaim['sign_image2']])) { ?>
-									<a target='_blank' class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image2']]['path'] . "/" . $eclaim_files[$eclaim['sign_image2']]['name']; ?>"><?php echo $eclaim_files[$eclaim['sign_image2']]['name']; ?></a>
+									<a target='_blank' class="img-responsive" href="<?php echo (substr($eclaim_files[$eclaim['sign_image2']]['name'],0,4)=="http")?$eclaim_files[$eclaim['sign_image2']]['name']:base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image2']]['path'] . "/" . $eclaim_files[$eclaim['sign_image2']]['name']; ?>"><?php echo $eclaim_files[$eclaim['sign_image2']]['name']; ?></a>
 								<?php } ?>
 								</div>
 								<?php } ?>
@@ -519,9 +519,9 @@
 								<?php if (isset($eclaim_files[$value])) { ?>
 									<?php $ext = strtolower(substr($eclaim_files[$value]['name'], -3)); ?>
 									<?php if ($ext == 'pdf') { ?>
-										<a class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"><?php echo $eclaim_files[$value]['name']; ?></a>
+										<a class="img-responsive" href="<?php echo (substr($eclaim_files[$value]['name'],0,4)=="http")?$eclaim_files[$value]['name']:base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"><?php echo $eclaim_files[$value]['name']; ?></a>
 									<?php } else { ?>
-										<a target='_blank' class="img-responsive" href="<?php echo base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"><?php echo $eclaim_files[$value]['name']; ?></a>
+										<a target='_blank' class="img-responsive" href="<?php echo (substr($eclaim_files[$value]['name'],0,4)=="http")?$eclaim_files[$value]['name']:base_url('assets/uploads/') . $eclaim_files[$value]['path'] . "/" . $eclaim_files[$value]['name']; ?>"><?php echo $eclaim_files[$value]['name']; ?></a>
 									<?php } ?>
 								<?php } ?>
 								</div>

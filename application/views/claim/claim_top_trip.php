@@ -1041,9 +1041,9 @@
 									<?php $files = $claim_details ['files'] ? explode(",", $claim_details ['files']) : array(); ?>
 									<?php if (! empty($files)) : ?>
 									<?php foreach ( $files as $file ) : ?>
-									<div class="col-sm-9" style="">
-										<span class="file-label"><?php echo anchor(base_url('assets/uploads/claim_files/' . $claim_details['id'] . "/" . $file), $file, array('target'=>'_blank')); ?></span>
-										<?php echo anchor(base_url('assets/uploads/claim_files/' . $claim_details['id'] . "/" . $file), '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
+									<div class="col-sm-9">
+										<span class="file-label"><?php echo anchor((substr($file,0,4)=="http")?$file:base_url('assets/uploads/claim_files/' . $claim_details['id'] . "/" . $file), $file, array('target'=>'_blank')); ?></span>
+										<?php echo anchor((substr($file,0,4)=="http")?$file:base_url('assets/uploads/claim_files/' . $claim_details['id'] . "/" . $file), '<i class="fa fa-search row-link"></i>', array('target'=>'_blank', 'title'=>'Browse File')); ?>
 										<?php echo anchor("claim_doc_download/" . $file . '__' . $claim_details['id'], '<i class="fa fa-download row-link"></i>', array('title'=>'Download File')); ?>
 										<?php echo anchor("claim_doc_delete/" . $file . '__' . $claim_details['id'], '<i class="fa fa-trash row-link remove_doc"></i>', array('title'=>'Delete File')); ?>
 									</div>
