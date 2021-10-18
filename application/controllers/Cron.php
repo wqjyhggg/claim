@@ -634,7 +634,6 @@ class Cron extends CI_Controller
 				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 				$objWriter->save($outfile);
 				*/
-<<<<<<< HEAD
         echo "Save to : " . $outfile . "\n";
         $uploaded = FALSE;
         if (0) {
@@ -689,66 +688,4 @@ class Cron extends CI_Controller
     $data = json_decode($rt, true);
     print_r($data); //XXXXXXXXXXX
   }
-=======
-				echo "Save to : " . $outfile . "\n";
-				$uploaded = FALSE;
-				if (0) {
-				for ($i = 0; $i < 5; $i++) {
-					$uploaded = $this->ftp($outfile, $uploadFilename);
-					if ($uploaded) {
-						// unlink($outfile);
-						break;
-					}
-					sleep(60); // wait 1 minute too retry
-				}
-				if (!$uploaded) {
-					$this->load->model("mymail_model");
-					$this->mymail_model->send_mymail('wqjyhggg@gmail.com', 'JF upload error', "File: " . $outfile);
-					$this->mymail_model->send_mymail('IT@jfgroup.ca', 'JF upload error', "File: " . $outfile, array($outfile));
-				}
-				} else {	
-					$this->load->model("mymail_model");
-					$this->mymail_model->send_mymail('IT@jfgroup.ca', 'JF upload file'.$uploadFilename, "File: " . $outfile, array($uploadFilename => $outfile));
-					$this->mymail_model->send_mymail('wqjyhggg@gmail.com', 'JF upload file'.$uploadFilename, "File: " . $outfile);
-				}
-			}
-		}
-	}
-	
-	public function test() {
-		$this->valid();
-$this->load->model('api_model');
-$plans = array();
-if ($rt = $this->db->select('id,policy_no')->get('case')->result_array()) {
-  foreach ($rt as $rc) {
-    if (!key_exists($rc['policy_no'], $plans)) {
-      $policy_info_arr = $this->api_model->get_policy(array('policy' => $rc['policy_no']));
-      if (empty($policy_info_arr)) {
-        echo ('Unknown policy for this Claim' . $rc['policy_no'] . '.');
-	continue;
-      }
-      $plans[$rc['policy_no']] = $policy_info_arr[0]['sum_insured'];
-    }
-    $this->db->set('sum_insured', $plans[$rc['policy_no']]);
-    $this->db->where('id', $rc['id']);
-    $this->db->update('case');
-    echo ($this->db->last_query()."\n"); //XXXXXXXXXXX
-  }
-}
-die("Finished\n");
-
-		$this->load->model("mymail_model");
-		$rt = $this->mymail_model->send_mymail('wqjyhggg@gmail.com', 'JF upload file', "File: AAA" , array("AAA" => "/tmp/OPL2_Sales_Report_2021.05.18_03.00.01.333.xlsx"));
-		print_r($rt);
-		die("XXXX\n");
-
-		$this->load->model('phone_model');
-		
-		$req = "/api/sms/send/16479532665/14167106618";
-		$para = array('text' => 'test 他们');
-		$rt = $this->phone_model->sendRequest($req, $para);
-		$data = json_decode($rt, true);
-		print_r($data); //XXXXXXXXXXX
-	}
->>>>>>> 309a818a1a3ff13c4ea20e4b923e0fc2654dbbb1
 }
