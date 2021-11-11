@@ -169,9 +169,9 @@ class Cron extends CI_Controller
           $find = 0;
           if ($rt = $this->db->where("name", $bname)->get('eclaim_file')->result_array()) {
             foreach ($rt as $rc) {
-              if (strpos($rc['name'], $key) !== false) {
+              if ((strpos($key, $rc['name']) !== false) && (strpos($key, $rc['path']) !== false)) {
                 $find = 1;
-                if (substr($name, 0, 4) != "http") {
+                if (substr($rc['name'], 0, 4) != "http") {
                   $rc['name'] = base_url("phone/file3/" . $key);
                 }
                 break;
@@ -652,7 +652,7 @@ class Cron extends CI_Controller
           }
         } else {
           $this->load->model("mymail_model");
-          $this->mymail_model->send_mymail('willance@jfgroup.ca', 'JF upload file' . $uploadFilename, "File: " . $outfile, array($uploadFilename => $outfile));
+          $this->mymail_model->send_mymail('IT@jfgroup.ca', 'JF upload file' . $uploadFilename, "File: " . $outfile, array($uploadFilename => $outfile));
           $this->mymail_model->send_mymail('wqjyhggg@gmail.com', 'JF upload file' . $uploadFilename, "File: " . $outfile);
         }
       }
