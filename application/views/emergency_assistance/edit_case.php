@@ -1061,8 +1061,13 @@ $(document).ready(function() {
       .replace(/{insured_postcode}/g, $("input[name=post_code_email]").val())
       .replace(/value="{insured_lastname}/g, 'value="' + $("input[name=last_name_email]").val().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{insured_lastname}/g, $("input[name=last_name_email]").val())
+      <?php if (empty($policy)) { ?>
+      .replace(/value="{coverage_period}/g, 'value=""').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/coverage_period/g, '')
+      <?php } else { ?>
       .replace(/value="{coverage_period}/g, 'value="' + ('<?php echo $policy['effective_date'] . " to " . $policy['expiry_date']; ?>').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/coverage_period/g, '<?php echo $policy['effective_date'] . " to " . $policy['expiry_date']; ?>')
+      <?php } ?>
       .replace(/value="{policy_full_name}/g, 'value="' + ('<?php echo $product_full_name?>').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/policy_full_name/g, '<?php echo $product_full_name?>')
       .replace(/value="{policy_no}/g, 'value="' + obj.attr("policy_no").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
