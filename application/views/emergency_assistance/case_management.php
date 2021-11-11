@@ -47,7 +47,7 @@
 						<select name="assign_to" class="form-control">
 							<option value=""> -- Select EAC -- </option>
 							<?php foreach ($eacs as $rc):?>
-							<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("assign_to")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+							<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->get("assign_to")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
 							<?php endforeach; ?>
 						</select>
 					</div>
@@ -55,7 +55,7 @@
 						<select name="case_manager" class="form-control">
 							<option value=""> -- Select Manager -- </option>
 							<?php foreach ($managers as $rc) :?>
-							<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->post("case_manager")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
+							<option value="<?php echo $rc['id']; ?>" <?php if ($rc['id'] == $this->input->get("case_manager")) { echo "selected"; } ?>><?php echo $rc['email']; ?></option>
 							<?php endforeach; ?>
 						</select>
 					</div>
