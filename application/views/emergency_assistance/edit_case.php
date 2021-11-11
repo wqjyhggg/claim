@@ -1062,7 +1062,7 @@ $(document).ready(function() {
       .replace(/value="{insured_lastname}/g, 'value="' + $("input[name=last_name_email]").val().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{insured_lastname}/g, $("input[name=last_name_email]").val())
       <?php if (empty($policy)) { ?>
-      .replace(/value="{coverage_period}/g, 'value=""').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/value="{coverage_period}/g, 'value="')
       .replace(/coverage_period/g, '')
       <?php } else { ?>
       .replace(/value="{coverage_period}/g, 'value="' + ('<?php echo $policy['effective_date'] . " to " . $policy['expiry_date']; ?>').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
