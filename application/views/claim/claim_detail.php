@@ -1439,8 +1439,8 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		var html = $(".payee-buffer").html();
 
 		var length = $(".payee-data .row").length;
-		if (length > 20) {
-			alter('maximum payee limit to 20');
+		if (length > 30) {
+			alter('maximum payee limit to 30');
 			retrun ;
 		}
 
