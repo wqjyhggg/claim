@@ -80,6 +80,7 @@
 						</div>
 						<div class="clearfix"></div>
 						<?php if (!empty($policy)) { ?>
+            <div class="form-group col-sm-4"><?php echo form_label('Apply Date:', 'Apply') . $policy['apply_date']; ?></div>
 						<div class="form-group col-sm-4"><?php echo form_label('Arrived Date:', 'Arrived') . $policy['arrival_date']; ?></div>
 						<div class="form-group col-sm-4"><?php echo form_label('Effective Date:', 'Effective') . $policy['effective_date']; ?></div>
 						<div class="form-group col-sm-4"><?php echo form_label('Expired Date:', 'Expired') . $policy['expiry_date']; ?></div>
