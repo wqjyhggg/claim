@@ -331,7 +331,7 @@ class Api extends CI_Controller {
 			$this->load->model('eclaim_file_model');
 			
 			$data = array();
-			$path = 'eclaim_files/' . date('Y') . '/' . date("m");
+			$path = 'eclaim_files/' . date('Y') . '/' . date("m") . date("d"). date("H");
 			// create directory to copy/shift files
 			@mkdir(UPLOADFULLPATH . $path, 0777, TRUE);
 
