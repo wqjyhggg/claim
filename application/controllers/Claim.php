@@ -1188,9 +1188,8 @@ class Claim extends CI_Controller {
 				$this->data['payinfo'] = $this->expenses_model->get_policy_payinfo($claim['policy_no']);
 				
 				foreach ($this->data['items'] as $ikey => $ival) {
-					if ($ival['provider_type']) {
+					if ($ival['provider_type'] && ($iadd = $this->provider_model->get_by_id($ival['expenses_provider_id']))) {
 						// bussiness
-						$iadd = $this->provider_model->get_by_id($ival['expenses_provider_id']);
 						$this->data['items'][$ikey]['item_provider_name'] = $iadd['payeename'];
 						$this->data['items'][$ikey]['item_provider_addr1'] = $iadd['address'];
 						$this->data['items'][$ikey]['item_provider_addr2'] = $iadd['city'] . " " . $iadd['province'];
@@ -1201,9 +1200,8 @@ class Claim extends CI_Controller {
 							$this->data['item_provider_addr2'] = $iadd['city'] . " " . $iadd['province'];
 							$this->data['item_provider_postcode'] = $iadd['postcode'];
 						}
-					} else {
+					} else if ($iadd = $this->claim_model->get_expenses_provider_by_id($ival['expenses_provider_id'])) {
 						// private
-						$iadd = $this->claim_model->get_expenses_provider_by_id($ival['expenses_provider_id']);
 						$this->data['items'][$ikey]['item_provider_name'] = $iadd['name'];
 						$this->data['items'][$ikey]['item_provider_addr1'] = $iadd['address'];
 						$this->data['items'][$ikey]['item_provider_addr2'] = $iadd['city'] . " " . $iadd['province'];
@@ -1213,6 +1211,18 @@ class Claim extends CI_Controller {
 							$this->data['item_provider_addr1'] = $iadd['address'];
 							$this->data['item_provider_addr2'] = $iadd['city'] . " " . $iadd['province'];
 							$this->data['item_provider_postcode'] = $iadd['postcode'];
+						}
+					} else {
+						// private, but something wrong
+						$this->data['items'][$ikey]['item_provider_name'] = "";
+						$this->data['items'][$ikey]['item_provider_addr1'] = "";
+						$this->data['items'][$ikey]['item_provider_addr2'] = "";
+						$this->data['items'][$ikey]['item_provider_postcode'] = "";
+						if (empty($this->data['item_provider_name'])) {
+							$this->data['item_provider_name'] = "";
+							$this->data['item_provider_addr1'] = "";
+							$this->data['item_provider_addr2'] = "";
+							$this->data['item_provider_postcode'] = "";
 						}
 					}
 					$this->data['item_payee_name'] = '';
