@@ -318,32 +318,47 @@ class Eclaim extends CI_Controller {
 				// copy files
 				$data['files'] = "";
 				if (!empty($data['sign_image']) && ($imgfile = $this->eclaim_file_model->get_by_id($data['sign_image']))) {
-					@mkdir(UPLOADFULLPATH . "claim_files/".$data['id']."/");
-					if (copy(UPLOADFULLPATH . $imgfile["path"] . "/" . $imgfile["name"], UPLOADFULLPATH . "claim_files/".$data['id']."/".$imgfile["name"])) {
-						if ($data['files']) $data['files'] .= ',';
-						$data['files'] .= $imgfile["name"];
-					}
+          if (substr($imgfile["name"], 0, 4) != "http") {
+            @mkdir(UPLOADFULLPATH . "claim_files/".$data['id']."/");
+            if (copy(UPLOADFULLPATH . $imgfile["path"] . "/" . $imgfile["name"], UPLOADFULLPATH . "claim_files/".$data['id']."/".$imgfile["name"])) {
+              if ($data['files']) $data['files'] .= ',';
+              $data['files'] .= $imgfile["name"];
+            }
+          } else {
+            if ($data['files']) $data['files'] .= ',';
+            $data['files'] .= $imgfile["name"];
+          }
 				}
 				unset($data['sign_image']);
 				if (!empty($data['sign_image2']) && ($imgfile = $this->eclaim_file_model->get_by_id($data['sign_image2']))) {
-					@mkdir(UPLOADFULLPATH . "claim_files/".$data['id']."/");
-					if (copy(UPLOADFULLPATH . $imgfile["path"] . "/" . $imgfile["name"], UPLOADFULLPATH . "claim_files/".$data['id']."/".$imgfile["name"])) {
-						if ($data['files']) $data['files'] .= ',';
-						$data['files'] .= $imgfile["name"];
-					}
+          if (substr($imgfile["name"], 0, 4) != "http") {
+            @mkdir(UPLOADFULLPATH . "claim_files/".$data['id']."/");
+            if (copy(UPLOADFULLPATH . $imgfile["path"] . "/" . $imgfile["name"], UPLOADFULLPATH . "claim_files/".$data['id']."/".$imgfile["name"])) {
+              if ($data['files']) $data['files'] .= ',';
+              $data['files'] .= $imgfile["name"];
+            }
+          } else {
+            if ($data['files']) $data['files'] .= ',';
+            $data['files'] .= $imgfile["name"];
+          }
 				}
 				unset($data['sign_image2']);
 
 				$otherimages = json_decode($data['imgfile'], true);
 				if (is_array($otherimages)) {
-					@mkdir(UPLOADFULLPATH . "claim_files/".$data['id']."/");
 					foreach ($otherimages as $oneimg) {
 						if ($imgfile = $this->eclaim_file_model->get_by_id($oneimg)) {
-							if (copy(UPLOADFULLPATH . $imgfile["path"] . "/" . $imgfile["name"], UPLOADFULLPATH . "claim_files/".$data['id']."/".$imgfile["name"])) {
-								if ($data['files']) $data['files'] .= ',';
-								$data['files'] .= $imgfile["name"];
-							}
-						}
+              if (substr($imgfile["name"], 0, 4) != "http") {
+                @mkdir(UPLOADFULLPATH . "claim_files/".$data['id']."/");
+                if (copy(UPLOADFULLPATH . $imgfile["path"] . "/" . $imgfile["name"], UPLOADFULLPATH . "claim_files/".$data['id']."/".$imgfile["name"])) {
+                  if ($data['files']) $data['files'] .= ',';
+                  $data['files'] .= $imgfile["name"];
+  							}
+              } else {
+                if ($data['files']) $data['files'] .= ',';
+                $data['files'] .= $imgfile["name"];
+              }
+            }
 					}
 				}
 				unset($data['imgfile']);

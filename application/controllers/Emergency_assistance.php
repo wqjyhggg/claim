@@ -1642,8 +1642,8 @@ class Emergency_assistance extends CI_Controller {
 				$shour = $this->schedule_model->get_shift_shour($shift);
 				for($i = 1; $i <= date('t', strtotime($year . "-" . $month)); $i++) {
 					$data = array(
-							'schedule' => $dataStrArr[$shift],
-							'employee_id' => $rc['id'],
+							'schedule' => $$shift,
+							'employee_id' => $employee_id,
 							'date' => $year . "-" . $month . "-" . $i,
 							'created_by' => $manager_id, 
 							'start_tm' => $year . "-" . $month . "-" . $i . " " . $shour . ":00:00", 
