@@ -389,6 +389,7 @@ class Cron extends CI_Controller
 
     if (1) {
       foreach ($status_groups as $status_group => $filename) {
+        echo __FILE__." at ".__LINE__."Use: ".memory_get_usage() . "\n"; //XXXXXXXXXXXXXXXXXXXXXX
         $para['status_group'] = $status_group;
         // $para['product_short'] = $product;
         if ($status_group == 'Unpaid') {
@@ -515,6 +516,7 @@ class Cron extends CI_Controller
         }
         fputcsv($output, array(''));
         fclose($output);
+        echo __FILE__." at ".__LINE__."Use: ".memory_get_usage() . "\n"; //XXXXXXXXXXXXXXXXXXXXXX
 
         /*
 				$objPHPExcel = new PHPExcel();
@@ -652,7 +654,9 @@ class Cron extends CI_Controller
           }
         } else {
           $this->load->model("mymail_model");
+          echo __FILE__." at ".__LINE__."Use: ".memory_get_usage() . "\n"; //XXXXXXXXXXXXXXXXXXXXXX
           $this->mymail_model->send_mymail('IT@jfgroup.ca', 'JF upload file' . $uploadFilename, "File: " . $outfile, array($uploadFilename => $outfile));
+          echo __FILE__." at ".__LINE__."Use: ".memory_get_usage() . "\n"; //XXXXXXXXXXXXXXXXXXXXXX
           $this->mymail_model->send_mymail('wqjyhggg@gmail.com', 'JF upload file' . $uploadFilename, "File: " . $outfile);
         }
       }
@@ -664,18 +668,27 @@ class Cron extends CI_Controller
     $this->valid();
     $this->load->model('api_model');
     $plans = array();
-    if ($rt = $this->db->select('id,policy_no')->get('claim')->result_array()) {
+    if ($rt = $this->db->where("eclaim_no!=","")->where("created>=","2021-11-04 00:00:00")->get('claim')->result_array()) {
       foreach ($rt as $rc) {
-        if (!key_exists($rc['policy_no'], $plans)) {
-          $policy_info_arr = $this->api_model->get_policy(array('policy' => $rc['policy_no']));
-          if (empty($policy_info_arr)) {
-            return show_error('Unknown policy for this Claim' . $rc['policy_no'] . '.');
+        if ($eclaim = $this->db->where("eclaim_no",$rc["eclaim_no"])->get("eclaim")->row_array()) {
+          if ($eclaim_flies = $this->db->where("eclaim_id",$eclaim["id"])->get("eclaim_file")->result_array()) {
+            $filelist = "";
+            foreach ($eclaim_flies as $f) {
+              if (substr($f["name"], 0, 4) != "http") {
+                echo "--- No copy yet; claim_id:".$rc['id']."; eclaim_id:".$eclaim['id']."\n";
+                $filelist = "";
+                break;
+              } else {
+                $filelist .= ",".$f["name"];
+              }
+            }
+            if ($filelist) {
+              $filelist = substr($filelist,1);
+              echo "--- claim_id:".$rc['id']."; eclaim_id:".$eclaim['id']."\n";
+              echo "UPDATE claim SET files=".$this->db->escape($filelist)." WHERE id=".$this->db->escape($rc['id']).";\n";
+            }
           }
-          $plans[$rc['policy_no']] = $policy_info_arr[0]['sum_insured'];
         }
-        $this->db->set('sum_insured', $plans[$rc['policy_no']]);
-        $this->db->where('id', $rc['id']);
-        $this->db->update('claim');
       }
     }
     die("Finished\n");
