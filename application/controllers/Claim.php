@@ -1184,9 +1184,10 @@ class Claim extends CI_Controller {
 						7 => 'Changed',
 				);
 				// get expenses climed items list
-				$this->data['items'] = $this->expenses_model->search(array('claim_id' => $claim['id']), 0, 0, array('date_of_service' => 'ASC'));
-				$this->data['payinfo'] = $this->expenses_model->get_policy_payinfo($claim['policy_no']);
+        $this->data['items'] = $this->expenses_model->search(array('claim_id' => $claim['id']), 0, 0, array('date_of_service' => 'ASC'));
+        $this->data['payinfo'] = $this->expenses_model->get_policy_payinfo($claim['policy_no']);
 				
+        $this->data['items_payees'] = array();
 				foreach ($this->data['items'] as $ikey => $ival) {
 					if ($ival['provider_type'] && ($iadd = $this->provider_model->get_by_id($ival['expenses_provider_id']))) {
 						// bussiness
@@ -1258,7 +1259,11 @@ class Claim extends CI_Controller {
 						$this->data['items'][$ikey]['item_payee_addr2'] = '';
 						$this->data['items'][$ikey]['item_payee_postcode'] = '';
 					}
+          if ($this->data['items'][$ikey]['item_payee_name'] && !in_array($this->data['items'][$ikey]['item_payee_name'], $this->data['items_payees'])) {
+            $this->data['items_payees'][] = $this->data['items'][$ikey]['item_payee_name'];
+          }
 				}
+        // print_r($this->data['items_payees']); //XXXXXXXXXXXXXXXXXXXXXXXX
 				
 				// get claim items history
 				$this->data['claim_history'] = $this->expenses_model->expenses_history($id);

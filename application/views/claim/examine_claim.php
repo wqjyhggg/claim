@@ -146,7 +146,19 @@
 					</div>
 					<hr />
 	
-					<h4>Items</h4>
+					<div class="row">
+            <div class="col-sm-3">
+  					  <h4>Items</h4>
+						</div>
+            <div class="col-sm-3" style="padding-top: 16px;">
+  					  <select id='payee_select_id' value="" onchange="payee_select_changed()">
+                <option value=""> -- Select Payee -- </option>
+                <?php foreach ($items_payees as $prc):?>
+                <option value="<?php echo $prc; ?>"><?php echo htmlspecialchars($prc); ?></option>
+                <?php endforeach; ?>
+              </select>
+						</div>
+          </div>
 					<div class="row">
 					<?php if (empty($items)) { echo "There is no item for this claim"; } else { ?>
 						<div class="table-responsive claim_items">
@@ -1468,6 +1480,27 @@ $outer_select.each(function(){
    $(this).append($("#products").html());
 });
 
+function payee_select_changed() {
+  var slsv = $('#payee_select_id').val();
+  $('.claim_items').each(function(idx){
+    var pn = $(this).attr('item_payee_name');
+    if (pn == undefined) {
+      return;
+    }
+    if (slsv) {
+      if (slsv.localeCompare(pn) == 0) {
+        console.log("payee_select_changed show", '['+slsv+']', '['+pn+']');
+        $(this).show();
+      } else {
+        console.log("payee_select_changed hide", '['+slsv+']', '['+pn+']');
+        $(this).hide();
+      }
+    } else {
+      console.log("payee_select_changed all", '['+slsv+']', '['+pn+']');
+      $(this).show();
+    }
+  });
+}
 </script>
 
 <style>
