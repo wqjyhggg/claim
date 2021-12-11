@@ -818,7 +818,13 @@ $(document).ready(function() {
 })
 .on("click", "input[name=selectall]", function() {
 	if ($(this).is(":checked")) {
-		$("input[name=items]").prop("checked", true);
+		// $("input[name=items]").prop("checked", true);
+		$("input[name=items]").each(function () {
+      var ptr = $(this).closest("tr");
+      if (!ptr.attr("hidden")) {
+        $(this).prop("checked", true);
+      }
+    });
 	} else {
 		$("input[name=items]").prop("checked", false);
 	}
@@ -1490,13 +1496,16 @@ function payee_select_changed() {
     if (slsv) {
       if (slsv.localeCompare(pn) == 0) {
         console.log("payee_select_changed show", '['+slsv+']', '['+pn+']');
+        $(this).attr("hidden", false);
         $(this).show();
       } else {
         console.log("payee_select_changed hide", '['+slsv+']', '['+pn+']');
+        $(this).attr("hidden", true);
         $(this).hide();
       }
     } else {
       console.log("payee_select_changed all", '['+slsv+']', '['+pn+']');
+      $(this).attr("hidden", false);
       $(this).show();
     }
   });
