@@ -52,31 +52,29 @@
           <div class="clearfix"><br /></div>
 
           <?php if (!empty($records)) : ?>
-            <div class="table-responsive">
-              <div class="row">
-                <div class="col-sm-12">
-                  <?php echo ($this->input->get("agent") ? "Phone Number : " . $this->input->get("agent") . " - " : "") . " Date : " . $start_dt . " to " . $end_dt; ?>
-                </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <?php echo ($this->input->get("agent") ? "Phone Number : " . $this->input->get("agent") . " - " : "") . " Date : " . $start_dt . " to " . $end_dt; ?>
               </div>
-              <div class="row">
-                <div class="col-sm-12">
-                <table class="table">
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+              <table class="table">
+                <tr>
+                  <td><b>Phone Number</b></td>
+                  <td><b>Start Time</b></td>
+                  <td><b>End Time</b></td>
+                  <td><b>Long</b></td>
+                </tr>
+                <?php foreach ($records as $rc) { ?>
                   <tr>
-                    <td><b>Phone Number</b></td>
-                    <td><b>Start Time</b></td>
-                    <td><b>End Time</b></td>
-                    <td><b>Long</b></td>
+                    <td><?php echo $rc['agent']; ?></td>
+                    <td><?php echo $rc['stm']; ?></td>
+                    <td><?php echo $rc['etm']; ?></td>
+                    <td><?php echo $rc['tiemlong']; ?></td>
                   </tr>
-                  <?php foreach ($records as $rc) { ?>
-                    <tr>
-                      <td><?php echo $rc['agent']; ?></td>
-                      <td><?php echo $rc['stm']; ?></td>
-                      <td><?php echo $rc['etm']; ?></td>
-                      <td><?php echo $rc['tiemlong']; ?></td>
-                    </tr>
-                  <?php } ?>
-                </table>
-                </div>
+                <?php } ?>
+              </table>
               </div>
             </div>
           <?php else : ?>
