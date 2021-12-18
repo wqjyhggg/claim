@@ -824,7 +824,28 @@ class Phone_model extends CI_Model {
 		}
 		return $rt;
 	}
-	
+
+	public function phone_online_report($data) {
+		if (empty($data['start_dt']) || empty($data['end_dt'])) {
+			return array();
+		}
+		
+		$st = $data['start_dt'] . " 00:00:00";
+		$et = $data['end_dt'] . " 23:59:59";
+		
+		if ($st > $et) {
+			return array();
+		}
+
+    if (isset($data['agent'])) {
+      $sql = "SELECT agent, stm, etm, SEC_TO_TIME(slength) as tiemlong FROM phone_action WHERE agent=".$this->db->escape($data['agent'])." AND stm>=".$this->db->escape($st)." AND etm<=".$this->db->escape($et);
+    } else {
+      $sql = "SELECT agent, stm, etm, SEC_TO_TIME(slength) as tiemlong FROM phone_action WHERE stm>=".$this->db->escape($st)." AND etm<=".$this->db->escape($et);
+    }
+		$sql .= " ORDER BY phone_action_id ASC LIMIT 2000"; // Limit 2000 record
+  	return $this->db->query($sql)->row_array();
+	}
+
 	public function phone_queue($data) {
 		if (empty($data['start_dt']) || empty($data['end_dt']) || empty($data['queue'])) {
 			return array();
@@ -855,7 +876,7 @@ class Phone_model extends CI_Model {
 		}
 		return $rt;
 	}
-	
+
 	public function testsocket() {
 		$errno = $errstr = '';
 		
