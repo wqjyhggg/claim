@@ -843,7 +843,7 @@ class Phone_model extends CI_Model {
       $sql = "SELECT agent, stm, etm, SEC_TO_TIME(slength) as tiemlong FROM phone_action WHERE stm>=".$this->db->escape($st)." AND etm<=".$this->db->escape($et);
     }
 		$sql .= " ORDER BY phone_action_id ASC LIMIT 2000"; // Limit 2000 record
-  	return $this->db->query($sql)->row_array();
+  	return $this->db->query($sql)->result_array();
 	}
 
 	public function phone_queue($data) {
