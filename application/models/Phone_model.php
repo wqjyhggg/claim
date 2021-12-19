@@ -838,11 +838,32 @@ class Phone_model extends CI_Model {
 		}
 
     if (isset($data['agent'])) {
-      $sql = "SELECT agent, stm, etm, SEC_TO_TIME(slength) as tiemlong FROM phone_action WHERE agent=".$this->db->escape($data['agent'])." AND stm>=".$this->db->escape($st)." AND etm<=".$this->db->escape($et);
+      $sql = "SELECT agent, stm, etm, SEC_TO_TIME(slength) as tiemlong FROM phone_action WHERE agent=".$this->db->escape($data['agent'])." AND stm>=".$this->db->escape($st)." AND stm<=".$this->db->escape($et);
     } else {
-      $sql = "SELECT agent, stm, etm, SEC_TO_TIME(slength) as tiemlong FROM phone_action WHERE stm>=".$this->db->escape($st)." AND etm<=".$this->db->escape($et);
+      $sql = "SELECT agent, stm, etm, SEC_TO_TIME(slength) as tiemlong FROM phone_action WHERE stm>=".$this->db->escape($st)." AND stm<=".$this->db->escape($et);
     }
 		$sql .= " ORDER BY phone_action_id ASC LIMIT 2000"; // Limit 2000 record
+  	return $this->db->query($sql)->result_array();
+	}
+
+	public function phone_general_report($data) {
+		if (empty($data['start_dt']) || empty($data['end_dt'])) {
+			return array();
+		}
+		
+		$st = $data['start_dt'] . " 00:00:00";
+		$et = $data['end_dt'] . " 23:59:59";
+		
+		if ($st > $et) {
+			return array();
+		}
+
+    if (isset($data['agent'])) {
+      $sql = "SELECT newcall, answer, hangup, agent, user_id, caller_id_number, direction FROM phone_records WHERE user_id>0 AND agent=".$this->db->escape($data['agent'])." AND newcall>=".$this->db->escape($st)." AND newcall<=".$this->db->escape($et);
+    } else {
+      $sql = "SELECT newcall, answer, hangup, agent, user_id, caller_id_number, direction FROM phone_records WHERE user_id>0 AND newcall>=".$this->db->escape($st)." AND newcall<=".$this->db->escape($et);
+    }
+		$sql .= " ORDER BY newcall ASC LIMIT 2000"; // Limit 2000 record
   	return $this->db->query($sql)->result_array();
 	}
 
