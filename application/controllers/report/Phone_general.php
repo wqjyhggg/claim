@@ -97,6 +97,9 @@ class Phone_general extends CI_Controller {
       ));
 
 			foreach ($records as $rc) { 
+        if ($rc['answer'] == "0000-00-00 00:00:00") {
+          $rc['answer'] = $rc['newcall'];
+        }
         $st = new DateTime($rc['newcall']);
         $wtm = $st->diff(new DateTime($rc['answer']));
         $st = new DateTime($rc['answer']);

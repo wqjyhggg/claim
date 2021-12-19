@@ -73,6 +73,9 @@
                 </tr>
                 <?php foreach ($records as $rc) { ?>
                   <?php
+                  if ($rc['answer'] == "0000-00-00 00:00:00") {
+                    $rc['answer'] = $rc['newcall'];
+                  }
                   $st = new DateTime($rc['newcall']);
                   $wtm = $st->diff(new DateTime($rc['answer']));
                   $st = new DateTime($rc['answer']);
