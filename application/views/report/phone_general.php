@@ -28,14 +28,14 @@
             <div class="form-group col-sm-3">
               <?php echo form_label('Date From:', 'start_dt', array("class" => 'col-sm-12')); ?>
               <div class="input-group date">
-                <?php echo form_input("start_dt", $this->input->get("start_dt"), array("class" => "form-control datepicker", 'placeholder' => 'Date From')); ?>
+                <?php echo form_input("start_dt", $start_dt, array("class" => "form-control datepicker", 'placeholder' => 'Date From')); ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
               </div>
             </div>
             <div class="form-group col-sm-3">
               <?php echo form_label('Date To:', 'end_dt', array("class" => 'col-sm-12')); ?>
               <div class="input-group date">
-                <?php echo form_input("end_dt", $this->input->get("end_dt"), array("class" => "form-control datepicker", 'placeholder' => 'Date To')); ?>
+                <?php echo form_input("end_dt", $end_dt, array("class" => "form-control datepicker", 'placeholder' => 'Date To')); ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
               </div>
             </div>
