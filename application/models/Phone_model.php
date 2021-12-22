@@ -837,7 +837,7 @@ class Phone_model extends CI_Model {
 			return array();
 		}
 
-    if (isset($data['agent'])) {
+    if (!empty($data['agent'])) {
       $sql = "SELECT agent, stm, etm, SEC_TO_TIME(slength) as tiemlong FROM phone_action WHERE agent=".$this->db->escape($data['agent'])." AND stm>=".$this->db->escape($st)." AND stm<=".$this->db->escape($et);
     } else {
       $sql = "SELECT agent, stm, etm, SEC_TO_TIME(slength) as tiemlong FROM phone_action WHERE stm>=".$this->db->escape($st)." AND stm<=".$this->db->escape($et);
@@ -858,7 +858,7 @@ class Phone_model extends CI_Model {
 			return array();
 		}
 
-    if (isset($data['agent'])) {
+    if (!empty($data['agent'])) {
       $sql = "SELECT newcall, answer, hangup, agent, user_id, caller_id_number, direction FROM phone_records WHERE agent=".$this->db->escape($data['agent'])." AND newcall>=".$this->db->escape($st)." AND newcall<=".$this->db->escape($et);
     } else {
       $sql = "SELECT newcall, answer, hangup, agent, user_id, caller_id_number, direction FROM phone_records WHERE agent>='100' AND agent<='300' AND newcall>=".$this->db->escape($st)." AND newcall<=".$this->db->escape($et);

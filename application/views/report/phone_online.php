@@ -60,9 +60,9 @@
               <table class="table">
                 <tr>
                   <td><b>Phone Number</b></td>
-                  <td><b>Start Time</b></td>
-                  <td><b>End Time</b></td>
-                  <td><b>Long</b></td>
+                  <td><b>Login Time</b></td>
+                  <td><b>Logout Time</b></td>
+                  <td><b>Working Time</b></td>
                 </tr>
                 <?php foreach ($records as $rc) { ?>
                   <tr>
