@@ -182,6 +182,9 @@ class Eclaim_model extends CI_Model {
         if (!empty($post['guardian_phone'])) {
             $data['guardian_phone'] = $post['guardian_phone'];
         }
+        if (!empty($post['suite_number'])) {
+            $data['suite_number'] = $post['suite_number'];
+        }
         if (!empty($post['street_address'])) {
             $data['street_address'] = $post['street_address'];
         }
@@ -224,6 +227,9 @@ class Eclaim_model extends CI_Model {
         if (!empty($post['clinic_name'])) {
             $data['clinic_name'] = $post['clinic_name'];
         }
+        if (!empty($post['physician_suite_number'])) {
+            $data['physician_suite_number'] = $post['physician_suite_number'];
+        }
         if (!empty($post['physician_street_address'])) {
             $data['physician_street_address'] = $post['physician_street_address'];
         }
@@ -250,6 +256,9 @@ class Eclaim_model extends CI_Model {
         }
         if (!empty($post['clinic_name_canada'])) {
             $data['clinic_name_canada'] = $post['clinic_name_canada'];
+        }
+        if (!empty($post['physician_suite_number_canada'])) {
+            $data['physician_suite_number_canada'] = $post['physician_suite_number_canada'];
         }
         if (!empty($post['physician_street_address_canada'])) {
             $data['physician_street_address_canada'] = $post['physician_street_address_canada'];
@@ -280,6 +289,9 @@ class Eclaim_model extends CI_Model {
         }
         if (!empty($post['employee_name'])) {
             $data['employee_name'] = $post['employee_name'];
+        }
+        if (!empty($post['employee_suite_number'])) {
+            $data['employee_suite_number'] = $post['employee_suite_number'];
         }
         if (!empty($post['employee_street_address'])) {
             $data['employee_street_address'] = $post['employee_street_address'];

@@ -134,6 +134,10 @@
 							
 							<h4 class="subTitle">Address in Canada </h4>
 							<div class="form-group col-sm-3">
+								<?php echo form_label('Suite Number:', 'suite_number', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("suite_number", $claim_details["suite_number"], array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
+							</div>
+							<div class="form-group col-sm-3">
 								<?php echo form_label('Street Address:', 'street_address', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("street_address", $claim_details["street_address"], array("class" => "form-control", 'placeholder' => 'Street Address')); ?>
 							</div>
@@ -314,6 +318,10 @@
 									<?php echo form_input("clinic_name", $claim_details["clinic_name"], array("class" => "form-control", 'placeholder' => 'Clinic Name or Address')); ?>
 								</div>
 								<div class="form-group col-sm-3">
+									<?php echo form_label('Suite Number:', 'physician_suite_number', array("class" => 'col-sm-12')); ?>
+									<?php echo form_input("physician_suite_number", $claim_details["physician_suite_number"], array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
+								</div>
+								<div class="form-group col-sm-3">
 									<?php echo form_label('Street Address:', 'physician_street_address', array("class" => 'col-sm-12')); ?>
 									<?php echo form_input("physician_street_address", $claim_details["physician_street_address"], array("class" => "form-control", 'placeholder' => 'Street Address')); ?>
 								</div>
@@ -358,6 +366,10 @@
 								<div class="form-group col-sm-3">
 									<?php echo form_label('Clinic Name or Address:', 'clinic_name_canada', array("class" => 'col-sm-12')); ?>
 									<?php echo form_input("clinic_name_canada", $claim_details["clinic_name_canada"], array("class" => "form-control", 'placeholder' => 'Clinic Name or Address')); ?>
+								</div>
+								<div class="form-group col-sm-3">
+									<?php echo form_label('Suite Number:', 'physician_suite_number_canada', array("class" => 'col-sm-12')); ?>
+									<?php echo form_input("physician_suite_number_canada", $claim_details["physician_suite_number_canada"], array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
 								</div>
 								<div class="form-group col-sm-3">
 									<?php echo form_label('Street Address:', 'physician_street_address_canada', array("class" => 'col-sm-12')); ?>
@@ -547,6 +559,10 @@
 									<div class="col-sm-3">
 										<?php echo form_label('Employer Name:', 'employee_name', array("class" => 'col-sm-12')); ?>
 										<?php echo form_input("employee_name", $claim_details["employee_name"], array("class" => "form-control", 'placeholder' => 'Employer Name')); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Suite Number:', 'employee_suite_number', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("employee_suite_number", $claim_details["employee_suite_number"], array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
 									</div>
 									<div class="col-sm-3">
 										<?php echo form_label('Street Address:', 'employee_street_address', array("class" => 'col-sm-12')); ?>
@@ -1854,12 +1870,17 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
+      var address = $("input[name=suite_number]").val().trim();
+      if (address) {
+        address += ", ";  
+      }
+      address += $("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val();
       str = str.replace(/value="{insured_name}/gi, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
 	  .replace(/{insured_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
       .replace(/value="{claimant_name}/gi, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val().val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{claimant_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
-      .replace(/value="{insured_address}/g, 'value="' + ($("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
-      .replace(/{insured_address}/g, $("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val())
+      .replace(/value="{insured_address}/g, 'value="' + address.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_address}/g, address)
       .replace(/value="{insured_lastname}/g, 'value="' + ($("input[name=insured_last_name]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{insured_lastname}/g, $("input[name=insured_last_name]").val())
       .replace(/value="{policy_no}/g, 'value="' + ($("input[name=policy_no]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))

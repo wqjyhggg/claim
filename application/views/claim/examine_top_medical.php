@@ -145,6 +145,9 @@
 
 						<h4 style="margin-left: 10px;">Address in Canada </h4>
 						<div class="form-group col-sm-3">
+							<label>Suite Number : </label><?php echo htmlspecialchars($claim['suite_number']); ?>
+						</div>
+						<div class="form-group col-sm-3">
 							<label>Street Address : </label><?php echo htmlspecialchars($claim['street_address']); ?>
 						</div>
 						<div class="form-group col-sm-3">
@@ -197,6 +200,9 @@
 							</div>
 							<div class="form-group col-sm-3">
 								<label>Clinic Name or Address : </label><?php echo htmlspecialchars($claim['clinic_name']); ?>
+							</div>
+							<div class="form-group col-sm-3">
+								<label>Suite Number : </label><?php echo htmlspecialchars($claim['physician_suite_number']); ?>
 							</div>
 							<div class="form-group col-sm-3">
 								<label>Street Address : </label><?php echo htmlspecialchars($claim['physician_street_address']); ?>
@@ -735,6 +741,11 @@
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
+            <div class="form-group col-sm-3">
+							<?php echo form_label ( 'Suite Number:', 'suite_number_email', array ("class" => 'col-sm-12') ); ?>
+							<?php echo form_input ( "suite_number_email", $claim['suite_number'], array ("class" => "form-control required", 'placeholder' => 'Suite Number') ); ?>
+							<?php echo form_error ( "suite_number_email" ); ?>
+						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label ( 'Street Name.:', 'street_name_email', array ("class" => 'col-sm-12') ); ?>
 							<?php echo form_input ( "street_name_email", $claim['street_address'], array ("class" => "form-control required", 'placeholder' => 'Street Name.') ); ?>

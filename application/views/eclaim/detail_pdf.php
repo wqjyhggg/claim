@@ -21,6 +21,7 @@ border-bottom: 1px solid #000;
 <div><b>Guardian Phone#: </b><?php echo $eclaim["guardian_phone"]; ?></div>
 <br />
 <h3>Address in Canada</h3>
+<div><b>Suite Number: </b><?php echo $eclaim["suite_number"]; ?></div>
 <div><b>Street Address: </b><?php echo $eclaim["street_address"]; ?></div>
 <div><b>City/Town: </b><?php echo $eclaim["city"]; ?></div>
 <div><b>Province: </b><?php echo $eclaim["province"]; ?></div>
@@ -39,6 +40,7 @@ border-bottom: 1px solid #000;
 <h3>Name and Address of Family Physician in Country of Origin</h3>
 <div><b>Name: </b><?php echo $eclaim["physician_name"]; ?></div>
 <div><b>Clinic Name or Address: </b><?php $eclaim["clinic_name"]; ?></div>
+<div><b>Suite Number: </b><?php echo $eclaim["physician_suite_number"]; ?></div>
 <div><b>Street Address: </b><?php echo $eclaim["physician_street_address"]; ?></div>
 <div><b>City/Town: </b><?php echo $eclaim["physician_city"]; ?></div>
 <div><b>Country: </b><?php foreach ($country as $key => $val) { if (($key == $eclaim['country']) || ($val == $eclaim['country'])) { echo $val; break; } } ?></div>
@@ -49,6 +51,7 @@ border-bottom: 1px solid #000;
 <h3>Name and Address of Family Physician in Canada</h3>
 <div><b>Name: </b><?php echo $eclaim["physician_name_canada"]; ?></div>
 <div><b>Clinic Name or Address: </b><?php echo $eclaim["clinic_name_canada"]; ?></div>
+<div><b>Suite Number: </b><?php echo $eclaim["physician_suite_number_canada"]; ?></div>
 <div><b>Street Address: </b><?php echo $eclaim["physician_street_address_canada"]; ?></div>
 <div><b>City/Town: </b><?php echo $eclaim["physician_city_canada"]; ?></div>
 <div><b>Postal Code: </b><?php echo $eclaim["physician_post_code_canada"]; ?></div>
@@ -61,6 +64,7 @@ border-bottom: 1px solid #000;
 <div><b>If yes, provide details of other insurance company coverage below.</b></div>
 <div><b>Full Name: </b><?php echo $eclaim["full_name"]; ?></div>
 <div><b>Employer Name: </b><?php echo $eclaim["employee_name"]; ?></div>
+<div><b>Suite Number: </b><?php echo $eclaim["employee_suite_number"]; ?></div>
 <div><b>Street Address: </b><?php echo $eclaim["employee_street_address"]; ?></div>
 <div><b>City/Town: </b><?php echo $eclaim["city_town"]; ?></div>
 <div><b>Postal Code: </b><?php echo $eclaim["employee_post_code"]; ?></div>

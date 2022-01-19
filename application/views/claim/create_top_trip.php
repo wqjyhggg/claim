@@ -133,6 +133,10 @@
 								<?php echo form_checkbox("same_policy", "Y", $this->input->post("same_policy"), array('class' => 'setpremium', 'style' => 'margin-left:10px')); ?>  Same with policy
 							</div>
 						</div>
+            <div class="form-group col-sm-3">
+              <?php echo form_label('Suite Number:', 'suite_number', array("class" => 'col-sm-12')); ?>
+              <?php echo form_input("suite_number", $this->input->post("suite_number"), array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
+            </div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Street Address:', 'street_address', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("street_address", $this->input->post("street_address"), array("class" => "form-control", 'placeholder' => 'Street Address')); ?>
@@ -317,6 +321,10 @@
 								<?php echo form_label('Clinic Name or Address:', 'clinic_name', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("clinic_name", $this->input->post("clinic_name"), array("class" => "form-control", 'placeholder' => 'Clinic Name or Address')); ?>
 							</div>
+              <div class="form-group col-sm-3">
+                <?php echo form_label('Suite Number:', 'physician_suite_number', array("class" => 'col-sm-12')); ?>
+                <?php echo form_input("physician_suite_number", $this->input->post("physician_suite_number"), array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
+              </div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Street Address:', 'physician_street_address', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("physician_street_address", $this->input->post("physician_street_address"), array("class" => "form-control", 'placeholder' => 'Street Address')); ?>
@@ -362,6 +370,10 @@
 								<?php echo form_label('Clinic Name or Address:', 'clinic_name_canada', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("clinic_name_canada", $this->input->post("clinic_name_canada"), array("class" => "form-control", 'placeholder' => 'Clinic Name or Address')); ?>
 							</div>
+              <div class="form-group col-sm-3">
+                <?php echo form_label('Suite Number:', 'physician_suite_number_canada', array("class" => 'col-sm-12')); ?>
+                <?php echo form_input("physician_suite_number_canada", $this->input->post("physician_suite_number_canada"), array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
+              </div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Street Address:', 'physician_street_address_canada', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("physician_street_address_canada", $this->input->post("physician_street_address_canada"), array("class" => "form-control", 'placeholder' => 'Street Address')); ?>
@@ -554,6 +566,10 @@
 									<?php echo form_input("employee_name", $this->input->post("employee_name"), array("class" => "form-control", 'placeholder' => 'Employee Name')); ?>
 									<?php echo form_error("employee_name"); ?>
 								</div>
+                <div class="col-sm-3">
+                  <?php echo form_label('Suite Number:', 'employee_suite_number', array("class" => 'col-sm-12')); ?>
+                  <?php echo form_input("employee_suite_number", $this->input->post("employee_suite_number"), array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
+                </div>
 								<div class="col-sm-3">
 									<?php echo form_label('Street Address:', 'employee_street_address', array("class" => 'col-sm-12')); ?>
 									<?php echo form_input("employee_street_address", $this->input->post("employee_street_address"), array("class" => "form-control", 'placeholder' => 'Street Address')); ?>
@@ -1580,12 +1596,17 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 
       // replace string from casemanager name etc
       var str = $(".doc-"+id+"  .doc-desc").html();
+      var address = $("input[name=suite_number]").val().trim();
+      if (address) {
+        address += ", ";  
+      }
+      address += $("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val();
       str = str.replace(/value="{insured_name}'/gi, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
 	  .replace(/{insured_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
       .replace(/value="{claimant_name}'/gi, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val().val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{claimant_name}/gi, $("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val())
-      .replace(/value="{insured_address}/g, 'value="' + ($("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
-      .replace(/{insured_address}/g, $("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val())
+      .replace(/value="{insured_address}/g, 'value="' + address.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_address}/g, address)
       .replace(/value="{insured_lastname}/g, 'value="' + ($("input[name=insured_last_name]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{insured_lastname}/g, $("input[name=insured_last_name]").val())
       .replace(/value="{policy_no}/g, 'value="' + ($("input[name=policy_no]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
@@ -1951,9 +1972,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
                {
                   // fill all json values to address fields
                   var addr = data.plan_list[0].street_number+" "+data.plan_list[0].street_name;
-                  if (data.plan_list[0].suite_number) {
-                      addr = data.plan_list[0].suite_number + "-"+data.plan_list[0].street_number+" "+data.plan_list[0].street_name;
-                  }
+                  $("input[name=suite_number]").val(data.plan_list[0].suite_number);
                   $("input[name=street_address]").val(addr);
                   $("input[name=city]").val(data.plan_list[0].city);
                   $("input[name=province]").val(data.plan_list[0].province2);
@@ -1986,7 +2005,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
                $("input[name=guardian_name]").val('');
                $("input[name=guardian_phone]").val('');
 
-               $("input[name=street_address],input[name=city],input[name=province],input[name=telephone],input[name=email],input[name=post_code],input[name=arrival_date_canada],input[name=cellular]").val("");
+               $("input[name=suite_number],input[name=street_address],input[name=city],input[name=province],input[name=telephone],input[name=email],input[name=post_code],input[name=arrival_date_canada],input[name=cellular]").val("");
 
             }
             $(".nav-m22d").removeClass("csspinner load1");
@@ -2003,10 +2022,8 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
       {
          // fill all json values to address fields
          var addr = data[0].street_number+" "+data[0].street_name;
-         if (data[0].suite_number) {
-             addr = data[0].suite_number + "-"+data[0].street_number+" "+data[0].street_name;
-         }
          
+         $("input[name=suite_number]").val(data[0].suite_number);
          $("input[name=street_address]").val(addr);
          $("input[name=city]").val(data[0].city);
          $("input[name=province]").val(data[0].province2);
@@ -2018,7 +2035,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
       }
       else
       {
-         $("input[name=street_address],input[name=city],input[name=province],input[name=telephone],input[name=email],input[name=post_code],input[name=arrival_date_canada],input[name=cellular]").val("");
+        $("input[name=suite_number],input[name=street_address],input[name=city],input[name=province],input[name=telephone],input[name=email],input[name=post_code],input[name=arrival_date_canada],input[name=cellular]").val("");
       }
    })
 

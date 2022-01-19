@@ -126,6 +126,10 @@
 							<div class="clearfix"></div>
 							
 							<h4 class="subTitle">Address in Canada </h4>
+              <div class="form-group col-sm-3">
+								<?php echo form_label('Suite Number:', 'suite_number', array("class" => 'col-sm-12')); ?>
+								<?php echo form_input("suite_number", $eclaim["suite_number"], array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
+							</div>
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Street Address:', 'street_address', array("class" => 'col-sm-12')); ?>
 								<?php echo form_input("street_address", $eclaim["street_address"], array("class" => "form-control", 'placeholder' => 'Street Address')); ?>
@@ -299,6 +303,10 @@
 									<?php echo form_input("clinic_name", $eclaim["clinic_name"], array("class" => "form-control", 'placeholder' => 'Clinic Name or Address')); ?>
 								</div>
 								<div class="form-group col-sm-3">
+									<?php echo form_label('Suite Number:', 'physician_suite_number', array("class" => 'col-sm-12')); ?>
+									<?php echo form_input("physician_suite_number", $eclaim["physician_suite_number"], array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
+								</div>
+								<div class="form-group col-sm-3">
 									<?php echo form_label('Street Address:', 'physician_street_address', array("class" => 'col-sm-12')); ?>
 									<?php echo form_input("physician_street_address", $eclaim["physician_street_address"], array("class" => "form-control", 'placeholder' => 'Street Address')); ?>
 								</div>
@@ -343,6 +351,10 @@
 								<div class="form-group col-sm-3">
 									<?php echo form_label('Clinic Name or Address:', 'clinic_name_canada', array("class" => 'col-sm-12')); ?>
 									<?php echo form_input("clinic_name_canada", $eclaim["clinic_name_canada"], array("class" => "form-control", 'placeholder' => 'Clinic Name or Address')); ?>
+								</div>
+								<div class="form-group col-sm-3">
+									<?php echo form_label('Suite Number:', 'physician_suite_number_canada', array("class" => 'col-sm-12')); ?>
+									<?php echo form_input("physician_suite_number_canada", $eclaim["physician_suite_number_canada"], array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
 								</div>
 								<div class="form-group col-sm-3">
 									<?php echo form_label('Street Address:', 'physician_street_address_canada', array("class" => 'col-sm-12')); ?>
@@ -517,6 +529,10 @@
 									<div class="col-sm-3">
 										<?php echo form_label('Employer Name:', 'employee_name', array("class" => 'col-sm-12')); ?>
 										<?php echo form_input("employee_name", $eclaim["employee_name"], array("class" => "form-control", 'placeholder' => 'Employer Name')); ?>
+									</div>
+									<div class="col-sm-3">
+										<?php echo form_label('Suite Number:', 'employee_suite_number', array("class" => 'col-sm-12')); ?>
+										<?php echo form_input("employee_suite_number", $eclaim["employee_suite_number"], array("class" => "form-control", 'placeholder' => 'Suite Number')); ?>
 									</div>
 									<div class="col-sm-3">
 										<?php echo form_label('Street Address:', 'employee_street_address', array("class" => 'col-sm-12')); ?>
