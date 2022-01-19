@@ -469,6 +469,7 @@ class Api extends CI_Controller {
 			$data['arrival_date'] = $this->input->post('arrival_date');
 			$data['guardian_name'] = $this->input->post('guardian_name');
 			$data['guardian_phone'] = $this->input->post('guardian_phone');
+			$data['suite_number'] = $this->input->post('suite_number');
 			$data['street_address'] = $this->input->post('street_address');
 			$data['city'] = $this->input->post('city');
 			$data['province'] = $this->input->post('province');
@@ -486,6 +487,7 @@ class Api extends CI_Controller {
 			$data['contact_phone'] = $this->input->post('contact_phone');
 			$data['physician_name'] = $this->input->post('physician_name');
 			$data['clinic_name'] = $this->input->post('clinic_name');
+			$data['physician_suite_number'] = $this->input->post('physician_suite_number');
 			$data['physician_street_address'] = $this->input->post('physician_street_address');
 			/*
 			if (empty($data['physician_street_address'])) {
@@ -499,6 +501,7 @@ class Api extends CI_Controller {
 			$data['physician_alt_telephone'] = $this->input->post('physician_alt_telephone');
 			$data['physician_name_canada'] = $this->input->post('physician_name_canada');
 			$data['clinic_name_canada'] = $this->input->post('clinic_name_canada');
+			$data['physician_suite_number_canada'] = $this->input->post('physician_suite_number_canada');
 			$data['physician_street_address_canada'] = $this->input->post('physician_street_address_canada');
 			$data['physician_city_canada'] = $this->input->post('physician_city_canada');
 			$data['physician_post_code_canada'] = $this->input->post('physician_post_code_canada');
@@ -509,6 +512,7 @@ class Api extends CI_Controller {
 			$data['travel_insurance_coverage_guardians'] = $this->input->post('travel_insurance_coverage_guardians');
 			$data['full_name'] = $this->input->post('full_name');
 			$data['employee_name'] = $this->input->post('employee_name');
+			$data['employee_suite_number'] = $this->input->post('employee_suite_number');
 			$data['employee_street_address'] = $this->input->post('employee_street_address');
 			$data['employee_post_code'] = $this->input->post('employee_post_code');
 			$data['city_town'] = $this->input->post('city_town');
