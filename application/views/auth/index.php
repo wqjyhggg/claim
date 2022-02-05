@@ -25,54 +25,6 @@
                         </tr>
                      </thead>
                      <tbody>
-                        <tr>
-                           <td>JES</td>
-                           <td>JF Elite Plus International Student to Canada</td>
-                           <td><a href="#" class="btn btn-primary">Claim</a></td>
-                           <td><a href="#" class="btn btn-info">Search</a></td>
-                        </tr>
-                        <tr>
-                           <td>JESP</td>
-                           <td>JF Elite Plus International Student to Canada</td>
-                           <td><a href="#" class="btn btn-primary">Claim</a></td>
-                           <td><a href="#" class="btn btn-info">Search</a></td>
-                        </tr>
-                        <tr>
-                           <td>JFC</td>
-                           <td>JF Care International Student to Canada</td>
-                           <td><a href="#" class="btn btn-primary">Claim</a></td>
-                           <td><a href="#" class="btn btn-info">Search</a></td>
-                        </tr>
-                        <tr>
-                           <td>JFP</td>
-                           <td>JF Protection International Student to Canada</td>
-                           <td><a href="#" class="btn btn-primary">Claim</a></td>
-                           <td><a href="#" class="btn btn-info">Search</a></td>
-                        </tr>
-                        <tr>
-                           <td>JFR</td>
-                           <td>JF Royal Visitor to Canada</td>
-                           <td><a href="#" class="btn btn-primary">Claim</a></td>
-                           <td><a href="#" class="btn btn-info">Search</a></td>
-                        </tr>
-                        <tr>
-                           <td>JUS</td>
-                           <td>JF USA International Student to USA</td>
-                           <td><a href="#" class="btn btn-primary">Claim</a></td>
-                           <td><a href="#" class="btn btn-info">Search</a></td>
-                        </tr>
-                        <tr>
-                           <td>NUS</td>
-                           <td>Nihao USA International Student to USA</td>
-                           <td><a href="#" class="btn btn-primary">Claim</a></td>
-                           <td><a href="#" class="btn btn-info">Search</a></td>
-                        </tr>
-                        <tr>
-                           <td>OPL</td>
-                           <td>Optimum Plus Visitor to Canada</td>
-                           <td><a href="#" class="btn btn-primary">Claim</a></td>
-                           <td><a href="#" class="btn btn-info">Search</a></td>
-                        </tr>
                      </tbody>
                   </table>
                </div>
