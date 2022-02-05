@@ -97,7 +97,7 @@ class Phone_general extends CI_Controller {
       ));
 
 			foreach ($records as $rc) { 
-        if ($rc['answer'] == "0000-00-00 00:00:00") {
+        if (($rc['answer'] == "0000-00-00 00:00:00") || ($rc['answer'] == "1970-01-01 00:00:00")) {
           $rc['answer'] = $rc['newcall'];
         }
         $st = new DateTime($rc['newcall']);
