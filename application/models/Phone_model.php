@@ -285,7 +285,7 @@ class Phone_model extends CI_Model {
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
 		$sql = "SELECT * FROM phone_ring WHERE phone_id=".$this->db->escape($json['id'])." ORDER BY event_tm DESC LIMIT 1";
 		$lastRing = $this->db->query($sql)->row_array();
-		$sql = "INSERT into phone_ring (phone_id, caller_id_number, agent, queue, user_id, event_tm) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['queue']).", '".(int)$user_id."', ".$this->db->escape(date("Y-m-d H:i:s", $tm)).")";
+		$sql = "INSERT into phone_ring (phone_id, caller_id_number, agent, queue, user_id, event_tm, destination_number) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape($json['agent']).", ".$this->db->escape($json['queue']).", '".(int)$user_id."', ".$this->db->escape(date("Y-m-d H:i:s", $tm)).", ".$this->db->escape($json['destination_number']).")";
 		$this->db->query($sql);
 		// $id = $this->db->insert_id();
 		if ($lastRing) {
@@ -357,7 +357,7 @@ class Phone_model extends CI_Model {
 			$tm = strtotime($event_time);
 		}
 		$para['event_time'] = date('Y-m-d H:i:s', $tm);
-		$sql = "INSERT into phone_records (phone_id, direction, caller_id_number, newcall) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['direction']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).") ON DUPLICATE KEY UPDATE newcall=".$this->db->escape(date("Y-m-d H:i:s", $tm));
+		$sql = "INSERT into phone_records (phone_id, direction, caller_id_number, newcall, destination_number) values (".$this->db->escape($json['id']).", ".$this->db->escape($json['direction']).", ".$this->db->escape($json['caller_id_number']).", ".$this->db->escape(date("Y-m-d H:i:s", $tm)).", ".$this->db->escape($json['destination_number']).") ON DUPLICATE KEY UPDATE newcall=".$this->db->escape(date("Y-m-d H:i:s", $tm).", destination_number=".$this->db->escape($json['destination_number']));
 		$this->db->query($sql);
 		return $this->db->insert_id();
 	}
