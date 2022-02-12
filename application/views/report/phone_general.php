@@ -63,6 +63,7 @@
                 <tr>
                   <td><b>Date</b></td>
                   <td><b>Days of weeks</b></td>
+                  <td><b>Agent</b></td>
                   <td><b>From</b></td>
                   <td><b>To</b></td>
                   <td><b>Direction</b></td>
@@ -90,8 +91,9 @@
                   <tr>
                     <td><?php echo substr($rc['newcall'], 0, 10); ?></td>
                     <td><?php echo date("l", strtotime($rc['newcall'])); ?></td>
-                    <td><?php echo $rc['caller_id_number']; ?></td>
                     <td><?php echo $rc['agent']; ?></td>
+                    <td><?php echo $rc['caller_id_number']; ?></td>
+                    <td><?php echo $rc['destination_number']; ?></td>
                     <td><?php echo $rc['direction']; ?></td>
                     <td><?php echo $rc['newcall']; ?></td>
                     <td><?php echo $rc['hangup']; ?></td>

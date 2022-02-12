@@ -859,9 +859,9 @@ class Phone_model extends CI_Model {
 		}
 
     if (!empty($data['agent'])) {
-      $sql = "SELECT newcall, answer, hangup, agent, user_id, caller_id_number, direction FROM phone_records WHERE agent=".$this->db->escape($data['agent'])." AND newcall>=".$this->db->escape($st)." AND newcall<=".$this->db->escape($et);
+      $sql = "SELECT newcall, answer, hangup, agent, user_id, caller_id_number, destination_number, direction FROM phone_records WHERE agent=".$this->db->escape($data['agent'])." AND newcall>=".$this->db->escape($st)." AND newcall<=".$this->db->escape($et);
     } else {
-      $sql = "SELECT newcall, answer, hangup, agent, user_id, caller_id_number, direction FROM phone_records WHERE agent>='100' AND agent<='300' AND newcall>=".$this->db->escape($st)." AND newcall<=".$this->db->escape($et);
+      $sql = "SELECT newcall, answer, hangup, agent, user_id, caller_id_number, destination_number, direction FROM phone_records WHERE agent>='100' AND agent<='300' AND newcall>=".$this->db->escape($st)." AND newcall<=".$this->db->escape($et);
     }
 		$sql .= " ORDER BY newcall ASC LIMIT 2000"; // Limit 2000 record
   	return $this->db->query($sql)->result_array();
