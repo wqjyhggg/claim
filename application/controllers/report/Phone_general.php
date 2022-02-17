@@ -26,12 +26,12 @@ class Phone_general extends CI_Controller {
 			if ($this->input->get('start_dt')) {
 				$para['start_dt'] = $this->input->get('start_dt');
 			} else {
-				$para['start_dt'] = date("Y-m-d", time() - (365 * 86400));
+				$para['start_dt'] = date("Y-m-d", time());
 			}
 			if ($this->input->get('end_dt')) {
 				$para['end_dt'] = $this->input->get('end_dt');
 			} else {
-				$para['end_dt'] = date("Y-m-d", time() - (365 * 86400));
+				$para['end_dt'] = date("Y-m-d", time());
 			}
 
 			$this->data['phone_list'] = $this->phone_model->get_working_number();
