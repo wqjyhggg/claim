@@ -1524,11 +1524,11 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		var ctry = $(this).closest("div").parent().find("input[name^='payees[country]']");
 		var ptcd = $(this).closest("div").parent().find("input[name^='payees[postcode]']");
 		var data = $.parseJSON(localStorage.getItem("policy_data")); 
-		// if (data[0].suite_number) {
-		// 	addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name);
-		// } else {
+		if (data[0].suite_number) {
+			addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name);
+		} else {
 			addr.val(data[0].street_number+" "+data[0].street_name);
-		// }
+		}
 		city.val(data[0].city);
 		prov.val(data[0].province2);
 		ctry.val(data[0].country2);
