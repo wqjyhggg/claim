@@ -1322,10 +1322,10 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		// get policy data
 		<?php $policy_info = json_decode($claim_details ['policy_info'], TRUE); ?>
 		// to add third pary payees on this list.
-		var data = $.parseJSON(localStorage.getItem("policy_data")); 
-		if (!data) {
+		//var data = $.parseJSON(localStorage.getItem("policy_data")); 
+		//if (!data) {
 			get_policy();
-		}
+		//}
 		
 
 		// show area once any error occured
