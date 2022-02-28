@@ -280,7 +280,7 @@
 									<label><span>School Phone : </span></label> <span class="institution_phone"><?php echo (isset($policy['institution_phone']) ? htmlspecialchars($policy['institution_phone']) : ''); ?></span>
 								</div>
 							</div>
-							<?php if (isset($policy['product_short']) && (($policy['product_short'] == 'OPL') || ($policy['product_short'] == 'JFR'))) { ?>
+							<?php if (isset($policy['product_short']) && (($policy['product_short'] == 'OPL') || ($policy['product_short'] == 'JFVTC') || ($policy['product_short'] == 'JFR'))) { ?>
 							<div class="row">
 								<div class="form-group col-sm-6">
 								<?php if ($policy['stable_condition'] == 1) { ?>

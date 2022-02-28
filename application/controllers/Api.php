@@ -73,7 +73,7 @@ class Api extends CI_Controller {
 		$firstname = $lastname = $birthday='';
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$policies = $this->api_model->get_policy(array('policy' => $data['policy']));
-			$allow_policies = array("JFS","JFE","BHS","JES","JFPL","JESP","JFC","JFP","JFR","JUS","NUS","OPL","TOP");
+			$allow_policies = array("JFS","JFE","BHS","JES","JFPL","JESP","JFC","JFP","JFVTC","JFR","JUS","NUS","OPL","TOP");
 			if (empty($policies)) {
 				$rdata['status'] = Api_model::STATUS_ERROR;
         if ($lang == 'zh') {
