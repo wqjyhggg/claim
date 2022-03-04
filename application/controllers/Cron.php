@@ -369,7 +369,7 @@ class Cron extends CI_Controller
     return TRUE;
   }
 
-  public function sftpupload()
+  private function dosftpupload($do="Paid")
   {
     $this->valid();
     set_time_limit(0);
@@ -385,7 +385,12 @@ class Cron extends CI_Controller
     $para['product_short_group'] = array('OPL', 'JFC', 'REF');
 
     //$status_groups = array("Paid" => "Paid_Declined", "Unpaid" => "Received_Approved_Pending");
-    $status_groups = array("Paid" => "Paid_Declined", "Unpaid" => "Pending");
+    // $status_groups = array("Paid" => "Paid_Declined", "Unpaid" => "Pending");
+    if ($do == "Paid") {
+      $status_groups = array("Paid" => "Paid_Declined");
+    } else {
+      $status_groups = array("Unpaid" => "Pending");
+    }
 
     if (1) {
       foreach ($status_groups as $status_group => $filename) {
@@ -661,6 +666,16 @@ class Cron extends CI_Controller
         }
       }
     }
+  }
+
+  public function sftpupload()
+  {
+    return $this->dosftpupload($do="Paid");
+  }
+
+  public function sftpupload2()
+  {
+    return $this->dosftpupload($do="Unpaid");
   }
 
   public function test()
