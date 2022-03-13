@@ -87,6 +87,7 @@ class Phone_general extends CI_Controller {
       fputcsv($output, array(
         'Date',
         'Days of weeks',
+        'Agent',
         'From',
         'To',
         'Direction',
@@ -95,7 +96,6 @@ class Phone_general extends CI_Controller {
         'Waiting Time',
         'Talk Time',
       ));
-
 			foreach ($records as $rc) { 
         if (($rc['answer'] == "0000-00-00 00:00:00") || ($rc['answer'] == "1970-01-01 00:00:00")) {
           $rc['answer'] = $rc['newcall'];
@@ -107,9 +107,9 @@ class Phone_general extends CI_Controller {
         $arr = array(
           substr($rc['newcall'], 0, 10),
           date("l", strtotime($rc['newcall'])),
-          $rc['caller_id_number'],
           $rc['agent'],
-          $rc['direction'],
+          $rc['caller_id_number'],
+          $rc['destination_number'],
           $rc['newcall'],
           $rc['hangup'],
           $wtm->h.":".str_pad($wtm->i, 2, "0", STR_PAD_LEFT).":".str_pad($wtm->s, 2, "0", STR_PAD_LEFT),
