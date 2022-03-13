@@ -62,16 +62,16 @@ class Phone_general extends CI_Controller {
 			if ($this->input->get('start_dt')) {
 				$para['start_dt'] = $this->input->get('start_dt');
 			} else {
-				$para['start_dt'] = date("Y-m-d", time() - (365 * 86400));
+				$para['start_dt'] = date("Y-m-d", time());
 			}
 			if ($this->input->get('end_dt')) {
 				$para['end_dt'] = $this->input->get('end_dt');
 			} else {
-				$para['end_dt'] = date("Y-m-d", time() - (365 * 86400));
+				$para['end_dt'] = date("Y-m-d", time());
 			}
 
-			$records = $this->phone_model->phone_online_report($para);
-			
+			$records = $this->phone_model->phone_general_report($para);
+
 			header('Content-Type: text/csv; charset=utf-8');
 			header('Content-Disposition: attachment; filename=Claim_summary.csv');
 				
@@ -96,7 +96,7 @@ class Phone_general extends CI_Controller {
         'Waiting Time',
         'Talk Time',
       ));
-			foreach ($records as $rc) { 
+	foreach ($records as $rc) { 
         if (($rc['answer'] == "0000-00-00 00:00:00") || ($rc['answer'] == "1970-01-01 00:00:00")) {
           $rc['answer'] = $rc['newcall'];
         }
@@ -110,13 +110,14 @@ class Phone_general extends CI_Controller {
           $rc['agent'],
           $rc['caller_id_number'],
           $rc['destination_number'],
+          $rc['direction'],
           $rc['newcall'],
           $rc['hangup'],
           $wtm->h.":".str_pad($wtm->i, 2, "0", STR_PAD_LEFT).":".str_pad($wtm->s, 2, "0", STR_PAD_LEFT),
           $ttm->h.":".str_pad($ttm->i, 2, "0", STR_PAD_LEFT).":".str_pad($ttm->s, 2, "0", STR_PAD_LEFT),
         );
 				fputcsv($output, $arr);
-			}
+	}
       exit;
 		}
 	}
