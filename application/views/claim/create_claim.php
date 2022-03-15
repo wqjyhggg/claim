@@ -1288,7 +1288,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		var ptcd = $(this).closest("div").parent().find("input[name^='payees[postcode]']");
 		var data = $.parseJSON(localStorage.getItem("policy_data")); 
 		if (data[0].suite_number) {
-			addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name);
+			"Suite "+addr.val(data[0].suite_number+" "+data[0].street_number+" "+data[0].street_name);
 		} else {
 			addr.val(data[0].street_number+" "+data[0].street_name);
 		}
@@ -1349,7 +1349,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
       var str = $(".doc-"+id+"  .doc-desc").html();
       var address = $("input[name=suite_number]").val().trim();
       if (address) {
-        address += ", ";  
+        address = "Suite " + address + " ";  
       }
       address += $("input[name=street_address]").val()+' '+$("input[name=city]").val()+' '+$("input[name=province]").val();
       str = str.replace(/value="{insured_name}'/gi, 'value="' + ($("input[name=insured_first_name]").val()+' '+$("input[name=insured_last_name]").val()).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))

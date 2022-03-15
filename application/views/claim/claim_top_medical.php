@@ -1639,7 +1639,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		var ptcd = $(this).closest("div").parent().find("input[name^='payees[postcode]']");
 		var data = $.parseJSON(localStorage.getItem("policy_data"));
 		if (data[0].suite_number) {
-			addr.val(data[0].suite_number+"-"+data[0].street_number+" "+data[0].street_name);
+			"Suite "+addr.val(data[0].suite_number+" "+data[0].street_number+" "+data[0].street_name);
 		} else {
 			addr.val(data[0].street_number+" "+data[0].street_name);
 		}
