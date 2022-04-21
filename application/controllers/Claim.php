@@ -1188,7 +1188,11 @@ class Claim extends CI_Controller {
         $this->data['payinfo'] = $this->expenses_model->get_policy_payinfo($claim['policy_no']);
 				
         $this->data['items_payees'] = array();
+        $this->data['diminishing_amount'] = $claim["reserve_amount"];
 				foreach ($this->data['items'] as $ikey => $ival) {
+          if ($ival["status"] == "Approved") {
+            $this->data['diminishing_amount'] -= $ival["amt_payable"];
+          }
 					if ($ival['provider_type'] && ($iadd = $this->provider_model->get_by_id($ival['expenses_provider_id']))) {
 						// bussiness
 						$this->data['items'][$ikey]['item_provider_name'] = $iadd['payeename'];
@@ -1263,6 +1267,10 @@ class Claim extends CI_Controller {
             $this->data['items_payees'][] = $this->data['items'][$ikey]['item_payee_name'];
           }
 				}
+        if ($claim["status2"] == "Closed") {
+          $this->data['diminishing_amount'] = 0;
+        }
+
         // print_r($this->data['items_payees']); //XXXXXXXXXXXXXXXXXXXXXXXX
 				
 				// get claim items history
@@ -2234,6 +2242,24 @@ class Claim extends CI_Controller {
 		// send success message
 		$this->session->set_flashdata('success', "Claim successfully changed status to " . $type);
 		
+		echo TRUE;
+	}
+	
+	public function denied() {
+		if (! $this->ion_auth->logged_in()) {
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		}
+		$this->load->model('claim_model');
+		
+		$claim_id = $this->input->post("claim_id");
+		$denied_reason = $this->input->post("denied_reason");
+		
+		$data = array(
+				"id" => $claim_id,
+				'denied_reason' => $denied_reason 
+		);
+		
+		$this->claim_model->save($data);
 		echo TRUE;
 	}
 	

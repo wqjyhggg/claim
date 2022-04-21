@@ -112,6 +112,8 @@
 							<label>Reserve Amount : </label>
               <input type='number' step='0.01' name='reserve_amount' id='reserve_amount_input' value="<?php echo $claim['reserve_amount']; ?>">
               <input class="btn btn-primary" name="save" value="Save Reserve" type="button" id="reserve_amount_save">
+              <br />
+              <label>Diminishing Amount : </label><?php echo number_format($diminishing_amount); ?>
 						</div>
 						<div class="clearfix"></div>
 	
@@ -404,7 +406,11 @@
 							</div>
 							<div class="col-sm-2">
 								<?php echo form_label('Claim Status:', 'status2', array("class" => 'col-sm-12')); ?>
-								<?php echo form_dropdown("status2", array('Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed'), $claim_details["status2"], array("class" => 'form-control change_claim_status2')); ?>
+								<?php echo form_dropdown("status2", array('Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed', 'Denied' => 'Denied'), $claim_details["status2"], array("class" => 'form-control change_claim_status2')); ?>
+                <div id="change_claim_status2_denied_div" <?php if ($claim_details["status2"] != "Denied") { ?>style="display: none;" <?php } ?>>
+                  <?php echo form_label('Denie Reasion:', 'status2', array("class" => 'col-sm-12')); ?>
+                  <?php echo form_dropdown("denied_reason", array('Exclusions and Limitations' => 'Exclusions and Limitations', 'Delay in Submitting Claim' => 'Delay in Submitting Claim', 'Benefit Not Covered' => 'Benefit Not Covered', 'Failure to Disclose or Misrepresent' => 'Failure to Disclose or Misrepresent', 'Not Meet Eligibility/ Void Policy' => 'Not Meet Eligibility/ Void Policy', 'Other (specify)' => 'Other (specify)'), $claim_details["denied_reason"], array("class" => 'form-control change_claim_status2_denied')); ?>
+                </div>
 							</div>
 							<div class="col-sm-2">
 								<label class="col-sm-12">&nbsp;</label>
@@ -716,6 +722,7 @@
 <script src="<?php echo base_url(); ?>/assets/js/jspdf.min.js"></script>
 <script>
 var old_status = '<?php echo !empty($claim_details["status"]) ? $claim_details["status"] : 0; ?>';
+var old_status2 = '<?php echo !empty($claim_details["status2"]) ? $claim_details["status2"] : 0; ?>';
 <?php if (empty($item_provider_name)) { ?>
 var item_provider_name = '';
 var item_provider_addr1 = '';
@@ -1358,6 +1365,7 @@ $(document).ready(function() {
 					$(".modal-content, .main_container").addClass("csspinner load1");
 				},
 				success: function() {
+          old_status = $(this).val();
 					window.location.reload();
 				}
 			})
@@ -1375,13 +1383,26 @@ $(document).ready(function() {
 					$(".modal-content, .main_container").addClass("csspinner load1");
 				},
 				success: function() {
+          old_status2 = $(this).val();
 					window.location.reload();
 				}
 			})
 		} else {
-			$(this).val(old_status);
+			$(this).val(old_status2);
 			return false;
 		}
+	}).on("change", ".change_claim_status2_denied", function() {
+    $.ajax({
+      url: "<?php echo base_url("claim/denied"); ?>",
+      method: "post",
+      data:{claim_id:<?php echo $claim['id']; ?>, denied_reason: $(this).val()},
+      beforeSend: function(){
+        $(".modal-content, .main_container").addClass("csspinner load1");
+      },
+      success: function() {
+        // window.location.reload();
+      }
+    })
 	}).on("click", "input[name=Accept]", function() {
 		if (confirm('Are you sure you want to change claim status to processed ?')) {
 			$.ajax({
