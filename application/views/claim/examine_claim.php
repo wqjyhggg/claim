@@ -1325,7 +1325,7 @@ $(document).ready(function() {
 			method: "post",
 			data:{reserve_amount:$('#reserve_amount_input').val()},
 			beforeSend: function(){
-				$(".modal-content, .main_container").addClass("csspinner load1");
+				// $(".modal-content, .main_container").addClass("csspinner load1");
 			},
 			success: function() {
 				window.location.reload();
@@ -1337,7 +1337,7 @@ $(document).ready(function() {
 			method: "post",
 			data:{intnotes:$('#intnotes_input').val()},
 			beforeSend: function(){
-				$(".modal-content, .main_container").addClass("csspinner load1");
+				// $(".modal-content, .main_container").addClass("csspinner load1");
 			},
 			success: function() {
 				window.location.reload();
@@ -1349,7 +1349,7 @@ $(document).ready(function() {
 			method: "post",
 			data:{notes:$('#notes').val()},
 			beforeSend: function(){
-				$(".modal-content, .main_container").addClass("csspinner load1");
+				// $(".modal-content, .main_container").addClass("csspinner load1");
 			},
 			success: function() {
 				window.location.reload();
@@ -1362,7 +1362,7 @@ $(document).ready(function() {
 				method: "post",
 				data:{claim_id:<?php echo $claim['id']; ?>},
 				beforeSend: function(){
-					$(".modal-content, .main_container").addClass("csspinner load1");
+					// $(".modal-content, .main_container").addClass("csspinner load1");
 				},
 				success: function() {
           old_status = $(this).val();
@@ -1380,7 +1380,7 @@ $(document).ready(function() {
 				method: "post",
 				data:{claim_id:<?php echo $claim['id']; ?>},
 				beforeSend: function(){
-					$(".modal-content, .main_container").addClass("csspinner load1");
+					// $(".modal-content, .main_container").addClass("csspinner load1");
 				},
 				success: function() {
           old_status2 = $(this).val();
@@ -1397,7 +1397,7 @@ $(document).ready(function() {
       method: "post",
       data:{claim_id:<?php echo $claim['id']; ?>, denied_reason: $(this).val()},
       beforeSend: function(){
-        $(".modal-content, .main_container").addClass("csspinner load1");
+        // $(".modal-content, .main_container").addClass("csspinner load1");
       },
       success: function() {
         // window.location.reload();
@@ -1410,7 +1410,7 @@ $(document).ready(function() {
 				method: "post",
 				data:{claim_id:<?php echo $claim['id']; ?>},
 				beforeSend: function(){
-					$(".modal-content, .main_container").addClass("csspinner load1");
+					// $(".modal-content, .main_container").addClass("csspinner load1");
 				},
 				success: function() {
 					window.location.reload();
@@ -1426,7 +1426,7 @@ $(document).ready(function() {
 				method: "post",
 				data:{claim_id:<?php echo $claim['id']; ?>},
 				beforeSend: function() {
-					$(".main_container").addClass("csspinner load1");
+					// $(".main_container").addClass("csspinner load1");
 				},
 				success: function() {
 					window.location.reload();
@@ -1442,7 +1442,7 @@ $(document).ready(function() {
 				method: "post",
 				data:{claim_id:<?php echo $claim['id']; ?>},
 				beforeSend: function() {
-					$(".main_container").addClass("csspinner load1");
+					// $(".main_container").addClass("csspinner load1");
 				},
 				success: function() {
 					window.location.reload();
@@ -1464,7 +1464,7 @@ $(document).ready(function() {
 						reason:$(this).children("option").filter(":selected").text(),
 					},
 					beforeSend: function() {
-						$(".main_container").addClass("csspinner load1");
+						// $(".main_container").addClass("csspinner load1");
 					},
 					success: function() {
 						window.location.reload();
