@@ -1365,7 +1365,6 @@ $(document).ready(function() {
 					// $(".modal-content, .main_container").addClass("csspinner load1");
 				},
 				success: function() {
-          old_status = $(this).val();
 					window.location.reload();
 				}
 			})
@@ -1383,7 +1382,6 @@ $(document).ready(function() {
 					// $(".modal-content, .main_container").addClass("csspinner load1");
 				},
 				success: function() {
-          old_status2 = $(this).val();
 					window.location.reload();
 				}
 			})
