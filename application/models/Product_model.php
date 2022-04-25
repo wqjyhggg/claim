@@ -29,6 +29,13 @@ class Product_model extends CI_Model {
 		return $rArr;
 	}
 	
+	public function get_all() {
+		$this->db->where('calculate', 1);
+		$this->db->order_by('full_name', 'ASC');
+		$rt = $this->db->get('product')->result_array();
+    return $rt;
+	}
+	
 	public function get_full_name($product_short) {
 		$this->db->where('product_short', $product_short);
 		if ($rt = $this->db->get('product')->row_array()) {

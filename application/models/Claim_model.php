@@ -424,4 +424,92 @@ class Claim_model extends CI_Model {
 
 		return $this->db->query($sql)->result_array();
 	}
+
+
+  public function claim_report3($get) {
+    $sql  = "SELECT c.*, DATEDIFF(c.created,c.last_update) AS opendays, p.up_insurer, ";
+    $sql .= " e3.coverage_code, e3.date_of_service, e3.finalize_date, e3.status AS e_status, e3.amount_claimed, e3.amt_payable, ";
+    $sql .= " (SELECT SUM(e1.amount_claimed) FROM expenses_claimed e1 WHERE e1.claim_id=c.id AND e1.status IN ('Received','Pending','Approved')) AS claimed_amount, ";
+    $sql .= " (SELECT SUM(e2.amt_payable) FROM expenses_claimed e2 WHERE e2.claim_id=c.id AND e2.status='Approved') AS paied_amount ";
+    $sql .= " FROM claim c ";
+    $sql .= " JOIN product p ON (c.product_short=p.product_short)";
+    $sql .= " JOIN expenses_claimed e3 ON (e3.claim_id=c.id)";
+    if (!empty($get["start_dt"]) && !empty($get["end_dt"])) {
+      // Use start date and end date
+      $sql .= " WHERE c.created>=".$this->db->escape($get["start_dt"]." 00:00:00")." AND c.created<=".$this->db->escape($get["end_dt"]." 23:59:59");
+    } else if (!empty($year)) {
+      // User year
+      $sql .= " WHERE c.created>=".$this->db->escape($get["year"]."-01-01 00:00:00")." AND c.created<=".$this->db->escape($get["year"]."-12-31 23:59:59");
+    } else {
+      // Use today
+      $sql .= " WHERE c.created>=".$this->db->escape(date("Y-m-d 00:00:00",time()))." AND c.created<=".$this->db->escape(date("Y-m-d 23:59:59", time()));
+    }
+
+    if (!empty($get["finalized_start_dt"])) {
+      $sql .= " AND e3.finalized_start_dt>=".$this->db->escape($get["finalized_start_dt"]);
+    }
+    if (!empty($get["finalized_end_dt"])) {
+      $sql .= " AND e3.finalized_end_dt=".$this->db->escape($get["finalized_end_dt"]);
+    }
+
+    if (!empty($get["status2"])) {
+      $sql .= " AND c.status2=".$this->db->escape($get["status2"]);
+    }
+
+    if (!empty($get["products"])) {
+      $pstr = "";
+      foreach ($get["products"] as $prod) {
+        $pstr .= $this->db->escape($prod).",";
+      }
+      if ($pstr) {
+        $pstr = substr($pstr, 0, -1);
+        $sql .= " AND c.product_short IN (".$pstr.")";
+      }
+    }
+
+    if (!empty($get["up_insurer"])) {
+      $sql .= " AND p.up_insurer=".$this->db->escape($get["up_insurer"]);
+    }
+
+		return $this->db->query($sql)->result_array();
+  }
+
+  public function claim_report4($get) {
+    $sql  = "SELECT c.*, DATEDIFF(c.created,c.last_update) AS opendays, p.up_insurer, ";
+    $sql .= " (SELECT SUM(e1.amount_claimed) FROM expenses_claimed e1 WHERE e1.claim_id=c.id AND e1.status IN ('Received','Pending','Approved')) AS claimed_amount, ";
+    $sql .= " (SELECT SUM(e2.amt_payable) FROM expenses_claimed e2 WHERE e2.claim_id=c.id AND e2.status='Approved') AS paied_amount ";
+    $sql .= " FROM claim c ";
+    $sql .= " JOIN product p ON (c.product_short=p.product_short)";
+    if (!empty($get["start_dt"]) && !empty($get["end_dt"])) {
+      // Use start date and end date
+      $sql .= " WHERE c.created>=".$this->db->escape($get["start_dt"]." 00:00:00")." AND c.created<=".$this->db->escape($get["end_dt"]." 23:59:59");
+    } else if (!empty($year)) {
+      // User year
+      $sql .= " WHERE c.created>=".$this->db->escape($get["year"]."-01-01 00:00:00")." AND c.created<=".$this->db->escape($get["year"]."-12-31 23:59:59");
+    } else {
+      // Use today
+      $sql .= " WHERE c.created>=".$this->db->escape(date("Y-m-d 00:00:00",time()))." AND c.created<=".$this->db->escape(date("Y-m-d 23:59:59", time()));
+    }
+
+    if (!empty($get["status2"])) {
+      $sql .= " AND c.status2=".$this->db->escape($get["status2"]);
+    }
+
+    if (!empty($get["products"])) {
+      $pstr = "";
+      foreach ($get["products"] as $prod) {
+        $pstr .= $this->db->escape($prod).",";
+      }
+      if ($pstr) {
+        $pstr = substr($pstr, 0, -1);
+        $sql .= " AND c.product_short IN (".$pstr.")";
+      }
+    }
+
+    if (!empty($get["up_insurer"])) {
+      $sql .= " AND p.up_insurer=".$this->db->escape($get["up_insurer"]);
+    }
+
+		return $this->db->query($sql)->result_array();
+  }
 }
