@@ -2232,10 +2232,16 @@ class Claim extends CI_Controller {
 		$this->load->model('claim_model');
 		
 		$claim_id = $this->input->post("claim_id");
+		$status2 = $this->input->post("status2");
+		$denied_reason = $this->input->post("denied_reason");
+		if ($denied_reason_other = $this->input->post("denied_reason_other")) {
+      $denied_reason = $denied_reason_other;
+    }
 		
 		$data = array(
 				"id" => $claim_id,
-				'status2' => $type 
+				'status2' => $status2,
+				'denied_reason' => $denied_reason
 		);
 		
 		$this->claim_model->save($data);
