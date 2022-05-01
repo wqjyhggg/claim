@@ -31,6 +31,8 @@
 							<li style='line-height: 2em;'><?php echo anchor("report/expenses", ' Claim Summary Report</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/expenses2", ' Claim Summary Report2</a>', array("class"=>'leftmeun h4')) ?> </li>
 							<li style='line-height: 2em;'><?php echo anchor("report/claim_sla", ' Claim SLA Report</a>', array("class"=>'leftmeun h4')) ?> </li>
+							<li style='line-height: 2em;'><?php echo anchor("report/claim_report3", ' Claim Detail Report3</a>', array("class"=>'leftmeun h4')) ?> </li>
+							<li style='line-height: 2em;'><?php echo anchor("report/claim_report4", ' Claim Monthly Report4</a>', array("class"=>'leftmeun h4')) ?> </li>
 						</ul>
 						<ul>
               <li style='line-height: 2em;'><?php echo anchor("report/phone_online", ' EAC Phone Online Report</a>', array("class"=>'leftmeun h4')) ?> </li>
