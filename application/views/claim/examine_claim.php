@@ -407,6 +407,9 @@
 							<div class="col-sm-2">
 								<?php echo form_label('Claim Status:', 'status2', array("class" => 'col-sm-12')); ?>
 								<?php echo form_dropdown("status2", array('Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed', 'Denied' => 'Denied'), $claim_details["status2"], array("class" => 'form-control change_claim_status2')); ?>
+                <?php if ($claim_details["status2"] == "Denied") { ?>
+                  <div><?php echo $claim_details["denied_reason"]; ?>
+                <? } ?>
 							</div>
 							<div class="col-sm-2">
 								<label class="col-sm-12">&nbsp;</label>

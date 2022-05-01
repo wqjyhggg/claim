@@ -2248,7 +2248,7 @@ class Claim extends CI_Controller {
 		// send success message
 		$this->session->set_flashdata('success', "Claim successfully changed status to " . $type);
 		
-		echo TRUE;
+		redirect("claim/examine_claim/".$claim_id);
 	}
 	
 	public function denied() {
