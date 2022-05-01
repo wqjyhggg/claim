@@ -524,8 +524,8 @@
 			</div>
 			<?php echo form_open( "claim/status2", array ("id" => 'claim_status_change_form') );?>
 			<div class="modal-body">
-        <input id="claim_status_change_claim_id" name="claim_id" value="<?php echo $claim['id']; ?>">
-        <input id="claim_status_change_status2" name="status2" value="">
+        <input id="claim_status_change_claim_id" type="hidden" name="claim_id" value="<?php echo $claim['id']; ?>">
+        <input id="claim_status_change_status2" type="hidden" name="status2" value="">
 				<div class="row">
   				<label for="status_label" class="col-sm-12">Are you sure you want to change claim processing status to <span id="claim_status_change_claim_str"></span></label>
   			</div>
@@ -1391,12 +1391,6 @@ $(document).ready(function() {
 			}
 		})
 	}).on("change", ".change_claim_status", function() {
-    var val = $(this).val();
-    $('#claim_status_change_status2').val(val);
-    $('#claim_status_change_claim_str').html(val);
-    if (val == "Denied") {
-      $("#change_claim_status2_denied_div").show();
-    }
 		if (confirm('Are you sure you want to change claim processing status ?')) {
 			$.ajax({
 				url: "<?php echo base_url("claim/status/"); ?>"  + $(this).val(),
@@ -1414,7 +1408,15 @@ $(document).ready(function() {
 			return false;
 		}
 	}).on("change", ".change_claim_status2", function() {
-    $('#claim_status_change_status2').val($(this).val());
+    var val = $(this).val();
+    $('#claim_status_change_status2').val(val);
+    $('#claim_status_change_claim_str').html(val);
+    if (val == "Denied") {
+      $("#change_claim_status2_denied_div").show();
+    } else {
+      $("#change_claim_status2_denied_div").hide();
+      $(".change_claim_status2_denied_other").val("");
+    }
     $('#claim_status_change').modal('show');
 	}).on("change", ".change_claim_status2_denied", function() {
     var val = $(this).val();
