@@ -543,7 +543,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<input type="submit" class="btn btn-primary preview-template" data-dismiss="modal" value="Confirm">
+				<input type="submit" class="btn btn-primary" value="Confirm">
 				<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
 			</div>
       <?php echo form_close(); ?>
