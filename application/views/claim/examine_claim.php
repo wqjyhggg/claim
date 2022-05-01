@@ -527,16 +527,16 @@
         <input id="claim_status_change_claim_id" type="hidden" name="claim_id" value="<?php echo $claim['id']; ?>">
         <input id="claim_status_change_status2" type="hidden" name="status2" value="">
 				<div class="row">
-  				<label for="status_label" class="col-sm-12">Are you sure you want to change claim processing status to <span id="claim_status_change_claim_str"></span></label>
+  				<label for="status_label" class="col-sm-12">Are you sure you want to change claim processing status to <span id="claim_status_change_claim_str" style="color:#800000;"></span></label>
   			</div>
 				<div class="row" id="change_claim_status2_denied_div" style="display:none;">
-  				<label for="status_label" class="col-sm-3">Denie Reasion:</label>
+  				<label for="status_label" class="col-sm-3 text-right">Denie Reasion:</label>
           <div class="col-sm-6">
             <?php echo form_dropdown("denied_reason", array('Exclusions and Limitations' => 'Exclusions and Limitations', 'Delay in Submitting Claim' => 'Delay in Submitting Claim', 'Benefit Not Covered' => 'Benefit Not Covered', 'Failure to Disclose or Misrepresent' => 'Failure to Disclose or Misrepresent', 'Not Meet Eligibility/ Void Policy' => 'Not Meet Eligibility/ Void Policy', 'Other' => 'Other (specify)'), $claim_details["denied_reason"], array("class" => 'form-control change_claim_status2_denied')); ?>
           </div>
 				</div>
 				<div class="row" id="change_claim_status2_denied_other_div" style="display:none;">
-  				<label for="status_label" class="col-sm-3">Denie Reasion:</label>
+  				<label for="status_label" class="col-sm-3 text-right">Input the Reason:</label>
           <div class="col-sm-6">
             <?php echo form_input("denied_reason_other", '', array("class" => 'form-control change_claim_status2_denied_other')); ?>
           </div>
