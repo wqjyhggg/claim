@@ -466,6 +466,8 @@ class Api extends CI_Controller {
 			$data['school_name'] = $this->input->post('school_name');
 			$data['group_id'] = $this->input->post('group_id');
 			$data['apply_date'] = $this->input->post('apply_date');
+			$data['effective_date'] = $this->input->post('effective_date');
+			$data['expiry_date'] = $this->input->post('expiry_date');
 			$data['arrival_date'] = $this->input->post('arrival_date');
 			$data['guardian_name'] = $this->input->post('guardian_name');
 			$data['guardian_phone'] = $this->input->post('guardian_phone');

@@ -76,6 +76,8 @@ class Claim_review extends CI_Controller {
 									$claim = $cases[0];
 									$claim['policy_info'] = $policies[0];
 									$claim['apply_date'] = $policies[0]['apply_date'];
+									$claim['effective_date'] = $policies[0]['effective_date'];
+									$claim['expiry_date'] = $policies[0]['expiry_date'];
 									$claim['street_address'] = empty($policies[0]['suite_number']) ? "" : "Suite " . $policies[0]['suite_number'] . " ";
 									$claim['street_address'] .= $policies[0]['street_number'] . " " . $policies[0]['street_name'];
 									$claim['insured_first_name'] = $claim['insured_firstname'];
@@ -154,7 +156,9 @@ class Claim_review extends CI_Controller {
 						// Add infor to fit claim
 						$claim['policy_info'] = $policies[0];
 						$claim['apply_date'] = $policies[0]['apply_date'];
-						$claim['street_address'] = empty($policies[0]['suite_number']) ? "" : "Suite " . $policies[0]['suite_number'] . " ";
+            $claim['effective_date'] = $policies[0]['effective_date'];
+            $claim['expiry_date'] = $policies[0]['expiry_date'];
+            $claim['street_address'] = empty($policies[0]['suite_number']) ? "" : "Suite " . $policies[0]['suite_number'] . " ";
 						$claim['street_address'] .= $policies[0]['street_number'] . " " . $policies[0]['street_name'];
 						$claim['insured_first_name'] = $claim['insured_firstname'];
 						$claim['insured_last_name'] = $claim['insured_lastname'];
