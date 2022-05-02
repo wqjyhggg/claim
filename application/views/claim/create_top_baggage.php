@@ -75,6 +75,8 @@
 						</div>
 						<div class="clearfix"></div>
 						<?php echo form_hidden("apply_date", $this->input->post("apply_date")); ?>
+						<?php echo form_hidden("effective_date", $this->input->post("effective_date")); ?>
+						<?php echo form_hidden("expiry_date", $this->input->post("expiry_date")); ?>
 						<?php echo form_hidden("arrival_date", $this->input->post("arrival_date")); ?>
 
 						<h4 class="subTitle">Address in Canada</h4>
@@ -1641,6 +1643,8 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
                $("input[name=school_name]").val(data.plan_list[0].institution);
                $("input[name=group_id]").val();
                $("input[name=apply_date]").val(data.plan_list[0].apply_date);
+               $("input[name=effective_date]").val(data.plan_list[0].effective_date);
+               $("input[name=expiry_date]").val(data.plan_list[0].expiry_date);
                $("input[name=arrival_date]").val(data.plan_list[0].arrival_date);
                $("input[name=guardian_name]").val();
                $("input[name=guardian_phone]").val();
@@ -1679,6 +1683,8 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
                $("input[name=school_name]").val('');
                $("input[name=group_id]").val();
                $("input[name=apply_date]").val('');
+               $("input[name=effective_date]").val('');
+               $("input[name=expiry_date]").val('');
                $("input[name=arrival_date]").val('');
                $("input[name=guardian_name]").val('');
                $("input[name=guardian_phone]").val('');
@@ -1784,6 +1790,8 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
                $("input[name=school_name]").val(data.plan_list[0].institution);
                $("input[name=group_id]").val();
                $("input[name=apply_date]").val(data.plan_list[0].apply_date);
+               $("input[name=effective_date]").val(data.plan_list[0].effective_date);
+               $("input[name=expiry_date]").val(data.plan_list[0].expiry_date);
                $("input[name=arrival_date]").val(data.plan_list[0].arrival_date);
                $("input[name=guardian_name]").val();
                $("input[name=guardian_phone]").val();

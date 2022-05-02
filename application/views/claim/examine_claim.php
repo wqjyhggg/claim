@@ -76,6 +76,12 @@
 							<label>Apply Date : </label><?php echo htmlspecialchars($claim['apply_date']); ?>
 						</div>
 						<div class="form-group col-sm-3">
+							<label>Effective Date : </label><?php echo htmlspecialchars($claim['effective_date']); ?>
+						</div>
+						<div class="form-group col-sm-3">
+							<label>Expiry Date : </label><?php echo htmlspecialchars($claim['expiry_date']); ?>
+						</div>
+						<div class="form-group col-sm-3">
 							<label>Arrival Date : </label><?php echo htmlspecialchars($claim['arrival_date_canada']); ?>
 						</div>
 						<div class="clearfix"></div>

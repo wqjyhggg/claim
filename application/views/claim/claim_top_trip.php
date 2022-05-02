@@ -110,6 +110,20 @@
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 							</div>
+							<div class="form-group col-sm-3">
+								<?php echo form_label('Effective Date:', 'effective_date', array("class"=>'col-sm-12')); ?>
+								<div class="input-group date">
+									<?php echo form_input("effective_date", $claim_details["effective_date"], array("class" => "form-control datepicker",'placeholder' => 'Effective Date')); ?>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+							</div>
+							<div class="form-group col-sm-3">
+								<?php echo form_label('Expiry Date:', 'expiry_date', array("class"=>'col-sm-12')); ?>
+								<div class="input-group date">
+									<?php echo form_input("expiry_date", $claim_details["expiry_date"], array("class" => "form-control datepicker",'placeholder' => 'Expiry Date')); ?>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+							</div>
 							<div class="form-group col-sm-3" style='display:none;'>
 								<?php echo form_label('Arrival Date in Canada:', 'arrival_date', array("class"=>'col-sm-12')); ?>
 								<div class="input-group date">

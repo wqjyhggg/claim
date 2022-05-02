@@ -84,6 +84,20 @@
 							</div>
 						</div>
 						<div class="form-group col-sm-3">
+							<?php echo form_label('Effective Date:', 'effective_date', array("class"=>'col-sm-12')); ?>
+							<div class="input-group date">
+								<?php echo form_input("effective_date", $this->input->post("effective_date"), array("class" => "form-control datepicker", 'placeholder' => 'Effective Date')); ?>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Expiry Date:', 'expiry_date', array("class"=>'col-sm-12')); ?>
+							<div class="input-group date">
+								<?php echo form_input("expiry_date", $this->input->post("expiry_date"), array("class" => "form-control datepicker", 'placeholder' => 'Expiry Date')); ?>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+						<div class="form-group col-sm-3">
 							<?php echo form_label('Arrival Date in Canada:', 'arrival_date', array("class"=>'col-sm-12')); ?>
 							<div class="input-group date">
 								<?php echo form_input("arrival_date", $this->input->post("arrival_date"), array("class" => "form-control datepicker", 'placeholder' => 'Arrival Date in Canada')); ?>
@@ -1719,6 +1733,8 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
                $("input[name=school_name]").val(data.plan_list[0].institution);
                $("input[name=group_id]").val();
                $("input[name=apply_date]").val(data.plan_list[0].apply_date);
+               $("input[name=effective_date]").val(data.plan_list[0].effective_date);
+               $("input[name=expiry_date]").val(data.plan_list[0].expiry_date);
                $("input[name=arrival_date]").val(data.plan_list[0].arrival_date);
                $("input[name=guardian_name]").val();
                $("input[name=guardian_phone]").val();
@@ -1757,6 +1773,8 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
                $("input[name=school_name]").val('');
                $("input[name=group_id]").val();
                $("input[name=apply_date]").val('');
+               $("input[name=effective_date]").val('');
+               $("input[name=expiry_date]").val('');
                $("input[name=arrival_date]").val('');
                $("input[name=guardian_name]").val('');
                $("input[name=guardian_phone]").val('');
@@ -1867,6 +1885,8 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
                $("input[name=school_name]").val(data.plan_list[0].institution);
                $("input[name=group_id]").val();
                $("input[name=apply_date]").val(data.plan_list[0].apply_date);
+               $("input[name=effective_date]").val(data.plan_list[0].effective_date);
+               $("input[name=expiry_date]").val(data.plan_list[0].expiry_date);
                $("input[name=arrival_date]").val(data.plan_list[0].arrival_date);
                $("input[name=guardian_name]").val();
                $("input[name=guardian_phone]").val();

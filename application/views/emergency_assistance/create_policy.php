@@ -64,6 +64,26 @@
                               <?php echo form_error('apply_date'); ?>
                            </div>
                            <div class="form-group col-sm-3">
+                              <?php echo form_label('Effective Date:', 'effective_date', array("class"=>'col-sm-12'));   ?>
+                              <div class="input-group date">
+                                 <?php                
+                                 echo form_input("effective_date", $this->input->post("effective_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Effective Date'));
+                                 ?>
+                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                              </div>
+                              <?php echo form_error('effective_date'); ?>
+                           </div>
+                           <div class="form-group col-sm-3">
+                              <?php echo form_label('Expiry Date:', 'expiry_date', array("class"=>'col-sm-12'));   ?>
+                              <div class="input-group date">
+                                 <?php                
+                                 echo form_input("expiry_date", $this->input->post("expiry_date"), array("class"=>"form-control datepicker", 'placeholder'=>'Expiry Date'));
+                                 ?>
+                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                              </div>
+                              <?php echo form_error('expiry_date'); ?>
+                           </div>
+                           <div class="form-group col-sm-3">
                               <?php echo form_label('Arrival Date:', 'arrival_date', array("class"=>'col-sm-12'));   ?>
                               <div class="input-group date">
                                  <?php                
