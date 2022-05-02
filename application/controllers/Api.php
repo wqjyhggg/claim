@@ -460,6 +460,9 @@ class Api extends CI_Controller {
 			}
 						
 			$data['product_short'] = $this->input->post('product_short');
+      if ($data['product_short'] == 'TOP') {
+        $data['package'] = $this->input->post('package');
+      }
 			$data['agent_id'] = $this->input->post('agent_id');
 			$data['totaldays'] = $this->input->post('totaldays');
 			$data['case_no'] = '';

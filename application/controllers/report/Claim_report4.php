@@ -41,9 +41,10 @@ class Claim_report4 extends CI_Controller {
                             'First Name',
                             'Policy Number',
                             'Sum Insured',
-                            'Arrival Date', // No "Policy Start Date"
+                            'Policy Start Date', // No "Policy Start Date"
                             'Province',
-                            'Claim number', // Claim type
+                            'Claim number',
+                            'Claim type',
                             'Claim Loss Date',
                             'Claim Status',
                             'Process Status',
@@ -73,9 +74,10 @@ class Claim_report4 extends CI_Controller {
               $value['insured_last_name'],
               $value['policy_no'],
               number_format($value['sum_insured'], 2),
-              $value['arrival_date'],
+              $value['effective_date'],
               $value['province'],
               $value['claim_no'],
+              $value['package'],
               $value['date_symptoms'],
               $value['status2'],
               $value['status'],

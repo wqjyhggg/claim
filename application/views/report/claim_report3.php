@@ -114,6 +114,8 @@
                   <th>Insurer</th>
                   <th>Product</th>
                   <th>Apply Date</th>
+                  <th>Policy Start Date</th>
+                  <th>Policy End Date</th>
                   <th>Last Name</th>
                   <th>First Name</th>
                   <th>Policy Number</th>
@@ -145,6 +147,8 @@
                     <td><?php echo $value['up_insurer']; ?></td>
                     <td><?php echo $value['product_short']; ?></td>
                     <td><?php echo $value['apply_date']; ?></td>
+                    <td><?php echo $value['effective_date']; ?></td>
+                    <td><?php echo $value['expiry_date']; ?></td>
                     <td><?php echo $value['insured_first_name']; ?></td>
                     <td><?php echo $value['insured_last_name']; ?></td>
                     <td><?php echo $value['policy_no']; ?></td>

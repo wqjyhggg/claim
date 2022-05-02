@@ -76,6 +76,9 @@ class Claim_review extends CI_Controller {
 									$claim = $cases[0];
 									$claim['policy_info'] = $policies[0];
 									$claim['apply_date'] = $policies[0]['apply_date'];
+                  if ($policies[0]['product_short'] == 'TOP') {
+                    $claim['package'] = $policies[0]['package'];
+                  }
 									$claim['effective_date'] = $policies[0]['effective_date'];
 									$claim['expiry_date'] = $policies[0]['expiry_date'];
 									$claim['street_address'] = empty($policies[0]['suite_number']) ? "" : "Suite " . $policies[0]['suite_number'] . " ";
@@ -156,6 +159,9 @@ class Claim_review extends CI_Controller {
 						// Add infor to fit claim
 						$claim['policy_info'] = $policies[0];
 						$claim['apply_date'] = $policies[0]['apply_date'];
+            if ($policies[0]['product_short'] == 'TOP') {
+              $claim['package'] = $policies[0]['package'];
+            }
             $claim['effective_date'] = $policies[0]['effective_date'];
             $claim['expiry_date'] = $policies[0]['expiry_date'];
             $claim['street_address'] = empty($policies[0]['suite_number']) ? "" : "Suite " . $policies[0]['suite_number'] . " ";

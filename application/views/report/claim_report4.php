@@ -96,9 +96,10 @@
                   <th>First Name</th>
                   <th>Policy Number</th>
                   <th>Sum Insured</th>
-                  <th>Arrival Date</th>
+                  <th>Policy Start Date</th>
                   <th>Province</th>
                   <th>Claim number</th>
+                  <th>Claim Type</th>
                   <th>Claim Loss Date</th>
                   <th>Claim Status</th>
                   <th>Process Status</th>
@@ -126,9 +127,10 @@
                     <td><?php echo $value['insured_last_name']; ?></td>
                     <td><?php echo $value['policy_no']; ?></td>
                     <td><?php echo number_format($value['sum_insured'], 2); ?></td>
-                    <td><?php echo $value['arrival_date']; ?></td>
+                    <td><?php echo $value['effective_date']; ?></td>
                     <td><?php echo $value['province']; ?></td>
                     <td><?php echo $value['claim_no']; ?></td>
+                    <td><?php echo $value['package']; ?></td>
                     <td><?php echo $value['date_symptoms']; ?></td>
                     <td><?php echo $value['status2']; ?></td>
                     <td><?php echo $value['status']; ?></td>

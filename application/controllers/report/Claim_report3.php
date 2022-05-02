@@ -37,11 +37,13 @@ class Claim_report3 extends CI_Controller {
         $fp = fopen("php://output", "w");
         fputcsv($fp, array( 'Insurer',
                             'Product',
-                            'Apply Date', // Miss "Policy Start date", "Policy End date
+                            'Apply Date',
+                            'Policy Start date',
+                            'Policy End date',
                             'First Name',
                             'Policy Number',
                             'Province',
-                            'Claim number', // Claim type
+                            'Claim number',
                             'Claim Start Date',
                             'Claim Close Date',
                             'Claim Status',
@@ -70,6 +72,8 @@ class Claim_report3 extends CI_Controller {
               $value['up_insurer'],
               $value['product_short'],
               $value['apply_date'],
+              $value['effective_date'],
+              $value['expiry_date'],
               $value['insured_first_name'],
               $value['insured_last_name'],
               $value['policy_no'],
