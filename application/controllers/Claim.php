@@ -177,6 +177,7 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('dob', 'Date of Birth', 'required');
 			$this->form_validation->set_rules('policy_no', 'Policy No', 'required');
 			$this->form_validation->set_rules('case_no', 'Case No', 'alpha_numeric_spaces');
+			$this->form_validation->set_rules('reserve_amount', 'Reserve Amount', 'required|numeric');
 			
 			$this->load->model('master_model');
 			$this->load->model('case_model');
@@ -468,6 +469,7 @@ class Claim extends CI_Controller {
 				$this->data['bprovider_list'] = $this->provider_model->search(array("status" => Provider_model::ACTIVE));
 				$this->data['eprovider_list'] = array();
 				$this->data['payees_list'] = array();
+        $this->data['reserve_amount'] = $this->input->post('reserve_amount');
 				if ($arr = $this->input->post('eprovider')) {
 					foreach ($arr['id'] as $key => $val) {
 						$this->data['eprovider_list'][$key]['id'] = $val; // id
@@ -504,6 +506,10 @@ class Claim extends CI_Controller {
 				$case_no = $this->input->get('case_no');
 				if (!empty($case_no)) {
 					$this->data["case_no"] = $case_no;
+					$case = $this->case_model->get_id_by_case_no($case_no); // Get case
+					if ($case) {
+						$this->data['reserve_amount'] = $case['reserve_amount'];
+					}
 				}
 				$product_short = $this->input->get('product_short');
 				if (!empty($product_short)) {

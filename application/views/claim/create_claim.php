@@ -115,6 +115,11 @@
 							<?php echo form_input("guardian_phone", $this->input->post("guardian_phone"), array("class" => "form-control", 'placeholder' => 'Guardian Phone#')); ?>
 							<?php echo form_error("guardian_phone"); ?>
 						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Reserve Amount:', 'reserve_amount', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("reserve_amount", $reserve_amount, array("class" => "form-control", 'placeholder' => 'Reserve Amount')); ?>
+							<?php echo form_error("reserve_amount"); ?>
+						</div>
 					</div>
 
 					<h4 class="move_down">Address in Canada <i class="fa fa-angle-down pull-right"></i></h4>
