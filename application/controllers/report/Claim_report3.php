@@ -117,7 +117,7 @@ class Claim_report3 extends CI_Controller {
         $this->data['export_url'] = site_url('report/claim_report4')."?".http_build_query($get);
         $this->data['current_url'] = site_url('report/claim_report4');
 
-        $this->template->write_view('content', 'report/claim_sla', $this->data);
+        $this->template->write_view('content', 'report/claim_report3', $this->data);
         $this->template->render();
       }
 		}

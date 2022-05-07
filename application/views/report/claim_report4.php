@@ -12,7 +12,7 @@
 <div width='100%'>
 	<div class="page-title" width='100%'>
 		<div class="title_left" width='100%'>
-			<h3>Claim SLA Report</h3>
+			<h3>Claim Report4</h3>
 		</div>
 	</div>
 	<div class="clearfix"></div>
