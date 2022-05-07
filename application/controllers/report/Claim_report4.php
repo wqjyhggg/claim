@@ -20,6 +20,7 @@ class Claim_report4 extends CI_Controller {
 			redirect('auth/login', 'refresh');
 		} else {
 			$this->load->model('product_model');
+			$this->load->model('claim_model');
 
       $get = $this->input->get();
       $this->data['records'] = array();
@@ -97,7 +98,7 @@ class Claim_report4 extends CI_Controller {
       } else {
         $allproducts = $this->product_model->get_all();
         $this->data['products'] = [];
-        $this->data['up_insuer_list'] = [];
+        $this->data['up_insuer_list'] = [''=>'select insurer'];
         foreach ($allproducts as $prod) {
           $this->data['products'][$prod["product_short"]] = $prod["product_short"];
           if (empty($this->data['up_insuer_list'][$prod["up_insuer"]])) {

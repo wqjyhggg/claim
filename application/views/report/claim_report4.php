@@ -12,7 +12,7 @@
 <div width='100%'>
 	<div class="page-title" width='100%'>
 		<div class="title_left" width='100%'>
-			<h3>Claim Report4</h3>
+			<h3>Claim Monthly Report4</h3>
 		</div>
 	</div>
 	<div class="clearfix"></div>
@@ -54,7 +54,7 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="form-group col-sm-3">
+							<div class="form-group col-sm-9">
                 <?php echo form_label('Products:', 'product_short', array ("class" => 'col-sm-12')); ?>
                 <?php $curproducts = empty($this->input->get('products[]')) ? array() : $this->input->get('products[]');?>
                 <?php foreach ($products as $key => $val) { ?>
@@ -69,14 +69,19 @@
                   <?php echo form_dropdown("up_insuer", $up_insuer_list, $this->input->get("up_insuer"), array("class" => 'form-control')); ?>
                 </div>
 							</div>
+						</div>
+						<div class="row">
+							<div class="form-group col-sm-6">
+								&nbsp;
+							</div>
 							<div class="form-group col-sm-3">
 								<a class="btn btn-primary buttonexport" href="<?php echo $export_url; ?>" target="_blank">Export</a>
 							</div>
 							<div class="form-group col-sm-3">
 								<button class="btn btn-primary buttonsubmit" name="submit" value="1">Submit</button>
 							</div>
-							<?php echo form_close(); ?>
 						</div>
+						<?php echo form_close(); ?>
 					</div>
 				</div>
 			</div>

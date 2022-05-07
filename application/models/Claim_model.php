@@ -427,7 +427,7 @@ class Claim_model extends CI_Model {
 
 
   public function claim_report3($get) {
-    $sql  = "SELECT c.*, DATEDIFF(c.created,c.last_update) AS opendays, p.up_insurer, ";
+    $sql  = "SELECT c.*, DATEDIFF(c.created,c.last_update) AS opendays, p.up_insuer, ";
     $sql .= " e3.coverage_code, e3.date_of_service, e3.finalize_date, e3.status AS e_status, e3.amount_claimed, e3.amt_payable, ";
     $sql .= " (SELECT SUM(e1.amount_claimed) FROM expenses_claimed e1 WHERE e1.claim_id=c.id AND e1.status IN ('Received','Pending','Approved')) AS claimed_amount, ";
     $sql .= " (SELECT SUM(e2.amt_payable) FROM expenses_claimed e2 WHERE e2.claim_id=c.id AND e2.status='Approved') AS paied_amount ";
@@ -446,10 +446,10 @@ class Claim_model extends CI_Model {
     }
 
     if (!empty($get["finalized_start_dt"])) {
-      $sql .= " AND e3.finalized_start_dt>=".$this->db->escape($get["finalized_start_dt"]);
+      $sql .= " AND e3.finalize_date>=".$this->db->escape($get["finalized_start_dt"]);
     }
     if (!empty($get["finalized_end_dt"])) {
-      $sql .= " AND e3.finalized_end_dt=".$this->db->escape($get["finalized_end_dt"]);
+      $sql .= " AND e3.finalize_date<=".$this->db->escape($get["finalized_end_dt"]);
     }
 
     if (!empty($get["status2"])) {
@@ -475,7 +475,7 @@ class Claim_model extends CI_Model {
   }
 
   public function claim_report4($get) {
-    $sql  = "SELECT c.*, DATEDIFF(c.created,c.last_update) AS opendays, p.up_insurer, ";
+    $sql  = "SELECT c.*, DATEDIFF(c.created,c.last_update) AS opendays, p.up_insuer, ";
     $sql .= " (SELECT SUM(e1.amount_claimed) FROM expenses_claimed e1 WHERE e1.claim_id=c.id AND e1.status IN ('Received','Pending','Approved')) AS claimed_amount, ";
     $sql .= " (SELECT SUM(e2.amt_payable) FROM expenses_claimed e2 WHERE e2.claim_id=c.id AND e2.status='Approved') AS paied_amount ";
     $sql .= " FROM claim c ";

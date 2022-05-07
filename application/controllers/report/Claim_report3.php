@@ -20,15 +20,16 @@ class Claim_report3 extends CI_Controller {
 			redirect('auth/login', 'refresh');
 		} else {
 			$this->load->model('product_model');
+			$this->load->model('claim_model');
 
       $get = $this->input->get();
       $this->data['records'] = array();
       if ($get) {
-        $this->data['records'] = $this->claim_model->claim_report4($get);
+        $this->data['records'] = $this->claim_model->claim_report3($get);
       }
 
       if (isset($get["iscsv"])) {
-        $filename = "report4_".$this->input->get('start_dt')."_".$this->input->get('end_dt');
+        $filename = "report3_".$this->input->get('start_dt')."_".$this->input->get('end_dt');
         if (!empty($this->data['is_examiner'] == 1)) {
           $filename .= "examiner";
         }
@@ -100,7 +101,7 @@ class Claim_report3 extends CI_Controller {
       } else {
         $allproducts = $this->product_model->get_all();
         $this->data['products'] = [];
-        $this->data['up_insuer_list'] = [];
+        $this->data['up_insuer_list'] = [''=>'select insurer'];
         foreach ($allproducts as $prod) {
           $this->data['products'][$prod["product_short"]] = $prod["product_short"];
           if (empty($this->data['up_insuer_list'][$prod["up_insuer"]])) {
@@ -114,8 +115,8 @@ class Claim_report3 extends CI_Controller {
         }
   
         $get["iscsv"] = 1;
-        $this->data['export_url'] = site_url('report/claim_report4')."?".http_build_query($get);
-        $this->data['current_url'] = site_url('report/claim_report4');
+        $this->data['export_url'] = site_url('report/claim_report3')."?".http_build_query($get);
+        $this->data['current_url'] = site_url('report/claim_report3');
 
         $this->template->write_view('content', 'report/claim_report3', $this->data);
         $this->template->render();
