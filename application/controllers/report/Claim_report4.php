@@ -68,7 +68,7 @@ class Claim_report4 extends CI_Controller {
             }
             $incurred = $diminishing + $value['paied_amount'];
             fputcsv($fp, array(
-              $value['up_insurer'],
+              $value['up_insuer'],
               $value['product_short'],
               $value['insured_first_name'],
               $value['insured_last_name'],
@@ -97,11 +97,11 @@ class Claim_report4 extends CI_Controller {
       } else {
         $allproducts = $this->product_model->get_all();
         $this->data['products'] = [];
-        $this->data['up_insurer_list'] = [];
+        $this->data['up_insuer_list'] = [];
         foreach ($allproducts as $prod) {
           $this->data['products'][$prod["product_short"]] = $prod["product_short"];
-          if (empty($this->data['up_insurer_list'][$prod["up_insurer"]])) {
-            $this->data['up_insurer_list'][$prod["up_insurer"]] = $prod["up_insurer"];
+          if (empty($this->data['up_insuer_list'][$prod["up_insuer"]])) {
+            $this->data['up_insuer_list'][$prod["up_insuer"]] = $prod["up_insuer"];
           }
         }
         $this->data['yearlist'] = array("" => "select Year");

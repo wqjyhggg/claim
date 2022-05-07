@@ -80,9 +80,9 @@
                 <?php } ?>
 							</div>
 							<div class="form-group col-sm-3">
-              <?php echo form_label('Insurer:', 'up_insurer', array("class" => 'col-sm-12')); ?>
+              <?php echo form_label('Insurer:', 'up_insuer', array("class" => 'col-sm-12')); ?>
 								<div class="input-group">
-                  <?php echo form_dropdown("up_insurer", $up_insurer_list, $this->input->get("up_insurer"), array("class" => 'form-control')); ?>
+                  <?php echo form_dropdown("up_insuer", $up_insuer_list, $this->input->get("up_insuer"), array("class" => 'form-control')); ?>
                 </div>
 							</div>
             </div>
@@ -144,7 +144,7 @@
                   <?php if (($value['status2'] != 'Closed') && ($value['status2'] != 'Denied')) { $diminishing = $value['reserve_amount'] - $value['claimed_amount']; } ?>
                   <?php $incurred = $diminishing + $value['paied_amount']; ?>
                   <tr>
-                    <td><?php echo $value['up_insurer']; ?></td>
+                    <td><?php echo $value['up_insuer']; ?></td>
                     <td><?php echo $value['product_short']; ?></td>
                     <td><?php echo $value['apply_date']; ?></td>
                     <td><?php echo $value['effective_date']; ?></td>
