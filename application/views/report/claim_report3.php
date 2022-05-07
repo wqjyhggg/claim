@@ -34,7 +34,7 @@
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Claim Item Finalized To Date:', 'finalized_end_dt', array("class" => 'col-sm-12'));   ?>
 								<div class="input-group date">
-									<?php echo form_input("finalized_end_dt", $$this->input->get('finalized_end_dt'), array("class" => "form-control datepicker required", 'placeholder' => 'To Date')); ?>
+									<?php echo form_input("finalized_end_dt", $this->input->get('finalized_end_dt'), array("class" => "form-control datepicker required", 'placeholder' => 'To Date')); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 								<?php echo form_error("dob"); ?>
@@ -42,7 +42,7 @@
               <div class="form-group col-sm-3">
 								<?php echo form_label('Claim Created From Date:', 'start_dt', array("class" => 'col-sm-12'));   ?>
 								<div class="input-group date">
-									<?php echo form_input("start_dt", $$this->input->get('start_dt'), array("class" => "form-control datepicker required", 'placeholder' => 'From Date')); ?>
+									<?php echo form_input("start_dt", $this->input->get('start_dt'), array("class" => "form-control datepicker required", 'placeholder' => 'From Date')); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 								<?php echo form_error("dob"); ?>
@@ -50,7 +50,7 @@
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Claim Created To Date:', 'end_dt', array("class" => 'col-sm-12'));   ?>
 								<div class="input-group date">
-									<?php echo form_input("end_dt", $$this->input->get('end_dt'), array("class" => "form-control datepicker required", 'placeholder' => 'To Date')); ?>
+									<?php echo form_input("end_dt", $this->input->get('end_dt'), array("class" => "form-control datepicker required", 'placeholder' => 'To Date')); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 								<?php echo form_error("dob"); ?>
