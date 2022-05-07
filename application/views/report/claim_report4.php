@@ -26,7 +26,7 @@
               <div class="form-group col-sm-3">
 								<?php echo form_label('Claim Created From Date:', 'start_dt', array("class" => 'col-sm-12'));   ?>
 								<div class="input-group date">
-									<?php echo form_input("start_dt", $start_dt, array("class" => "form-control datepicker required", 'placeholder' => 'From Date')); ?>
+									<?php echo form_input("start_dt", $$this->input->get('start_dt'), array("class" => "form-control datepicker required", 'placeholder' => 'From Date')); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 								<?php echo form_error("dob"); ?>
@@ -34,7 +34,7 @@
 							<div class="form-group col-sm-3">
 								<?php echo form_label('Claim Created To Date:', 'end_dt', array("class" => 'col-sm-12'));   ?>
 								<div class="input-group date">
-									<?php echo form_input("end_dt", $end_dt, array("class" => "form-control datepicker required", 'placeholder' => 'To Date')); ?>
+									<?php echo form_input("end_dt", $$this->input->get('end_dt'), array("class" => "form-control datepicker required", 'placeholder' => 'To Date')); ?>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 								</div>
 								<?php echo form_error("dob"); ?>
@@ -49,7 +49,7 @@
 							<div class="form-group col-sm-3">
                 <?php echo form_label('Claim Status:', 'status2', array("class" => 'col-sm-12')); ?>
 								<div class="input-group">
-                  <?php echo form_dropdown("status2", array('' => 'select status', 'Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed', 'Denied' => 'Denied'), $claim_details["status2"], array("class" => 'form-control change_claim_status2')); ?>
+                  <?php echo form_dropdown("status2", array('' => 'select status', 'Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed', 'Denied' => 'Denied'), $$this->input->get('status2'), array("class" => 'form-control change_claim_status2')); ?>
                 </div>
 							</div>
 						</div>
@@ -116,7 +116,7 @@
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($reports as $value) { ?>
+                <?php foreach ($records as $value) { ?>
                   <?php $diminishing = 0; ?>
                   <?php if (($value['status2'] != 'Closed') && ($value['status2'] != 'Denied')) { $diminishing = $value['reserve_amount'] - $value['claimed_amount']; } ?>
                   <?php $incurred = $diminishing + $value['paied_amount']; ?>
