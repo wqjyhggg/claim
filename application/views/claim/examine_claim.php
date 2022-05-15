@@ -28,17 +28,6 @@
 							<label>Policy : </label><?php echo $policy['policy']; ?><span style="padding-left: 10px;">&nbsp;</span> ( <span style="<?php if (($policy['status_id'] == 2) || ($policy['status_id'] == 5) || ($policy['status_id'] == 6)) { echo "color: rgba(243,76,70,0.88);"; } ?>"><?php echo $policy_status[$policy['status_id']]; ?></span> )
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Arrival Date : </label><?php echo $policy['arrival_date']; ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Effective Date : </label><?php echo $policy['effective_date']; ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Expiry Date : </label><?php echo $policy['expiry_date']; ?>
-						</div>
-						<div class="clearfix"></div>
-	
-						<div class="form-group col-sm-3">
 							<label>Beneficiary : </label><?php echo $policy['beneficiary']; ?>
 						</div>
 						<div class="form-group col-sm-3">
