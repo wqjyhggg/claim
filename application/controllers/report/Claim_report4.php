@@ -31,7 +31,7 @@ class Claim_report4 extends CI_Controller {
       }
 
       if (isset($get["iscsv"])) {
-        if (1) {
+        if (0) {
           $filename = "report4_".$this->input->get('start_dt')."_".$this->input->get('end_dt');
           header('Content-Disposition: attachment;filename="'.$filename.'.csv";');
           header('Content-Type: application/csv; charset=UTF-8');
@@ -69,31 +69,30 @@ class Claim_report4 extends CI_Controller {
               }
               $incurred = $diminishing + $value['paied_amount'];
               fputcsv($fp, array(
-                empty($value['up_insuer'])?$value['up_insuer']:"",
+                empty($value['up_insuer'])?"":$value['up_insuer'],
                 $value['product_short'],
                 $value['insured_first_name'],
                 $value['insured_last_name'],
                 $value['policy_no'],
                 number_format($value['sum_insured'], 2),
-                empty($value['effective_date'])?$value['effective_date']:"",
-                empty($value['province'])?$value['province']:"",
+                empty($value['effective_date'])?"":$value['effective_date'],
+                empty($value['province'])?"":$value['province'],
                 $value['claim_no'],
-                empty($value['package'])?$value['package']:"",
+                empty($value['package'])?"":$value['package'],
                 $value['date_symptoms'],
-                empty($value['status2'])?$value['status2']:"",
-                empty($value['status'])?$value['status']:"",
+                empty($value['status2'])?"":$value['status2'],
+                empty($value['status'])?"":$value['status'],
                 substr($value['created'], 0, 10),
                 substr($value['last_update'], 0, 10),
-                empty($value['opendays'])?$value['opendays']:"",
-                empty($value['denied_reason'])?$value['denied_reason']:"",
-                empty($value['notes'])?$value['notes']:"",
+                empty($value['opendays'])?"":$value['opendays'],
+                empty($value['denied_reason'])?"":$value['denied_reason'],
+                empty($value['notes'])?"":$value['notes'],
                 number_format($value['claimed_amount'], 2),
                 number_format($value['reserve_amount'], 2),
                 number_format($diminishing, 2),
                 number_format($value['paied_amount'], 2),
                 number_format($incurred, 2),
               ));
-            }
           }
         } else {
           $objPHPExcel = new PHPExcel();
@@ -135,7 +134,7 @@ class Claim_report4 extends CI_Controller {
               }
               $incurred = $diminishing + $value['paied_amount'];
 
-              $sheet->setCellValue('A'.$row, empty($value['up_insuer'])?$value['up_insuer']:"");
+              $sheet->setCellValue('A'.$row, empty($value['up_insuer'])?"":$value['up_insuer']);
               $sheet->setCellValue('B'.$row, $value['product_short']);
               $sheet->setCellValue('C'.$row, $value['insured_first_name']);
               $sheet->setCellValue('D'.$row, $value['insured_last_name']);
@@ -143,18 +142,18 @@ class Claim_report4 extends CI_Controller {
               $sheet->setCellValue('F'.$row, number_format($value['sum_insured'], 2));
               $sheet->setCellValue('G'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime(substr($value['effective_date'], 0, 10) . ' 00:00:00 EST')));
               $sheet->getStyle('G'.$row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
-              $sheet->setCellValue('H'.$row, empty($value['province'])?$value['province']:"");
+              $sheet->setCellValue('H'.$row, empty($value['province'])?"":$value['province']);
               $sheet->setCellValue('I'.$row, $value['claim_no']);
-              $sheet->setCellValue('J'.$row, empty($value['package'])?$value['package']:"");
+              $sheet->setCellValue('J'.$row, empty($value['package'])?"":$value['package']);
               $sheet->setCellValue('K'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime(substr($value['date_symptoms'], 0, 10) . ' 00:00:00 EST')));
               $sheet->getStyle('K'.$row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
-              $sheet->setCellValue('L'.$row, empty($value['status2'])?$value['status2']:"");
-              $sheet->setCellValue('M'.$row, empty($value['status'])?$value['status']:"");
+              $sheet->setCellValue('L'.$row, empty($value['status2'])?"":$value['status2']);
+              $sheet->setCellValue('M'.$row, empty($value['status'])?"":$value['status']);
               $sheet->setCellValue('N'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime(substr($value['created'], 0, 10) . ' 00:00:00 EST')));
               $sheet->getStyle('N'.$row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
-              $sheet->setCellValue('P'.$row, empty($value['opendays'])?$value['opendays']:"");
-              $sheet->setCellValue('Q'.$row, empty($value['denied_reason'])?$value['denied_reason']:"");
-              $sheet->setCellValue('R'.$row, empty($value['notes'])?$value['notes']:"");
+              $sheet->setCellValue('P'.$row, empty($value['opendays'])?"":$value['opendays']);
+              $sheet->setCellValue('Q'.$row, empty($value['denied_reason'])?"":$value['denied_reason']);
+              $sheet->setCellValue('R'.$row, empty($value['notes'])?"":$value['notes']);
               $sheet->setCellValue('S'.$row, number_format($value['claimed_amount'], 2));
               $sheet->setCellValue('T'.$row, number_format($value['reserve_amount'], 2));
               $sheet->setCellValue('U'.$row, number_format($diminishing, 2));
