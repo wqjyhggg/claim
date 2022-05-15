@@ -121,9 +121,9 @@
                   <th>Process Status</th>
                   <th>Sum Insured</th>
                   <th>Total Claimed Amount</th>
-                  <th>Reserve</th>
-                  <th>Diminishing Reserve</th>
-                  <th>Total Amount Paid</th>
+                  <th>Claim Reserved Amount</th>
+                  <th>Claim Diminishing Reserved Amount</th>
+                  <th>Total Amount Paid for Claim</th>
                   <th>Benefit</th>
                   <th>Claim Item Loss Date</th>
                   <th>Claim item Finalized Date</th>
