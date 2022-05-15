@@ -116,9 +116,7 @@
 							<?php echo form_error("guardian_phone"); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<?php echo form_label('Reserve Amount:', 'reserve_amount', array("class" => 'col-sm-12')); ?>
-							<?php echo form_input("reserve_amount", $reserve_amount, array("class" => "form-control", 'placeholder' => 'Reserve Amount')); ?>
-							<?php echo form_error("reserve_amount"); ?>
+              &nbsp;
 						</div>
 					</div>
 
@@ -367,6 +365,11 @@
 							<?php echo form_label('Diagnosis:', 'diagnosis', array("class" => 'col-sm-12')); ?>
 							<?php echo form_input("diagnosis", $this->input->post("diagnosis"), array("class" => "form-control required", 'placeholder' => 'Diagnosis')); ?>
 							<?php echo form_error("diagnosis"); ?>
+						</div>
+						<div class="col-sm-12">
+              <?php echo form_label('Reserve Amount:', 'reserve_amount', array("class" => 'col-sm-12')); ?>
+							<?php echo form_input("reserve_amount", $reserve_amount, array("class" => "form-control", 'placeholder' => 'Reserve Amount')); ?>
+							<?php echo form_error("reserve_amount"); ?>
 						</div>
 						<div class="form-group col-sm-12">
 							<?php echo form_label('Brief description of your sickness or injury:', 'medical_description', array("class" => 'col-sm-12')); ?>
