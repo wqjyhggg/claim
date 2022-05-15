@@ -93,6 +93,7 @@ class Claim_report4 extends CI_Controller {
                 number_format($value['paied_amount'], 2),
                 number_format($incurred, 2),
               ));
+            }
           }
         } else {
           $objPHPExcel = new PHPExcel();
