@@ -363,6 +363,11 @@ class Eclaim extends CI_Controller {
 				}
 				unset($data['imgfile']);
 				$payee['claim_id'] = $data['id'];
+        if ($existed = $this->claim_model->search(array("eclaim_no"=>$data["eclaim_no"]))) {
+          // Claim existed
+          return show_error('Eclaim has been transfered. Claim No:' . $existed[0]['claim_no']);
+        }
+
 				$payee_id = $this->claim_model->payees_save($payee);
 
 				// insert values to database

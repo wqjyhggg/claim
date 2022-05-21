@@ -61,6 +61,7 @@
 								<?php echo form_error("policy_no"); ?>
 								<?php echo form_hidden("id", $eclaim['id']); ?>
 								<?php echo form_hidden("eclaim_no", $eclaim['eclaim_no']); ?>
+								<?php echo form_hidden("reserve_amount", $eclaim['amount']); ?>
 								<?php echo form_hidden("product_short", $eclaim['product_short']); ?>
 							</div>
 							<div class="form-group col-sm-3">

@@ -105,7 +105,7 @@ class Claim_report3 extends CI_Controller {
         }
         $objPHPExcel->setActiveSheetIndex(0);
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $filename = "report3_".date("Y-m-d_h:i:s").".xlsx";
+        $filename = "report3_".date("Ymd_his").".xlsx";
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
