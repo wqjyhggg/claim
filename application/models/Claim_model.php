@@ -438,12 +438,12 @@ class Claim_model extends CI_Model {
     if (!empty($get["start_dt"]) && !empty($get["end_dt"])) {
       // Use start date and end date
       $sql .= " WHERE c.created>=".$this->db->escape($get["start_dt"]." 00:00:00")." AND c.created<=".$this->db->escape($get["end_dt"]." 23:59:59");
-    } else if (!empty($year)) {
+    } else if (!empty($get["year"])) {
       // User year
       $sql .= " WHERE c.created>=".$this->db->escape($get["year"]."-01-01 00:00:00")." AND c.created<=".$this->db->escape($get["year"]."-12-31 23:59:59");
     } else {
       // Use today
-      $sql .= " WHERE c.created>=".$this->db->escape(date("Y-m-d 00:00:00",time()))." AND c.created<=".$this->db->escape(date("Y-m-d 23:59:59", time()));
+      $sql .= " WHERE 1=1";
     }
 
     if (!empty($get["finalized_start_dt"])) {
@@ -468,8 +468,8 @@ class Claim_model extends CI_Model {
       }
     }
 
-    if (!empty($get["up_insurer"])) {
-      $sql .= " AND p.up_insurer=".$this->db->escape($get["up_insurer"]);
+    if (!empty($get["up_insuer"])) {
+      $sql .= " AND p.up_insuer=".$this->db->escape($get["up_insuer"]);
     }
 
 		return $this->db->query($sql)->result_array();
@@ -485,12 +485,12 @@ class Claim_model extends CI_Model {
     if (!empty($get["start_dt"]) && !empty($get["end_dt"])) {
       // Use start date and end date
       $sql .= " WHERE c.created>=".$this->db->escape($get["start_dt"]." 00:00:00")." AND c.created<=".$this->db->escape($get["end_dt"]." 23:59:59");
-    } else if (!empty($year)) {
+    } else if (!empty($get["year"])) {
       // User year
       $sql .= " WHERE c.created>=".$this->db->escape($get["year"]."-01-01 00:00:00")." AND c.created<=".$this->db->escape($get["year"]."-12-31 23:59:59");
     } else {
       // Use today
-      $sql .= " WHERE c.created>=".$this->db->escape(date("Y-m-d 00:00:00",time()))." AND c.created<=".$this->db->escape(date("Y-m-d 23:59:59", time()));
+      $sql .= " WHERE 1=1";
     }
 
     if (!empty($get["status2"])) {
@@ -508,8 +508,8 @@ class Claim_model extends CI_Model {
       }
     }
 
-    if (!empty($get["up_insurer"])) {
-      $sql .= " AND p.up_insurer=".$this->db->escape($get["up_insurer"]);
+    if (!empty($get["up_insuer"])) {
+      $sql .= " AND p.up_insuer=".$this->db->escape($get["up_insuer"]);
     }
 
 		return $this->db->query($sql)->result_array();

@@ -23,6 +23,9 @@ class Claim_report4 extends CI_Controller {
 		} else {
 			$this->load->model('product_model');
 			$this->load->model('claim_model');
+			$this->load->model('province_model');
+      
+      $this->data['provinces'] = $this->province_model->get_list(1); // Canada only
 
       $get = $this->input->get();
       $this->data['records'] = array();
@@ -134,7 +137,12 @@ class Claim_report4 extends CI_Controller {
                 $diminishing = $value['reserve_amount'] - $value['claimed_amount'];
               }
               $incurred = $diminishing + $value['paied_amount'];
-
+              $province = empty($value['province'])?"":$value['province'];
+              if (!empty($this->data['provinces'][$province])) {
+                $province = $this->data['provinces'][$province];
+              }
+              $province = ucfirst($province);
+  
               $sheet->setCellValue('A'.$row, empty($value['up_insuer'])?"":$value['up_insuer']);
               $sheet->setCellValue('B'.$row, $value['product_short']);
               $sheet->setCellValue('C'.$row, $value['insured_first_name']);
@@ -143,7 +151,7 @@ class Claim_report4 extends CI_Controller {
               $sheet->setCellValue('F'.$row, number_format($value['sum_insured'], 2));
               $sheet->setCellValue('G'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime(substr($value['effective_date'], 0, 10) . ' 00:00:00 EST')));
               $sheet->getStyle('G'.$row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
-              $sheet->setCellValue('H'.$row, empty($value['province'])?"":$value['province']);
+              $sheet->setCellValue('H'.$row, $province);
               $sheet->setCellValue('I'.$row, $value['claim_no']);
               $sheet->setCellValue('J'.$row, empty($value['package'])?"":$value['package']);
               $sheet->setCellValue('K'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime(substr($value['date_symptoms'], 0, 10) . ' 00:00:00 EST')));

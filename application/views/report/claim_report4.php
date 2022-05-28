@@ -125,6 +125,13 @@
                   <?php $diminishing = 0; ?>
                   <?php if (($value['status2'] != 'Closed') && ($value['status2'] != 'Denied')) { $diminishing = $value['reserve_amount'] - $value['claimed_amount']; } ?>
                   <?php $incurred = $diminishing + $value['paied_amount']; ?>
+                  <?php 
+                    $province = empty($value['province'])?"":$value['province'];
+                    if (!empty($this->data['provinces'][$province])) {
+                      $province = $this->data['provinces'][$province];
+                    }
+                    $province = ucfirst($province);
+                  ?>
                   <tr>
                     <td><?php echo $value['up_insuer']; ?></td>
                     <td><?php echo $value['product_short']; ?></td>
@@ -133,7 +140,7 @@
                     <td><?php echo $value['policy_no']; ?></td>
                     <td><?php echo number_format($value['sum_insured'], 2); ?></td>
                     <td><?php echo $value['effective_date']; ?></td>
-                    <td><?php echo $value['province']; ?></td>
+                    <td><?php echo $province; ?></td>
                     <td><?php echo $value['claim_no']; ?></td>
                     <td><?php echo $value['package']; ?></td>
                     <td><?php echo $value['date_symptoms']; ?></td>
