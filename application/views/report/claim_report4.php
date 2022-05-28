@@ -130,7 +130,7 @@
                     if (!empty($this->data['provinces'][$province])) {
                       $province = $this->data['provinces'][$province];
                     }
-                    $province = ucfirst($province);
+                    $province = ucfirst(strtolower($province));
                   ?>
                   <tr>
                     <td><?php echo $value['up_insuer']; ?></td>

@@ -75,7 +75,7 @@ class Claim_report3 extends CI_Controller {
             if (!empty($this->data['provinces'][$province])) {
               $province = $this->data['provinces'][$province];
             }
-            $province = ucfirst($province);
+            $province = ucfirst(strtolower($province));
             $sheet->setCellValue('A'.$row, empty($value['up_insuer'])?"":$value['up_insuer']);
             $sheet->setCellValue('B'.$row, $value['product_short']);
             $sheet->setCellValue('C'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime(substr($value['apply_date'], 0, 10) . ' 00:00:00 EST')));
