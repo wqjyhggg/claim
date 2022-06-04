@@ -175,7 +175,7 @@
 							<tbody>
 								<?php foreach ($policies as $key => $value): ?>
 								<tr data='<?php echo $html_model->escapeQuote(json_encode($value)); ?>'>
-									<td><?php echo $value['policy']; ?></td>
+									<td><a href="<?php echo $policy_detail_url.$value['policy']; ?>" target="_blank"><?php echo $value['policy']; ?></a></td>
 									<td><?php echo htmlspecialchars($value['firstname']." ".$value['lastname']); ?></td>
 									<td><?php echo htmlspecialchars($value['birthday']); ?></td>
 									<td><?php echo $policy_status[$value['status_id']]['name']; ?></td>

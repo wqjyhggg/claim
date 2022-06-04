@@ -48,6 +48,7 @@ class Eclaim extends CI_Controller {
 
 			$this->data['pagination'] = $this->pagination->create_links(); // create pagination links
 			$this->data['html_model'] = $this->html_model;
+			$this->data['policy_detail_url'] = site_url('emergency_assistance/view_policy')."/";
 			                                    
 			// render view data
 			$this->template->write('title', SITE_TITLE . ' - Eclaim', TRUE);
