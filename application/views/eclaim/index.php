@@ -105,7 +105,7 @@
 								<?php foreach ($eclaims as $key => $value): ?>
 								<tr>
 									<td><?php echo $value['eclaim_no']; ?></td>
-									<td><?php echo $value['policy_no']; ?></td>
+									<td><a href="<?php echo $policy_detail_url.$value['policy_no']; ?>" target="_blank"><?php echo $value['policy_no']; ?></a></td>
 									<td><?php echo $value['claim_no']; ?></td>
 									<td><?php echo htmlspecialchars($value['insured_first_name']); ?></td>
 									<td><?php echo htmlspecialchars($value['insured_last_name']); ?></td>
