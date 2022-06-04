@@ -1273,7 +1273,7 @@ class Claim extends CI_Controller {
             $this->data['items_payees'][] = $this->data['items'][$ikey]['item_payee_name'];
           }
 				}
-        if ($claim["status2"] == "Closed") {
+        if (($claim["status2"] == "Closed") || ($claim["status2"] == "Denied")) {
           $this->data['diminishing_amount'] = 0;
         }
 
