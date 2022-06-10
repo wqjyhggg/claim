@@ -80,7 +80,7 @@
                </div> 
                <div class="form-group col-sm-3">
                   <?php               
-                  echo form_input("plan_id", $this->input->get("plan_id"), array("class"=>"form-control", 'placeholder'=>'ID'));
+                  echo form_input("student_id", $this->input->get("student_id"), array("class"=>"form-control", 'placeholder'=>'student_id'));
                   ?>
                </div>
                <div class="form-group col-sm-3">

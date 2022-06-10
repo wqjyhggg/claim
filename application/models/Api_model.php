@@ -26,6 +26,7 @@ class Api_model extends CI_Model {
 			'birthday2',
 			'policy',
 			'policy_match',
+			'student_id',
 			'apply_date', 'apply_date2',
 			'arrival_date', 'arrival_date2',
 			'effective_date', 'effective_date2',
