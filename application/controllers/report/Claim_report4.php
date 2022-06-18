@@ -192,7 +192,7 @@ class Claim_report4 extends CI_Controller {
         $this->data['yearlist'] = array("" => "select Year");
         $thisyear = date("Y");
         for ($i = 0; $i < 5; $i++) {
-          $this->data['yearlist'][] = $thisyear - $i;
+          $this->data['yearlist'][$thisyear - $i] = $thisyear - $i;
         }
   
         $get["iscsv"] = 1;
