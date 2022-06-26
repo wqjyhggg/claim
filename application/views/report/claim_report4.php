@@ -135,8 +135,8 @@
                   <tr>
                     <td><?php echo $value['up_insuer']; ?></td>
                     <td><?php echo $value['product_short']; ?></td>
-                    <td><?php echo $value['insured_first_name']; ?></td>
                     <td><?php echo $value['insured_last_name']; ?></td>
+                    <td><?php echo $value['insured_first_name']; ?></td>
                     <td><?php echo $value['policy_no']; ?></td>
                     <td><?php echo number_format($value['sum_insured'], 2); ?></td>
                     <td><?php echo $value['effective_date']; ?></td>

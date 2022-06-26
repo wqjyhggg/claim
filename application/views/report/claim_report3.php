@@ -150,8 +150,8 @@
                     <td><?php echo $value['apply_date']; ?></td>
                     <td><?php echo $value['effective_date']; ?></td>
                     <td><?php echo $value['expiry_date']; ?></td>
-                    <td><?php echo $value['insured_first_name']; ?></td>
                     <td><?php echo $value['insured_last_name']; ?></td>
+                    <td><?php echo $value['insured_first_name']; ?></td>
                     <td><?php echo $value['policy_no']; ?></td>
                     <td><?php echo $province; ?></td>
                     <td><?php echo $value['claim_no']; ?></td>

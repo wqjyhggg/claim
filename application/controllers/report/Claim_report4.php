@@ -145,8 +145,8 @@ class Claim_report4 extends CI_Controller {
   
               $sheet->setCellValue('A'.$row, empty($value['up_insuer'])?"":$value['up_insuer']);
               $sheet->setCellValue('B'.$row, $value['product_short']);
-              $sheet->setCellValue('C'.$row, $value['insured_first_name']);
-              $sheet->setCellValue('D'.$row, $value['insured_last_name']);
+              $sheet->setCellValue('C'.$row, $value['insured_last_name']);
+              $sheet->setCellValue('D'.$row, $value['insured_first_name']);
               $sheet->setCellValue('E'.$row, $value['policy_no']);
               $sheet->setCellValue('F'.$row, number_format($value['sum_insured'], 2));
               $sheet->setCellValue('G'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime(substr($value['effective_date'], 0, 10) . ' 00:00:00 EST')));

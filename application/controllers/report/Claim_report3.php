@@ -84,8 +84,8 @@ class Claim_report3 extends CI_Controller {
             $sheet->getStyle('D'.$row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
             $sheet->setCellValue('E'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime(substr($value['expiry_date'], 0, 10) . ' 00:00:00 EST')));
             $sheet->getStyle('E'.$row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
-            $sheet->setCellValue('F'.$row, $value['insured_first_name']);
-            $sheet->setCellValue('G'.$row, $value['insured_last_name']);
+            $sheet->setCellValue('F'.$row, $value['insured_last_name']);
+            $sheet->setCellValue('G'.$row, $value['insured_first_name']);
             $sheet->setCellValue('H'.$row, $value['policy_no']);
             $sheet->setCellValue('I'.$row, $province);
             $sheet->setCellValue('J'.$row, $value['claim_no']);
