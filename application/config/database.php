@@ -75,9 +75,9 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'claim',
-	'password' => 'claim1209',
+	'hostname' => '172.31.91.60',
+	'username' => 'remoteacc',
+	'password' => 'b3FFc99bFE34885',
 	'database' => 'jf_claim_management',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
