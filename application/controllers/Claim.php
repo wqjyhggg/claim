@@ -2244,6 +2244,10 @@ class Claim extends CI_Controller {
       $denied_reason = $denied_reason_other;
     }
 		
+		if (empty($status2) && !empty($type)) {
+		  $status2 = $type;
+		  $denied_reason = "";
+		}
 		$data = array(
 				"id" => $claim_id,
 				'status2' => $status2,
