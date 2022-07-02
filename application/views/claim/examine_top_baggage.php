@@ -557,7 +557,10 @@
 							</div>
 							<div class="col-sm-2">
 								<?php echo form_label('Claim Status:', 'status2', array("class" => 'col-sm-12')); ?>
-								<?php echo form_dropdown("status2", array('Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed'), $claim_details["status2"], array("class" => 'form-control change_claim_status2')); ?>
+								<?php echo form_dropdown("status2", array('Open' => 'Open', 'Reopen' => 'Reopen', 'Closed' => 'Closed', 'Denied' => 'Denied'), $claim_details["status2"], array("class" => 'form-control change_claim_status2')); ?>
+                <?php if ($claim_details["status2"] == "Denied") { ?>
+                  <div><?php echo $claim_details["denied_reason"]; ?></div>
+                <?php } ?>
 							</div>
 							<div class="col-sm-2">
 								<label class="col-sm-12">&nbsp;</label>
@@ -653,6 +656,45 @@
 		</div>
 	</div>
 </div>
+
+<!-- Claim Status Confirm -->
+<div id="claim_status_change" class="modal fade" role="dialog">
+	<div class="modal-dialog  modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Confirm Status Change</h4>
+			</div>
+			<?php echo form_open( "claim/status2", array ("id" => 'claim_status_change_form') );?>
+			<div class="modal-body">
+        <input id="claim_status_change_claim_id" type="hidden" name="claim_id" value="<?php echo $claim['id']; ?>">
+        <input id="claim_status_change_status2" type="hidden" name="status2" value="">
+				<div class="row">
+  				<label for="status_label" class="col-sm-12">Are you sure you want to change claim processing status to <span id="claim_status_change_claim_str" style="color:#800000;"></span></label>
+  			</div>
+				<div class="row" id="change_claim_status2_denied_div" style="display:none;">
+  				<label for="status_label" class="col-sm-3 text-right">Denie Reasion:</label>
+          <div class="col-sm-6">
+            <?php echo form_dropdown("denied_reason", array('' => '', 'Exclusions and Limitations' => 'Exclusions and Limitations', 'Delay in Submitting Claim/Insufficient documents' => 'Delay in Submitting Claim/Insufficient documents', 'Benefit Not Covered' => 'Benefit Not Covered', 'Failure to Disclose or Misrepresent' => 'Failure to Disclose or Misrepresent', 'Not Meet Eligibility/ Void Policy' => 'Not Meet Eligibility/ Void Policy', 'Other' => 'Other (specify)'), $claim_details["denied_reason"], array("class" => 'form-control change_claim_status2_denied')); ?>
+          </div>
+				</div>
+				<div class="row" id="change_claim_status2_denied_other_div" style="display:none;">
+  				<label for="status_label" class="col-sm-3 text-right">Input the Reason:</label>
+          <div class="col-sm-6">
+            <?php echo form_input("denied_reason_other", '', array("class" => 'form-control change_claim_status2_denied_other')); ?>
+          </div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<input type="submit" class="btn btn-primary" value="Confirm">
+				<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+			</div>
+      <?php echo form_close(); ?>
+		</div>
+	</div>
+</div>
+<!-- Claim Status Confirm End Here -->
 
 <!-- Email print doc content here -->
 <div id="print_template" class="modal fade" role="dialog">
@@ -1418,22 +1460,23 @@ $(document).ready(function() {
 			return false;
 		}
 	}).on("change", ".change_claim_status2", function() {
-		if (confirm('Are you sure you want to change claim processing status ?')) {
-			$.ajax({
-				url: "<?php echo base_url("claim/status2/"); ?>"  + $(this).val(),
-				method: "post",
-				data:{claim_id:<?php echo $claim['id']; ?>},
-				beforeSend: function(){
-					$(".modal-content, .main_container").addClass("csspinner load1");
-				},
-				success: function() {
-					window.location.reload();
-				}
-			})
-		} else {
-			$(this).val(old_status);
-			return false;
-		}
+    var val = $(this).val();
+    $('#claim_status_change_status2').val(val);
+    $('#claim_status_change_claim_str').html(val);
+    if (val == "Denied") {
+      $("#change_claim_status2_denied_div").show();
+    } else {
+      $("#change_claim_status2_denied_div").hide();
+      $(".change_claim_status2_denied_other").val("");
+    }
+    $('#claim_status_change').modal('show');
+	}).on("change", ".change_claim_status2_denied", function() {
+    var val = $(this).val();
+    if (val == "Other") {
+      $('#change_claim_status2_denied_other_div').show();
+    } else {
+      $('#change_claim_status2_denied_other_div').hide();
+    }
 	}).on("click", "input[name=Accept]", function() {
 		if (confirm('Are you sure you want to change claim status to processed ?')) {
 			$.ajax({
