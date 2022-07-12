@@ -56,7 +56,7 @@
 					<?php } else if (($policy['package'] == 'single_medical_plan') || ($policy['package'] == 'optional_plan')) { ?>
 					<?php     if ($policy['package'] == 'single_medical_plan') { ?>
 					<div class="form-group col-sm-3">
-						<label style="text-transform: capitalize;">Sum Insured: $10,000,000</label>
+						<label style="text-transform: capitalize;">Sum Insured: $5,000,000</label>
 					</div>
 					<?php     } ?>
 					<?php     if ($policy['ad_and_d_ck']) { ?>
