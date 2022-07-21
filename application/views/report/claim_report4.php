@@ -123,7 +123,7 @@
               <tbody>
                 <?php foreach ($records as $value) { ?>
                   <?php $diminishing = 0; ?>
-                  <?php if (($value['status2'] != 'Closed') && ($value['status2'] != 'Denied')) { $diminishing = $value['reserve_amount'] - $value['claimed_amount']; } ?>
+                  <?php if (($value['status2'] != 'Closed') && ($value['status2'] != 'Denied')) { $diminishing = $value['reserve_amount'] - $value['paied_amount']; } ?>
                   <?php $incurred = $diminishing + $value['paied_amount']; ?>
                   <?php 
                     $province = empty($value['province'])?"":$value['province'];
@@ -149,7 +149,7 @@
                     <td><?php echo substr($value['created'], 0, 10); ?></td>
                     <td><?php echo substr($value['last_update'], 0, 10); ?></td>
                     <td><?php echo $value['opendays']; ?></td>
-                    <td><?php echo $value['denied_reason']; ?></td>
+                    <td><?php echo ($value['status2'] == 'Closed')?"":$value['denied_reason']; ?></td>
                     <td><?php echo $value['notes']; ?></td>
                     <td><?php echo number_format($value['claimed_amount'], 2); ?></td>
                     <td><?php echo number_format($value['reserve_amount'], 2); ?></td>

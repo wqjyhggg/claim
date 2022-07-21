@@ -134,7 +134,7 @@ class Claim_report4 extends CI_Controller {
               // $policy = json_decode($value["policy_info"], true);
               $diminishing = 0;
               if (($value['status2'] != 'Closed') && ($value['status2'] != 'Denied')) {
-                $diminishing = $value['reserve_amount'] - $value['claimed_amount'];
+                $diminishing = $value['reserve_amount'] - $value['paied_amount'];
               }
               $incurred = $diminishing + $value['paied_amount'];
               $province = empty($value['province'])?"":$value['province'];
@@ -160,8 +160,10 @@ class Claim_report4 extends CI_Controller {
               $sheet->setCellValue('M'.$row, empty($value['status'])?"":$value['status']);
               $sheet->setCellValue('N'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime(substr($value['created'], 0, 10) . ' 00:00:00 EST')));
               $sheet->getStyle('N'.$row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+              $sheet->setCellValue('O'.$row, PHPExcel_Shared_Date::PHPToExcel(strtotime(substr($value['last_update'], 0, 10) . ' 00:00:00 EST')));
+              $sheet->getStyle('O'.$row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
               $sheet->setCellValue('P'.$row, empty($value['opendays'])?"":$value['opendays']);
-              $sheet->setCellValue('Q'.$row, empty($value['denied_reason'])?"":$value['denied_reason']);
+              $sheet->setCellValue('Q'.$row, (($value['status2'] == 'Closed') || empty($value['denied_reason']))?"":$value['denied_reason']);
               $sheet->setCellValue('R'.$row, empty($value['notes'])?"":$value['notes']);
               $sheet->setCellValue('S'.$row, number_format($value['claimed_amount'], 2));
               $sheet->setCellValue('T'.$row, number_format($value['reserve_amount'], 2));
