@@ -148,7 +148,7 @@
                     <td><?php echo $value['status']; ?></td>
                     <td><?php echo substr($value['created'], 0, 10); ?></td>
                     <td><?php echo substr($value['last_update'], 0, 10); ?></td>
-                    <td><?php echo $value['opendays']; ?></td>
+                    <td><?php echo empty($value['opendays'])?0:($value['opendays']+1); ?></td>
                     <td><?php echo ($value['status2'] == 'Closed')?"":$value['denied_reason']; ?></td>
                     <td><?php echo $value['notes']; ?></td>
                     <td><?php echo number_format($value['claimed_amount'], 2); ?></td>
