@@ -584,6 +584,9 @@
 							<div class="col-sm-2">
 								<input class="btn btn-primary" name="Refuse" value="Refuse Claim" type="button">
 							</div>
+							<div class="col-sm-2">
+								<?php echo form_checkbox('no_refuse_reason', '1'); ?> No Reason
+							</div>
 							<?php } ?>
 							<div class="col-sm-2">
 								<?php echo anchor("eclaim/export/".$eclaim['id'], "Print", "target='_blank' class='btn btn-primary'"); ?>

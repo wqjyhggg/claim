@@ -106,14 +106,16 @@ class Eclaim extends CI_Controller {
 					$to = $ec['email'];
 					$body  = "Dear " . $ec['insured_first_name'] . ",\n\n"; 
 					$body  .= "The web claim you submitted on ".date("Y-m-d")." has been reviewed. By visiting eclaim.jfgroup.ca and logging in to your account, you may review further details under your claim history.\n\n"; 
-					$body  .= "You are receiving this email due to one of the following reasons:\n\n"; 
-          if (empty($data['notes'])) {
-            $body  .= "- You have submitted a duplicate claim. You are not required to do anything further.\n\n"; 
-            $body  .= "- Your claim was submitted under an incorrect policy. You are not required to take any further action as a claim examiner will make the necessary corrections.\n\n"; 
-            $body  .= "- You have submitted additional documentation(s) related to an existing claim. You are not required to take any further action as a claim examiner will make the necessary corrections.\n\n"; 
-            $body  .= "- Your total claim amount exceeds $500. You are required to mail your claim to our office. Please follow the instructions https://www.jfgroup.ca/how_to_claim.\n\n"; 
-          } else {
-            $body  .= "Refuse Reaspm - " . $data['notes'] . "\n\n"; 
+          if (empty($post['no_refuse_reason'])) {
+            $body  .= "You are receiving this email due to one of the following reasons:\n\n"; 
+            if (empty($data['notes'])) {
+              $body  .= "- You have submitted a duplicate claim. You are not required to do anything further.\n\n"; 
+              $body  .= "- Your claim was submitted under an incorrect policy. You are not required to take any further action as a claim examiner will make the necessary corrections.\n\n"; 
+              $body  .= "- You have submitted additional documentation(s) related to an existing claim. You are not required to take any further action as a claim examiner will make the necessary corrections.\n\n"; 
+              $body  .= "- Your total claim amount exceeds $500. You are required to mail your claim to our office. Please follow the instructions https://www.jfgroup.ca/how_to_claim.\n\n"; 
+            } else {
+              $body  .= "Refuse Reason - " . $data['notes'] . "\n\n"; 
+            }
           }
 					$body  .= "This is an auto-generated email, please do not reply directly.\n"; 
 					$body  .= "Should you have any questions, please contact us by phone at 905-707-3335 or email at claim@otcww.com.\n\n"; 
