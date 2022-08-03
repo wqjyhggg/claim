@@ -114,7 +114,7 @@ class Eclaim extends CI_Controller {
               $body  .= "- You have submitted additional documentation(s) related to an existing claim. You are not required to take any further action as a claim examiner will make the necessary corrections.\n\n"; 
               $body  .= "- Your total claim amount exceeds $500. You are required to mail your claim to our office. Please follow the instructions https://www.jfgroup.ca/how_to_claim.\n\n"; 
             } else {
-              $body  .= "Refuse Reason - " . $data['notes'] . "\n\n"; 
+              $body  .= $data['notes'] . "\n\n"; 
             }
           }
 					$body  .= "This is an auto-generated email, please do not reply directly.\n"; 
