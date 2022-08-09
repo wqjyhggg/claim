@@ -145,7 +145,7 @@ class Claim extends CI_Controller {
 			$this->form_validation->set_rules('insured_last_name', 'Insured Last Name ', 'required');
 			$this->form_validation->set_rules('guardian_name', 'Guardian Name ', '');
 			$this->form_validation->set_rules('city', 'city ', '');
-			$this->form_validation->set_rules('province', 'province ', 'alpha');
+			$this->form_validation->set_rules('province', 'province ', 'required');
 			$this->form_validation->set_rules('full_name', 'full name ', '');
 			$this->form_validation->set_rules('employee_name', 'employee name ', '');
 			$this->form_validation->set_rules('city_town', 'city town ', '');
