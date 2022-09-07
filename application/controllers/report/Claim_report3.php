@@ -68,7 +68,7 @@ class Claim_report3 extends CI_Controller {
             // $policy = json_decode($value["policy_info"], true);
             $diminishing = 0;
             if (($value['status2'] != 'Closed') && ($value['status2'] != 'Denied')) {
-              $diminishing = $value['reserve_amount'] - $value['claimed_amount'];
+              $diminishing = $value['reserve_amount'] - $value['paied_amount'];
             }
             $incurred = $diminishing + $value['paied_amount'];
             $province = empty($value['province'])?"":$value['province'];

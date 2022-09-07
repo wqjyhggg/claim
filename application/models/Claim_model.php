@@ -479,7 +479,7 @@ class Claim_model extends CI_Model {
     // expense has status 'Approved','Declined','Paid','Pending','Received' and 'Duplicated'
     $sql  = "SELECT c.*, DATEDIFF(c.last_update,c.created) AS opendays, p.up_insuer, ";
     $sql .= " (SELECT SUM(e1.amount_claimed) FROM expenses_claimed e1 WHERE e1.claim_id=c.id AND e1.status IN ('Approved','Declined','Paid','Pending','Received')) AS claimed_amount, ";
-    $sql .= " (SELECT SUM(e2.amt_payable) FROM expenses_claimed e2 WHERE e2.claim_id=c.id AND e2.status IN ('Approved','Paid')) AS paied_amount ";
+    $sql .= " (SELECT SUM(e2.amt_payable) FROM expenses_claimed e2 WHERE e2.claim_id=c.id AND e2.status='Paid') AS paied_amount ";
     $sql .= " FROM claim c ";
     $sql .= " JOIN product p ON (c.product_short=p.product_short)";
     if (!empty($get["start_dt"]) && !empty($get["end_dt"])) {

@@ -135,7 +135,7 @@
               <tbody>
                 <?php foreach ($records as $value) { ?>
                   <?php $diminishing = 0; ?>
-                  <?php if (($value['status2'] != 'Closed') && ($value['status2'] != 'Denied')) { $diminishing = $value['reserve_amount'] - $value['claimed_amount']; } ?>
+                  <?php if (($value['status2'] != 'Closed') && ($value['status2'] != 'Denied')) { $diminishing = $value['reserve_amount'] - $value['paied_amount']; } ?>
                   <?php $incurred = $diminishing + $value['paied_amount']; ?>
                   <?php 
                     $province = empty($value['province'])?"":$value['province'];
