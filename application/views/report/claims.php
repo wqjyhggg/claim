@@ -234,8 +234,8 @@ function scope_change() {
 	var sls = $("select[name=scope]").val();
 	if (sls == 'Claim') {
 		$('#status_div').show();
-    $('#claim_assign_div').show();
-	} else if (sls == 'Claim') {
+		$('#claim_assign_div').show();
+	} else if (sls == 'Case') {
 		$('#case_assign_div').show();
 	} else {
 		$('#status_div').hide();
