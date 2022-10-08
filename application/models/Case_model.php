@@ -159,6 +159,15 @@ class Case_model extends CI_Model {
 	}
 	
 	/**
+	 * Get Agent ids
+	 * 
+	 * @return array
+	 */
+	public function get_assign_to_list($need_empty=0) {
+		return $this->db->query("SELECT id, username, email, first_name, last_name FROM users WHERE id in (SELECT DISTINCT assign_to FROM `case`) ORDER BY id")->result_array();
+	}
+
+	/**
 	 * Return a list of policy status
 	 *
 	 * @param array $data
@@ -359,6 +368,9 @@ class Case_model extends CI_Model {
 		$sql .= " WHERE status='".self::STATUS_ACTIVE."' AND claim_no='' AND created>='".$ststr."' AND created<='".$edstr."'";
 		if (!empty($data['product_short'])) {
 			$sql .= " AND product_short=".$this->db->escape($data['product_short']);
+		}
+		if (!empty($data['assign_to'])) {
+			$sql .= " AND assign_to=".intval($data['assign_to']);
 		}
 		if (!empty($data['products']) && is_array($data['products'])) {
       $pStr = "'".join("','", $data['products'])."'";

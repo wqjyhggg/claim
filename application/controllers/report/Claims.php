@@ -33,9 +33,13 @@ class Claims extends CI_Controller {
 			$para['invoice_status'] = $this->input->get('invoice_status[]');
 			$para['product_short'] = $this->input->get('product_short');
 			$para['agent_id'] = $this->input->get('agent_id');
+			$para['assign_id'] = $this->input->get('assign_id');
 			$para['claim_date_type'] = $this->input->get('claim_date_type');
 			if ($para['scope'] == 'Claim') {
 				$para['status'] = $this->input->get('status');
+				$para['assign_to'] = $this->input->get('claim_assign');
+			} else  if ($para['scope'] == 'Case') {
+				$para['assign_to'] = $this->input->get('case_assign');
 			}
 			if ($this->input->get('start_dt')) {
 				$para['start_dt'] = $this->input->get('start_dt');
@@ -49,6 +53,8 @@ class Claims extends CI_Controller {
 			}
 
 			$this->data['agents'] = $this->claim_model->get_agents_list();
+			$this->data['claim_assigns'] = $this->claim_model->get_assign_to_list();
+			$this->data['case_assigns'] = $this->case_model->get_assign_to_list();
 			if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
 				$this->data['products'] = $this->product_model->get_list();
 			} else {

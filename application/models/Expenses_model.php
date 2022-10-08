@@ -590,6 +590,9 @@ class Expenses_model extends CI_Model {
 		if (!empty($data['product_short'])) {
 			$sql .= " AND c.product_short=".$this->db->escape($data['product_short']);
 		}
+		if (!empty($data['assign_to'])) {
+			$sql .= " AND c.assign_to=".intval($data['assign_to']);
+		}
 		if (!empty($data['products']) && is_array($data['products'])) {
       $pStr = "'".join("','", $data['products'])."'";
 			$sql .= " AND c.product_short IN (".$pStr.")";

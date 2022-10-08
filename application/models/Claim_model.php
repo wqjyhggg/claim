@@ -62,6 +62,15 @@ class Claim_model extends CI_Model {
 	}
 	
 	/**
+	 * Get Agent ids
+	 * 
+	 * @return array
+	 */
+	public function get_assign_to_list($need_empty=0) {
+		return $this->db->query("SELECT id, username, email, first_name, last_name FROM users WHERE id in (SELECT DISTINCT assign_to FROM claim) ORDER BY id")->result_array();
+	}
+	
+	/**
 	 * Return a Claim Record
 	 *
 	 * @param int $id

@@ -35,12 +35,21 @@
 								<option value="Claim" <?php if ("Claim" == $this->input->get('scope')) { echo "selected"; } ?>>Claim Only</option>
 							</select>
 						</div>
-						<div class="form-group col-sm-3" style="display:none;" id="status_div">
-							<?php echo form_label('Status:', 'status', array ("class" => 'col-sm-12')); ?>
-							<select name="status" class="form-control">
-								<option value="">-- Select Status --</option>
-								<?php foreach ($statuses as $key => $val) { ?>
-								<option value="<?php echo $key; ?>" <?php if ($key == $this->input->get('status')) { echo "selected"; } ?>><?php echo $val; ?></option>
+						<div class="form-group col-sm-3" style="display:none;" id="claim_assign_div">
+            <?php echo form_label('Assign:', 'claim_date_type', array ("class" => 'col-sm-12')); ?>
+							<select name="claim_assign" class="form-control">
+								<option value="" <?php if (empty($this->input->get('claim_assign'))) { echo "selected"; } ?>></option>
+                <?php foreach ($claim_assigns as $assign) { ?>}
+								<option value="<?php echo $assign["id"]; ?>" <?php if ($assign["id"] == $this->input->get('claim_assign')) { echo "selected"; } ?>><?php echo $assign["id"]; ?> - <?php echo $assign["email"]; ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<div class="form-group col-sm-3" style="display:none;" id="case_assign_div">
+            <?php echo form_label('Assign:', 'claim_date_type', array ("class" => 'col-sm-12')); ?>
+							<select name="case_assign" class="form-control">
+								<option value="" <?php if (empty($this->input->get('case_assign'))) { echo "selected"; } ?>></option>
+                <?php foreach ($case_assigns as $assign) { ?>}
+								<option value="<?php echo $assign["id"]; ?>" <?php if ($assign["id"] == $this->input->get('case_assign')) { echo "selected"; } ?>><?php echo $assign["id"]; ?> - <?php echo $assign["email"]; ?></option>
 								<?php } ?>
 							</select>
 						</div>
@@ -67,7 +76,14 @@
               <span style="margin-left: 1em;">
               <input type="checkbox" name="invoice_status[]" value="F" <?php if (in_array("F", $curinvoice_status)) { echo "checked"; } ?> /> F
 						</div>
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-3" style="display:none;" id="status_div">
+							<?php echo form_label('Status:', 'status', array ("class" => 'col-sm-12')); ?>
+							<select name="status" class="form-control">
+								<option value="">-- Select Status --</option>
+								<?php foreach ($statuses as $key => $val) { ?>
+								<option value="<?php echo $key; ?>" <?php if ($key == $this->input->get('status')) { echo "selected"; } ?>><?php echo $val; ?></option>
+								<?php } ?>
+							</select>
 						</div>
 						<div class="clearfix"><br /></div>
 						<div class="form-group col-sm-6">
@@ -218,8 +234,13 @@ function scope_change() {
 	var sls = $("select[name=scope]").val();
 	if (sls == 'Claim') {
 		$('#status_div').show();
+    $('#claim_assign_div').show();
+	} else if (sls == 'Claim') {
+		$('#case_assign_div').show();
 	} else {
 		$('#status_div').hide();
+		$('#claim_assign_div').hide();
+		$('#case_assign_div').hide();
 	}
 }
 
