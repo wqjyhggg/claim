@@ -35,6 +35,11 @@
 								<option value="Claim" <?php if ("Claim" == $this->input->get('scope')) { echo "selected"; } ?>>Claim Only</option>
 							</select>
 						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_label('Show Assign:', 'show_assign', array ("class" => 'col-sm-12')); ?>
+              <span style="margin-left: 1em;">
+              <input type="checkbox" name="show_assign" value="Show" <?php if ($this->input->get('show_assign')) { echo "checked"; } ?> /> Show
+						</div>
 						<div class="form-group col-sm-3" style="display:none;" id="claim_assign_div">
             <?php echo form_label('Assign:', 'claim_date_type', array ("class" => 'col-sm-12')); ?>
 							<select name="claim_assign" class="form-control">
@@ -142,6 +147,9 @@
 									<th>Decline Reason</th>
 									<th>Claim Status</th>
 									<th>Sum Insured</th>
+                  <?php if ($this->input->get('show_assign')) { ?>
+                  <th>Assign</th>
+                  <?php } ?>
 								</tr>
 							</thead>
 							<tbody>
@@ -180,6 +188,9 @@
 									<td><?php echo empty($value['reason']) ? '' : $value['reason']; ?></td>
 									<td><?php echo $value['status2']; ?></td>
 									<td><?php echo $value['sum_insured']; ?></td>
+                  <?php if ($this->input->get('show_assign')) { ?>
+                  <td><?php echo $value['assign_to']; ?></td>
+                  <?php } ?>
 								</tr>
 								<?php } ?>
 								<tr>
@@ -214,6 +225,9 @@
 									<td></td>
 									<td></td>
 									<td></td>
+                  <?php if ($this->input->get('show_assign')) { ?>
+                  <td></td>
+                  <?php } ?>
 								</tr>
 							</tbody>
 						</table>
@@ -235,7 +249,10 @@ function scope_change() {
 	if (sls == 'Claim') {
 		$('#status_div').show();
     $('#claim_assign_div').show();
+		$('#case_assign_div').hide();
 	} else if (sls == 'Claim') {
+		$('#status_div').hide();
+		$('#claim_assign_div').hide();
 		$('#case_assign_div').show();
 	} else {
 		$('#status_div').hide();
