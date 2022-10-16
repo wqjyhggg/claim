@@ -105,10 +105,14 @@ class Claims extends CI_Controller {
 			$para['invoice_status'] = $this->input->get('invoice_status[]');
 			$para['product_short'] = $this->input->get('product_short');
 			$para['agent_id'] = $this->input->get('agent_id');
+			$para['assign_id'] = $this->input->get('assign_id');
 			$para['claim_date_type'] = $this->input->get('claim_date_type');
 			if ($para['scope'] == 'Claim') {
 				$para['status'] = $this->input->get('status');
-			}
+				$para['assign_to'] = $this->input->get('claim_assign');
+			} else {
+        $para['assign_to'] = $this->input->get('case_assign');
+      }
 			if ($this->input->get('start_dt')) {
 				$para['start_dt'] = $this->input->get('start_dt');
 			} else {
@@ -195,26 +199,26 @@ class Claims extends CI_Controller {
 				$t_amount_claimed += $value['amount_claimed']; $t_amt_payable += $value['amt_payable']; $t_recovery_amt += $value['recovery_amt']; $t_reserve_amount += $value['reserve_amount'];
         $cols = array(
             $value['claim_no'],
-            $value['invoice'],
-            $value['provider_name'],
-            $value['policy_no'],
-            $value['last_name'],
-            $value['first_name'],
-            $value['birth_day'],
-            $value['gender'],
-            $value['totaldays'],
-            $value['street_address'],
-            $value['city'],
-            $value['province'],
-            $value['post_code'],
-            $value['agent_id'],
-            $value['diagnosis'],
+            empty($value['invoice'])?'':$value['invoice'],
+            empty($value['provider_name'])?'':$value['provider_name'],
+            empty($value['policy_no'])?'':$value['policy_no'],
+            empty($value['last_name'])?'':$value['last_name'],
+            empty($value['first_name'])?'':$value['first_name'],
+            empty($value['birth_day'])?'':$value['birth_day'],
+            empty($value['gender'])?'':$value['gender'],
+            empty($value['totaldays'])?'':$value['totaldays'],
+            empty($value['street_address'])?'':$value['street_address'],
+            empty($value['city'])?'':$value['city'],
+            empty($value['province'])?'':$value['province'],
+            empty($value['post_code'])?'':$value['post_code'],
+            empty($value['agent_id'])?'':$value['agent_id'],
+            empty($value['diagnosis'])?'':$value['diagnosis'],
             isset($value['coverage_code']) ? $value['coverage_code'] : '',
             isset($value['amt_deductible']) ? $value['amt_deductible'] : 0,
             substr($value['created'], 0, 10),
-            $value['date_of_service'],
+            empty($value['date_of_service'])?'':$value['date_of_service'],
             isset($value['finalize_date']) ? $value['finalize_date'] : '',
-            $value['status'],
+            empty($value['status'])?'':$value['status'],
             sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0)),
             sprintf("%0.2f", (isset($value['reserve_amount']) ? $value['reserve_amount'] : 0)),
             sprintf("%0.2f", (isset($value['amount_claimed']) ? $value['amount_claimed'] : 0)),
@@ -223,8 +227,8 @@ class Claims extends CI_Controller {
             isset($value['service_description']) ? $value['service_description'] : '',
             isset($value['pay_to']) ? $value['pay_to'] : '',
             empty($value['reason']) ? '' : $value['reason'],
-            $value['status2'],
-            $value['sum_insured'],
+            empty($value['status2'])?'':$value['status2'],
+            empty($value['sum_insured'])?'':$value['sum_insured'],
         );
         if ($this->input->get('show_assign')) {
           $cols[] = $value['assign_to'];
