@@ -133,7 +133,7 @@
 							<label>Second Insured Last Name : </label><?php echo htmlspecialchars($exinfo['insured2_last_name']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Second Insured Gender : </label><?php echo $exinfo['gender2']; ?>
+							<label>Second Insured Gender : </label><?php echo empty($exinfo['gender2'])?"":$exinfo['gender2']; ?>
 						</div>
 						<div class="form-group col-sm-3">
 							<label>Second Insured Birthday : </label><?php echo $exinfo['dob2']; ?>
@@ -352,13 +352,13 @@
 							Other Travel Insurance
 						</div>
 						<div class="form-group col-sm-6">
-							Name and Address of Insurance Company : <?php echo isset($exinfo["other_travel_insurance"]) ? $exinfo["group_insurance"] : ''; ?>
+							Name and Address of Insurance Company : <?php echo isset($exinfo["other_travel_insurance"]) ? $exinfo["other_travel_insurance"] : ''; ?>
 						</div>
 						<div class="form-group col-sm-3">
-							Policy # : <?php echo isset($exinfo["group_insurance"]) ? htmlspecialchars($exinfo["other_travel_insurance_policy"]) : ''; ?>
+							Policy # : <?php echo isset($exinfo["other_travel_insurance_policy"]) ? htmlspecialchars($exinfo["other_travel_insurance_policy"]) : ''; ?>
 						</div>
 						<div class="form-group col-sm-3">
-							Telephone : <?php echo isset($exinfo["group_insurance"]) ? htmlspecialchars($exinfo["other_travel_insurance_phone"]) : ''; ?>
+							Telephone : <?php echo isset($exinfo["other_travel_insurance_phone"]) ? htmlspecialchars($exinfo["other_travel_insurance_phone"]) : ''; ?>
 						</div>
 						<div class="col-sm-12">
 							Have you claimed from any other party? <input type="checkbox" name="exinfo[other_party_reimbursed_refunded]" value="1" <?php if (! empty($exinfo["other_party_reimbursed_refunded"])) { echo "checked"; } ?>> Yes. If 'yes', please provide details below:_
