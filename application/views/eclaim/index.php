@@ -161,10 +161,10 @@ $(document).ready(function() {
 	var dt = new FormData();
 	console.log("SSSSSS",$("#assign_user").val()); //XXXXXXXXXXXXXXX
 	dt.append('assign_id', $("#assign_user").val());
-	$("input[name=assign_id]").each(function(){
-		console.log("SSSSS111S",$(this).checked,$(this).value); //XXXXXXXXXXXXXXX
-		if ($(this).checked) {
-			dt.append('eclaimids[]', $(this).value);
+	$("input[name=assign_id]").forEach(function(el){
+		console.log("SSSSS111S", el.checked, el.value); //XXXXXXXXXXXXXXX
+		if (el.checked) {
+			dt.append('eclaimids[]', el.value);
     	}
 	});
 	$.ajax({
