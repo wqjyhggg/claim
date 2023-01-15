@@ -49,6 +49,14 @@ class Eclaim extends CI_Controller {
 			$this->data['pagination'] = $this->pagination->create_links(); // create pagination links
 			$this->data['html_model'] = $this->html_model;
 			$this->data['policy_detail_url'] = site_url('emergency_assistance/view_policy')."/";
+			$this->data['assign_users'] = array(0 => "Select Assign to");
+			$para = array("groups" => "Examiner", "active" => 1);
+			$assigns = $this->users_model->search($para, 200, 0);
+			if ($assigns && is_array($assigns)) {
+				foreach ($assigns as $rc) {
+					$this->data['assign_users'][$rc["id"]] = $rc["first_name"]." ".$rc["last_name"];
+				}
+			}
 			                                    
 			// render view data
 			$this->template->write('title', SITE_TITLE . ' - Eclaim', TRUE);

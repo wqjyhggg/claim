@@ -81,7 +81,19 @@
             </div><!-- x_panel -->
             <div class="x_panel">
 				<div class="x_title">
-					<h2>Eclaim Search Result<small></small></h2>
+					<div class="row">
+						<div class="form-group col-sm-3">
+							<h2>Eclaim Search Result<small></small></h2>
+						</div>
+						<div class="form-group col-sm-3 text-right">
+							Assign To
+						</div>
+						<div class="form-group col-sm-3">
+							<?php echo form_dropdown ( "assign_user", $assign_users, 0, array ("class" => 'form-control', "id" => 'assign_user') );?>
+						</div>
+						<div class="form-group col-sm-3">
+							<button class="btn btn-primary" name="Assign" value="Assign">Assign</button>
+						</div>
 					<div class="clearfix"></div>
 				</div>
                 <div class="x_content">
@@ -89,9 +101,11 @@
 						<table class="table table-hover table-bordered">
 							<thead>
 								<tr>
+									<th><?php echo form_checkbox("selectall", 1, FALSE); ?></th>
                                     <th>RefID</th>
 									<th>Policy</th>
 									<th>Claim No</th>
+									<th>Assign to</th>
 									<th>First Name</th>
 									<th>Last Name</th>
 									<th>Status</th>
@@ -103,10 +117,12 @@
 							</thead>
 							<tbody>
 								<?php foreach ($eclaims as $key => $value): ?>
-								<tr>
+								<tr data-id="<?php echo $value['id']; ?>">
+									<td><?php echo form_checkbox("assign_id", $value['id'], FALSE); ?></td>
 									<td><?php echo $value['eclaim_no']; ?></td>
 									<td><a href="<?php echo $policy_detail_url.$value['policy_no']; ?>" target="_blank"><?php echo $value['policy_no']; ?></a></td>
 									<td><?php echo $value['claim_no']; ?></td>
+									<td><?php echo empty($assign_users[$value['processed_by']])?"":$assign_users[$value['processed_by']]; ?></td>
 									<td><?php echo htmlspecialchars($value['insured_first_name']); ?></td>
 									<td><?php echo htmlspecialchars($value['insured_last_name']); ?></td>
 									<td><?php echo (($value['status']==2)?'Transferred':(($value['status']==3)?'Refused':'Received')); ?></td>
@@ -134,5 +150,26 @@ $(document).ready(function() {
 		startDate: '-105y',
 		endDate: '+2y',
 	});
+}).on("click", "input[name=selectall]", function(){                                   // select all checkboxes script
+   if ($(this).is(":checked")) {                                                          // check user click check or uncheck tickbox
+      $("input[name=assign_id]").prop("checked", true);
+   } else {
+      $("input[name=assign_id]").prop("checked", false);
+   }
+}).on("click", "input[name=Assign]",  function(e){                // enable disable buttons
+	e.preventDefault();
+	var dt = new formData();
+	dt.append('assign_id', $("#assign_user").val());
+	dt.append('eclaimids', $("input[name=assign_id]").val());
+	$.ajax({
+		url: "<?php echo base_url("eclaim/assign_to") ?>",
+		method: "post",
+		dataType:"json",
+		success: function(result) {
+			console.log("RRRRRR",result);
+			// window.location.reload();
+		}
+	});
+   }
 })
 </script>

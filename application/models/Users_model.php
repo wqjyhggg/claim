@@ -73,7 +73,7 @@ class Users_model extends CI_Model {
 			$sql .= " WHERE " .join(" AND ", $where); 
 		}
 
-		$array = array('id', 'email', 'last_name', 'last_name', 'first_name', 'active');
+		$array = array('id', 'email', 'last_name', 'first_name', 'active');
 		if (isset($data["field"]) && in_array($data["field"], $array)) {
 			$sql .= " ORDER BY " . $data["field"];
 		} else {
