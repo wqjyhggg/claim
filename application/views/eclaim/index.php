@@ -122,7 +122,7 @@
 									<td><?php echo $value['eclaim_no']; ?></td>
 									<td><a href="<?php echo $policy_detail_url.$value['policy_no']; ?>" target="_blank"><?php echo $value['policy_no']; ?></a></td>
 									<td><?php echo $value['claim_no']; ?></td>
-									<td><?php echo empty($assign_users[$value['processed_by']])?"":$assign_users[$value['processed_by']]; ?></td>
+									<td><?php echo (empty($value['processed_by']) || empty($assign_users[$value['processed_by']]))?"":$assign_users[$value['processed_by']]; ?></td>
 									<td><?php echo htmlspecialchars($value['insured_first_name']); ?></td>
 									<td><?php echo htmlspecialchars($value['insured_last_name']); ?></td>
 									<td><?php echo (($value['status']==2)?'Transferred':(($value['status']==3)?'Refused':'Received')); ?></td>
@@ -158,23 +158,22 @@ $(document).ready(function() {
    }
 }).on("click", "#Assign",  function(e){                // enable disable buttons
 	e.preventDefault();
-	var dt = new FormData();
-	console.log("SSSSSS",$("#assign_user").val()); //XXXXXXXXXXXXXXX
-	dt.append('assign_id', $("#assign_user").val());
-	$("input[name=assign_id]").forEach(function(el){
-		console.log("SSSSS111S", el.checked, el.value); //XXXXXXXXXXXXXXX
-		if (el.checked) {
-			dt.append('eclaimids[]', el.value);
-    	}
+	var dt = {};
+	dt.assign_id = $("#assign_user").val();
+	dt.eclaimids = [];
+	$("input[name=assign_id]").each(function(){
+		if ($(this).is(":checked")) {
+			dt.eclaimids.push($(this).val());
+		}
 	});
+
 	$.ajax({
 		url: "<?php echo base_url("eclaim/assign_to") ?>",
-		method: "post",
-		dataType:"json",
+		type: "POST",
 		data: dt,
 		success: function(result) {
 			console.log("RRRRRR",result);
-			// window.location.reload();
+			window.location.reload();
 		}
 	});
 })

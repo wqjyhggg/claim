@@ -70,15 +70,13 @@ class Eclaim extends CI_Controller {
 			$this->load->model('eclaim_model');
 
 			$post = $this->input->post();
-			print_r($post); //XXXXXXXXXX
-			die("XXXXX");
-			if (!empty($post['assign_user']) && isset($post['eclaimids'])) {
+			if (!empty($post['assign_id']) && isset($post['eclaimids'])) {
 				foreach ($post['eclaimids'] as $eid) {
 					$ec = $this->eclaim_model->get_by_id($eid);
 					if ($ec) {
 						$data = array(
 							'id' => $eid, 
-							'processed_by' => $post['assign_user'],
+							'processed_by' => $post['assign_id'],
 						);
 						$id = $this->eclaim_model->save($data);
 						echo $id . " ";
