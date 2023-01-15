@@ -85,7 +85,7 @@
 						<div class="form-group col-sm-3">
 							<h2>Eclaim Search Result<small></small></h2>
 						</div>
-						<div class="form-group col-sm-3 text-right">
+						<div class="col-sm-3 text-right" style="padding-top: 7px;">
 							Assign To
 						</div>
 						<div class="form-group col-sm-3">
