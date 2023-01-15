@@ -65,6 +65,32 @@ class Eclaim extends CI_Controller {
 		}
 	}
 
+	public function assign_to() {
+		if ($this->ion_auth->logged_in()) {
+			$this->load->model('eclaim_model');
+
+			$post = $this->input->post();
+			print_r($post); //XXXXXXXXXX
+			die("XXXXX");
+			if (!empty($post['assign_user']) && isset($post['eclaimids'])) {
+				foreach ($post['eclaimids'] as $eid) {
+					$ec = $this->eclaim_model->get_by_id($eid);
+					if ($ec) {
+						$data = array(
+							'id' => $eid, 
+							'processed_by' => $post['assign_user'],
+						);
+						$id = $this->eclaim_model->save($data);
+						echo $id . " ";
+					}
+				}
+				die("all done");
+			}
+			return show_error('Sorry, data format error.');
+		}
+		return show_error('Sorry, you don\'t have any permission to access this page.');
+	}
+
 	public function setcaseno() {
 		if ($this->ion_auth->logged_in()) {
 			$this->load->model('eclaim_model');

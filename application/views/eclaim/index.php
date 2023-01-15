@@ -92,7 +92,7 @@
 							<?php echo form_dropdown ( "assign_user", $assign_users, 0, array ("class" => 'form-control', "id" => 'assign_user') );?>
 						</div>
 						<div class="form-group col-sm-3">
-							<button class="btn btn-primary" name="Assign" value="Assign">Assign</button>
+							<button class="btn btn-primary" id="Assign">Assign</button>
 						</div>
 					<div class="clearfix"></div>
 				</div>
@@ -156,20 +156,26 @@ $(document).ready(function() {
    } else {
       $("input[name=assign_id]").prop("checked", false);
    }
-}).on("click", "input[name=Assign]",  function(e){                // enable disable buttons
+}).on("click", "#Assign",  function(e){                // enable disable buttons
 	e.preventDefault();
-	var dt = new formData();
+	var dt = new FormData();
+	console.log("SSSSSS",$("#assign_user").val()); //XXXXXXXXXXXXXXX
 	dt.append('assign_id', $("#assign_user").val());
-	dt.append('eclaimids', $("input[name=assign_id]").val());
+	$("input[name=assign_id]").each(function(){
+		console.log("SSSSS111S",$(this).checked,$(this).value); //XXXXXXXXXXXXXXX
+		if ($(this).checked) {
+			dt.append('eclaimids[]', $(this).value);
+    	}
+	});
 	$.ajax({
 		url: "<?php echo base_url("eclaim/assign_to") ?>",
 		method: "post",
 		dataType:"json",
+		data: dt,
 		success: function(result) {
 			console.log("RRRRRR",result);
 			// window.location.reload();
 		}
 	});
-   }
 })
 </script>
