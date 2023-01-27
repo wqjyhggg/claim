@@ -705,26 +705,27 @@ class Eclaim extends CI_Controller {
 			if (!file_put_contents($zipdir."eclaim.html", $html)) {
 				return show_error('Sorry, Can not create eclaim file.');
 			}
+			$z->addFile($zipdir."eclaim.html", "eclaim.html");
 			
 			if (!empty($this->data['eclaim']['sign_image']) && isset($this->data['eclaim_files'][$this->data['eclaim']['sign_image']])) {
 				$url = (substr($this->data['eclaim_files'][$this->data['eclaim']['sign_image']]['name'],0,4)=="http")
 					? $this->data['eclaim_files'][$this->data['eclaim']['sign_image']]['name']
 					: base_url('assets/uploads/') . $this->data['eclaim_files'][$this->data['eclaim']['sign_image']]['path'] . "/" . $this->data['eclaim_files'][$this->data['eclaim']['sign_image']]['name'];
 				$ext = substr(strrchr($url, '.'), 1);
-				if (!file_put_contents($zipdir."sign".$ext, $this->getfiledata($url))) {
+				if (!file_put_contents($zipdir."sign.".$ext, $this->getfiledata($url))) {
 					return show_error('Sorry, Can not get file '.$url.'.');
 				}
-				$z->addFile($zipdir."sign".$ext, "sign".$ext);
+				$z->addFile($zipdir."sign.".$ext, "sign.".$ext);
 			}
 			if (!empty($this->data['eclaim']['sign_image2'])) {
 				$url = (substr($this->data['eclaim_files'][$this->data['eclaim']['sign_image2']]['name'],0,4)=="http")
 					? $this->data['eclaim_files'][$this->data['eclaim']['sign_image2']]['name']
 					: base_url('assets/uploads/') . $this->data['eclaim_files'][$this->data['eclaim']['sign_image2']]['path'] . "/" . $this->data['eclaim_files'][$this->data['eclaim']['sign_image2']]['name'];
 				$ext = substr(strrchr($url, '.'), 1);
-				if (!file_put_contents($zipdir."sign2".$ext, $this->getfiledata($url))) {
+				if (!file_put_contents($zipdir."sign2.".$ext, $this->getfiledata($url))) {
 					return show_error('Sorry, Can not get file '.$url.'.');
 				}
-				$z->addFile($zipdir."sign2".$ext, "sign2".$ext);
+				$z->addFile($zipdir."sign2.".$ext, "sign2.".$ext);
 			}
 			$images = json_decode($this->data['eclaim']['imgfile'], TRUE);
 			if ($images) {
