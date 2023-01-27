@@ -618,6 +618,17 @@ class Eclaim extends CI_Controller {
 		return rmdir($dir);
 	}
 
+	private function getfiledata($url) {
+		if (($pn = strpos($url, '/file3/')) || ($pn = strpos($url, '/file2/'))) {
+			$fn = substr($url, $pn + 7);
+			if ($r = $this->phone_model->get_s3_file($fn)) {
+				return $r['Body'];
+			}
+			return '';
+		}
+		return file_get_contents($url);
+	}	
+
 	public function download($id) {
 		if (! $this->ion_auth->logged_in()) {
 			redirect('auth/login', 'refresh');
@@ -629,6 +640,7 @@ class Eclaim extends CI_Controller {
 			$this->load->model('eclaim_file_model');
 			$this->load->model('html_model');
 			$this->load->model('country_model');
+			$this->load->model('phone_model');
 
 			// get claim details
 			$this->data['eclaim'] = $this->eclaim_model->get_by_id($id);
@@ -673,7 +685,7 @@ class Eclaim extends CI_Controller {
 			}
 
 			// Create local files
-			$zipdir = FCPATH."download".$id.DIRECTORY_SEPARATOR;
+			$zipdir = FCPATH."download".DIRECTORY_SEPARATOR;
 			if (!file_exists($zipdir)) {
 				return show_error('Please contact admin to create eclaim download folder.');
 			}
@@ -685,6 +697,7 @@ class Eclaim extends CI_Controller {
 			if (file_exists($zipdir)) {
 				$this->emptydir($zipdir);
 			}
+			mkdir($zipdir);
 
 			$z = new ZipArchive();
 			$z->open($zipfile, ZIPARCHIVE::CREATE);
@@ -698,7 +711,7 @@ class Eclaim extends CI_Controller {
 					? $this->data['eclaim_files'][$this->data['eclaim']['sign_image']]['name']
 					: base_url('assets/uploads/') . $this->data['eclaim_files'][$this->data['eclaim']['sign_image']]['path'] . "/" . $this->data['eclaim_files'][$this->data['eclaim']['sign_image']]['name'];
 				$ext = substr(strrchr($url, '.'), 1);
-				if (!file_put_contents($zipdir."sign".$ext, file_get_contents($url))) {
+				if (!file_put_contents($zipdir."sign".$ext, $this->getfiledata($url))) {
 					return show_error('Sorry, Can not get file '.$url.'.');
 				}
 				$z->addFile($zipdir."sign".$ext, "sign".$ext);
@@ -708,7 +721,7 @@ class Eclaim extends CI_Controller {
 					? $this->data['eclaim_files'][$this->data['eclaim']['sign_image2']]['name']
 					: base_url('assets/uploads/') . $this->data['eclaim_files'][$this->data['eclaim']['sign_image2']]['path'] . "/" . $this->data['eclaim_files'][$this->data['eclaim']['sign_image2']]['name'];
 				$ext = substr(strrchr($url, '.'), 1);
-				if (!file_put_contents($zipdir."sign2".$ext, file_get_contents($url))) {
+				if (!file_put_contents($zipdir."sign2".$ext, $this->getfiledata($url))) {
 					return show_error('Sorry, Can not get file '.$url.'.');
 				}
 				$z->addFile($zipdir."sign2".$ext, "sign2".$ext);
@@ -721,7 +734,7 @@ class Eclaim extends CI_Controller {
 						? $this->data['eclaim_files'][$value]['name']
 						: base_url('assets/uploads/') . $this->data['eclaim_files'][$value]['path'] . "/" . $this->data['eclaim_files'][$value]['name'];
 					$ext = basename($url);
-					if (!file_put_contents($zipdir.$ext, file_get_contents($url))) {
+					if (!file_put_contents($zipdir.$ext, $this->getfiledata($url))) {
 						return show_error('Sorry, Can not get file '.$url.'.');
 					}
 					$z->addFile($zipdir.$ext, $ext);
