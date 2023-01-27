@@ -162,6 +162,7 @@ if (isset($expenses_claimed_service_descriptions)) {
 }
 ?>
 <br />
+<?php if (!empty($is_download)) { ?>
 <div><b>Sign: </b><?php echo $eclaim['sign_name']; ?></div>
 <div><img src="<?php echo (substr($eclaim_files[$eclaim['sign_image']]['name'],0,4)=="http")?$eclaim_files[$eclaim['sign_image']]['name']:base_url('assets/uploads/') . $eclaim_files[$eclaim['sign_image']]['path'] . "/" . $eclaim_files[$eclaim['sign_image']]['name']; ?>"></div>
 <?php if (!empty($eclaim['sign_image2'])) { ?>
@@ -184,3 +185,4 @@ foreach ( $images as $key => $value ) {
 window.print();
 //-->
 </script>
+<?php } ?>

@@ -705,6 +705,9 @@
 							<div class="col-sm-2">
 								<?php echo anchor("eclaim/export/".$eclaim['id'], "Print", "target='_blank' class='btn btn-primary'"); ?>
 							</div>
+							<div class="col-sm-2">
+								<?php echo anchor("eclaim/download/".$eclaim['id'], "Download", "target='_blank' class='btn btn-primary'"); ?>
+							</div>
 						</div>
 					</div>
 					<?php echo form_close(); ?>

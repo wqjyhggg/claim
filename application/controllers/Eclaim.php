@@ -605,4 +605,143 @@ class Eclaim extends CI_Controller {
 			}
 		}
 	}
+
+	private function emptydir($dir) {
+		$files = array_diff(scandir($dir), array('.','..'));
+		foreach ($files as $file) {
+			if (is_dir("$dir/$file")) {
+				$this->emptydir("$dir/$file");
+			} else {
+				unlink("$dir/$file");
+			}
+		}
+		return rmdir($dir);
+	}
+
+	public function download($id) {
+		if (! $this->ion_auth->logged_in()) {
+			redirect('auth/login', 'refresh');
+		} else if (! $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) {
+			return show_error('Sorry, you don\'t have any permission to access this page.');
+		} else {
+			$this->load->model('api_model');
+			$this->load->model('eclaim_model');
+			$this->load->model('eclaim_file_model');
+			$this->load->model('html_model');
+			$this->load->model('country_model');
+
+			// get claim details
+			$this->data['eclaim'] = $this->eclaim_model->get_by_id($id);
+			$this->data['html_model'] = $this->html_model;
+			$this->data['eclaim_file_model'] = $this->eclaim_file_model;
+			if (empty($this->data['eclaim'])) {
+				// send error message
+				$this->session->set_flashdata('error', "Can't find Eclaim.");
+				
+				// redirect them to the claim
+				redirect('eclaim');
+			}
+			if ($policies = $this->api_model->get_policy(array('policy' => $this->data['eclaim']["policy_no"]))) {
+				$this->data['policy'] = $policies[0];
+			} else {
+				// send error message
+				$this->session->set_flashdata('error', "Can't find Policy(".$this->data['eclaim']["policy_no"].".");
+				
+				// redirect them to the claim
+				redirect('eclaim');
+			}
+			// get all related files
+			$this->data['eclaim_files'] = $this->eclaim_file_model->get_files_by_id($id);
+
+			$this->data['country'] = $this->country_model->get_list();
+			$this->data['is_download'] = 1;
+
+			// load view data
+			switch ($this->data['eclaim']['exinfo_type']) {
+				case "top_baggage":
+					$html = $this->load->view('eclaim/top_baggage_pdf', $this->data, TRUE);
+					break;
+				case "top_medical":
+					$html = $this->load->view('eclaim/top_medical_pdf', $this->data, TRUE);
+					break;
+				case "top_trip":
+					$html = $this->load->view('eclaim/top_trip_pdf', $this->data, TRUE);
+					break;
+				default:
+					$html = $this->load->view('eclaim/detail_pdf', $this->data, TRUE);
+					break;
+			}
+
+			// Create local files
+			$zipdir = FCPATH."download".$id.DIRECTORY_SEPARATOR;
+			if (!file_exists($zipdir)) {
+				return show_error('Please contact admin to create eclaim download folder.');
+			}
+			$zipfile = $zipdir."E".$id.".zip";
+			if (file_exists($zipfile)) {
+				unlink($zipfile);
+			}
+			$zipdir = $zipdir."tmp".$id.DIRECTORY_SEPARATOR;
+			if (file_exists($zipdir)) {
+				$this->emptydir($zipdir);
+			}
+
+			$z = new ZipArchive();
+			$z->open($zipfile, ZIPARCHIVE::CREATE);
+
+			if (!file_put_contents($zipdir."eclaim.html", $html)) {
+				return show_error('Sorry, Can not create eclaim file.');
+			}
+			
+			if (!empty($this->data['eclaim']['sign_image']) && isset($this->data['eclaim_files'][$this->data['eclaim']['sign_image']])) {
+				$url = (substr($this->data['eclaim_files'][$this->data['eclaim']['sign_image']]['name'],0,4)=="http")
+					? $this->data['eclaim_files'][$this->data['eclaim']['sign_image']]['name']
+					: base_url('assets/uploads/') . $this->data['eclaim_files'][$this->data['eclaim']['sign_image']]['path'] . "/" . $this->data['eclaim_files'][$this->data['eclaim']['sign_image']]['name'];
+				$ext = substr(strrchr($url, '.'), 1);
+				if (!file_put_contents($zipdir."sign".$ext, file_get_contents($url))) {
+					return show_error('Sorry, Can not get file '.$url.'.');
+				}
+				$z->addFile($zipdir."sign".$ext, "sign".$ext);
+			}
+			if (!empty($this->data['eclaim']['sign_image2'])) {
+				$url = (substr($this->data['eclaim_files'][$this->data['eclaim']['sign_image2']]['name'],0,4)=="http")
+					? $this->data['eclaim_files'][$this->data['eclaim']['sign_image2']]['name']
+					: base_url('assets/uploads/') . $this->data['eclaim_files'][$this->data['eclaim']['sign_image2']]['path'] . "/" . $this->data['eclaim_files'][$this->data['eclaim']['sign_image2']]['name'];
+				$ext = substr(strrchr($url, '.'), 1);
+				if (!file_put_contents($zipdir."sign2".$ext, file_get_contents($url))) {
+					return show_error('Sorry, Can not get file '.$url.'.');
+				}
+				$z->addFile($zipdir."sign2".$ext, "sign2".$ext);
+			}
+			$images = json_decode($this->data['eclaim']['imgfile'], TRUE);
+			if ($images) {
+				foreach ( $images as $key => $value ) {
+					if (!isset($this->data['eclaim_files'][$value])) continue;
+					$url = (substr($this->data['eclaim_files'][$value]['name'],0,4)=="http")
+						? $this->data['eclaim_files'][$value]['name']
+						: base_url('assets/uploads/') . $this->data['eclaim_files'][$value]['path'] . "/" . $this->data['eclaim_files'][$value]['name'];
+					$ext = basename($url);
+					if (!file_put_contents($zipdir.$ext, file_get_contents($url))) {
+						return show_error('Sorry, Can not get file '.$url.'.');
+					}
+					$z->addFile($zipdir.$ext, $ext);
+				}
+			}
+			$z->close();
+		
+			if (file_exists($zipfile)) {
+				header('Content-Description: File Transfer');
+				header('Content-Type: application/octet-stream');
+				header('Content-Disposition: attachment; filename="' . basename($zipfile) . '"');
+				header('Expires: 0');
+				header('Cache-Control: must-revalidate');
+				header('Pragma: public');
+				header('Content-Length: ' . filesize($zipfile));
+				readfile($zipfile);
+				exit;
+			}
+
+			return show_error('Sorry, Something wrong with create download file.');
+		}
+	}
 }
