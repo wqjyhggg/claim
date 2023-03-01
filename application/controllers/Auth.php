@@ -53,6 +53,7 @@ class Auth extends CI_Controller {
 			$this->data['finish_url'] = base_url('auth/setfinish');
 			$this->data['case_only_url'] = base_url('auth/mytasks/CASE');
 			$this->data['claim_only_url'] = base_url('auth/mytasks/CLAIM');
+			$this->data['type'] = $type;
 				
 			$this->data['records'] = $this->mytask_model->get_mytask($para, $limit, $offset);
 			$config['total_rows'] = $this->mytask_model->last_rows();
@@ -75,7 +76,7 @@ class Auth extends CI_Controller {
 				$this->data['records'][$key]['assign_name'] = $user['email'];
 			}
 			
-			$config['base_url'] = base_url('auth/mytasks/' . (empty($type) ? '0' : $type));
+			$config['base_url'] = base_url('auth/mytasks/' . (empty($type) ? 'CLAIM' : $type));
 			$config['per_page'] = $limit;
 			$config['first_url'] = $config['base_url'] . '?' . http_build_query($this->input->get());
 			if (count($this->input->get()) > 0)	$config ['suffix'] = '?' . http_build_query($this->input->get(), '', "&");

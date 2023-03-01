@@ -1,8 +1,5 @@
 <?php $this->load->model('mytask_model'); ?>
 <div>
-	<div class="page-title">
-		<div class="title_left"><h3>My Tasks</h3></div>
-	</div>
 	<div class="clearfix"></div>
 	<!-- Product List Section -->
 	<div class="row">
@@ -10,11 +7,11 @@
 			<div class="x_panel">
 				<div class="x_title">
 					<h2 class="task_heading">
-						My Tasks!<small></small>
+						My <?php echo ucfirst(strtolower($type)); ?> Tasks
 					</h2>
 					<div class='pull-right'><input type="checkbox" id="finished_input" <?php echo ($finished ? 'checked' : '');?>> Finished Task</div>
-					<div class='pull-right'><a href="<?php echo $case_only_url; ?>" class="btn btn-info" role="button">Case Only</a></div>
-					<div class='pull-right'><a href="<?php echo $claim_only_url; ?>" class="btn btn-info" role="button">Claim Only</a></div>
+					<!-- div class='pull-right'><a href="<?php echo $case_only_url; ?>" class="btn btn-info" role="button">Case Only</a></div -->
+					<!-- div class='pull-right'><a href="<?php echo $claim_only_url; ?>" class="btn btn-info" role="button">Claim Only</a></div -->
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
@@ -25,7 +22,8 @@
 								<tr>
 									<th>Task ID</th>
 									<th><?php echo $this->pagination->sort("priority", "Priority") ?></th>
-									<th>Case/Claim No.</th>
+									<!-- th>Case/Claim No.</th -->>
+									<th><?php echo ucfirst(strtolower($type)); ?>  No.</th>
 									<th>Policy No.</th>
 									<th>Status</th>
 									<th>Insured Name</th>
@@ -99,17 +97,17 @@ $(document).ready(function() {
 
 <?php
 if (isset($i)) {
-	$str = '';
+	$str = 'My '.ucfirst(strtolower($type)).' Tasks ';
 	if (count ( $claims ) and count ( $cases )) {
-		$str = '(' . count ( $cases ) . ' Case' . (count ( $cases ) > 1 ? 's' : '') . '/' . count ( $claims ) . ' Claim' . (count ( $claims ) > 1 ? 's' : '') . ')';
+		$str .= '(' . count ( $cases ) . ' Case' . (count ( $cases ) > 1 ? 's' : '') . '/' . count ( $claims ) . ' Claim' . (count ( $claims ) > 1 ? 's' : '') . ')';
 	} elseif (count ( $claims )) {
-		$str = '(' . count ( $claims ) . ' Claim' . (count ( $claims ) > 1 ? 's' : '') . ')';
+		$str .= '(' . count ( $claims ) . ' Claim' . (count ( $claims ) > 1 ? 's' : '') . ')';
 	} elseif (count ( $cases )) {
-		$str = '(' . count ( $cases ) . ' Case' . (count ( $cases ) > 1 ? 's' : '') . ')';
+		$str .= '(' . count ( $cases ) . ' Case' . (count ( $cases ) > 1 ? 's' : '') . ')';
 	}
 	if ($str) {
 ?>
-	$(".task_heading").text('My Tasks! <?php echo $str; ?>');
+	$(".task_heading").text('<?php echo $str; ?>');
 <?php
 	}
 }
