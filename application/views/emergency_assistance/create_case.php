@@ -805,7 +805,7 @@ $(document).ready(function() {
 
       // validate file extension
       var ext = $(this).val().split('.').pop().toLowerCase();
-      if ($.inArray(ext, ['pdf','doc','docx','xls','xlsx']) == -1) {
+      if ($.inArray(ext, ['pdf','doc','docx','xls','xlsx','wav']) == -1) {
           alert('invalid extension! Please attach only pdf file.');
           $(this).val('');
           return false;

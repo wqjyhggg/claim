@@ -885,8 +885,8 @@ $(document).ready(function() {
 
       // validate file extension
       var ext = $(this).val().split('.').pop().toLowerCase();
-      if($.inArray(ext, ['pdf','doc','docx','xls','xlsx','msg']) == -1) {
-          alert('invalid extension! Please attach .pdf, .doc, .docx, .xls, .xlsx or .msg file.');
+      if($.inArray(ext, ['pdf','doc','docx','xls','xlsx','msg','wav']) == -1) {
+          alert('invalid extension! Please attach .pdf, .doc, .docx, .xls, .xlsx, .wav or .msg file.');
           $(this).val('');
           return false;
       }
