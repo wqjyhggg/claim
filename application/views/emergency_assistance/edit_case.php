@@ -934,7 +934,7 @@ $(document).ready(function() {
 
 	// delete intake form upload file
 	.on("click",".remove_file", function() {
-		$(this).parent("div").remove()
+		$(this).parent("div").remove();
 	})
 
   // delete intake form phone file
