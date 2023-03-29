@@ -903,7 +903,7 @@ $(document).ready(function() {
       var no_of_form = $(".intake-forms").length + 1;
 
       // add new file here
-      $(".modal-body .files").append('<div class="col-sm-9" style="display:none"><input style="display:none" type="file" name="files[]" id="file'+(count+1)+'" accept="pdf" /><span class="file-label"></span> <i class="fa fa-trash row-link" id="'+(count+1)+'"></i></div>');
+      $(".modal-body .files").append('<div class="col-sm-9" style="display:none"><input style="display:none" type="file" name="files[]" id="uploadfile'+(count+1)+'" accept="pdf" /><span class="file-label"></span> <i class="fa fa-trash row-link remove_file" id="'+(count+1)+'"></i></div>');
 
       // place trigger clicked once file append in files class
       $('#file'+(count+1)).trigger("click");
@@ -932,7 +932,12 @@ $(document).ready(function() {
 		}
 	})
 
-	// delete intake form phone file
+	// delete intake form upload file
+	.on("click",".remove_file", function() {
+		$(this).parent("div").remove()
+	})
+
+  // delete intake form phone file
 	.on("click",".remove_phone", function() {
 		var id = $(this).attr("data-id");
 
