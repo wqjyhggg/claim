@@ -768,6 +768,7 @@
 						</div>
 					</div>
 					<div class="form-group col-sm-6">
+            <?php if (0) { ?>
 						<?php echo form_label('Phone File:', 'phonefile', array("class" => 'col-sm-12')); ?>
 						<span id='phonelink'></span>
 						<span id='phonefilelist'></span>
@@ -775,6 +776,7 @@
 						<a href="javascript:void(0)" class="removemyphonefile" style='display:none;'><i class="fa fa-trash row-link"></i></a>
 						<?php echo form_hidden("phonefile", $this->input->post("phonefile"), array("class" => "form-control", 'placeholder' => 'Phone File')); ?>
 						<?php echo form_error("intake_notes"); ?>
+            <?php } ?>
 					</div>
 					<div class="form-group col-sm-12">
 						<?php echo form_label('Notes:', 'intake_notes', array("class"=>'col-sm-12')); ?>

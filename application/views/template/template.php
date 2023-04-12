@@ -52,7 +52,7 @@
                         <div class="navbar nav_title" style="border: 0;">
                            <a class="site_title"><i class="fa fa-user"></i> <span><?php echo $this->ion_auth->user()->row()->first_name." ".$this->ion_auth->user()->row()->last_name ?></span></a>
                         </div>
-                        <?php if ($this->ion_auth->in_group(array(Users_model::GROUP_EAC))) { ?>
+                        <?php if (0 && $this->ion_auth->in_group(array(Users_model::GROUP_EAC))) { ?>
                         <div class="navbar site_title" id="phone_opt_div" style="border: 0;">
                            <i class="fa fa-phone"></i>
                            	<span id="phone_login" style="display:none;">
