@@ -20,18 +20,25 @@
 						<table class="table table-hover table-bordered">
 							<thead>
 								<tr>
+                  <?php if ($type != 'CLAIM') { ?>
 									<th>Task ID</th>
 									<th><?php echo $this->pagination->sort("priority", "Priority") ?></th>
 									<!-- th>Case/Claim No.</th -->>
+                  <?php } ?>
 									<th><?php echo ucfirst(strtolower($type)); ?>  No.</th>
 									<th>Policy No.</th>
 									<th>Status</th>
 									<th>Insured Name</th>
+                  <?php if ($type != 'CLAIM') { ?>
 									<th>Created By</th>
 									<th>Created DateTime</th>
 									<th><?php echo $this->pagination->sort("due", "Due DateTime") ?></th>
 									<?php if ($this->ion_auth->in_group(Users_model::GROUP_ADMIN)) { ?>
 									<th>Assign to</th>
+									<?php } ?>
+									<?php } else { ?>
+                  <th>Created Date</th>
+                  <th>Last Update</th>
 									<?php } ?>
 							</thead>
 							<tbody>
@@ -47,17 +54,24 @@
 										$cases [] = $i;
 								?>
 								<tr <?php if($value['priority'] == 'HIGH') echo 'style="background-color:rgba(155, 243, 151, 0.44)"'; ?>>
+                  <?php if ($type != 'CLAIM') { ?>
 									<td><?php echo anchor('auth/edit_task/'.$value['id'], $value['id'], array('title'=>'Edit Task')) . " (" . $value ['type'] . ")"; ?></td>
 									<td><?php echo $value['priority']; ?></td>
+                  <?php } ?>
 									<td><?php echo anchor(($value['type']=='CLAIM'?'claim/claim_detail/'.$value['item_id']:'emergency_assistance/edit_case/'.$value['item_id']), $value['task_no'], array('title'=>'Item Details')) ?></td>
 									<td><?php echo $value['policy_no']; ?></td>
 									<td><?php echo $value['status']; ?></td>
 									<td><?php echo htmlspecialchars($value['insured_name']); ?></td>
+                  <?php if ($type != 'CLAIM') { ?>
 									<td><?php echo $value['created_email']; ?></td>
 									<td><?php echo $value['created']; ?></td>
 									<td><?php echo $value['due_date'] . " " . $value['due_time']; ?></td>
 									<?php if ($this->ion_auth->in_group(Users_model::GROUP_ADMIN)) { ?>
 									<td><?php echo htmlspecialchars($value['assign_name']); ?></td>
+									<?php } ?>
+									<?php } else { ?>
+                  <td><?php echo substr($value['created'], 0, 10); ?></td>
+                  <td><?php echo substr($value['last_update'], 0, 10); ?></td>
 									<?php } ?>
 								</tr>
 								<?php endforeach; ?>

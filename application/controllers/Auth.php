@@ -69,6 +69,8 @@ class Auth extends CI_Controller {
 					$this->data['records'][$key]['insured_name'] = $claim['insured_first_name'] . " " . $claim['insured_last_name'];
 					$this->data['records'][$key]['priority'] = '-';
 					$this->data['records'][$key]['policy_no'] = $claim['policy_no'];
+					$this->data['records'][$key]['last_update'] = $claim['last_update'];
+					$this->data['records'][$key]['status'] = $claim['status2'];
 				}
 				$ctuser = $this->users_model->get_by_id($rc['created_by']);
 				$this->data['records'][$key]['created_email'] = isset($ctuser['email']) ? $ctuser['email'] : '';
