@@ -652,9 +652,10 @@ $(document).ready(function() {
 				data:$('#main_form').serialize(),
 				dataType: "json",
 				success: function(data) {
-					if (data.status == 2) {
-						window.location = "<?php echo base_url("eclaim"); ?>";
-					}
+					window.location.reload();
+					// if (data.status == 2) {
+					// 	window.location = "<?php echo base_url("eclaim"); ?>";
+					// }
 				}
 			})
 	} else {
