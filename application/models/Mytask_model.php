@@ -204,7 +204,11 @@ class Mytask_model extends CI_Model {
 		//	$fields = "mytask.*, IF(mytask.type='CLAIM', claim.last_update, case.last_update) as last_update, IF(mytask.type='CLAIM', concat_ws(' ', claim.insured_first_name, claim.insured_last_name), concat_ws(' ', case.insured_firstname, case.insured_lastname)) as insured_name, IF(type='CLAIM', '', LPAD(case.assign_to, 4, 0)) as followup_by, IF(mytask.type='CLAIM', claim.status, case.status) as task_status, u2.username as assign_name, concat_ws(' ', users.first_name, users.last_name) as created_by";
 	
 		if (isset($para['finished'])) {
-			$sql = "SELECT SQL_CALC_FOUND_ROWS t.id,t.user_id,t.item_id,task_no,t.category,t.due_date,t.due_time,t.completion_date,t.type,c.priority,t.created_by,t.user_type,t.status,t.created,t.finished,t.notes,t.logs FROM mytask t LEFT JOIN `case` c ON (t.item_id=c.id AND t.type='CASE') WHERE t.finished='".(int)$para['finished']."'";
+			if ($para['type'] == "CLAIM") {
+				$sql = "SELECT SQL_CALC_FOUND_ROWS t.id,t.user_id,t.item_id,task_no,t.category,t.due_date,t.due_time,t.completion_date,t.type, 0 as priority,t.created_by,t.user_type,t.status,t.created,t.finished,t.notes,t.logs FROM mytask t LEFT JOIN `claim` c ON (t.item_id=c.id AND t.type='CLAIM') WHERE c.status2='Closed' OR c.status2='Denied'";
+			} else {
+				$sql = "SELECT SQL_CALC_FOUND_ROWS t.id,t.user_id,t.item_id,task_no,t.category,t.due_date,t.due_time,t.completion_date,t.type,c.priority,t.created_by,t.user_type,t.status,t.created,t.finished,t.notes,t.logs FROM mytask t LEFT JOIN `case` c ON (t.item_id=c.id AND t.type='CASE') WHERE t.finished='".(int)$para['finished']."'";
+			}
 		} else {
 			$sql = "SELECT SQL_CALC_FOUND_ROWS t.id,t.user_id,t.item_id,task_no,t.category,t.due_date,t.due_time,t.completion_date,t.type,c.priority,t.created_by,t.user_type,t.status,t.created,t.finished,t.notes,t.logs FROM mytask t LEFT JOIN `case` c ON (t.item_id=c.id AND t.type='CASE') WHERE t.finished='0'";
 		}
