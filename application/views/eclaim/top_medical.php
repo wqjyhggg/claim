@@ -765,7 +765,8 @@ $(document).ready(function() {
 				dataType: "json",
 				success: function(data) {
 					if (data.status == 2) {
-						window.location = "<?php echo base_url("eclaim"); ?>";
+            window.location.reload();
+						// window.location = "<?php echo base_url("eclaim"); ?>";
 					}
 				}
 			})

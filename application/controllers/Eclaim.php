@@ -483,7 +483,9 @@ class Eclaim extends CI_Controller {
 
 				$this->session->set_flashdata('success', "Claim successfully created (" . $data['claim_no'] . ")");
 
-				redirect("eclaim");
+        $id = $this->input->post('id');
+        redirect("eclaim/detail/".$id);
+				// redirect("eclaim");
 			}
 			// echo validation_errors();
 			$id = $this->input->post('id');
