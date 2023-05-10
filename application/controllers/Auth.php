@@ -38,6 +38,10 @@ class Auth extends CI_Controller {
 			$this->load->model('case_model');
 			$this->load->model('html_model');
 
+			if (empty($type)) $type = $this->session->userdata('tasktype');
+			if (empty($type)) $type = 'CLAIM';
+			$this->session->set_userdata('tasktype', $type);
+
 			// if sorting enabled
 			$para = array(
 					'type' => $type,
@@ -50,6 +54,9 @@ class Auth extends CI_Controller {
 			$offset = $this->uri->segment(4);
 			
 			$this->data['finished'] = (int)$this->session->userdata('finished');
+			if ($type == 'CLAIM') {
+				$this->data['finished'] = 1;
+			}
 			$this->data['finish_url'] = base_url('auth/setfinish');
 			$this->data['case_only_url'] = base_url('auth/mytasks/CASE');
 			$this->data['claim_only_url'] = base_url('auth/mytasks/CLAIM');
