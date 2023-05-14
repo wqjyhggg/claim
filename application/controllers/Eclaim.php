@@ -468,7 +468,7 @@ class Eclaim extends CI_Controller {
 				$body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies. \n\n"; 
 				$body  .= "Best regards,\n\n"; 
 				$body  .= "Ontime Care Worldwide Inc. \n"; 
-				$body  .= "Telephone: 905-707-3555\n"; 
+				$body  .= "Telephone: 905-707-3335\n"; 
 				$body  .= "Email: claim@otcww.com \n"; 
 				// $body  = "Dear " . $data['insured_first_name'] . ",<br /><br />\n"; 
 				// $body  .= "The web claim you submitted on ".date("Y-m-d")." has been accepted and is being reviewed. Your claim number is " . $data['claim_no'] . ". It will take approximately 5 business days for us to process your claim. <br /><br />\n"; 
