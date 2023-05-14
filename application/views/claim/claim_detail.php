@@ -519,7 +519,15 @@
 								</div>
 							</div>
 							<?php if($edit): ?>
-							<button class="btn btn-primary add_eprovider" name="filter" type="button" value="claim">Add a Provider</button>
+              <div class="col-sm-2">
+  							<button class="btn btn-primary add_eprovider" name="filter" type="button" value="claim">Add a Provider</button>
+              </div>
+              <div class="col-sm-1 searchInputDiv" style="padding-top: 1rem;">
+  							Find Address
+              </div>
+              <div class="col-sm-3 searchInputDiv" >
+  							<input type="text" id="searchInput" class="form-control" />
+              </div>
 							<?php endif; ?>
 						</div>
 
@@ -1286,6 +1294,7 @@
 <script src="<?php echo base_url() ?>/assets/js/jquery.validate.min.js"></script>
 <?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
 <script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAtXPZRU3oKfDBWVujb6VBFPsWGrdWnsXM"></script>
 <script>
 function get_policy() {
 	var policy_no = '<?php echo $claim_details['policy_no']; ?>';
@@ -1341,7 +1350,64 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 			get_policy();
 		//}
 		
+    var autocomplete;
+    autocomplete = new google.maps.places.Autocomplete((document.getElementById('searchInput')), {
+        componentRestrictions: { country: ["ca"] },
+    });
+	
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var place = autocomplete.getPlace();
+        let iaddress1 = "";
+        let ipostcode = "";
+        let icity = "";
+        let iarea = "";
+        let icountry = "";
 
+        // Get each component of the address from the place details,
+        // and then fill-in the corresponding field on the form.
+        // place.address_components are google.maps.GeocoderAddressComponent objects
+        // which are documented at http://goo.gle/3l5i5Mr
+        for (const component of place.address_components) {
+          // @ts-ignore remove once typings fixed
+          const componentType = component.types[0];
+          switch (componentType) {
+            case "street_number": 
+              iaddress1 = component.long_name; 
+              break;
+            case "route":
+              iaddress1 += " " + component.long_name;
+              break;
+            case "postal_code":
+              ipostcode = component.long_name;
+              break;
+            case "postal_code_suffix":
+              ipostcode += '-' + component.long_name;
+              break;
+            case "locality":
+              icity = component.long_name;
+              break;
+            // case "administrative_area_level_2": 
+            // case "administrative_area_level_3": 
+            case "administrative_area_level_1":
+              iarea = component.short_name;
+              break;
+            case "country":
+              icountry = component.short_name;
+              break;
+          }
+        }
+        var pdata = $('.eprovider-data').find('.save-eprovider');
+        if (pdata && (pdata.length > 0)) {
+          // Has the add notes
+          var p = pdata.parent().parent();
+          p.find("input[name^='eprovider[address]']").val(iaddress1);
+          p.find("input[name^='eprovider[city]']").val(icity);
+          p.find("input[name^='eprovider[province]']").val(iarea);
+          p.find("input[name^='eprovider[country]']").val(icountry);
+          p.find("input[name^='eprovider[postcode]']").val(ipostcode);
+        }
+    });
+    $('.searchInputDiv').hide();
 		// show area once any error occured
 		$(".alert-error").map(function(){
 			if($(this).text()){
@@ -1349,7 +1415,6 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 				$(this).closest('.row').prev('.move_down').children('i').removeClass('fa-angle-down').addClass('fa-angle-up');
 			}
 		})
-
       // fill autofill on key type
       .on("keyup", ".company_name input", function(){
          $(".company_name input").val($(this).val());
@@ -1471,7 +1536,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		var length = $(".payee-data .row").length;
 		if (length > 30) {
 			alter('maximum payee limit to 30');
-			retrun ;
+			return ;
 		}
 
 		//html = html.replace(/payment_type/g, "payment_type_"+(length+1));
@@ -1487,6 +1552,10 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		var p = $(this).parent().parent();
 		var myid = p.find("input[name^='eprovider[id]']");
 		var name = p.find("input[name^='eprovider[name]']").val();
+    if (!name) {
+			alert('Please input provider name');
+			return ;
+    }
 		var address = p.find("input[name^='eprovider[address]']").val();
 		var city = p.find("input[name^='eprovider[city]']").val();
 		var province = p.find("input[name^='eprovider[province]']").val();
@@ -1513,14 +1582,21 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		e.stopPropagation()
 	})
 	.on("click", ".add_eprovider", function(e){
+    var numb = document.getElementsByClassName("save-eprovider").length;
+    if (numb > 1) {
+			alert('Please add current provider information first');
+			return ;
+    }
+
 		var length = $(".eprovider-data .row").length;
 		if (length > 30) {
 			alert('maximum eprovider limit to 30');
-			retrun ;
+			return ;
 		}
 
 		var me = $(this);
-
+    $('#searchInput').val('');
+    $('.searchInputDiv').show();
 		var html = $(".eprovider-buffer").html();
 		//html = html.replace(/nameindex/g, '');
 		//html = html.replace(/idvalue/, 0);

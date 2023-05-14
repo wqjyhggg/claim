@@ -1239,7 +1239,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		var length = $(".payee-data .row").length;
 		if (length > 20) {
 			alter('maximum payee limit to 20');
-			retrun ;
+			return ;
 		}
 
 		//html = html.replace(/payment_type/g, "payment_type_"+(length+1));
