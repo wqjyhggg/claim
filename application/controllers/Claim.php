@@ -2687,7 +2687,7 @@ class Claim extends CI_Controller {
 	// delete eprovider form here for ajax request
 	public function delete_eprovider($id) {
 		$json = array("success" => 0, "id" => 0);
-		if ($this->ion_auth->logged_in() && $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_ACCOUNTANT))) {
+		if ($this->ion_auth->logged_in() && $this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER,  Users_model::GROUP_EXAMINER, Users_model::GROUP_ACCOUNTANT))) {
 			$this->load->model('claim_model');
 			$data = array('id' => $id, 'status' => 0);
 			$id = $this->claim_model->expenses_provider_save($data);
