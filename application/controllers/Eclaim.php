@@ -154,7 +154,7 @@ class Eclaim extends CI_Controller {
 					$body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies.\n\n"; 
 					$body  .= "Best regards,\n"; 
 					$body  .= "Ontime Care Worldwide Inc. \n"; 
-					$body  .= "Telephone: 905-707-3555\n"; 
+					$body  .= "Telephone: 905-707-3335\n"; 
 					$body  .= "Email: claim@otcww.com \n"; 
 					// $body  = "Dear " . $ec['insured_first_name'] . ",<br /><br />\n"; 
 					// $body  .= "The web claim you submitted on ".date("Y-m-d")." has been reviewed. By visiting eclaim.jfgroup.ca and logging in to your account, you may review further details under your claim history.<br /><br />\n"; 
@@ -167,7 +167,7 @@ class Eclaim extends CI_Controller {
 					// $body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies.<br /><br />\n"; 
 					// $body  .= "Best regards,<br />\n"; 
 					// $body  .= "Ontime Care Worldwide Inc. <br />\n"; 
-					// $body  .= "Telephone: 905-707-3555<br />\n"; 
+					// $body  .= "Telephone: 905-707-3335<br />\n"; 
 					// $body  .= "Email: claim@otcww.com <br />\n"; 
 					$this->mymail_model->send_mymail($to, $subject, $body, array(), 'Ontime Care Worldwide Inc.', 'text');
 						
@@ -477,7 +477,7 @@ class Eclaim extends CI_Controller {
 				// $body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies. <br /><br />\n"; 
 				// $body  .= "Best regards,<br />\n"; 
 				// $body  .= "Ontime Care Worldwide Inc. <br />\n"; 
-				// $body  .= "Telephone: 905-707-3555<br />\n"; 
+				// $body  .= "Telephone: 905-707-3335<br />\n"; 
 				// $body  .= "Email: claim@otcww.com <br />\n"; 
 				$this->mymail_model->send_mymail($to, $subject, $body, array(), 'Ontime Care Worldwide Inc.', 'text');
 
