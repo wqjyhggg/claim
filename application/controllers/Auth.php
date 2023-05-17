@@ -55,7 +55,7 @@ class Auth extends CI_Controller {
 			
 			$this->data['finished'] = (int)$this->session->userdata('finished');
 			if ($type == 'CLAIM') {
-				$this->data['finished'] = 1;
+				$para['finished'] = 1;
 			}
 			$this->data['finish_url'] = base_url('auth/setfinish');
 			$this->data['case_only_url'] = base_url('auth/mytasks/CASE');
