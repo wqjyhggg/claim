@@ -62,16 +62,27 @@
 						<div class="clearfix"></div>
 
 						<div class="form-group col-sm-3">
-							<label>Apply Date : </label><?php echo htmlspecialchars($claim['apply_date']); ?>
+							<label>Apply Date : </label><?php echo htmlspecialchars($policy['apply_date']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Effective Date : </label><?php echo htmlspecialchars($claim['effective_date']); ?>
+							<label>Effective Date : </label><?php echo htmlspecialchars($policy['effective_date']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Expiry Date : </label><?php echo htmlspecialchars($claim['expiry_date']); ?>
+							<label>Expiry Date : </label><?php echo htmlspecialchars($policy['expiry_date']); ?>
 						</div>
 						<div class="form-group col-sm-3">
-							<label>Arrival Date : </label><?php echo htmlspecialchars($claim['arrival_date_canada']); ?>
+							<label>Arrival Date : </label><?php echo htmlspecialchars($policy['arrival_date_canada']); ?>
+						</div>
+						<div class="clearfix"></div>
+	
+						<div class="form-group col-sm-3">
+							<label>Prefer Language : </label><?php echo empty($policy['contact_language'])? 'English' : htmlspecialchars($policy['contact_language']); ?>
+						</div>
+						<div class="form-group col-sm-3">
+						</div>
+						<div class="form-group col-sm-3">
+						</div>
+						<div class="form-group col-sm-3">
 						</div>
 						<div class="clearfix"></div>
 	

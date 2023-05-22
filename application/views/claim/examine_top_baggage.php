@@ -72,6 +72,16 @@
 						</div>
 						<div class="clearfix"></div>
 	
+						<div class="form-group col-sm-3">
+							<label>Prefer Language : </label><?php echo empty($policy['contact_language'])? 'English' : htmlspecialchars($policy['contact_language']); ?>
+						</div>
+						<div class="form-group col-sm-3">
+						</div>
+						<div class="form-group col-sm-3">
+						</div>
+						<div class="form-group col-sm-3">
+						</div>
+						<div class="clearfix"></div>
 	
 						<?php if (!empty($policy['family'])) { ?>
 						<?php 	foreach($policy['family'] as $member ) { ?>
