@@ -1472,7 +1472,8 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
 		}
 
 		var me = $(this);
-
+    $('#searchInput').val('');
+    $('.searchInputDiv').show();
 		var html = $(".eprovider-buffer").html();
 		//html = html.replace(/nameindex/g, '');
 		//html = html.replace(/idvalue/, 0);
