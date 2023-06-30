@@ -52,10 +52,10 @@ class Eclaim_model extends CI_Model {
 			$this->db->where("policy_no", $data["policy_no"]);
 		}
 		if (!empty($data["created_from"])) {
-			$this->db->where("created_from >=", $data["created_from"] . " 00:00:00");
+			$this->db->where("created >=", $data["created_from"] . " 00:00:00");
 		}
 		if (!empty($data["created_to"])) {
-			$this->db->where("created_to <=", $data["created_to"] . " 23:59:59");
+			$this->db->where("created <=", $data["created_to"] . " 23:59:59");
 		}
 		if (!empty($data["processed_by"])) {
 			$this->db->where("processed_by", $data["processed_by"]);
