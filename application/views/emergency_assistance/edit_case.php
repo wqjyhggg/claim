@@ -1081,8 +1081,10 @@ $(document).ready(function() {
       .replace(/value="{policy_full_name}/g, 'value="' + ('<?php echo $product_full_name?>').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/policy_full_name/g, '<?php echo $product_full_name?>')
       .replace(/value="{policy_no}/g, 'value="' + obj.attr("policy_no").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{policy_no}/g, obj.attr("policy_no"))
       .replace(/policy_no/g, obj.attr("policy_no"))
       .replace(/{pre_sex}/g, pre_sex)
+      .replace(/{case_no}/g, obj.attr("case_no"))
       .replace(/case_no/g, obj.attr("case_no"))
       .replace(/value="{casemanager_name}/g, 'value="' + obj.attr("casemanager_name").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/casemanager_name/g, obj.attr("casemanager_name"));
