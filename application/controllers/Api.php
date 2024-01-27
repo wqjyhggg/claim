@@ -9,6 +9,9 @@ defined ( 'BASEPATH' ) or exit ( 'No direct script access allowed' );
  */
 class Api extends CI_Controller {
 	public $api;
+  private $invoiceURL = "https://insurance-inovice-jf.cognitiveservices.azure.com/formrecognizer/documentModels/prebuilt-invoice:analyze?api-version=2023-07-31";
+  private $receiptURL = "https://insurance-inovice-jf.cognitiveservices.azure.com/formrecognizer/documentModels/Generation3:analyze?api-version=2023-07-31";
+  private $azureKey = "d6cf34d7455f414392c4aefe4c54ec19";
 	
 	public function index() {
 		$data = array("status" => "OK", "message" => "API V0.01.01");
@@ -312,6 +315,127 @@ class Api extends CI_Controller {
 				$rdata['message'] = 'Upload file error';
 			}
 		}
+
+		header('Content-Type: application/json');
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+		echo json_encode($rdata);
+	}
+
+	public function analize() {
+		$this->load->model('api_model');
+		$lang = $this->input->post_get('lan');
+    if ($lang != 'zh') {
+      $lang = 'en';
+    }
+		$rdata = $this->conn_verify();
+    $opt = $this->input->post('opt');   // invoice receipt
+    if (($opt != "invoice") && ($opt != "receipt")) {
+      $rdata['status'] = Api_model::STATUS_ERROR;
+      $rdata['message'] = 'Unknown Operation';
+    }
+		if ($rdata['status'] == Api_model::STATUS_OK) {
+			$this->load->model('eclaim_file_model');
+			
+			$data = array();
+			$path = 'eclaim_files/' . date('Y') . '/' . date("m") . date("d"). date("H");
+			// create directory to copy/shift files
+			@mkdir(UPLOADFULLPATH . $path, 0777, TRUE);
+
+			// load upload class
+			$config['upload_path'] = UPLOADFULLPATH . $path;
+			$config['allowed_types'] = 'gif|jpg|png|jpeg|pdf|wav';
+			$config['overwrite'] = FALSE;
+			$config['max_size'] = 15000;	// 15M
+			$this->load->library('upload', $config);
+			if ($this->upload->do_upload('userfile')) {
+				$file_data = $this->upload->data();
+				$data['name'] = $file_data['file_name'];
+				$data['path'] = $path;
+				$file_id = $this->eclaim_file_model->save($data);
+				if ($file_id) {
+					$rdata['file_id'] = $file_id;
+					$rdata['path'] = "/assets/uploads/".$data['path']."/".$data['name'];
+				} else {
+					$rdata['status'] = Api_model::STATUS_ERROR;
+          if ($lang == 'zh') {
+            $rdata['message'] = '插入数据库错误';
+          } else {
+  					$rdata['message'] = 'Insert DB error';
+          }
+				}
+			} else {
+				$rdata['status'] = Api_model::STATUS_ERROR;
+				$rdata['error'] = $this->upload->display_errors();
+        if ($lang == 'zh') {
+          $rdata['message'] = '上传文件错误';
+        } else {
+          $rdata['message'] = 'Upload file error';
+        }
+			}
+		}
+
+    if ($rdata['status'] == Api_model::STATUS_OK) {
+      $url = ($opt == "invoice")?$this->invoiceURL:$this->receiptURL;
+      $ch = curl_init();
+      $headers = [
+        'Content-Type: application/json',
+        'Ocp-Apim-Subscription-Key: '.$this->azureKey,
+      ];
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($ch, CURLOPT_HEADER, true);
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_POST, true);
+      $postData = '{"urlSource": "'.base_url($rdata['path']).'"};';
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      $response = curl_exec($ch);
+      $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+      $headersting = substr($response, 0, $headerSize);
+      $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+      curl_close($ch);
+  
+      if ($responseCode === 202) {
+        $headArr = explode("\n", $headersting);
+        $getURL = "";
+        foreach ($headArr as $head) {
+          $parts = explode(':', $head, 2);
+          if ($parts && (sizeof($parts) == 2)) {
+            $key = trim($parts[0]);
+            if ($key == "Operation-Location") {
+              $getURL = trim($parts[1]);
+              break;
+            }
+          }
+        }
+        if ($getURL) {
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_URL, $url);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          $response = curl_exec($ch);
+          $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+          curl_close($ch);
+          if ($responseCode === 200) {
+            $rdata['data'] = $response;
+          } else {
+            $rdata['status'] = Api_model::STATUS_ERROR;
+            $rdata['message'] = 'Analyzed data error: '.$responseCode.'; '.$response;
+          }
+        } else {
+          $rdata['status'] = Api_model::STATUS_ERROR;
+          $rdata['message'] = 'No analyzed result: '.$headersting;
+        }
+      } else {
+        $rdata['status'] = Api_model::STATUS_ERROR;
+        $rdata['message'] = 'Can not pass file to analyze';
+      }
+    }
 
 		header('Content-Type: application/json');
 		header('Access-Control-Allow-Origin: *');
