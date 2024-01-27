@@ -12,6 +12,7 @@ class Api extends CI_Controller {
   private $invoiceURL = "https://insurance-inovice-jf.cognitiveservices.azure.com/formrecognizer/documentModels/prebuilt-invoice:analyze?api-version=2023-07-31";
   private $receiptURL = "https://insurance-inovice-jf.cognitiveservices.azure.com/formrecognizer/documentModels/Generation3:analyze?api-version=2023-07-31";
   private $azureKey = "d6cf34d7455f414392c4aefe4c54ec19";
+  private $azureHost = "insurance-inovice-jf.cognitiveservices.azure.com";
 	
 	public function index() {
 		$data = array("status" => "OK", "message" => "API V0.01.01");
@@ -380,6 +381,7 @@ class Api extends CI_Controller {
       $url = ($opt == "invoice")?$this->invoiceURL:$this->receiptURL;
       $ch = curl_init();
       $headers = [
+        'Host: '.$this->azureHost,
         'Content-Type: application/json',
         'Ocp-Apim-Subscription-Key: '.$this->azureKey,
       ];
@@ -414,7 +416,7 @@ class Api extends CI_Controller {
         if ($getURL) {
           $ch = curl_init();
           curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-          curl_setopt($ch, CURLOPT_URL, $url);
+          curl_setopt($ch, CURLOPT_URL, $getURL);
           curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
           curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
