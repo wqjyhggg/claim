@@ -323,7 +323,7 @@ class Api extends CI_Controller {
 		echo json_encode($rdata);
 	}
 
-	public function analize() {
+	public function analyze() {
 		$this->load->model('api_model');
 		$lang = $this->input->post_get('lan');
     if ($lang != 'zh') {
