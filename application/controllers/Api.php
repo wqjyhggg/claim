@@ -414,20 +414,29 @@ class Api extends CI_Controller {
           }
         }
         if ($getURL) {
-          $ch = curl_init();
-          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-          curl_setopt($ch, CURLOPT_URL, $getURL);
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-          $response = curl_exec($ch);
-          $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-          curl_close($ch);
-          if ($responseCode === 200) {
-            $rdata['data'] = $response;
-          } else {
-            $rdata['status'] = Api_model::STATUS_ERROR;
-            $rdata['message'] = 'Analyzed data error: '.$responseCode.'; '.$response;
+          for ($i = 0; $i < 10; $i++) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_URL, $getURL);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            if ($responseCode === 200) {
+              $rdata['data'] = $response;
+              $rdata['message'] = 'OK';
+              $json = json_decode($response, true);
+              if (isset($json["status"]) && (($json["status"] == "notStarted") || ($json["status"] == "running"))) {
+                sleep(2);
+                continue;
+              }
+            } else {
+              $rdata['status'] = Api_model::STATUS_ERROR;
+              $rdata['message'] = 'Analyzed data error: '.$responseCode.'; '.$response;
+              break;
+            }
           }
         } else {
           $rdata['status'] = Api_model::STATUS_ERROR;
