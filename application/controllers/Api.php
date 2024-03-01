@@ -10,7 +10,7 @@ defined ( 'BASEPATH' ) or exit ( 'No direct script access allowed' );
 class Api extends CI_Controller {
 	public $api;
   private $invoiceURL = "https://insurance-inovice-jf.cognitiveservices.azure.com/formrecognizer/documentModels/prebuilt-invoice:analyze?api-version=2023-07-31";
-  private $receiptURL = "https://insurance-inovice-jf.cognitiveservices.azure.com/formrecognizer/documentModels/Generation3:analyze?api-version=2023-07-31";
+  private $prescriptionURL = "https://insurance-inovice-jf.cognitiveservices.azure.com/formrecognizer/documentModels/Generation3:analyze?api-version=2023-07-31";
   private $azureKey = "d6cf34d7455f414392c4aefe4c54ec19";
   private $azureHost = "insurance-inovice-jf.cognitiveservices.azure.com";
 	
@@ -331,8 +331,8 @@ class Api extends CI_Controller {
       $lang = 'en';
     }
 		$rdata = $this->conn_verify();
-    $opt = $this->input->post('opt');   // invoice receipt
-    if (($opt != "invoice") && ($opt != "receipt")) {
+    $opt = $this->input->post('opt');   // invoice prescription
+    if (($opt != "invoice") && ($opt != "prescription")) {
       $rdata['status'] = Api_model::STATUS_ERROR;
       $rdata['message'] = 'Unknown Operation';
     }
@@ -378,7 +378,7 @@ class Api extends CI_Controller {
 		}
 
     if ($rdata['status'] == Api_model::STATUS_OK) {
-      $url = ($opt == "invoice")?$this->invoiceURL:$this->receiptURL;
+      $url = ($opt == "invoice")?$this->invoiceURL:$this->prescriptionURL;
       $ch = curl_init();
       $headers = [
         'Host: '.$this->azureHost,
