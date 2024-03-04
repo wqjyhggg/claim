@@ -108,6 +108,9 @@ class Eclaim_model extends CI_Model {
             //$data['expenses_claimed_provider_name'] = json_encode($post['expenses_claimed_provider_name']);
             $data['expenses_claimed_provider_name'] = $post['expenses_claimed_provider_name'];
         }
+        if (!empty($post['expenses_claimed_provider_address'])) {
+          $data['expenses_claimed_provider_address'] = $post['expenses_claimed_provider_address'];
+        }
         if (!empty($post['expenses_claimed_referencing_physician'])) {
             //$data['expenses_claimed_referencing_physician'] = json_encode($post['expenses_claimed_referencing_physician']);
             $data['expenses_claimed_referencing_physician'] = $post['expenses_claimed_referencing_physician'];

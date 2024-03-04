@@ -584,6 +584,7 @@
 									<?php
 									$expenses_claimed_service_descriptions = json_decode($eclaim["expenses_claimed_service_description"], TRUE);
 									$expenses_claimed_provider_names = json_decode($eclaim["expenses_claimed_provider_name"], TRUE);
+                  $expenses_claimed_provider_addresses = json_decode($eclaim["expenses_claimed_provider_address"], TRUE);
 									$expenses_claimed_referencing_physicians = json_decode($eclaim["expenses_claimed_referencing_physician"], TRUE);
 									$expenses_claimed_date_of_services = json_decode($eclaim["expenses_claimed_date_of_service"], TRUE);
 									$expenses_claimed_amount_client_paid_orgs = json_decode($eclaim["expenses_claimed_amount_client_paid_org"], TRUE);
@@ -596,6 +597,10 @@
 										<div class="col-sm-3">
 											<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed_provider_name[]", $expenses_claimed_provider_names[$key]); ?>
+										</div>
+										<div class="col-sm-3">
+											<?php echo form_label('Address of Provider:', 'provider_address', array("class" => 'col-sm-12')); ?>
+											<?php echo form_input("expenses_claimed_provider_address[]", $expenses_claimed_provider_addresses[$key]); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>

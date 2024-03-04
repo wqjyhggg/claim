@@ -90,6 +90,7 @@ border-bottom: 1px solid #000;
 <?php
 $expenses_claimed_service_descriptions = json_decode($eclaim["expenses_claimed_service_description"], TRUE);
 $expenses_claimed_provider_names = json_decode($eclaim["expenses_claimed_provider_name"], TRUE);
+$expenses_claimed_provider_addresses = json_decode($eclaim["expenses_claimed_provider_address"], TRUE);
 $expenses_claimed_referencing_physicians = json_decode($eclaim["expenses_claimed_referencing_physician"], TRUE);
 $expenses_claimed_date_of_services = json_decode($eclaim["expenses_claimed_date_of_service"], TRUE);
 $expenses_claimed_amount_client_paid_orgs = json_decode($eclaim["expenses_claimed_amount_client_paid_org"], TRUE);

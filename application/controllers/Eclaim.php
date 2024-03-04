@@ -291,7 +291,7 @@ class Eclaim extends CI_Controller {
 							'claim_no' => '',
 							'claim_item_no' => '',
 							'invoice' => '',
-							'provider_name' => $array['expenses_claimed_provider_name'][$key],
+							'provider_name' => $array['expenses_claimed_provider_name'][$key] . ";  Addr: " . $array['expenses_claimed_provider_address'][$key],
 							'provider_type' => 0,
 							'expenses_provider_id' => 0,
 							'referencing_physician' => $array['expenses_claimed_referencing_physician'][$key],
@@ -314,13 +314,13 @@ class Eclaim extends CI_Controller {
 				}
 				unset($array['expenses_claimed_currency']);
 				unset($array['expenses_claimed_provider_name']);
+				unset($array['expenses_claimed_provider_address']);
 				unset($array['expenses_claimed_referencing_physician']);
 				unset($array['expenses_claimed_service_description']);
 				unset($array['expenses_claimed_date_of_service']);
 				unset($array['expenses_claimed_amount_client_paid_org']);
 				unset($array['expenses_claimed_amount_claimed_org']);
 				unset($array['expenses_claimed_other_reimbursed_amount']);
-				unset($array['expenses_claimed_provider_name']);
 
 				if (!empty($array['exinfo'])) {
 					$exinfo = $array['exinfo'];
