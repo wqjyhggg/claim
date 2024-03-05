@@ -444,7 +444,7 @@ class Api extends CI_Controller {
         }
       } else {
         $rdata['status'] = Api_model::STATUS_ERROR;
-        $rdata['message'] = 'Can not pass file to analyze';
+        $rdata['message'] = 'The file can not be accepted';
       }
     }
 
