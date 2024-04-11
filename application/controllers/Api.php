@@ -407,7 +407,7 @@ class Api extends CI_Controller {
           $parts = explode(':', $head, 2);
           if ($parts && (sizeof($parts) == 2)) {
             $key = trim($parts[0]);
-            if ($key == "Operation-Location") {
+            if (strtolower($key) == "operation-location") {
               $getURL = trim($parts[1]);
               break;
             }
