@@ -489,7 +489,7 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
-											<?php echo form_input("expenses_claimed_referencing_physician[]", $expenses_claimed_referencing_physicians[$key]); ?>
+											<?php echo form_input("expenses_claimed_referencing_physician[]", empty($expenses_claimed_referencing_physicians[$key])?"":$expenses_claimed_referencing_physicians[$key]); ?>
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Description of Services:', 'service_description', array("class" => 'col-sm-12')); ?>

@@ -547,6 +547,11 @@ class Eclaim_model extends CI_Model {
         if (!empty($post['logs'])) {
             $data['logs'] = $post['logs'];
         }
+        $isfast = false;
+        if (!empty($post["fastline"])) {
+          $isfast = true;
+        }
+        unset($post["fastline"]);
 		if (!empty($post['id'])) {
 			$id = $post['id'];
 			if ($cur = $this->get_by_id($id)) {
@@ -579,7 +584,10 @@ class Eclaim_model extends CI_Model {
         $rfrid = $id;
 
 		if ($id) {
-		    $rfrid = "RFR".str_pad($id, 6, "0", STR_PAD_LEFT);
+        $rfrid = "RFR".str_pad($id, 6, "0", STR_PAD_LEFT);
+      if ($isfast) {
+		    $rfrid = "FRFR".str_pad($id, 6, "0", STR_PAD_LEFT);
+      }
 		    $this->db->where('id', $id);
 		    $this->db->update('eclaim', array('eclaim_no' => $rfrid));
 		}
