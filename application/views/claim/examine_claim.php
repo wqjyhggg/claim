@@ -541,7 +541,16 @@
 				<div class="row" id="change_claim_status2_denied_div" style="display:none;">
   				<label for="status_label" class="col-sm-3 text-right">Denie Reasion:</label>
           <div class="col-sm-6">
-            <?php echo form_dropdown("denied_reason", array('' => '', 'Exclusions and Limitations' => 'Exclusions and Limitations', 'Delay in Submitting Claim/Insufficient documents' => 'Delay in Submitting Claim/Insufficient documents', 'Benefit Not Covered' => 'Benefit Not Covered', 'Failure to Disclose or Misrepresent' => 'Failure to Disclose or Misrepresent', 'Not Meet Eligibility/ Void Policy' => 'Not Meet Eligibility/ Void Policy', 'Other' => 'Other (specify)'), $claim_details["denied_reason"], array("class" => 'form-control change_claim_status2_denied')); ?>
+            <?php echo form_dropdown("denied_reason", 
+              array('' => '', 
+                    'Exclusions and Limitations' => 'Exclusions and Limitations', 
+                    'Delay in Submitting Claim/Insufficient documents' => 'Delay in Submitting Claim/Insufficient documents', 
+                    'Benefit Not Covered' => 'Benefit Not Covered', 
+                    'Failure to Disclose or Misrepresent' => 'Failure to Disclose or Misrepresent', 
+                    'Not Meet Eligibility/ Void Policy' => 'Not Meet Eligibility/ Void Policy', 
+                    'Client requested to close/withdraw the claim' => 'Client requested to close/withdraw the claim',
+                    'Other' => 'Other (specify)'), 
+              $claim_details["denied_reason"], array("class" => 'form-control change_claim_status2_denied')); ?>
           </div>
 				</div>
 				<div class="row" id="change_claim_status2_denied_other_div" style="display:none;">
