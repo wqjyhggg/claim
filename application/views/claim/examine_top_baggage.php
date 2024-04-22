@@ -747,13 +747,13 @@
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Firstname:', 'first_name_email', array("class"=>'col-sm-12')); ?>
 							<div class="form-group col-sm-12">
-								<?php echo form_input("first_name_email", $case_details['insured_firstname'], array("class"=>"form-control form-group required", 'placeholder'=>'First Name')); ?>
+								<?php echo form_input("first_name_email", $claim['insured_first_name'], array("class"=>"form-control form-group required", 'placeholder'=>'First Name')); ?>
 							</div>
 						</div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('lastname:', 'last_name_email', array("class"=>'col-sm-12')); ?>
 							<div class="form-group col-sm-12">
-								<?php echo form_input("last_name_email", $case_details['insured_lastname'], array("class"=>"form-control form-group required", 'placeholder'=>'Last Name')); ?>
+								<?php echo form_input("last_name_email", $claim['insured_last_name'], array("class"=>"form-control form-group required", 'placeholder'=>'Last Name')); ?>
 							</div>
 						</div>
 					</div>
