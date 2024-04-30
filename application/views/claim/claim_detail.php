@@ -666,6 +666,7 @@
 											<?php echo form_label('Name of Referring Physician:', 'referencing_physician', array("class" => 'col-sm-12')); ?>
 											<?php echo form_input("expenses_claimed[referencing_physician][]", $value ['referencing_physician'], array("class" => "form-control")); ?>
 										</div>
+										<div class="clearfix"></div>
 										<div class="col-sm-3">
 											<?php echo form_label('Coverage Code:', 'coverage_code', array("class" => 'col-sm-12')); ?>
 											<select name="expenses_claimed[coverage_code][]" class="form-control required">
