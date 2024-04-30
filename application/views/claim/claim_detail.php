@@ -640,7 +640,7 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Type of Provider:', 'provider_type', array("class" => 'col-sm-12')); ?>
-                      <?php if (empty($value["expenses_provider_id"]) { echo "Customer Input"; } else { ?>
+                      <?php if (empty($value["expenses_provider_id"])) { echo "Customer Input"; } else { ?>
 											<select name="expenses_claimed[provider_type][]" class="form-control expenses_provider_type required">
 												<option value="0" <?php if (1 != $value ["provider_type"]) { echo "selected"; } ?>>Private</option>
 												<option value="1" <?php if (1 == $value ["provider_type"]) { echo "selected"; } ?>>Bussiness</option>
@@ -649,7 +649,7 @@
 										</div>
 										<div class="col-sm-3">
 											<?php echo form_label('Name of Provider:', 'provider_name', array("class" => 'col-sm-12')); ?>
-                      <?php if (empty($value["expenses_provider_id"]) { echo htmlspecialchars($value['provider_name']); } else { ?>
+                      <?php if (empty($value["expenses_provider_id"])) { echo htmlspecialchars($value['provider_name']); } else { ?>
 											<select name="expenses_claimed[expenses_provider_id][]" class="form-control expenses_provider_select required">
 												<option value="0">-- Select Provider --</option>
 											<?php if (1 == $value ["provider_type"]) { ?>
