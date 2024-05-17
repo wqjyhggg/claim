@@ -286,14 +286,36 @@ class Eclaim extends CI_Controller {
 					redirect("eclaim/detail/".$id); */
 				} else {
 					foreach ($array['expenses_claimed_service_description'] as $key => $val) {
+            $provider_address_arr = explode("|", $array['expenses_claimed_provider_address'][$key]);
+            $expenses_provider_id = 0;
+            $provider_name = $array['expenses_claimed_provider_name'][$key];
+            $provider_type = 0;
+            if (is_array($provider_address_arr) && (sizeof($provider_address_arr) == 5)) {
+              $provide_data = array(
+                "claim_id" => 0,
+                "status" => 1,
+                "name" => $provider_name,
+                "address" => $provider_address_arr[0],
+                "city" => $provider_address_arr[1],
+                "province" => $provider_address_arr[2],
+                "country" => $provider_address_arr[3],
+                "postcode" => $provider_address_arr[4],
+              );
+              if ($expenses_provider_id = $this->claim_model->expenses_provider_save($provide_data)) {
+                $provider_type = 2;
+              }
+            } else {
+              $provider_name .= ";  Addr: " . $array['expenses_claimed_provider_address'][$key];
+            }
+
 						$expenses[] = array(
 							'claim_id' => 0,
 							'claim_no' => '',
 							'claim_item_no' => '',
 							'invoice' => '',
-							'provider_name' => $array['expenses_claimed_provider_name'][$key] . ";  Addr: " . $array['expenses_claimed_provider_address'][$key],
-							'provider_type' => 0,
-							'expenses_provider_id' => 0,
+							'provider_name' => $provider_name,
+							'provider_type' => $provider_type,
+							'expenses_provider_id' => $expenses_provider_id,
 							'referencing_physician' => $array['expenses_claimed_referencing_physician'][$key],
 							'service_description' => $array['expenses_claimed_service_description'][$key],
 							'date_of_service' => $array['expenses_claimed_date_of_service'][$key],
@@ -412,6 +434,9 @@ class Eclaim extends CI_Controller {
 				$i = 0;
 				foreach ($expenses as $payee_data ) {
 					$i++;
+          if (($payee_data['provider_type'] == 2) && $payee_data['expenses_provider_id']) {
+            $this->claim_model->set_expenses_provider_claim_id_by_id($payee_data['expenses_provider_id'], $record_id);
+          }
 					$payee_data['claim_id'] = $record_id;
 					$payee_data['cellular'] = '';
 					$payee_data['claim_no'] = $data['claim_no'];

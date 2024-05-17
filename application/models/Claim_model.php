@@ -339,7 +339,13 @@ class Claim_model extends CI_Model {
 		$this->db->where('id', $id);
 		return $this->db->get('expenses_provider')->row_array();
 	}
-	
+
+  public function set_expenses_provider_claim_id_by_id($id, $claim_id) {
+		$this->db->where('id', $id);
+		$this->db->set('claim_id', $claim_id);
+		return $this->db->update('expenses_provider');
+	}
+
 	public function delete_provider_by_id($id) {
 		$this->db->where('id', $id);
 		$this->db->delete('expenses_provider');

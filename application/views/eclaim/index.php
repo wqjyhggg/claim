@@ -64,7 +64,8 @@
 							</div>
 						</div>
 						<div class="col-sm-3">
-							<label class="col-sm-12">&nbsp;</label>
+              <?php echo form_label ( 'Fastline:', 'fastline', array ("class" => 'col-sm-12') ); ?>
+							<?php echo form_dropdown ( "fastline", array(0 => "-- Select Fastline --", "FRFR" => "Fastline only", "RFR" => "No Fastline"), $this->input->post_get( "fastline" ), array ("class" => 'form-control') );?>
 						</div>
 						<div class="col-sm-3">
 							<label class="col-sm-12">&nbsp;</label>
@@ -102,7 +103,7 @@
 							<thead>
 								<tr>
 									<th><?php echo form_checkbox("selectall", 1, FALSE); ?></th>
-                                    <th>RefID</th>
+                  <th>RefID</th>
 									<th>Policy</th>
 									<th>Claim No</th>
 									<th>Assign to</th>

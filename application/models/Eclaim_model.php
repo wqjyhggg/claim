@@ -42,6 +42,8 @@ class Eclaim_model extends CI_Model {
 		}
 		if (!empty($data["eclaim_no"])) {
 			$this->db->like("eclaim_no", $data["eclaim_no"]);
+		} else if (!empty($data["fastline"])) {
+			$this->db->like("eclaim_no", $data["fastline"], 'after');
 		}
 		if (!empty($data["cdob"])) {
 			$this->db->where("dob", $data["cdob"]);
