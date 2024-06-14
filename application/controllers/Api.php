@@ -986,7 +986,7 @@ class Api extends CI_Controller {
 
 	public function check_fastclaim() {
 		$this->load->model('api_model');
-		$this->load->model('api_model');
+		$this->load->model('eclaim_model');
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
       $policy_no = $this->input->get_post('policy_no');
