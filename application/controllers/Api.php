@@ -986,33 +986,28 @@ class Api extends CI_Controller {
 
 	public function check_fastclaim() {
 		$this->load->model('api_model');
-		$ips = array('127.0.0.1', '54.89.143.155', '52.205.81.107', '54.164.58.203');
-		$keys = array('qqnzcPfp', 'H5FqpJdc');
-		
-		$key = $this->input->get_post('key');
-		$rdata = array('status' => Api_model::STATUS_ERROR, 'message' => 'Unknown Error');
-		if (! in_array($_SERVER['REMOTE_ADDR'], $ips) || ! in_array($key, $keys)) {
-			die(json_encode($rdata));
-		}
-		$this->load->model('claim_model');
-		$rdata = array('status' => Api_model::STATUS_ERROR, 'message' => 'Unknown Error');
-		$policy_no = $this->input->get_post('policy_no');
-    if (empty($policy_no)) {
-      die(json_encode($rdata));
-    }
-		
-    $process = "Y";
-    $untilnow = -1;
-		if ($eclaims = $this->eclaim_model->search(array('policy_no' => $policy_no), -1, -1, array('id' => 'DESC'))) {
-      $untilnow = time() - strtotime($eclaims[0]["created"]);
-      if ($untilnow < 86400) {
-        $process = "N";
+		$this->load->model('api_model');
+		$rdata = $this->conn_verify();
+		if ($rdata['status'] == Api_model::STATUS_OK) {
+      $policy_no = $this->input->get_post('policy_no');
+      if (empty($policy_no)) {
+        $rdata['status'] = Api_model::STATUS_ERROR;
+        $rdata['message'] = 'Can not creae your claim, please try it later';
+      } else {
+        $process = "Y";
+        $untilnow = -1;
+        if ($eclaims = $this->eclaim_model->search(array('policy_no' => $policy_no), -1, -1, array('id' => 'DESC'))) {
+          $untilnow = time() - strtotime($eclaims[0]["created"]);
+          if ($untilnow < 86400) {
+            $process = "N";
+          }
+        }
+        $rdata['status'] = Api_model::STATUS_OK;
+        $rdata['process'] = $process;
+        $rdata['untilnow'] = $untilnow;
+        $rdata['message'] = '';
       }
-    }
-		$rdata['status'] = Api_model::STATUS_OK;
-		$rdata['process'] = $process;
-		$rdata['untilnow'] = $untilnow;
-		$rdata['message'] = '';
+    }		
 
 		header('Content-Type: application/json');
 		header('Access-Control-Allow-Origin: *');
