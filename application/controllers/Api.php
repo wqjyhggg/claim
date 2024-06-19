@@ -995,7 +995,7 @@ class Api extends CI_Controller {
         $rdata['message'] = 'Can not creae your claim, please try it later';
       } else {
         $process = "Y";
-        $untilnow = -1;
+        $untilnow = 999999;
         if ($eclaims = $this->eclaim_model->search(array('policy_no' => $policy_no), -1, -1, array('id' => 'DESC'))) {
           $untilnow = time() - strtotime($eclaims[0]["created"]);
           if ($untilnow < 86400) {
