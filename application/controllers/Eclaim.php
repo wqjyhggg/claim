@@ -445,7 +445,7 @@ class Eclaim extends CI_Controller {
 					$payee_data['coverage_code'] = '';
 					$payee_data['diagnosis'] = '';
 					$payee_data['payee'] = $payee_id;
-					$payee_data['pay_to'] = ($payee['payment_type'] == 'cheque') ? ($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address'] . " : " . $payee['city'] . " : " . $payee['province'] . " : " . $payee['country'] . " : " . $payee['postcode']) : $payee['payment_type'] . " : " . $payee['bank'];
+					$payee_data['pay_to'] = ($payee['payment_type'] == 'cheque') ? ($payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['address'] . " : " . $payee['city'] . " : " . $payee['province'] . " : " . $payee['country'] . " : " . $payee['postcode']) : $payee['payment_type'] . " : " . $payee['payee_name'] . " : " . $payee['bank'];
 					$payee_data['third_party_payee'] = '';
 					$payee_data['comment'] = '';
 					$payee_data['status'] = Expenses_model::EXPENSE_STATUS_Received;
