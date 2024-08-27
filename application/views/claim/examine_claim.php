@@ -288,7 +288,7 @@
 													<div class='col-sm-12'><?php echo $value['last_update']; ?></div>
 												</div>
 												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Update By: </label>
+													<label class="col-sm-12">Updated By: </label>
 													<div class='col-sm-12'><?php echo $value['updated_by'] . " - " . $value['updated_by_email']; ?></div>
 												</div>
 												<div class="clearfix"></div>
