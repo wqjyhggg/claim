@@ -331,7 +331,8 @@ class Claim extends CI_Controller {
 								'status' => Expenses_model::EXPENSE_STATUS_Received,
 								'created_by' => $this->ion_auth->get_user_id(),
 								'finalize_date' => date('Y-m-d'),
-								'created' => date('Y-m-d H:i:s') 
+								'created' => date('Y-m-d H:i:s'),
+								'updated_by' => $this->ion_auth->get_user_id(),
 						);
 						$this->common_model->save("expenses_claimed", $payee_data);
 						// Need to update claim id when first time create
@@ -729,7 +730,8 @@ class Claim extends CI_Controller {
 									'status' => Expenses_model::EXPENSE_STATUS_Received,
 									'created_by' => $this->ion_auth->get_user_id(),
 									'finalize_date' => date('Y-m-d'),
-									'created' => date('Y-m-d H:i:s')
+									'created' => date('Y-m-d H:i:s'),
+                  'updated_by' => $this->ion_auth->get_user_id(),
 							);
 							$this->common_model->save("expenses_claimed", $payee_data);
 							// Need to update claim id when first time create
@@ -974,6 +976,7 @@ class Claim extends CI_Controller {
 			$this->load->model('reasons_model');
 			$this->load->model('provider_model');
 			$this->load->model('html_model');
+			$this->load->model('user_model');
 
 			$claim = $this->claim_model->get_by_id($id);
 			if (empty($claim)) {
@@ -1198,6 +1201,12 @@ class Claim extends CI_Controller {
 				foreach ($this->data['items'] as $ikey => $ival) {
           if ($ival["status"] == "Approved") {
             $this->data['diminishing_amount'] -= $ival["amt_payable"];
+          }
+          $this->data['items'][$ikey]['updated_by_email'] = "None";
+          if ($ival["updated_by"] != 0) {
+            if ($u = $this->user_model->get_by_id($ival["updated_by"])) {
+              $this->data['items'][$ikey]['updated_by_email'] = $u["email"];
+            }
           }
 					if ($ival['provider_type'] && ($iadd = $this->provider_model->get_by_id($ival['expenses_provider_id']))) {
 						// bussiness
@@ -1584,7 +1593,8 @@ class Claim extends CI_Controller {
 								'currency' => $array['expenses_claimed']['currency'][$key],
 								//'comment' => $array['expenses_claimed']['comment'][$key],
 								'created_by' => $this->ion_auth->get_user_id(),
-								'created' => date('Y-m-d H:i:s') 
+								'created' => date('Y-m-d H:i:s'),
+								'updated_by' => $this->ion_auth->get_user_id(), 
 						);
 						
 						if ($item_id = @$array['expenses_claimed']['id'][$key]) {

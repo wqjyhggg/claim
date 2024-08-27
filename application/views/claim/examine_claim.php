@@ -262,10 +262,6 @@
 													<label class="col-sm-12">Pay To : </label>
 													<div class='col-sm-12'><?php echo htmlspecialchars($value['pay_to']); ?>&nbsp;</div>
 												</div>
-												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Last Update : </label>
-													<div class='col-sm-12'><?php echo $value['last_update']; ?></div>
-												</div>
 												<?php if ($value['status'] != Expenses_model::EXPENSE_STATUS_Paid) { ?>
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Decision : </label>
@@ -285,6 +281,15 @@
 												<div class="form-group col-sm-3">
 													<label class="col-sm-12">Finalize Date</label>
 													<div class='col-sm-12'><?php echo $value['finalize_date']; ?></div>
+												</div>
+												<div class="clearfix"></div>
+												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Last Update : </label>
+													<div class='col-sm-12'><?php echo $value['last_update']; ?></div>
+												</div>
+												<div class="form-group col-sm-3">
+													<label class="col-sm-12">Update By: </label>
+													<div class='col-sm-12'><?php echo $value['updated_by'] . " - " . $value['updated_by_email']; ?></div>
 												</div>
 												<div class="clearfix"></div>
 												
