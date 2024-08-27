@@ -452,6 +452,7 @@ class Eclaim extends CI_Controller {
 					$payee_data['created_by'] = $this->ion_auth->get_user_id();
 					$payee_data['finalize_date'] = date('Y-m-d');
 					$payee_data['created'] = date('Y-m-d H:i:s');
+					$payee_data['updated_by'] = $this->ion_auth->get_user_id();
 					
 					$this->common_model->save("expenses_claimed", $payee_data);
 				}

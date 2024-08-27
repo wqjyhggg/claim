@@ -976,7 +976,7 @@ class Claim extends CI_Controller {
 			$this->load->model('reasons_model');
 			$this->load->model('provider_model');
 			$this->load->model('html_model');
-			$this->load->model('user_model');
+      $this->load->model('users_model');
 
 			$claim = $this->claim_model->get_by_id($id);
 			if (empty($claim)) {
@@ -1204,7 +1204,7 @@ class Claim extends CI_Controller {
           }
           $this->data['items'][$ikey]['updated_by_email'] = "None";
           if ($ival["updated_by"] != 0) {
-            if ($u = $this->user_model->get_by_id($ival["updated_by"])) {
+            if ($u = $this->users_model->get_by_id($ival["updated_by"])) {
               $this->data['items'][$ikey]['updated_by_email'] = $u["email"];
             }
           }
