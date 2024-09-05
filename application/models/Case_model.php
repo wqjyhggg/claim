@@ -364,17 +364,18 @@ class Case_model extends CI_Model {
 			$edstr = $et->format("Y-m-d 23:59:59");
 		}
 		
-		$sql  = "SELECT case_no as claim_no, '' as invoice, '' as provider_name, sum_insured, diagnosis, insured_firstname as first_name, insured_lastname as last_name, dob as birth_day, '' as gender, policy_no, LEFT(created, 10) as date_of_service, totaldays, '' as finalize_date, 'P' as status, '-' as status2, created, IF(DATEDIFF(NOW(),last_update)>90,0,reserve_amount) as amount_claimed, 0 as amt_payable, IF(DATEDIFF(NOW(),last_update)>90,0,reserve_amount) as reserve_amount, 0 as recovery_amt, street_name as street_address, city, province, post_code, agent_id, assign_to  FROM `case`";
-		$sql .= " WHERE status='".self::STATUS_ACTIVE."' AND claim_no='' AND created>='".$ststr."' AND created<='".$edstr."'";
+		$sql  = "SELECT c.case_no as claim_no, '' as invoice, '' as provider_name, c.sum_insured, c.diagnosis, c.insured_firstname as first_name, c.insured_lastname as last_name, c.dob as birth_day, '' as gender, c.policy_no, LEFT(c.created, 10) as date_of_service, c.totaldays, '' as finalize_date, 'P' as status, '-' as status2, c.created, IF(DATEDIFF(NOW(),c.last_update)>90,0,c.reserve_amount) as amount_claimed, 0 as amt_payable, IF(DATEDIFF(NOW(),c.last_update)>90,0,c.reserve_amount) as reserve_amount, 0 as recovery_amt, c.street_name as street_address, c.city, c.province, c.post_code, c.agent_id, c.assign_to, p.up_insuer  FROM `case` c";
+		$sql .= " INNER JOIN product p ON (p.product_short=c.product_short)";
+		$sql .= " WHERE c.status='".self::STATUS_ACTIVE."' AND c.claim_no='' AND c.created>='".$ststr."' AND c.created<='".$edstr."'";
 		if (!empty($data['product_short'])) {
-			$sql .= " AND product_short=".$this->db->escape($data['product_short']);
+			$sql .= " AND c.product_short=".$this->db->escape($data['product_short']);
 		}
 		if (!empty($data['assign_to'])) {
-			$sql .= " AND assign_to=".intval($data['assign_to']);
+			$sql .= " AND c.assign_to=".intval($data['assign_to']);
 		}
 		if (!empty($data['products']) && is_array($data['products'])) {
       $pStr = "'".join("','", $data['products'])."'";
-			$sql .= " AND product_short IN (".$pStr.")";
+			$sql .= " AND c.product_short IN (".$pStr.")";
 		}
     $curinvoice_status = isset($data['invoice_status']) ? $data['invoice_status'] : array();
 		if (empty($curinvoice_status) || !is_array($curinvoice_status) || !in_array('P',$curinvoice_status)) {
@@ -383,6 +384,9 @@ class Case_model extends CI_Model {
 		}
 		if (!empty($data['agent_id'])) {
 			$sql .= " AND agent_id='". (int)$data['agent_id']."'";
+		}
+    if (!empty($data['up_insuer'])) {
+			$sql .= " AND p.up_insuer='". $data['up_insuer']."'";
 		}
 		$sql .= " ORDER BY claim_no";
 		return $this->db->query($sql)->result_array();

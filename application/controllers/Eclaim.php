@@ -762,7 +762,7 @@ class Eclaim extends CI_Controller {
 					$url = (substr($this->data['eclaim_files'][$value]['name'],0,4)=="http")
 						? $this->data['eclaim_files'][$value]['name']
 						: base_url('assets/uploads/') . $this->data['eclaim_files'][$value]['path'] . "/" . $this->data['eclaim_files'][$value]['name'];
-					$ext = basename($url);
+					$ext = "I".$value.basename($url);
 					if (!file_put_contents($zipdir.$ext, $this->getfiledata($url))) {
 						return show_error('Sorry, Can not get file '.$url.'.');
 					}

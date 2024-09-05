@@ -49,15 +49,6 @@
 								<?php } ?>
 							</select>
 						</div>
-						<div class="form-group col-sm-3" style="display:none;" id="case_assign_div">
-            <?php echo form_label('Assign:', 'claim_date_type', array ("class" => 'col-sm-12')); ?>
-							<select name="case_assign" class="form-control">
-								<option value="" <?php if (empty($this->input->get('case_assign'))) { echo "selected"; } ?>></option>
-                <?php foreach ($case_assigns as $assign) { ?>}
-								<option value="<?php echo $assign["id"]; ?>" <?php if ($assign["id"] == $this->input->get('case_assign')) { echo "selected"; } ?>><?php echo $assign["id"]; ?> - <?php echo $assign["email"]; ?></option>
-								<?php } ?>
-							</select>
-						</div>
 						<div class="clearfix"><br /></div>
 						<div class="form-group col-sm-3">
 							<?php echo form_label('Agent ID:', 'agent_id', array ("class" => 'col-sm-12')); ?>
@@ -87,6 +78,25 @@
 								<option value="">-- Select Status --</option>
 								<?php foreach ($statuses as $key => $val) { ?>
 								<option value="<?php echo $key; ?>" <?php if ($key == $this->input->get('status')) { echo "selected"; } ?>><?php echo $val; ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<div class="clearfix"><br /></div>
+						<div class="form-group col-sm-3">
+            <?php echo form_label('Insuer:', 'up_insuer', array ("class" => 'col-sm-12')); ?>
+							<select name="up_insuer" class="form-control">
+								<option value="" <?php if (empty($this->input->get('up_insuer'))) { echo "selected"; } ?>></option>
+                <?php foreach ($up_insuer as $upi) { ?>}
+								<option value="<?php echo $upi; ?>" <?php if ($upi == $this->input->get('up_insuer')) { echo "selected"; } ?>><?php echo $upi; ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<div class="form-group col-sm-3" style="display:none;" id="case_assign_div">
+            <?php echo form_label('Assign:', 'claim_date_type', array ("class" => 'col-sm-12')); ?>
+							<select name="case_assign" class="form-control">
+								<option value="" <?php if (empty($this->input->get('case_assign'))) { echo "selected"; } ?>></option>
+                <?php foreach ($case_assigns as $assign) { ?>}
+								<option value="<?php echo $assign["id"]; ?>" <?php if ($assign["id"] == $this->input->get('case_assign')) { echo "selected"; } ?>><?php echo $assign["id"]; ?> - <?php echo $assign["email"]; ?></option>
 								<?php } ?>
 							</select>
 						</div>
@@ -147,6 +157,7 @@
 									<th>Decline Reason</th>
 									<th>Claim Status</th>
 									<th>Sum Insured</th>
+									<th>Insuer</th>
                   <?php if ($this->input->get('show_assign')) { ?>
                   <th>Assign</th>
                   <?php } ?>
@@ -188,6 +199,7 @@
 									<td><?php echo empty($value['reason']) ? '' : $value['reason']; ?></td>
 									<td><?php echo $value['status2']; ?></td>
 									<td><?php echo $value['sum_insured']; ?></td>
+									<td><?php echo $value['up_insuer']; ?></td>
                   <?php if ($this->input->get('show_assign')) { ?>
                   <td><?php echo $value['assign_to']; ?></td>
                   <?php } ?>
@@ -220,6 +232,7 @@
 									<td><?php echo sprintf("%0.2f", $t_amount_claimed); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_amt_payable); ?></td>
 									<td><?php echo sprintf("%0.2f", $t_recovery_amt); ?></td>
+									<td></td>
 									<td></td>
 									<td></td>
 									<td></td>

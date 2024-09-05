@@ -581,8 +581,9 @@ class Expenses_model extends CI_Model {
 			}
 		}
 		
-		$sql  = "SELECT e.claim_no, e.invoice, e.provider_name, c.sum_insured, c.diagnosis, c.insured_first_name as first_name, c.insured_last_name as last_name, c.dob as birth_day, c.gender, c.policy_no, e.date_of_service, c.totaldays, e.finalize_date, IF(e.status='".self::EXPENSE_STATUS_Paid."','F',( IF(e.status='".self::EXPENSE_STATUS_Declined."' OR e.status='".self::EXPENSE_STATUS_Duplicated."', 'D', 'P') )) as status, c.status2, IF(e.reason='Other',e.reason_other,e.reason) AS reason, e.created, e.amount_claimed, e.amt_payable, 0 as reserve_amount, e.recovery_amt, c.street_address, c.city, c.province, c.post_code, c.agent_id, c.assign_to, e.service_description, e.coverage_code, e.amt_deductible, e.pay_to  FROM expenses_claimed e";
+		$sql  = "SELECT e.claim_no, e.invoice, e.provider_name, c.sum_insured, c.diagnosis, c.insured_first_name as first_name, c.insured_last_name as last_name, c.dob as birth_day, c.gender, c.policy_no, e.date_of_service, c.totaldays, e.finalize_date, IF(e.status='".self::EXPENSE_STATUS_Paid."','F',( IF(e.status='".self::EXPENSE_STATUS_Declined."' OR e.status='".self::EXPENSE_STATUS_Duplicated."', 'D', 'P') )) as status, c.status2, IF(e.reason='Other',e.reason_other,e.reason) AS reason, e.created, e.amount_claimed, e.amt_payable, 0 as reserve_amount, e.recovery_amt, c.street_address, c.city, c.province, c.post_code, c.agent_id, c.assign_to, e.service_description, e.coverage_code, e.amt_deductible, e.pay_to, p.up_insuer  FROM expenses_claimed e";
 		$sql .= " RIGHT JOIN claim c ON (e.claim_id=c.id)";
+		$sql .= " INNER JOIN product p ON (p.product_short=c.product_short)";
 		$sql .= " WHERE " . $dtcolumn . ">='".$ststr."' AND " . $dtcolumn . "<='".$edstr."' AND e.status!='".self::EXPENSE_STATUS_Duplicated."'";
 		if (!empty($data['status'])) {
 			$sql .= " AND c.status=".$this->db->escape($data['status']);
@@ -619,6 +620,9 @@ class Expenses_model extends CI_Model {
 		}
 		if (!empty($nozero)) {
 			$sql .= " AND " . $nozero . "!='0'";
+		}
+    if (!empty($data['up_insuer'])) {
+			$sql .= " AND p.up_insuer='". $data['up_insuer']."'";
 		}
 		$sql .= " ORDER BY e.claim_no";
 		return $this->db->query($sql)->result_array();

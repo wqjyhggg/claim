@@ -24,6 +24,7 @@ class Claims extends CI_Controller {
 			$this->load->model('product_model');
 			$this->load->model('mytask_model');
 			$this->load->model('case_model');
+			$this->load->model('product_model');
 				
 			// if sorting enabled
 			$para = array();
@@ -35,6 +36,7 @@ class Claims extends CI_Controller {
 			$para['agent_id'] = $this->input->get('agent_id');
 			$para['assign_id'] = $this->input->get('assign_id');
 			$para['claim_date_type'] = $this->input->get('claim_date_type');
+			$para['up_insuer'] = $this->input->get('up_insuer');
 			if ($para['scope'] == 'Claim') {
 				$para['status'] = $this->input->get('status');
 				$para['assign_to'] = $this->input->get('claim_assign');
@@ -52,6 +54,7 @@ class Claims extends CI_Controller {
 				$para['end_dt'] = date("Y-m-d", time() - (365 * 86400));
 			}
 
+			$this->data['up_insuer'] = $this->product_model->get_up_insuer();
 			$this->data['agents'] = $this->claim_model->get_agents_list();
 			$this->data['claim_assigns'] = $this->claim_model->get_assign_to_list();
 			$this->data['case_assigns'] = $this->case_model->get_assign_to_list();
@@ -187,6 +190,7 @@ class Claims extends CI_Controller {
         'Decline Reason',
         'Claim Status',
         'Sum Insured',
+        'Insuer',
       );
       if ($this->input->get('show_assign')) {
         $cols[] = 'Assign';
@@ -229,6 +233,7 @@ class Claims extends CI_Controller {
             empty($value['reason']) ? ' ' : $value['reason'],
             empty($value['status2'])?' ':$value['status2'],
             empty($value['sum_insured'])?' ':$value['sum_insured'],
+            empty($value['up_insuer'])?' ':$value['up_insuer'],
         );
         if ($this->input->get('show_assign')) {
           $cols[] = empty($value['assign_to'])?' ':$value['assign_to'];
