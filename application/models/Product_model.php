@@ -46,6 +46,7 @@ class Product_model extends CI_Model {
 
 	public function get_up_insuer() {
 		$this->db->select('DISTINCT up_insuer', false);
+    $this->db->order_by('up_insuer', 'ASC');
 		if ($rt = $this->db->get('product')->result_array()) {
       $arr = array();
       foreach ($rt as $rc) {
