@@ -619,6 +619,10 @@
 					</div>
 					<div class="form-group col-sm-12">
 						<div class="form-group col-sm-3">
+							<?php echo form_label ( 'Suite#:', 'suite_number_email', array ("class" => 'col-sm-12') ); ?>
+							<?php echo form_input ( "suite_number_email", $claim['suite_number'], array ("class" => "form-control", 'placeholder' => 'Suite Number') ); ?>
+						</div>
+						<div class="form-group col-sm-3">
 							<?php echo form_label ( 'Street Name.:', 'street_name_email', array ("class" => 'col-sm-12') ); ?>
 							<?php echo form_input ( "street_name_email", $claim['street_address'], array ("class" => "form-control required", 'placeholder' => 'Street Name.') ); ?>
 							<?php echo form_error ( "street_name_email" ); ?>
@@ -632,7 +636,7 @@
 							<?php echo form_label ( 'Province:', 'province_email', array ("class" => 'col-sm-12') ); ?>
 							<select name="province_email" class="form-control">
 								<?php foreach ($province as $key => $val): ?>
-								<option value="<?php echo $key; ?>" <?php if ($key == $this->input->post("province_email")) { echo "selected"; } ?>><?php echo $val; ?></option>
+								<option value="<?php echo $key; ?>" <?php if ($key == $claim["province"]) { echo "selected"; } ?>><?php echo $val; ?></option>
 								<?php endforeach; ?>
 							</select>
 							<?php echo form_error ( "province_email" ); ?>
@@ -1008,13 +1012,18 @@ $(document).ready(function() {
       var insured_address2 = $("input[name=city_email]").val() + ', ' + $("select[name=province_email]").val();
       var pre_sex = "Mrs."; 
       if ($("select[name=gender]").val() != 'female') pre_sex = "Mr.";
+      var address = $("input[name=suite_number_email]").val().trim();
+      if (address) {
+        address += ", ";  
+      }
+      address += $("input[name=street_name_email]").val().trim();
 
       str = str.replace(/value="{insured_name}/gi, 'value="' + insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
-	  .replace(/{insured_name}/gi, insured_name)
+	    .replace(/{insured_name}/gi, insured_name)
       .replace(/value="{claimant_name}/gi, 'value="' + insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;'.replace(/"/g, '&quot;')))
       .replace(/{claimant_name}/gi, insured_name)
-      .replace(/value="{insured_address}/g, 'value="' + $("input[name=street_name_email]").val().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
-      .replace(/{insured_address}/g, $("input[name=street_name_email]").val())
+      .replace(/value="{insured_address}/g, 'value="' + address.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
+      .replace(/{insured_address}/g, address)
       .replace(/value="{insured_address2}/g, 'value="' + insured_address2.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{insured_address2}/g, insured_address2)
       .replace(/value="{insured_postcode}/g, 'value="' + $("input[name=post_code_email]").val().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
