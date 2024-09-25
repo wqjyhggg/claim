@@ -452,6 +452,7 @@ class Expenses_model extends CI_Model {
 						return 0;
 					}
 				}
+        $cur_status = $cur['status'];
 				if (empty($data['status'])) {
 					if (empty($cur['status'])) {
 						$data['status'] = self::EXPENSE_STATUS_Received;
@@ -464,7 +465,10 @@ class Expenses_model extends CI_Model {
 				} else {
 					unset($data['finalize_date']);
 				}
-				$this->db->where('id', $id);
+				if (($cur_status == $data['status']) || ($data['status'] == self::EXPENSE_STATUS_Paid)) {
+					unset($data['updated_by']);
+				}
+        $this->db->where('id', $id);
 				$this->db->update('expenses_claimed', $data);
 				$this->active_model->log_update('expenses_claimed', $id, $cur, $data, $this->db->last_query());
 				return $id;
