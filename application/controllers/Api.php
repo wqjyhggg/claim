@@ -525,6 +525,14 @@ class Api extends CI_Controller {
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('eclaim_model');
 			
+      // Disable JFPL eclaim
+			$product_short = $this->input->post("product_short");
+      if ($product_short && ($product_short == "JFPL")) {
+				$rdata['error'] = "This product can't do eclaim";
+				$rdata['status'] = Api_model::STATUS_ERROR;
+        echo json_encode($rdata);
+        exit();
+      }
 			$lrc = $this->eclaim_model->get_last_record();
 			$ltm = strtotime($lrc['created']);
 			$ntm = time();
@@ -564,6 +572,14 @@ class Api extends CI_Controller {
 			$this->load->model('mytask_model');
 			$this->load->model('master_model');
 			$this->load->model('expenses_model');
+      // Disable JFPL eclaim
+			$product_short = $this->input->post("product_short");
+      if ($product_short && ($product_short == "JFPL")) {
+				$rdata['error'] = "This product can't do eclaim";
+				$rdata['status'] = Api_model::STATUS_ERROR;
+        echo json_encode($rdata);
+        exit();
+      }
 			
 			$data = array();
 			$error = array();
