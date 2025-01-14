@@ -356,6 +356,7 @@ class Eclaim extends CI_Controller {
 				$data['created'] = date('Y-m-d H:i:s');
 				$data['logs'] = json_encode(array(date("Y-m-d H:i:s").' - Transferred this Eclaim by ' . $this->ion_auth->user()->row()->first_name." ".$this->ion_auth->user()->row()->last_name . " (". $this->ion_auth->get_user_id() .")"));
 				$data['created_by'] = $this->ion_auth->get_user_id();
+				$data['assign_to'] = $data['created_by'];
 				
 				// set default status processing
 				$data['status'] = Claim_model::STATUS_Processing;
@@ -457,7 +458,8 @@ class Eclaim extends CI_Controller {
 					$this->common_model->save("expenses_claimed", $payee_data);
 				}
 				
-				$assign_to = $this->mytask_model->get_auto_assign_examiner_id();
+				// $assign_to = $this->mytask_model->get_auto_assign_examiner_id();
+				$assign_to = $this->ion_auth->get_user_id();
 				
 				// settings for my task section for case manager
 				$task_data = array(
