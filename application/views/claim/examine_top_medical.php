@@ -123,6 +123,13 @@
 						<div class="form-group col-sm-3">
 							<label>Arrival Date : </label><?php echo $claim['arrival_date_canada']; ?>
 						</div>
+						<div class="form-group col-sm-6">
+							<label>Reserve Amount : </label>
+              <input type='number' step='0.01' name='reserve_amount' id='reserve_amount_input' value="<?php echo $claim['reserve_amount']; ?>">
+              <input class="btn btn-primary" name="save" value="Save Reserve" type="button" id="reserve_amount_save">
+              <br />
+              <label>Diminishing Amount : </label><?php echo number_format($diminishing_amount); ?>
+						</div>
 	
 						<div class="form-group col-sm-3">
 							<label>First Name : </label><?php echo htmlspecialchars($claim['insured_first_name']); ?>
@@ -1066,6 +1073,19 @@ $(document).ready(function() {
 		$(this).blur();
 		return false;
 	}
+})
+.on("click", "#reserve_amount_save", function() {
+  $.ajax({
+    url: "<?php echo base_url("claim/reserve_amount/".$claim['id']); ?>",
+    method: "post",
+    data:{reserve_amount:$('#reserve_amount_input').val()},
+    beforeSend: function(){
+      // $(".modal-content, .main_container").addClass("csspinner load1");
+    },
+    success: function() {
+      window.location.reload();
+    }
+  })
 })
 .on("click", "input[name=selectall]", function() {
 	if ($(this).is(":checked")) {
