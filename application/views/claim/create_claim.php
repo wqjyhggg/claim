@@ -1216,7 +1216,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
       });
 
       var product_short = $("input[name=product_short]").val();
-      var productlist = ['REF','OPL',"JFVTC",'JFOS','JFR','BHS','JFS','JFE','JES','JFPL',"JFSL","JFGD",'JESP','JFC','JFP'];
+      var productlist = ['REF','OPL',"JFVTC",'JFOS','JFR','BHS','JFS','JFE','JES','JFPL',"JFSL","JFGD","TCS",'JESP','JFC','JFP'];
 
       if (product_short != '') {
         if (!productlist.includes(product_short)) {
@@ -1794,7 +1794,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
          success: function(data){
             if(typeof data.plan_list != "undefined" && data.plan_list.length) {
                 localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
-                var productlist = ['REF','OPL',"JFVTC",'JFOS','JFR','BHS','JFS','JFE','JES','JFPL',"JFSL","JFGD",'JESP','JFC','JFP'];
+                var productlist = ['REF','OPL',"JFVTC",'JFOS','JFR','BHS','JFS','JFE','JES','JFPL',"JFSL","JFGD","TCS",'JESP','JFC','JFP'];
 
               if (!productlist.includes(data.plan_list[0].product_short)) {
                 	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + policy_no + "&case_no=" + $("input[name=case_no]").val() + "&product_short=" + $("input[name=product_short]").val() + "&firstname=" + $("input[name=insured_first_name]").val() + "&lastname=" + $("input[name=insured_last_name]").val() + "&birthday=" + $("input[name=dob]").val() + "&gender=" + $("input[name=gender]").val();
@@ -1945,7 +1945,7 @@ var epayee_html = "<option value=''>--Select Payee--</option>";
             if(typeof data.plan_list != "undefined" && data.plan_list.length)
             {
                localStorage.setItem("policy_data", JSON.stringify(data.plan_list));
-               var productlist = ['REF','OPL',"JFVTC",'JFOS','JFR','BHS','JFS','JFE','JES','JFPL',"JFSL","JFGD",'JESP','JFC','JFP'];
+               var productlist = ['REF','OPL',"JFVTC",'JFOS','JFR','BHS','JFS','JFE','JES','JFPL',"JFSL","JFGD","TCS",'JESP','JFC','JFP'];
  
                if (!productlist.includes(data.plan_list[0].product_short)) {
                	window.location.href = "<?php echo base_url() ?>" + "/claim/create_other?policy=" + $("input[name=policy_no]").val() + "&case_no=" + $("input[name=case_no]").val() + "&product_short=" + $("input[name=product_short]").val() + "&firstname=" + $("input[name=insured_first_name]").val() + "&lastname=" + $("input[name=insured_last_name]").val() + "&birthday=" + $("input[name=dob]").val() + "&gender=" + $("input[name=gender]").val();
