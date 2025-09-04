@@ -76,7 +76,7 @@ class Claim_review extends CI_Controller {
 									$claim = $cases[0];
 									$claim['policy_info'] = $policies[0];
 									$claim['apply_date'] = $policies[0]['apply_date'];
-                  if ($policies[0]['product_short'] == 'TOP') {
+                  if (($policies[0]['product_short'] == 'TOP') || ($policies[0]['product_short'] == 'TOPN')) {
                     $claim['package'] = $policies[0]['package'];
                   }
 									$claim['effective_date'] = $policies[0]['effective_date'];
@@ -159,7 +159,7 @@ class Claim_review extends CI_Controller {
 						// Add infor to fit claim
 						$claim['policy_info'] = $policies[0];
 						$claim['apply_date'] = $policies[0]['apply_date'];
-            if ($policies[0]['product_short'] == 'TOP') {
+            if (($policies[0]['product_short'] == 'TOP') || ($policies[0]['product_short'] == 'TOPN')) {
               $claim['package'] = $policies[0]['package'];
             }
             $claim['effective_date'] = $policies[0]['effective_date'];

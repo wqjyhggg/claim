@@ -67,7 +67,7 @@ class Claims extends CI_Controller {
 			}
 
 			$this->data['statuses'] = $this->claim_model->get_claim_status_list();
-				
+
 			$cases = array();
 			$claims = array();
 			$this->data['records'] = array();
