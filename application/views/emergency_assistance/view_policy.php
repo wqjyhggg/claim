@@ -31,7 +31,7 @@
 					<div class="form-group col-sm-3">
 						<label style="text-transform: capitalize;"><span>Status: </span><?php echo (isset($policy['status_id']) ? $policy_status[$policy['status_id']]['name'] : ''); ?></label>
 					</div>
-					<?php if (isset($policy['product_short']) && ($policy['product_short'] == 'TOP')) { ?>
+					<?php if (isset($policy['product_short']) && (($policy['product_short'] == 'TOP') || ($policy['product_short'] == 'TOPN'))) { ?>
 					<div class="form-group col-sm-3">
 						<label style="text-transform: capitalize;"><span>Package: </span><?php echo (isset($policy['package']) ? preg_replace('/_/', " ", $policy['package']) : ''); ?></label>
 					</div>

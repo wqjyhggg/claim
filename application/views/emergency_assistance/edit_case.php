@@ -84,7 +84,7 @@
 						<div class="form-group col-sm-3"><?php echo form_label('Arrived Date:', 'Arrived') . $policy['arrival_date']; ?></div>
 						<div class="form-group col-sm-3"><?php echo form_label('Effective Date:', 'Effective') . $policy['effective_date']; ?></div>
 						<div class="form-group col-sm-3"><?php echo form_label('Expired Date:', 'Expired') . $policy['expiry_date']; ?></div>
-<?php if ($policy['product_short'] != "TOP") { ?>
+<?php if (($policy['product_short'] != "TOP") && ($policy['product_short'] != "TOPN")) { ?>
 						<div class="form-group col-sm-4"><?php echo form_label('Sum Insured:', 'Sum Insured') . '$' . number_format($policy['sum_insured'], 2); ?></div>
 						<div class="form-group col-sm-4"><?php echo form_label('Deductible:', 'Deductible') . '$' . number_format($policy['deductible_amount'], 2); ?></div>
 <?php } ?>

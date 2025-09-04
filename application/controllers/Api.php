@@ -77,7 +77,7 @@ class Api extends CI_Controller {
 		$firstname = $lastname = $birthday='';
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$policies = $this->api_model->get_policy(array('policy' => $data['policy']));
-			$allow_policies = array("JFS","JFE","BHS","JES","JFPL","JFSL","JFGD","TCS","JESP","JFC","JFP","JFVTC","JFR","JUS","NUS","OPL","TOP");
+			$allow_policies = array("JFS","JFE","BHS","JES","JFPL","JFSL","JFGD","TCS","JESP","JFC","JFP","JFVTC","JFR","JUS","NUS","OPL","TOP","TOPN");
 			if (empty($policies)) {
 				$rdata['status'] = Api_model::STATUS_ERROR;
         if ($lang == 'zh') {
@@ -611,7 +611,7 @@ class Api extends CI_Controller {
 			}
 						
 			$data['product_short'] = $this->input->post('product_short');
-      if ($data['product_short'] == 'TOP') {
+      if (($data['product_short'] == 'TOP') || ($data['product_short'] == 'TOPN')) {
         $data['package'] = $this->input->post('package');
       }
 			$data['agent_id'] = $this->input->post('agent_id');
