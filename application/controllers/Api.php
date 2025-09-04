@@ -883,7 +883,7 @@ class Api extends CI_Controller {
 
 	public function claim_exist() {
 		$this->load->model('api_model');
-		$ips = array('127.0.0.1', '54.89.143.155', '52.205.81.107', '54.164.58.203');
+		$ips = array('127.0.0.1', '54.173.205.174', '52.205.81.107', '173.206.132.113');
 		$keys = array('qqnzcPfp', 'H5FqpJdc');
 		
 		$key = $this->input->get_post('key');
