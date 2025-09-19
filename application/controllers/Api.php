@@ -13,6 +13,7 @@ class Api extends CI_Controller {
   private $prescriptionURL = "https://insurance-inovice-jf.cognitiveservices.azure.com/formrecognizer/documentModels/Generation3:analyze?api-version=2023-07-31";
   private $azureKey = "d6cf34d7455f414392c4aefe4c54ec19";
   private $azureHost = "insurance-inovice-jf.cognitiveservices.azure.com";
+  private $lang = "en";
 	
 	public function index() {
 		$data = array("status" => "OK", "message" => "API V0.01.01");
@@ -26,16 +27,23 @@ class Api extends CI_Controller {
 	public function login() {
 		$this->load->model('api_model');
 
-		$lang = $this->input->post_get('lan');
-    if ($lang != 'zh') {
+		$lang = $this->input->post_get('lang');
+    if ($lang != 'fr') {
       $lang = 'en';
     }
+		$lan = $this->input->post_get('lan');
+    if ($lan == 'zh') {
+      $lang = 'zh';
+    }
+    $this->lang = $lang;
 		$data['api_id'] = $this->input->post('api_id');
 		$data['policy'] = $this->input->post('policy');
 		$data['birthday'] = $this->input->post('birthday');
 		$data['ip'] = $this->input->server('REMOTE_ADDR');
     if ($lang == 'zh') {
       $rdata = array('status' => Api_model::STATUS_OK, 'message' => '成功', 'token' => '');
+    } else if ($lang == 'fr') {
+      $rdata = array('status' => Api_model::STATUS_OK, 'message' => 'Réussite', 'token' => '');
     } else {
       $rdata = array('status' => Api_model::STATUS_OK, 'message' => 'Success', 'token' => '');
     }
@@ -43,6 +51,8 @@ class Api extends CI_Controller {
 			$rdata['status'] = Api_model::STATUS_ERROR;
       if ($lang == 'zh') {
         $rdata['message'] = '无效的ID';
+      } else if ($lang == 'fr') {
+        $rdata['message'] = 'ID invalide';
       } else {
         $rdata['message'] = 'Invalid ID';
       }
@@ -50,6 +60,8 @@ class Api extends CI_Controller {
 			$rdata['status'] = Api_model::STATUS_ERROR;
       if ($lang == 'zh') {
         $rdata['message'] = '未知的生日';
+      } else if ($lang == 'fr') {
+        $rdata['message'] = 'Date de naissance inconnue';
       } else {
         $rdata['message'] = 'Unknown Birth Day';
       }
@@ -57,6 +69,8 @@ class Api extends CI_Controller {
 			$rdata['status'] = Api_model::STATUS_ERROR;
       if ($lang == 'zh') {
         $rdata['message'] = '无效的参数';
+      } else if ($lang == 'fr') {
+        $rdata['message'] = 'Paramètre non valide';
       } else {
         $rdata['message'] = 'Invalid Parameter';
       }
@@ -67,6 +81,8 @@ class Api extends CI_Controller {
 				$rdata['status'] = Api_model::STATUS_ERROR;
         if ($lang == 'zh') {
           $rdata['message'] = '太多登录';
+        } else if ($lang == 'fr') {
+          $rdata['message'] = 'Trop de connexions';
         } else {
           $rdata['message'] = 'Too many logins';
         }
@@ -82,6 +98,8 @@ class Api extends CI_Controller {
 				$rdata['status'] = Api_model::STATUS_ERROR;
         if ($lang == 'zh') {
           $rdata['message'] = '保单号码无效';
+        } else if ($lang == 'fr') {
+          $rdata['message'] = "Le numéro de police n'est pas valide";
         } else {
   				$rdata['message'] = 'Policy number is not valid';
         }
@@ -89,6 +107,8 @@ class Api extends CI_Controller {
 				$rdata['status'] = Api_model::STATUS_ERROR;
         if ($lang == 'zh') {
           $rdata['message'] = '不支持的保单类型';
+        } else if ($lang == 'fr') {
+          $rdata['message'] = "Type de politique non pris en charge";
         } else {
 				  $rdata['message'] = 'Unsupported Policy Type';
         }
@@ -124,7 +144,9 @@ class Api extends CI_Controller {
 					$rdata['status'] = Api_model::STATUS_ERROR;
           if ($lang == 'zh') {
             $rdata['message'] = '生日与我们的记录不符';
-          } else {
+          } else if ($lang == 'fr') {
+            $rdata['message'] = "L'anniversaire ne correspond pas à nos enregistrements";
+            } else {
             $rdata['message'] = 'Birthday does not match our records';
           }
 				}
@@ -156,16 +178,28 @@ class Api extends CI_Controller {
 		$rdata = array('status' => Api_model::STATUS_OK, 'message' => 'Success');
 		if (empty($data['api_id'])) {
 			$rdata['status'] = Api_model::STATUS_ERROR;
-			$rdata['message'] = 'Invilad ID';
+      if ($this->lang == 'fr') {
+        $rdata['message'] = 'ID Invilad';
+      } else {
+        $rdata['message'] = 'Invilad ID';
+      }
 		} else if (empty($data['token'])) {
 			$rdata['status'] = Api_model::STATUS_ERROR;
-			$rdata['message'] = 'Invilad Parameter';
+      if ($this->lang == 'fr') {
+        $rdata['message'] = 'Paramètre non valide';
+      } else {
+  			$rdata['message'] = 'Invalid Parameter';
+      }
 		} else {
 			$data['last_tm'] = date('c');
 			$this->api = $this->api_model->check_last($data);
 			if (empty($this->api)) {
 				$rdata['status'] = Api_model::STATUS_ERROR;
-				$rdata['message'] = 'Unknown ID';
+        if ($this->lang == 'fr') {
+          $rdata['message'] = 'ID inconnu';
+        } else {
+          $rdata['message'] = 'Unknown ID';
+        }
 			}
 		}
 		return $rdata;
@@ -517,10 +551,15 @@ class Api extends CI_Controller {
 		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 
 		$this->load->model('api_model');
-		$lang = $this->input->post_get('lan');
-    if ($lang != 'zh') {
+		$lang = $this->input->post_get('lang');
+    if ($lang != 'fr') {
       $lang = 'en';
     }
+		$lan = $this->input->post_get('lan');
+    if ($lan == 'zh') {
+      $lang = 'zh';
+    }
+    $this->lang = $lang;
 		$rdata = $this->conn_verify();
 		if ($rdata['status'] == Api_model::STATUS_OK) {
 			$this->load->model('eclaim_model');
@@ -542,6 +581,8 @@ class Api extends CI_Controller {
 				$rdata['error'] = 'To fast to submit';
         if ($lang == 'zh') {
           $rdata['message'] = '提交太快';
+        } else if ($lang == 'fr') {
+          $rdata['message'] = 'Jeûner pour se soumettre';
         } else {
           $rdata['message'] = 'To fast to submit';
         }
@@ -554,6 +595,8 @@ class Api extends CI_Controller {
 				$rdata['status'] = Api_model::STATUS_ERROR;
         if ($lang == 'zh') {
           $rdata['message'] = '数据有问题';
+        } else if ($lang == 'fr') {
+          $rdata['message'] = 'Il y a un problème avec les données';
         } else {
   				$rdata['message'] = 'Something wrong with data';
         }
