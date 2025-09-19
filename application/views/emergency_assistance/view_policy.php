@@ -135,6 +135,13 @@
 							<?php } // questionnaire ?>
 						</label>
 					</div>
+					<div class="form-group col-sm-3">
+  					<?php if ($policy['apply_date'] > $policy['arrival_date']) { ?>
+            <label style="text-transform: capitalize;">Extended Policy</label>
+            <?php } else { ?>
+						<label style="text-transform: capitalize;">Top Up Policy</label>
+            <?php } ?>
+					</div>
 					<?php } ?>
 					<div class="clearfix"></div>
 					<div class="form-group col-sm-12">
