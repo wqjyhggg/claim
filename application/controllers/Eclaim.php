@@ -244,6 +244,12 @@ class Eclaim extends CI_Controller {
 				$data =[];
 				$expenses=[];
 				$array = $this->input->post();
+        $lang = "en";
+        if (isset($array["lang"])) {
+          if ($array["lang"] == "fr") {
+            $lang = "fr";
+          }
+        }
 
         $policy_info_arr = $this->api_model->get_policy(array('policy' => $array['policy_no']));
 
@@ -487,17 +493,30 @@ class Eclaim extends CI_Controller {
 				// print_r($this->db->last_query());
 				// send success message
 				$this->load->model("mymail_model");
-				$subject = "Web claim under review - " . $data['claim_no'] . " - " . $data['insured_first_name'];
 				$to = $data['email'];
-				$body  = "Dear " . $data['insured_first_name'] . ",\n\n"; 
-				$body  .= "The web claim you submitted on ".date("Y-m-d")." has been accepted and is being reviewed. Your claim number is " . $data['claim_no'] . ". It will take approximately 5 business days for us to process your claim. \n\n"; 
-				$body  .= "You can check the status of your claim by logging into the eclaim.jfgroup.ca with your policy number and birthday and selecting 'Check Claim Status' on the main menu.\n"; 
-				$body  .= "This is an system-generated email, please do not reply directly. Should you have any questions, please contact us by email at claim@otcww.com.\n\n"; 
-				$body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies. \n\n"; 
-				$body  .= "Best regards,\n\n"; 
-				$body  .= "Ontime Care Worldwide Inc. \n"; 
-				$body  .= "Telephone: 905-707-3335\n"; 
-				$body  .= "Email: claim@otcww.com \n"; 
+        if ($lang = "fr") {
+          $subject = "Réclamation en ligne en cours d'examen - " . $data['claim_no'] . " - " . $data['insured_first_name'];
+          $body  = "Cher/Chère " . $data['insured_first_name'] . ",\n\n"; 
+          $body  .= "La réclamation en ligne que vous avez soumise le ".date("Y-m-d")." a été acceptée et est en cours d'examen. Votre numéro de réclamation est " . $data['claim_no'] . ". Le traitement de votre réclamation prendra environ 5 jours ouvrables. \n\n"; 
+          $body  .= "Vous pouvez vérifier l'état de votre réclamation en vous connectant sur eclaim.jfgroup.ca avec votre numéro de police et votre date de naissance, puis en sélectionnant “Vérifier l'état de la réclamation” dans le menu principal\n"; 
+          $body  .= "Ceci est un courriel généré automatiquement, merci de ne pas y répondre directement. Pour toute question, veuillez nous contacter par courriel à claim@otcww.com.\n\n"; 
+          $body  .= "Ontime Care Worldwide Inc. est l'administrateur de réclamations autorisé pour les polices d'assurance JF.\n\n"; 
+          $body  .= "Cordialement,\n\n"; 
+          $body  .= "Ontime Care Worldwide Inc. \n"; 
+          $body  .= "Téléphone: 905-707-3335\n"; 
+          $body  .= "Courriel: claim@otcww.com \n";
+        } else {
+          $subject = "Web claim under review - " . $data['claim_no'] . " - " . $data['insured_first_name'];
+          $body  = "Dear " . $data['insured_first_name'] . ",\n\n"; 
+          $body  .= "The web claim you submitted on ".date("Y-m-d")." has been accepted and is being reviewed. Your claim number is " . $data['claim_no'] . ". It will take approximately 5 business days for us to process your claim. \n\n"; 
+          $body  .= "You can check the status of your claim by logging into the eclaim.jfgroup.ca with your policy number and birthday and selecting 'Check Claim Status' on the main menu.\n"; 
+          $body  .= "This is an system-generated email, please do not reply directly. Should you have any questions, please contact us by email at claim@otcww.com.\n\n"; 
+          $body  .= "Ontime Care Worldwide Inc. is the authorized claims administrator for JF Insurance policies. \n\n"; 
+          $body  .= "Best regards,\n\n"; 
+          $body  .= "Ontime Care Worldwide Inc. \n"; 
+          $body  .= "Telephone: 905-707-3335\n"; 
+          $body  .= "Email: claim@otcww.com \n";
+        }
 				// $body  = "Dear " . $data['insured_first_name'] . ",<br /><br />\n"; 
 				// $body  .= "The web claim you submitted on ".date("Y-m-d")." has been accepted and is being reviewed. Your claim number is " . $data['claim_no'] . ". It will take approximately 5 business days for us to process your claim. <br /><br />\n"; 
 				// $body  .= "You can check the status of your claim by logging into the <a href='https://eclaim.jfgroup.ca'>eclaim.jfgroup.ca</a> with your policy number and birthday and selecting 'Check Claim Status' on the main menu.<br />\n"; 
