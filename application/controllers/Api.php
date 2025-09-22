@@ -175,17 +175,21 @@ class Api extends CI_Controller {
 		$data['api_id'] = $this->input->post('api_id');
 		$data['token'] = $this->input->post('token');
 		$data['ip'] = $this->input->server('REMOTE_ADDR');
-		$rdata = array('status' => Api_model::STATUS_OK, 'message' => 'Success');
+    $lang = "en";
+    if (isset($this->lang)) {
+      $lang = $this->lang;
+    }
+    $rdata = array('status' => Api_model::STATUS_OK, 'message' => 'Success');
 		if (empty($data['api_id'])) {
 			$rdata['status'] = Api_model::STATUS_ERROR;
-      if ($this->lang == 'fr') {
+      if ($lang == 'fr') {
         $rdata['message'] = 'ID Invilad';
       } else {
         $rdata['message'] = 'Invilad ID';
       }
 		} else if (empty($data['token'])) {
 			$rdata['status'] = Api_model::STATUS_ERROR;
-      if ($this->lang == 'fr') {
+      if ($lang == 'fr') {
         $rdata['message'] = 'Paramètre non valide';
       } else {
   			$rdata['message'] = 'Invalid Parameter';
@@ -195,7 +199,7 @@ class Api extends CI_Controller {
 			$this->api = $this->api_model->check_last($data);
 			if (empty($this->api)) {
 				$rdata['status'] = Api_model::STATUS_ERROR;
-        if ($this->lang == 'fr') {
+        if ($lang == 'fr') {
           $rdata['message'] = 'ID inconnu';
         } else {
           $rdata['message'] = 'Unknown ID';
