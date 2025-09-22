@@ -13,7 +13,7 @@ class Api extends CI_Controller {
   private $prescriptionURL = "https://insurance-inovice-jf.cognitiveservices.azure.com/formrecognizer/documentModels/Generation3:analyze?api-version=2023-07-31";
   private $azureKey = "d6cf34d7455f414392c4aefe4c54ec19";
   private $azureHost = "insurance-inovice-jf.cognitiveservices.azure.com";
-  private $lang = "en";
+  public $lang = "en";
 	
 	public function index() {
 		$data = array("status" => "OK", "message" => "API V0.01.01");
