@@ -136,9 +136,9 @@
 							<label>Birthday : </label><?php echo $claim['dob']; ?><input type='hidden' name='dob' value='<?php echo $claim['dob']; ?>'>
 						</div>
 	
-						<div class="form-group col-sm-3">
+						<!-- <div class="form-group col-sm-3">
 							<label>Status : </label><?php echo $claim['status']; ?>
-						</div>
+						</div> -->
 						<div class="form-group col-sm-3">
 							<label>Diagnosis : </label><?php echo htmlspecialchars($claim['diagnosis']); ?>
 							<?php echo form_hidden("policy_info", $claim['policy_info'] ); ?>

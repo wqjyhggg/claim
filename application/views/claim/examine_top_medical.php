@@ -145,6 +145,10 @@
 						</div>
 	
 						<div class="form-group col-sm-3">
+							<label>Diagnosis : </label><?php echo htmlspecialchars($claim['diagnosis']); ?>
+							<?php echo form_hidden("policy_info", $claim['policy_info'] ); ?>
+						</div>
+						<!-- <div class="form-group col-sm-3">
 							<label>Status : </label><?php echo $claim['status']; ?>
 						</div>
 						<div class="form-group col-sm-3">
@@ -156,8 +160,7 @@
 									echo "&nbsp;";
 								}
 							?>
-							<?php echo form_hidden("policy_info", $claim['policy_info'] ); ?>
-						</div>
+						</div> -->
 						<div class="form-group col-sm-6">
 							<label>Related Files : </label>
 							<?php 
