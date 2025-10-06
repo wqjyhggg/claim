@@ -623,6 +623,13 @@
 						</div>
 						<?php } ?>
 					</div>
+					<div class="row actions" style="margin-top: 20px;">
+						<div class="col-sm-6">
+              <label class="col-sm-12">Export Claim Info
+                <a class="btn btn-primary" href="<?php echo base_url().'/claim/export_claim_info/'.$claim['id']; ?>" target="_blank" id="export_pdf">Export</a>
+              </label>
+						</div>
+					</div>
 					<hr />
 					<?php } ?>
 					<h4 style="margin-top: 25px; margin-bottom: 26px;">Total Pay info By Policy</h4>
