@@ -2048,7 +2048,49 @@ class Claim extends CI_Controller {
 				'file_name' => $filename 
 		));
 	}
-	
+ 
+	// send email template from examine claim page
+	public function export_claim_info($claim_id) {
+    $this->load->model('api_model');
+    $this->load->model('claim_model');
+    $this->load->model('product_model');
+
+    $claim = $this->claim_model->get_by_id($claim_id);
+    if (empty($claim)) {
+      return show_error('Unknown Claim.');
+    }
+    $product_name = $this->product_model->get_full_name($claim["product_short"]);
+    if (empty($product_name)) {
+      $product_name = $claim["product_short"];
+    }
+    if (empty($claim["policy_info"])) {
+      $policy_info_arr = $this->api_model->get_policy(array('policy' => $claim['policy_no']));
+
+      if (empty($policy_info_arr)) {
+        return show_error('Unknown policy for this Claim, ' . $claim['policy_no'] . '.');
+      }
+      $policy = $policy_info_arr[0];
+    } else {
+      $policy = json_decode($claim["policy_info"], true);
+    }
+    if (empty($policy)) {
+      return show_error('Unknown policy ' . $claim['policy_no'] . '.');
+    }
+
+    $html_content = $this->load->view('my_view', ["claim"=>$claim, "policy"=>$policy, "product_name"=>$product_name], TRUE);
+
+    // create pdf from template using DOM PDF
+		require_once './assets/dompdf/dompdf_config.inc.php';
+		$dompdf = new DOMPDF();
+		$dompdf->load_html($html_content);
+		$dompdf->render();
+		$output = $dompdf->output();
+		$filename = 'claim_pdf_'. $claim_id . '.pdf';
+		$filepath = UPLOADFULLPATH . "temp/" . $filename;
+		file_put_contents($filepath, $output);
+    echo $html_content;
+	}
+  
 	// send email template from examine claim page
 	public function send_print_email_claim() {
 		// get all requested params
