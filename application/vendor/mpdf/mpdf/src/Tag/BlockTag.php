@@ -895,7 +895,7 @@ abstract class BlockTag extends Tag
 			$this->mpdf->listitem = [];
 
 			// Listitem-type
-			$this->mpdf->_setListMarker($currblk['list_style_type']??'', $currblk['list_style_image']??'', $currblk['list_style_position']??'');
+			$this->mpdf->_setListMarker(isset($currblk['list_style_type'])?$currblk['list_style_type']:'', isset($currblk['list_style_image'])?$currblk['list_style_image']:'', isset($currblk['list_style_position'])?$currblk['list_style_position']:'');
 		}
 
 		// mPDF 6 Bidirectional formatting for block elements
