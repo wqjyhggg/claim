@@ -2078,17 +2078,11 @@ class Claim extends CI_Controller {
     }
 
     $html_content = $this->load->view('claim/claim_pdf', ["claim"=>$claim, "plan"=>$policy[0], "product_name"=>$product_name], TRUE);
-
-    // create pdf from template using DOM PDF
-		require_once './assets/dompdf/dompdf_config.inc.php';
-		$dompdf = new DOMPDF();
-		$dompdf->load_html($html_content);
-		$dompdf->render();
-		$output = $dompdf->output();
-		$filename = 'claim_pdf_'. $claim_id . '.pdf';
-		$filepath = UPLOADFULLPATH . "temp/" . $filename;
-		file_put_contents($filepath, $output);
-    echo $html_content;
+		$mpdf = new \Mpdf\Mpdf();
+		$mpdf->setAutoTopMargin = 'stretch';
+		$mpdf->setAutoBottomMargin = 'stretch';
+		$mpdf->WriteHTML($html);
+		$mpdf->Output();
 	}
   
 	// send email template from examine claim page
