@@ -2,64 +2,64 @@
    <body>
     <table>
       <tr>
-        <td><p>Claimant/Insured's Name</p></td>
-        <td><p><?php echo $claim["insured_first_name"] . " " . $claim["insured_last_name"]; ?></p></td>
+        <td>Claimant/Insured's Name</td>
+        <td><?php echo $claim["insured_first_name"] . " " . $claim["insured_last_name"]; ?></td>
       </tr>
       <tr>
-        <td><p>Date of Birth/Age/Sex</p></td>
-        <td><p><?php echo $claim["dob"] . "/" . (intval(substr($claim["apply_date"], 0, 4)) - intval(substr($claim["dob"], 0, 4))) . "/" . ucfirst($claim["gender"]); ?></p></td>
+        <td>Date of Birth/Age/Sex</td>
+        <td><?php echo $claim["dob"] . "/" . (intval(substr($claim["apply_date"], 0, 4)) - intval(substr($claim["dob"], 0, 4))) . "/" . ucfirst($claim["gender"]); ?></td>
       </tr>
       <tr>
-        <td><p>Claim Number</p></td>
-        <td><p><?php echo $claim["claim_no"]; ?></p></td>
+        <td>Claim Number</td>
+        <td><?php echo $claim["claim_no"]; ?></td>
       </tr>
       <tr>
-        <td><p>Other Claims (related or unrelated)</p></td>
-        <td><p>No</p></td>
+        <td>Other Claims (related or unrelated)</td>
+        <td>No</td>
       </tr>
       <tr>
-        <td><p>Policy Number</p></td>
-        <td><p><?php echo $claim["policy_no"]; ?></p></td>
+        <td>Policy Number</td>
+        <td><?php echo $claim["policy_no"]; ?></td>
       </tr>
       <tr>
-        <td><p>Product</p></td>
-        <td><p><?php echo $product_name; ?></p></td>
+        <td>Product</td>
+        <td><?php echo $product_name; ?></td>
       </tr>
       <tr>
-        <td><p>Plan Type</p></td>
-        <td><p>Individual</p></td>
+        <td>Plan Type</td>
+        <td>Individual</td>
       </tr>
       <tr>
-        <td><p>Date of Application/Issue (if applicable) </p></td>
-        <td><p><?php echo $claim["apply_date"]; ?></p></td>
+        <td>Date of Application/Issue (if applicable) </td>
+        <td><?php echo $claim["apply_date"]; ?></td>
       </tr>
       <tr>
-        <td><p>Coverage Period</p></td>
-        <td><p><?php echo $claim["effective_date"] . " to " . $claim["expiry_date"]; ?></p></td>
+        <td>Coverage Period</td>
+        <td><?php echo $claim["effective_date"] . " to " . $claim["expiry_date"]; ?></td>
       </tr>
       <tr>
-        <td><p>Travel Dates</p></td>
-        <td><p><?php echo $claim["arrival_date"]; ?></p></td>
+        <td>Travel Dates</td>
+        <td><?php echo $claim["arrival_date"]; ?></td>
       </tr>
       <tr>
-        <td><p>Travel Destination</p></td>
-        <td><p><?php echo $claim["city"] . " " . $claim["province"]; ?></p></td>
+        <td>Travel Destination</td>
+        <td><?php echo $claim["city"] . " " . $claim["province"]; ?></td>
       </tr>
       <tr>
-        <td><p>Date of Loss</p></td>
-        <td><p><?php echo $claim["date_symptoms"]; ?></p></td>
+        <td>Date of Loss</td>
+        <td><?php echo $claim["date_symptoms"]; ?></td>
       </tr>
       <tr>
-        <td><p>Cause for Claim/Diagnosis</p></td>
-        <td><p><?php echo $claim["medical_description"]; ?></p></td>
+        <td>Cause for Claim/Diagnosis</td>
+        <td><?php echo $claim["medical_description"]; ?></td>
       </tr>
       <tr>
-        <td><p>Reserve Amount</p></td>
-        <td><p><?php echo $claim["reserve_amount"]; ?></p></td>
+        <td>Reserve Amount</td>
+        <td><?php echo $claim["reserve_amount"]; ?></td>
       </tr>
       <tr>
-        <td><p>Pre-existing Condition Period</p></td>
-        <td><p><?php echo ($plan["stable_condition"] == 1)?"Including":(($plan["stable_condition"] == 2)?"Excludes":"&nbsp;") ; ?></p></td>
+        <td>Pre-existing Condition Period</td>
+        <td><?php echo ($plan["stable_condition"] == 1)?"Including":(($plan["stable_condition"] == 2)?"Excludes":"&nbsp;") ; ?></td>
       </tr>
     </table>
 	</body>
