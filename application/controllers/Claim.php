@@ -2077,7 +2077,7 @@ class Claim extends CI_Controller {
       return show_error('Unknown policy ' . $claim['policy_no'] . '.');
     }
 
-    $html_content = $this->load->view('claim/claim_pdf', ["claim"=>$claim, "plan"=>$policy[0], "product_name"=>$product_name], TRUE);
+    $html = $this->load->view('claim/claim_pdf', ["claim"=>$claim, "plan"=>$policy[0], "product_name"=>$product_name], TRUE);
 		$mpdf = new \Mpdf\Mpdf();
 		$mpdf->setAutoTopMargin = 'stretch';
 		$mpdf->setAutoBottomMargin = 'stretch';
