@@ -2069,7 +2069,7 @@ class Claim extends CI_Controller {
       if (empty($policy_info_arr)) {
         return show_error('Unknown policy for this Claim, ' . $claim['policy_no'] . '.');
       }
-      $policy = $policy_info_arr[0];
+      $policy = $policy_info_arr;
     } else {
       $policy = json_decode($claim["policy_info"], true);
     }
@@ -2077,7 +2077,7 @@ class Claim extends CI_Controller {
       return show_error('Unknown policy ' . $claim['policy_no'] . '.');
     }
 
-    $html_content = $this->load->view('my_view', ["claim"=>$claim, "policy"=>$policy, "product_name"=>$product_name], TRUE);
+    $html_content = $this->load->view('claim/claim_pdf', ["claim"=>$claim, "plan"=>$policy[0], "product_name"=>$product_name], TRUE);
 
     // create pdf from template using DOM PDF
 		require_once './assets/dompdf/dompdf_config.inc.php';
