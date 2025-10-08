@@ -136,10 +136,12 @@
 						</label>
 					</div>
 					<div class="form-group col-sm-3">
+            <?php if ($policy['arrival_date'] < $policy['effective_date']) { ?>
   					<?php if ($policy['apply_date'] > $policy['arrival_date']) { ?>
             <label style="text-transform: capitalize;">Extended Policy</label>
             <?php } else { ?>
 						<label style="text-transform: capitalize;">Top Up Policy</label>
+            <?php } ?>
             <?php } ?>
 					</div>
 					<?php } ?>
