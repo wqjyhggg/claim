@@ -473,7 +473,7 @@ class Emergency_assistance extends CI_Controller {
 
     $output = fopen('php://output', 'w');
     fputcsv($output, ["Claimant/Insured's Name", $case["first_name"] . " " . $case["last_name"]]);
-    fputcsv($output, ["Date of Birth/Age/Sex", $case["dob"] . "/" . (intval(substr($plan["apply_date"], 0, 4)) - intval(substr($claim["case"], 0, 4))) . "/" . ucfirst($case["gender"])]);
+    fputcsv($output, ["Date of Birth/Age/Sex", $case["dob"] . "/" . (intval(substr($plan["apply_date"], 0, 4)) - intval(substr($case["dob"], 0, 4))) . "/" . ucfirst($case["gender"])]);
     fputcsv($output, ["Case Number", $case["case_no"]]);
     fputcsv($output, ["Other Claims (related or unrelated)", "No"]);
     fputcsv($output, ["Policy Number", $case["policy_no"]]);
