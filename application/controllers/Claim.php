@@ -2049,7 +2049,6 @@ class Claim extends CI_Controller {
 		));
 	}
  
-	// send email template from examine claim page
 	public function export_claim_info($claim_id) {
     $this->load->model('api_model');
     $this->load->model('claim_model');
@@ -2076,13 +2075,36 @@ class Claim extends CI_Controller {
     if (empty($policy)) {
       return show_error('Unknown policy ' . $claim['policy_no'] . '.');
     }
+    if (0) {
+      $html = $this->load->view('claim/claim_pdf', ["claim"=>$claim, "plan"=>$policy[0], "product_name"=>$product_name], TRUE);
+      $mpdf = new \Mpdf\Mpdf();
+      $mpdf->setAutoTopMargin = 'stretch';
+      $mpdf->setAutoBottomMargin = 'stretch';
+      $mpdf->WriteHTML($html);
+      $mpdf->Output();
+    }
+    $plan = $policy[0];
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="claim_'.$claim_id.'.csv"');
 
-    $html = $this->load->view('claim/claim_pdf', ["claim"=>$claim, "plan"=>$policy[0], "product_name"=>$product_name], TRUE);
-		$mpdf = new \Mpdf\Mpdf();
-		$mpdf->setAutoTopMargin = 'stretch';
-		$mpdf->setAutoBottomMargin = 'stretch';
-		$mpdf->WriteHTML($html);
-		$mpdf->Output();
+    $output = fopen('php://output', 'w');
+    fputcsv($output, ["Claimant/Insured's Name", $claim["insured_first_name"] . " " . $claim["insured_last_name"]]);
+    fputcsv($output, ["Date of Birth/Age/Sex", $claim["dob"] . "/" . (intval(substr($claim["apply_date"], 0, 4)) - intval(substr($claim["dob"], 0, 4))) . "/" . ucfirst($claim["gender"])]);
+    fputcsv($output, ["Claim Number", $claim["claim_no"]]);
+    fputcsv($output, ["Other Claims (related or unrelated)", "No"]);
+    fputcsv($output, ["Policy Number", $claim["policy_no"]]);
+    fputcsv($output, ["Product", $product_name]);
+    fputcsv($output, ["Plan Type", empty($plan["isfamilyplan"])?"Individual":"Family"]);
+    fputcsv($output, ["Date of Application/Issue (if applicable)", $claim["apply_date"]]);
+    fputcsv($output, ["Coverage Period", $claim["effective_date"] . " to " . $claim["expiry_date"]]);
+    fputcsv($output, ["Travel Dates", $claim["arrival_date"]]);
+    fputcsv($output, ["Travel Destination", $claim["city"] . " " . $claim["province"]]);
+    fputcsv($output, ["Date of Loss", $claim["date_symptoms"]]);
+    fputcsv($output, ["Cause for Claim/Diagnosis", $claim["diagnosis"]]);
+    fputcsv($output, ["Reserve Amount", $claim["reserve_amount"]]);
+    fputcsv($output, ["Pre-existing Condition Period", ($plan["stable_condition"] == 1)?"Including":(($plan["stable_condition"] == 2)?"Excludes":" ")]);
+    fclose($output);
+    exit();
 	}
   
 	// send email template from examine claim page

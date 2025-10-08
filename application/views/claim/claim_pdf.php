@@ -52,7 +52,7 @@
         </tr>
         <tr>
           <td>Cause for Claim/Diagnosis</td>
-          <td><?php echo $claim["medical_description"]; ?></td>
+          <td><?php echo $claim["diagnosis"]; ?></td>
         </tr>
         <tr>
           <td>Reserve Amount</td>

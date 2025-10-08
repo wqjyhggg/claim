@@ -446,6 +446,50 @@ class Emergency_assistance extends CI_Controller {
 		}
 	}
 	
+  public function export_case_info($case_id) {
+    $this->load->model('api_model');
+    $this->load->model('case_model');
+    $this->load->model('product_model');
+
+    $case = $this->case_model->get_by_id($case_id);
+    if (empty($case)) {
+      return show_error('Unknown Case.');
+    }
+    $product_name = $this->product_model->get_full_name($case["product_short"]);
+    if (empty($product_name)) {
+      $product_name = $case["product_short"];
+    }
+    $policy_info_arr = $this->api_model->get_policy(array('policy' => $case['policy_no']));
+    if (empty($policy_info_arr)) {
+      return show_error('Unknown policy for this case, ' . $case['policy_no'] . '.');
+    }
+    $policy = $policy_info_arr;
+    if (empty($policy)) {
+      return show_error('Unknown policy ' . $case['policy_no'] . '.');
+    }
+    $plan = $policy[0];
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="case_'.$case_id.'.csv"');
+
+    $output = fopen('php://output', 'w');
+    fputcsv($output, ["Claimant/Insured's Name", $case["first_name"] . " " . $case["last_name"]]);
+    fputcsv($output, ["Date of Birth/Age/Sex", $case["dob"] . "/" . $plan["totalyears"] . "/" . ucfirst($case["gender"])]);
+    fputcsv($output, ["Case Number", $case["case_no"]]);
+    fputcsv($output, ["Other Claims (related or unrelated)", "No"]);
+    fputcsv($output, ["Policy Number", $case["policy_no"]]);
+    fputcsv($output, ["Product", $product_name]);
+    fputcsv($output, ["Plan Type", empty($plan["isfamilyplan"])?"Individual":"Family"]);
+    fputcsv($output, ["Date of Application/Issue (if applicable)", $case["init_reserve_tm"]]);
+    fputcsv($output, ["Coverage Period", $plan["effective_date"] . " to " . $plan["expiry_date"]]);
+    fputcsv($output, ["Travel Dates", $plan["arrival_date"]]);
+    fputcsv($output, ["Travel Destination", $case["city"] . " " . $case["province"]]);
+    fputcsv($output, ["Date of Loss", $case["incident_date"]]);
+    fputcsv($output, ["Reserve Amount", $case["reserve_amount"]]);
+    fputcsv($output, ["Pre-existing Condition Period", ($plan["stable_condition"] == 1)?"Including":(($plan["stable_condition"] == 2)?"Excludes":" ")]);
+    fclose($output);
+    exit();
+	}
+
 	// redirect if needed, otherwise display the edit case page
 	public function edit_case($id = 0) {
 		if (!$this->ion_auth->logged_in()) {
