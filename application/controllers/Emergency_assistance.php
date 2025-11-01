@@ -485,7 +485,18 @@ class Emergency_assistance extends CI_Controller {
     fputcsv($output, ["Travel Destination", $case["city"] . " " . $case["province"]]);
     fputcsv($output, ["Date of Loss", $case["incident_date"]]);
     fputcsv($output, ["Reserve Amount", $case["reserve_amount"]]);
-    fputcsv($output, ["Pre-existing Condition Period", ($plan["stable_condition"] == 1)?"Including":(($plan["stable_condition"] == 2)?"Excludes":" ")]);
+    $YesArr = ["JES", "JESP", "JFGD", "JFOS", "JFP", "JFPL", "TCS", "BHS"];
+    $NoArr = ["JFS", "JFSL"];
+    $TOPArr = ["TOP", "TOPN"];
+    if (in_array($plan["product_short"], $YesArr)) {
+      fputcsv($output, ["Pre-existing Condition Period", "Yes"]);
+    } else if (in_array($plan["product_short"], $NoArr)) {
+      fputcsv($output, ["Pre-existing Condition Period", "No"]);
+    } else if (in_array($plan["product_short"], $TOPArr)) {
+      fputcsv($output, ["Pre-existing Condition Period", ($plan["stable_condition"] == 1)?"Including":(($plan["stable_condition"] == 2)?"Excludes":" ")]);
+    } else {
+      fputcsv($output, ["Pre-existing Condition Period", ($plan["stable_condition"] == 1)?"Yes":(($plan["stable_condition"] == 2)?"No":" ")]);
+    }
     fclose($output);
     exit();
 	}
