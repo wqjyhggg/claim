@@ -463,7 +463,7 @@
 							<?php } ?>
 							<button insured_address="<?php echo nl2br(htmlspecialchars($case_details['insured_address'])); ?>" insured_lastname="<?php echo htmlspecialchars($case_details['insured_lastname']); ?>" insured_firstname="<?php echo htmlspecialchars($case_details['insured_firstname']) ?>" policy_no="<?php echo htmlspecialchars($case_details['policy_no']) ?>" case_no="<?php echo htmlspecialchars($case_details['case_no']) ?>" casemanager_name="<?php echo isset($case_details['case_manager_name']) ? $case_details['case_manager_name'] : ''; ?>" class="btn btn-primary email_print" type="button" data-toggle="modal" data-target="#print_template">Email/Print</button>
 							<?php } ?>
-							<a href="<?php echo base_url("emergency_assistance/export_case_info/".$case_id) ?>" class="btn btn-primary export_csv" target="_blank">Export CSV</a>
+							<a href="<?php echo base_url("emergency_assistance/export_case_info/".$case_id) ?>" class="btn btn-primary export_csv" target="_blank">LL report</a>
 						</div>
 						<?php } ?>
 					</div>
