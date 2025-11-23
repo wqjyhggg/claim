@@ -1151,7 +1151,7 @@ class Emergency_assistance extends CI_Controller {
 						$this->data['policy']['family'][$key]['create_case_url'] = base_url('emergency_assistance/create_case') . "?" . http_build_query($para);
 					}
 				}
-        $expiretm = strtotime($policies[0]['policy']["expiry_date"]);
+        $expiretm = strtotime($this->data['policy']["expiry_date"]);
         if ($expiretm > time()) {
           $this->data['show_expiry'] = 1;
         }
