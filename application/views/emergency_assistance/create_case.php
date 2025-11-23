@@ -11,7 +11,16 @@
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="x_panel">
 				<div class="x_title">
-					<h2>Case Details</h2>
+          <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <h2>Case Details</h2>
+            </div>
+            <?php if (!empty($show_expiry)) { ?>
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <h2 style="color:red;">Warning: This policy has expired!</h2>
+            </div>
+            <?php } ?>
+          </div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">

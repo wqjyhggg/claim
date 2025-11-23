@@ -341,6 +341,7 @@ class Emergency_assistance extends CI_Controller {
 				$case_details['reserve_amount'] = '-1';
 				
 				$this->data['policy'] = array();
+				$this->data['show_expiry'] = 0;
 				if (empty($case_details['policy_no'])) {
 					$policy = $this->input->get('policy');
 					if (!empty($policy)) {
@@ -381,6 +382,12 @@ class Emergency_assistance extends CI_Controller {
 					$case_details['country'] = $this->data['case_details']['country2'] = 'CA';
 					$case_details['province'] = $this->data['case_details']['province'] = 'ON';
 				}
+        if ($this->data['policy']) {
+          $expiretm = strtotime($this->data['policy']["expiry_date"]);
+          if ($expiretm > time()) {
+            $this->data['show_expiry'] = 1;
+          }
+        }
 				
 				// load dropdowns data
 				$this->data['country'] = $this->data['country2'] = $this->country_model->get_list(TRUE);
@@ -1120,6 +1127,7 @@ class Emergency_assistance extends CI_Controller {
 				
 			$policies = $this->api_model->get_policy(array('policy' => $policy));
 			$this->data['policy_local_note'] = '';
+      $this->data['show_expiry'] = 0;
 			if ($policies) {
 				$this->data['policy'] = $policies[0];
 				$para = array();
@@ -1143,6 +1151,10 @@ class Emergency_assistance extends CI_Controller {
 						$this->data['policy']['family'][$key]['create_case_url'] = base_url('emergency_assistance/create_case') . "?" . http_build_query($para);
 					}
 				}
+        $expiretm = strtotime($policies[0]['policy']["expiry_date"]);
+        if ($expiretm > time()) {
+          $this->data['show_expiry'] = 1;
+        }
 				if ($pn = $this->policy_model->get_by_no($policies[0]['policy'])) {
 					$this->data['policy_local_note'] = $pn['note'];
 				}
