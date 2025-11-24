@@ -508,6 +508,35 @@ class Emergency_assistance extends CI_Controller {
     exit();
 	}
 
+  public function doc_upload() {
+    $para = [
+      "user_id" => $this->input->post('user_id'),
+      "case_id" => $this->input->post('case_id'),
+      "case_no" => $this->input->post('case_no'),
+      "doc_type" => $this->input->post('doc_type'),
+      "notes" => $this->input->post('notes')];
+			
+    $data = array();
+    $path = "case_docs/".$case_id."/";
+    @mkdir(UPLOADFULLPATH . $path, 0777, TRUE);
+
+    // load upload class
+    $config['upload_path'] = UPLOADFULLPATH . $path;
+    $config['allowed_types'] = 'gif|jpg|png|jpeg|pdf|wav|doc|docx|pdf';
+    $config['overwrite'] = FALSE;
+    $config['max_size'] = 15000;	// 15M
+    $this->load->library('upload', $config);
+    if ($this->upload->do_upload('doc_file')) {
+      $this->load->model('case_file_model');
+      $file_data = $this->upload->data();
+      $para['filename'] = $file_data['file_name'];
+      $para['url'] = base_url("/assets/uploads/".$path.$para['name']);
+      $this->edit_case($case_id);
+    } else {
+      return show_error("Sorry, Upload file error");
+		}
+	}
+
 	// redirect if needed, otherwise display the edit case page
 	public function edit_case($id = 0) {
 		if (!$this->ion_auth->logged_in()) {
@@ -674,6 +703,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->load->model('template_model');
 				$this->load->model('schedule_model');
 				$this->load->model('product_model');
+        $this->load->model('case_file_model');
 				
 				$this->data['policy'] = array();
 				$this->data['hasclaim'] = array();
@@ -788,6 +818,7 @@ class Emergency_assistance extends CI_Controller {
 				$this->data['priorities'] = $this->mytask_model->get_priorities();
 				
 				$this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CASE));
+        $this->data['case_docs'] = $this->case_file_model->get_files($id);
 				$this->data['phone_list_url'] = base_url('phone/search');
 				$this->data['note_delay'] = $this->notes_dealy;
 				$this->data['my_user_id'] = $this->ion_auth->get_user_id();

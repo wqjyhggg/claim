@@ -464,10 +464,35 @@
 							<button insured_address="<?php echo nl2br(htmlspecialchars($case_details['insured_address'])); ?>" insured_lastname="<?php echo htmlspecialchars($case_details['insured_lastname']); ?>" insured_firstname="<?php echo htmlspecialchars($case_details['insured_firstname']) ?>" policy_no="<?php echo htmlspecialchars($case_details['policy_no']) ?>" case_no="<?php echo htmlspecialchars($case_details['case_no']) ?>" casemanager_name="<?php echo isset($case_details['case_manager_name']) ? $case_details['case_manager_name'] : ''; ?>" class="btn btn-primary email_print" type="button" data-toggle="modal" data-target="#print_template">Email/Print</button>
 							<?php } ?>
 							<a href="<?php echo base_url("emergency_assistance/export_case_info/".$case_id) ?>" class="btn btn-primary export_csv" target="_blank">LL report</a>
+							<button type="button" class="btn btn-primary doc_upload_form" data-toggle="modal" data-target="#doc_upload_form">Doc Upload </button>
 						</div>
 						<?php } ?>
 					</div>
 					<?php echo form_close(); ?>
+					<?php if(!empty($case_docs) && is_array($case_docs) && (sizeof($case_docs) > 0)) { ?>
+            <div class="row intake-forms-list col-sm-12">
+              <div class="col-sm-12">
+                <h2>Uploaded Documents</h2>
+              </div>  
+            </div>
+            <div class="row intake-forms-list col-sm-12">
+              <?php foreach ($case_docs as $doc) { ?>
+                <div class="col-sm-3">
+                  <a herf="<?php echo $doc['url']; ?>" target="_blank"><?php echo $doc['filename']; ?></a>
+                </div>  
+                <div class="col-sm-2">
+                  <?php echo $doc['doc_type']; ?>
+                </div>  
+                <div class="col-sm-2">
+                  <?php echo $doc['create_time']; ?>
+                </div>  
+                <div class="col-sm-5">
+                  <?php echo $doc['create_time']; ?>
+                </div>
+                <div class="clearfix"></div>
+              <?php } ?>
+            </div>
+          <?php } ?>
 					<?php if(!empty($intake_forms)) { ?>
 					<h4 class="modal-title intake-heading" <?php if(empty($intake_forms)) { ?> style="display: none" <?php } ?>>Notes</h4>
 					<div class="row intake-forms-list col-sm-12">
@@ -799,6 +824,59 @@
 </div>
 <!-- end intake form model here -->
 
+<!-- Doc Upload Form Modal -->
+<div id="doc_upload_form" class="modal fade" role="dialog">
+	<div class="modal-dialog  modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Upload Document File</h4>
+			</div>
+			<?php echo form_open_multipart("emergency_assistance/doc_upload", array("id"=>'docuploadform')); ?>
+			<?php echo form_hidden("user_id", $my_user_id); ?>
+			<?php echo form_hidden("case_id", $case_id); ?>
+			<?php echo form_hidden("case_no", $case_details['case_no']); ?>
+			<div class="modal-body">
+      <div class="row">
+					<div class="form-group col-sm-12">
+						<?php echo form_label('Doc File:', '', array("class"=>'col-sm-12')); ?>
+						<?php echo form_upload("doc_file", '', array("class"=>"form-control required", 'placeholder'=>'Notes', 'style'=>"height:100px")); ?>
+						<?php echo form_error("doc_file"); ?>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-sm-12">
+						<?php echo form_label('Doc Type:', 'doc_type', array("class"=>'col-sm-12')); ?>
+						<?php echo form_dropdown("doc_type", array( "Medical Report",
+                                                        "Invoices",
+                                                        "Proof of Study",
+                                                        "Proof of Arrival",
+                                                        "Completed IP Form",
+                                                        "Others"), 
+                                                        "Medical Report", array("class"=>"form-control required", 'placeholder'=>'Notes', 'style'=>"height:100px")); ?>
+						<?php echo form_error("doc_type"); ?>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-sm-12">
+						<?php echo form_label('Notes:', 'notes', array("class"=>'col-sm-12')); ?>
+						<?php echo form_input("notes", '', array("class"=>"form-control required", 'placeholder'=>'Notes', 'style'=>"height:100px")); ?>
+						<?php echo form_error("notes"); ?>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<label class="col-sm-12">&nbsp;</label>
+				<button class="btn btn-primary save-intakeform" type="submit">Upload</button>
+				<button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+			</div>
+			<?php echo form_close(); ?>
+		</div>
+	</div>
+</div>
+<!-- Doc Upload Form Model End -->
+
 <div style="display: none">
 	<div id="products"><?php echo $products; ?></div>
 </div>
@@ -831,6 +909,11 @@ var employee_id = '<?php echo isset($case_details['assign_to']) ? (int)$case_det
 
 $(document).ready(function() {
 	$("#create_intakeform").validate();
+
+  $('#doc_upload_form').on('hidden.bs.modal', function () {
+    console.log("doc_upload_form dissmiss"); //XXXXXXXXXXXXXXXXXXXXXXX
+    window.location.reload();
+  });
 
 	$(".datepicker_due").datepicker({
 		startDate: '-0y',
