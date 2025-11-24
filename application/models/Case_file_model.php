@@ -45,25 +45,25 @@ class Case_file_model extends CI_Model {
       }
     }
     if (isset($data["case_id"])) {
-      $tis->db->set("case_id", $data["case_id"]);
+      $this->db->set("case_id", $data["case_id"]);
     }
     if (isset($data["user_id"])) {
-      $tis->db->set("user_id", $data["user_id"]);
+      $this->db->set("user_id", $data["user_id"]);
     }
     if (isset($data["case_no"])) {
-      $tis->db->set("case_no", $data["case_no"]);
+      $this->db->set("case_no", $data["case_no"]);
     }
     if (isset($data["doc_type"])) {
-      $tis->db->set("doc_type", $data["doc_type"]);
+      $this->db->set("doc_type", $data["doc_type"]);
     }
     if (isset($data["filename"])) {
-      $tis->db->set("filename", $data["filename"]);
+      $this->db->set("filename", $data["filename"]);
     }
     if (isset($data["url"])) {
-      $tis->db->set("url", $data["url"]);
+      $this->db->set("url", $data["url"]);
     }
     if (isset($data["notes"])) {
-      $tis->db->set("notes", $data["notes"]);
+      $this->db->set("notes", $data["notes"]);
     }
 		if ($id) {
 			$this->db->where('id', $id);

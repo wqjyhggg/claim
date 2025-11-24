@@ -1571,7 +1571,7 @@ CREATE TABLE case_file (
   `case_no` varchar(64) NOT NULL DEFAULT '',
   `doc_type` varchar(32) NOT NULL DEFAULT '',
   `filename` char(64) NOT NULL DEFAULT '' COMMENT 'File Name for showing',
-  `url` varchar(8) NOT NULL DEFAULT '' COMMENT 'Download URL',
+  `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'Download URL',
   notes TEXT,
   update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

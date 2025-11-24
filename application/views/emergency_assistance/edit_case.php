@@ -841,27 +841,27 @@
       <div class="row">
 					<div class="form-group col-sm-12">
 						<?php echo form_label('Doc File:', '', array("class"=>'col-sm-12')); ?>
-						<?php echo form_upload("doc_file", '', array("class"=>"form-control required", 'placeholder'=>'Notes', 'style'=>"height:100px")); ?>
+						<?php echo form_upload("doc_file", '', array("class"=>"form-control required", 'placeholder'=>'Notes')); ?>
 						<?php echo form_error("doc_file"); ?>
 					</div>
 				</div>
 				<div class="row">
 					<div class="form-group col-sm-12">
 						<?php echo form_label('Doc Type:', 'doc_type', array("class"=>'col-sm-12')); ?>
-						<?php echo form_dropdown("doc_type", array( "Medical Report",
-                                                        "Invoices",
-                                                        "Proof of Study",
-                                                        "Proof of Arrival",
-                                                        "Completed IP Form",
-                                                        "Others"), 
-                                                        "Medical Report", array("class"=>"form-control required", 'placeholder'=>'Notes', 'style'=>"height:100px")); ?>
+						<?php echo form_dropdown("doc_type", array( "Medical Report" => "Medical Report",
+                                                        "Invoices" => "Invoices",
+                                                        "Proof of Study" => "Proof of Study",
+                                                        "Proof of Arrival" => "Proof of Arrival",
+                                                        "Completed IP Form" => "Completed IP Form",
+                                                        "Others" => "Others"), 
+                                                        "Medical Report", array("class"=>"form-control required", 'placeholder'=>'Notes')); ?>
 						<?php echo form_error("doc_type"); ?>
 					</div>
 				</div>
 				<div class="row">
 					<div class="form-group col-sm-12">
 						<?php echo form_label('Notes:', 'notes', array("class"=>'col-sm-12')); ?>
-						<?php echo form_input("notes", '', array("class"=>"form-control required", 'placeholder'=>'Notes', 'style'=>"height:100px")); ?>
+						<?php echo form_input("notes", '', array("class"=>"form-control required", 'placeholder'=>'Notes')); ?>
 						<?php echo form_error("notes"); ?>
 					</div>
 				</div>
