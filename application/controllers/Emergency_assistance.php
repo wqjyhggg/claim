@@ -517,7 +517,7 @@ class Emergency_assistance extends CI_Controller {
       "notes" => $this->input->post('notes')];
 			
     $data = array();
-    $path = "case_docs/".$case_id."/";
+    $path = "case_docs/".$para["case_id"]."/";
     @mkdir(UPLOADFULLPATH . $path, 0777, TRUE);
 
     // load upload class
@@ -531,7 +531,8 @@ class Emergency_assistance extends CI_Controller {
       $file_data = $this->upload->data();
       $para['filename'] = $file_data['file_name'];
       $para['url'] = base_url("/assets/uploads/".$path.$para['name']);
-      $this->edit_case($case_id);
+      $this->case_file_model->save($para);
+      redirect('emergency_assistance/edit_case/'.$para["case_id"], 'refresh');
     } else {
       return show_error("Sorry, Upload file error");
 		}
