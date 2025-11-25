@@ -896,7 +896,9 @@ class Emergency_assistance extends CI_Controller {
 			}
 			if ($this->input->get("status")) {
 				$conditions['case.status'] = trim($this->input->get("status"));
-			}
+			} else {
+        $conditions['case.status'] = 'A';
+      }
 			if ($this->input->get("assigned_status") == 'assigned') {
 				$conditions['case.assign_to != '] = '0';
 			} else if ($this->input->get("assigned_status") == 'unassigned') {

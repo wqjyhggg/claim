@@ -111,8 +111,8 @@
 									<th>Reason</th>
 									<th>Policy Number</th>
 									<th>Insured Name</th>
-									<th>DOB</th>
-									<th>Init Manager</th>
+									<!-- <th>DOB</th>
+									<th>Init Manager</th> -->
 									<th>Current Case Manager</th>
 									<th><a href='<?php echo $priority_sort_url; ?>'>Priority</a></th>
 									<th>Status</th>
@@ -130,8 +130,8 @@
 									<td><?php echo htmlspecialchars($value['reason']); ?></td>
 									<td><?php echo htmlspecialchars($value['policy_no']); ?></td>
 									<td><?php echo htmlspecialchars($value['insured_firstname'] . " " . $value['insured_lastname']); ?></td>
-									<td><?php echo htmlspecialchars(($value['dob']<>'N/A')?date('d/m/Y', strtotime($value['dob'])):'N/A'); ?></td>
-									<td><?php echo htmlspecialchars($value['initiator']); ?></td>
+									<!-- <td><?php echo htmlspecialchars(($value['dob']<>'N/A')?date('d/m/Y', strtotime($value['dob'])):'N/A'); ?></td>
+									<td><?php echo htmlspecialchars($value['initiator']); ?></td> -->
 									<td><?php echo htmlspecialchars($value['case_manager_name']); ?></td>
 									<td><?php echo htmlspecialchars($value['priority']); ?></td>
 									<td><?php echo @$case_status[$value['status']]; ?></td>
