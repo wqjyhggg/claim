@@ -182,7 +182,7 @@ class Case_model extends CI_Model {
 		
 		$this->db->select('SQL_CALC_FOUND_ROWS *', FALSE);
 		$this->db->where($data);
-		$this->db->order_by("ORDER BY FIELD(case.priority, 'Critical', 'High', 'Medium', 'Low')", NULL);
+		$this->db->order_by("FIELD(case.priority, 'Critical', 'High', 'Medium', 'Low')", NULL);
 		$this->db->order_by("case.created", "ASC");
 		// foreach ($sortby as $key => $val) {
 		// 	$this->db->order_by($key, $val);
