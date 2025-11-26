@@ -522,7 +522,7 @@ class Emergency_assistance extends CI_Controller {
 
     // load upload class
     $config['upload_path'] = UPLOADFULLPATH . $path;
-    $config['allowed_types'] = 'gif|jpg|png|jpeg|pdf|wav|doc|docx|pdf';
+    $config['allowed_types'] = 'gif|jpg|png|jpeg|pdf|doc|docx|xls|xlsx';
     $config['overwrite'] = FALSE;
     $config['max_size'] = 15000;	// 15M
     $this->load->library('upload', $config);
@@ -530,7 +530,7 @@ class Emergency_assistance extends CI_Controller {
       $this->load->model('case_file_model');
       $file_data = $this->upload->data();
       $para['filename'] = $file_data['file_name'];
-      $para['url'] = base_url("/assets/uploads/".$path.$para['name']);
+      $para['url'] = base_url("/assets/uploads/".$path.$para['filename']);
       $this->case_file_model->save($para);
       redirect('emergency_assistance/edit_case/'.$para["case_id"], 'refresh');
     } else {

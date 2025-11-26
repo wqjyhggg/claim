@@ -476,6 +476,19 @@
               </div>  
             </div>
             <div class="row intake-forms-list col-sm-12">
+              <div class="col-sm-3">
+                <h2>Name</h2>
+              </div>  
+              <div class="col-sm-2">
+                <h2>Type</h2>
+              </div>  
+              <div class="col-sm-2">
+                <h2>Create Time</h2>
+              </div>  
+              <div class="col-sm-5">
+                <h2>Notes</h2>
+              </div>
+              <div class="clearfix"></div>
               <?php foreach ($case_docs as $doc) { ?>
                 <div class="col-sm-3">
                   <a herf="<?php echo $doc['url']; ?>" target="_blank"><?php echo $doc['filename']; ?></a>
@@ -487,7 +500,7 @@
                   <?php echo $doc['create_time']; ?>
                 </div>  
                 <div class="col-sm-5">
-                  <?php echo $doc['create_time']; ?>
+                  <?php echo $doc['notes']; ?>
                 </div>
                 <div class="clearfix"></div>
               <?php } ?>
@@ -971,8 +984,8 @@ $(document).ready(function() {
 
       // validate file extension
       var ext = $(this).val().split('.').pop().toLowerCase();
-      if($.inArray(ext, ['pdf','doc','docx','xls','xlsx','msg','wav','eml']) == -1) {
-          alert('invalid extension! Please attach .pdf, .doc, .docx, .xls, .xlsx, .wav, .eml or .msg file.');
+      if($.inArray(ext, ['gif','jpg','png','jpeg','pdf','doc','docx','xls','xlsx']) == -1) {
+          alert('invalid extension! Please attach .gif .jpg .png .jpeg .pdf .doc .docx .xls and .xlsx file.');
           $(this).val('');
           return false;
       }
