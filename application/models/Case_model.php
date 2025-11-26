@@ -228,6 +228,7 @@ class Case_model extends CI_Model {
 		if (isset($indata['last_name'])) $data['last_name'] = $indata['last_name'];
 		if (isset($indata['phone_number'])) $data['phone_number'] = $indata['phone_number'];
 		if (isset($indata['email'])) $data['email'] = $indata['email'];
+		if (isset($indata['manager_summary'])) $data['manager_summary'] = $indata['manager_summary'];
 		if (isset($indata['place_of_call'])) $data['place_of_call'] = $indata['place_of_call'];
 		if (isset($indata['incident_date'])) $data['incident_date'] = $indata['incident_date'];
 		if (isset($indata['relations'])) $data['relations'] = $indata['relations'];

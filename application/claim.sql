@@ -1578,3 +1578,15 @@ CREATE TABLE case_file (
   user_id INT NOT NULL DEFAULT 0,
  PRIMARY KEY (id) );
 CREATE INDEX case_file_case_id ON case_file (case_id);
+
+ALTER TABLE `case` CHANGE `email` `email` TINYTEXT NULL DEFAULT NULL;
+ALTER TABLE `case` CHANGE `insured_address` `insured_address` TINYTEXT NULL DEFAULT NULL;
+ALTER TABLE `case` CHANGE `outpatient_provider` `outpatient_provider` TINYTEXT NOT NULL;
+ALTER TABLE `case` CHANGE `outpatient_facility` `outpatient_facility` TINYTEXT NOT NULL;
+ALTER TABLE `case` CHANGE `outpatient_physician` `outpatient_physician` TINYTEXT NOT NULL;
+ALTER TABLE `case` CHANGE `outpatient_address1` `outpatient_address1` TINYTEXT NOT NULL;
+ALTER TABLE `case` CHANGE `outpatient_address2` `outpatient_address2` TINYTEXT NOT NULL;
+ALTER TABLE `case` ADD `manager_summary` TEXT NOT NULL AFTER `email`;
+
+SET sql_mode = '';
+UPDATE `case` SET departure_date = '1970-01-01' WHERE departure_date = '0000-00-00';
