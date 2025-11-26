@@ -445,7 +445,7 @@
             <?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) { ?>
 						<div class="form-group col-sm-12">
               <?php echo form_label('Case Manager Summary:', 'manager_summary', array("class"=>'col-sm-12')); ?>
-              <?php echo form_textarea("manager_summary", $this->input->post("manager_summary"), array("class"=>"form-control required", 'placeholder'=>'Notes', 'style'=>"height:100px")); ?>
+              <?php echo form_textarea("manager_summary", $case_details["manager_summary"], array("class"=>"form-control required", 'placeholder'=>'Notes', 'style'=>"height:100px")); ?>
               <?php echo form_error("manager_summary"); ?>
 						</div>
 						<?php } ?>
