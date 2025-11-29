@@ -735,6 +735,13 @@ class Emergency_assistance extends CI_Controller {
 					}
 					$this->data['hasclaim'] = $this->claim_model->get_by_id($case_details['id']);
 				}
+        $this->data['show_expiry'] = 0;
+				if ($this->data['policy']) {
+          $expiretm = strtotime($this->data['policy']["expiry_date"]);
+          if ($expiretm < time()) {
+            $this->data['show_expiry'] = 1;
+          }
+				}
 				if ($this->data['policy'] && isset($this->data['policy']['effective_date'])) {
 					$this->data['customer_ages'] = round((strtotime($this->data['policy']['effective_date']) - strtotime($this->data['case_details']["dob"])) / (3600*24*365.25));
 				} else {
