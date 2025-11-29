@@ -498,7 +498,7 @@
               <div class="clearfix"></div>
               <?php foreach ($case_docs as $doc) { ?>
                 <div class="col-sm-3">
-                  <a herf="<?php echo $doc['url']; ?>" target="_blank"><?php echo $doc['filename']; ?></a>
+                  <a href="<?php echo $doc['url']; ?>" target="_blank"><?php echo $doc['filename']; ?></a>
                 </div>  
                 <div class="col-sm-2">
                   <?php echo $doc['doc_type']; ?>
