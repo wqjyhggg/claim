@@ -519,7 +519,7 @@
                   <?php echo $doc['notes']; ?>
                 </div>
                 <div class="col-sm-1">
-                  <a href="<?php echo base_url("emergency_assistance/export_case_info/".$doc["id"]."/".$case_id) ?>">Remove</a>
+                  <a href="<?php echo base_url("emergency_assistance/del_doc_upload/".$doc["id"]."/".$case_id) ?>">Remove</a>
                 </div>
                 <div class="clearfix"></div>
               <?php } ?>
