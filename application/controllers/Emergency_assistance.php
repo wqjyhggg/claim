@@ -538,6 +538,18 @@ class Emergency_assistance extends CI_Controller {
 		}
 	}
 
+  public function del_doc_upload($id, $case_id) {
+    $this->load->model('case_file_model');
+    if ($rc = $this->case_file_model->get_by_id($id)) {
+      $filepath = UPLOADFULLPATH."case_docs/".$para["case_id"]."/".$rc["filename"];
+      @unlink($filepath);
+      $this->case_file_model->delete_by_id($id);
+      redirect('emergency_assistance/edit_case/'.$para["case_id"], 'refresh');
+    } else {
+      return show_error("Sorry, Upload file error");
+		}
+	}
+
 	// redirect if needed, otherwise display the edit case page
 	public function edit_case($id = 0) {
 		if (!$this->ion_auth->logged_in()) {

@@ -184,6 +184,7 @@ class Case_model extends CI_Model {
 		$this->db->where($data);
 		$this->db->order_by("FIELD(case.priority, 'Critical', 'High', 'Medium', 'Low')", NULL);
 		$this->db->order_by("case.created", "ASC");
+		$this->db->order_by("case.last_update", "DESC");
 		// foreach ($sortby as $key => $val) {
 		// 	$this->db->order_by($key, $val);
 		// }

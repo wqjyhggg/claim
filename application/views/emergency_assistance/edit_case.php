@@ -515,8 +515,11 @@
                 <div class="col-sm-2">
                   <?php echo $doc['create_time']; ?>
                 </div>  
-                <div class="col-sm-5">
+                <div class="col-sm-4">
                   <?php echo $doc['notes']; ?>
+                </div>
+                <div class="col-sm-1">
+                  <a href="<?php echo base_url("emergency_assistance/export_case_info/".$doc["id"]."/".$case_id) ?>">Remove</a>
                 </div>
                 <div class="clearfix"></div>
               <?php } ?>

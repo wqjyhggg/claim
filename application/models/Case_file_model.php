@@ -90,4 +90,15 @@ class Case_file_model extends CI_Model {
 		$this->db->where("case_id", $case_id);
 		return $this->db->get('case_file')->result_array();
 	}
+
+	/**
+	 * Delete Record
+	 *
+	 * @param array	data
+	 * @return int		inserted array ID
+	 */
+	public function delete_by_id($id) {
+		$this->db->where("id", $id);
+		return $this->db->delete('case_file');
+	}
 }
