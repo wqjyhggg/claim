@@ -102,7 +102,7 @@
 						<?php } ?>
 						<?php } ?>
 					</div>
-					<h4>Case Basic Info option</h4>
+					<h4 class="move_down">Case Basic Info option <i class="fa fa-angle-down pull-right"></i></h4>
 					<div class="row">
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Case Number:', 'case_no', array("class"=>'col-sm-12')); ?>
@@ -131,7 +131,7 @@
 							</select>
 						</div>
 					</div>
-					<h4>Visiting Address</h4>
+					<h4 class="move_down">Visiting Address <i class="fa fa-angle-down pull-right"></i></h4>
 					<div class="row">
 						<div class="form-group col-sm-2">
 							<?php echo form_label('Street No.:', 'street_no', array("class"=>'col-sm-12')); ?>
@@ -183,7 +183,7 @@
 							<?php } ?>
 						</div>
 					</div>
-					<h4>Caller Info</h4>
+					<h4 class="move_down">Caller Info <i class="fa fa-angle-down pull-right"></i></h4>
 					<div class="row">
 						<div class="form-group col-sm-4">
 							<?php echo form_label('First Name:', 'first_name', array("class"=>'col-sm-12')); ?>
@@ -240,7 +240,7 @@
 							<?php echo form_error("country2"); ?>
 						</div>
 					</div>
-					<h4 class="hospital_info">Doctor Info/Hospital Info</h4>
+					<h4 class="move_down hospital_info">Doctor Info/Hospital Info <i class="fa fa-angle-down pull-right"></i></h4>
 					<div class="row inpationdocinfo">
 						<label class="form-group col-sm-12">Inpatient Info</label>
 						<div class="form-group col-sm-4">
@@ -279,8 +279,7 @@
 							<?php echo $inpatient_currency; ?>
 							<?php echo form_error("inpatient_currency"); ?>
 						</div>
-					</div>
-					<div class="row">
+            <div class="clearfix"></div>
 						<label class="form-group col-sm-12 doctor_info">Home Doctor Info</label>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('First Name:', 'doctor_first_name', array("class"=>'col-sm-12')); ?>
