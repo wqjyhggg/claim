@@ -688,6 +688,18 @@ class Emergency_assistance extends CI_Controller {
 					}
 					$taks_id = $this->mytask_model->save($new_task);
 				}
+
+        if ($case_details && 
+           ((($new_case['reason'] == "Inpatient") && ($case_details['reason'] != "Inpatient")) ||
+            (($new_case['priority'] == "Critical") && ($case_details['priority'] != "Critical"))))
+        {
+          $this->load->model("mymail_model");
+          $mail_body  = "Hello,\r\n";
+          $mail_body .= "Case - ".$new_case["case_no"]." - has recently been updated to critical or in-patient status. Your immediate attention and expertise are necessary to ensure we deliver the highest quality care and support for this case.\r\n\r\n";
+          $mail_body .= "Please review the updated case details and prioritize accordingly.\r\n\r\n";
+          $mail_body .= "Thank you!\r\n";
+          $this->mymail_model->send_mymail($email, "Case updated to Critical/In–patient - ".$new_case["case_no"], $mail_body, array());
+        }
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully updated");
 				
