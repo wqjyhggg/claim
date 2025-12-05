@@ -240,7 +240,7 @@
 							<?php echo form_error("country2"); ?>
 						</div>
 					</div>
-					<h4 class="move_down hospital_info">Doctor Info/Hospital Info <i class="fa fa-angle-down pull-right"></i></h4>
+					<h4 class="move_down"><span class="hospital_info">Doctor Info/Hospital Info</span> <i class="fa fa-angle-down pull-right"></i></h4>
 					<div class="row inpationdocinfo">
 						<label class="form-group col-sm-12">Inpatient Info</label>
 						<div class="form-group col-sm-4">
