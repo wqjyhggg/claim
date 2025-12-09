@@ -256,6 +256,19 @@ class Emergency_assistance extends CI_Controller {
 					$new_task['notes'] = "New Case Assign";
 								
 					$this->mytask_model->save($new_task);
+
+          if (($new_case['reason'] == "Inpatient") || ($new_case['priority'] == "Critical")) {
+            $this->load->model("mymail_model");
+            $case_manager = $this->users_model->get_by_id($new_case['case_manager']);
+            $mail_body  = "Hello,\r\n";
+            $mail_body .= "A new critical or in-patient case - ".$new_case["case_no"]." - has been opened. Your immediate attention and expertise are necessary to ensure we deliver the highest quality care and support for this case.\r\n\r\n";
+            $mail_body .= "Please review the details of the case and prioritize accordingly.\r\n\r\n";
+            $mail_body .= "Thank you!\r\n";
+            if (!empty($case_manager) && !empty($case_manager['email'])) {
+              $this->mymail_model->send_mymail($case_manager['email'], "New Critical/In-patient case opened - ".$new_case["case_no"], $mail_body, array());
+            }
+          }
+
 				}
 				
 				/*
@@ -561,6 +574,7 @@ class Emergency_assistance extends CI_Controller {
 			$this->load->model('case_model');
 			
 			$case_details = $this->case_model->get_by_id($id);
+      $case_manager = "";
 			if ($case_details && $case_details['case_manager']) {
 				$case_manager = $this->users_model->get_by_id($case_details['case_manager']);
 				if ($case_manager) {
@@ -698,7 +712,9 @@ class Emergency_assistance extends CI_Controller {
           $mail_body .= "Case - ".$new_case["case_no"]." - has recently been updated to critical or in-patient status. Your immediate attention and expertise are necessary to ensure we deliver the highest quality care and support for this case.\r\n\r\n";
           $mail_body .= "Please review the updated case details and prioritize accordingly.\r\n\r\n";
           $mail_body .= "Thank you!\r\n";
-          $this->mymail_model->send_mymail($email, "Case updated to Critical/In–patient - ".$new_case["case_no"], $mail_body, array());
+          if (!empty($case_manager) && !empty($case_manager['email'])) {
+            $this->mymail_model->send_mymail($case_manager['email'], "Case updated to Critical/In–patient - ".$new_case["case_no"], $mail_body, array());
+          }
         }
 				// send success message
 				$this->session->set_flashdata('success', "Case successfully updated");
