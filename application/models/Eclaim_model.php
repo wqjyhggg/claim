@@ -35,8 +35,11 @@ class Eclaim_model extends CI_Model {
 
 		$this->db->select('SQL_CALC_FOUND_ROWS *', FALSE);
 		if (!empty($data["status"])) {
-            $this->db->where("status ", $data["status"]);
-        }
+        $this->db->where("status ", $data["status"]);
+    }
+    if (!empty($post['lang'])) {
+        $this->db->where("lang ", $data["lang"]);
+    }
 		if (!empty($data["eclaim_id"])) {
 			$this->db->like("id", $data["eclaim_id"]);
 		}
@@ -345,6 +348,9 @@ class Eclaim_model extends CI_Model {
         }
         if (!empty($post['status'])) {
             $data['status'] = $post['status'];
+        }
+        if (!empty($post['lang'])) {
+            $data['lang'] = $post['lang'];
         }
         if (!empty($post['reason'])) {
             $data['reason'] = $post['reason'];

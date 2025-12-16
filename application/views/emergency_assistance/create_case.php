@@ -27,7 +27,7 @@
 					<!-- search policy filter start -->
 					<?php echo form_open_multipart("", array('class'=>'form-horizontal')); ?>
 					<h4 class="move_down">Assistance Client Info <i class="fa fa-angle-down pull-right"></i></h4>
-					<div class="row" style="margin-bottom: 15px">
+					<div class="row" style="margin-bottom: 15px; display: none;">
 						<div class="form-group col-sm-4">
 						<?php echo form_label('Policy Number:', 'policy_no', array("class" => 'col-sm-12')); ?>
 						<?php echo form_input("policy_no", $case_details["policy_no"], array("class" => "form-control", 'placeholder' => 'Policy Number')); ?>
@@ -204,7 +204,7 @@
 					</div>
 
 					<h4>Case Basic Info option</h4>
-					<div class="row">
+					<div class="row" style="display: none;">
 						<div class="form-group col-sm-4">
 						<?php echo form_label('Case Number:', 'case_no', array("class" => 'col-sm-12')); ?>
 							<div class="form-group col-sm-12">#######</div>
@@ -228,7 +228,7 @@
 					</div>
 
 					<h4 class="move_down">Visiting Address <i class="fa fa-angle-down pull-right"></i></h4>
-					<div class="row">
+					<div class="row" style="display: none;">
 						<div class="form-group col-sm-2">
 						<?php echo form_label('Street No.:', 'street_no', array("class" => 'col-sm-12')); ?>
 						<?php echo form_input("street_no", $case_details["street_no"], array("class" => "form-control", 'placeholder' => 'Street No.')); ?>
@@ -282,7 +282,7 @@
 					</div>
 
 					<h4 class="move_down">Caller Info <i class="fa fa-angle-down pull-right"></i></h4>
-					<div class="row">
+					<div class="row" style="display: none;">
 						<div class="form-group col-sm-4">
 						<?php echo form_label('First Name:', 'first_name', array("class" => 'col-sm-12')); ?>
 						<?php echo form_input("first_name", $case_details["first_name"], array("class" => "form-control", 'placeholder' => 'First Name')); ?>
@@ -343,7 +343,7 @@
 					</div>
 
 					<h4 class="move_down"><span class="hospital_info">Doctor Info/Hospital Info</span> <i class="fa fa-angle-down pull-right"></i></h4>
-					<div class="row inpationdocinfo">
+					<div class="row inpationdocinfo" style="display: none;">
 						<label class="form-group col-sm-12">Inpatient Info</label>
 						<div class="form-group col-sm-4">
 							<?php echo form_label('Admission Date:', 'addmission_date', array("class"=>'col-sm-12'));   ?>
