@@ -1007,8 +1007,8 @@ $(document).ready(function() {
 
       // validate file extension
       var ext = $(this).val().split('.').pop().toLowerCase();
-      if($.inArray(ext, ['gif','jpg','png','jpeg','pdf','doc','docx','xls','xlsx']) == -1) {
-          alert('invalid extension! Please attach .gif .jpg .png .jpeg .bmp .pdf .csv .doc .docx .xls and .xlsx file.');
+      if($.inArray(ext, ['gif','jpg','png','jpeg','bmp','pdf','csv','wav','msg','doc','docx','xls','xlsx']) == -1) {
+          alert('invalid extension! Please attach .gif .jpg .png .jpeg .bmp .pdf .csv .wav .msg .doc .docx .xls and .xlsx file.');
           $(this).val('');
           return false;
       }
