@@ -298,6 +298,7 @@ class Emergency_assistance extends CI_Controller {
 				// redirect them to the login page
 				redirect('emergency_assistance/edit_case/'.$record_id, 'refresh');
 			} else {
+        $this->data['v_errors'] = validation_errors();
 				$case_details = array();
 				$case_details['policy_no'] = '';
 				$case_details['totaldays'] = '';
@@ -722,6 +723,7 @@ class Emergency_assistance extends CI_Controller {
 				// redirect them to the login page
 				redirect('emergency_assistance/edit_case/'.$id, 'refresh');
 			} else {
+				$this->data['v_errors'] = validation_errors();
 //				echo validation_errors(); //XXXXXXXXXXXXXXXX
 //				die("X2"); //XXXXXXXXXXXXXXXXXXX
 				
@@ -1317,6 +1319,8 @@ class Emergency_assistance extends CI_Controller {
 				redirect('emergency_assistance/create_provider', 'refresh');
 			} else {
 				// load view data
+        $this->data['v_errors'] = validation_errors();
+
 				$this->template->write('title', SITE_TITLE . ' - Create Provider', TRUE);
 				$this->template->write_view('content', 'emergency_assistance/create_provider', $this->data);
 				$this->template->render();
@@ -1389,6 +1393,7 @@ class Emergency_assistance extends CI_Controller {
 				}
 			} else {
 				// load view data
+				$this->data['v_errors'] = validation_errors();
 				$this->template->write('title', SITE_TITLE . ' - Provider Batch Upload', TRUE);
 				$this->template->write_view('content', 'emergency_assistance/provider_batch_upload', $this->data);
 				$this->template->render();
@@ -1529,6 +1534,7 @@ class Emergency_assistance extends CI_Controller {
 				redirect('emergency_assistance/edit_case/' . $array['case_id'], 'refresh');
 			} else {
 				// load view data
+				$this->data['v_errors'] = validation_errors();
 				$this->template->write('title', SITE_TITLE . ' - Create Note', TRUE);
 				$this->template->write_view('content', 'emergency_assistance/create_intakeform');
 				$this->template->render();

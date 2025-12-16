@@ -5,6 +5,11 @@
 		</div>
 	</div>
 	<div class="clearfix"></div>
+<?php if (!empty($v_errors)) {?>
+	<div class="alert-error">
+		<p><?php echo $v_errors; ?></p>
+	</div>
+<?php } ?>
 
 	<!-- Policy search and List Section -->
 	<div class="row">
