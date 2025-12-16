@@ -1171,13 +1171,20 @@ $(document).ready(function() {
       var insured_name = $("input[name=first_name_email]").val() + ' ' + $("input[name=last_name_email]").val();
       var insured_address = $("input[name=street_no_email]").val() + ' ' + $("input[name=street_name_email]").val();
       var insured_address2 = $("input[name=city_email]").val() + ', ' + $("input[name=province_email]").val();
+      var coverage_period = '';
       var pre_sex = "Mrs."; 
+      <?php 
+      if (!empty($policy)) {
+        echo "coverage_period='".$policy['effective_date']." to ".$policy['expiry_date']."';";
+      } 
+      ?>
       if ($("select[name=gender]").val() != 'female') pre_sex = "Mr.";
  
       str = str.replace(/value="{insured_name}/gi, 'value="' + insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
 	  .replace(/{insured_name}/gi, insured_name)
       .replace(/value="{claimant_name}/, 'value="' + insured_name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{claimant_name}/g, insured_name)
+      .replace(/{coverage_period}/g, coverage_period)
       .replace(/value="{insured_address}/g, 'value="' + insured_address.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       .replace(/{insured_address}/g, insured_address)
       .replace(/value="{insured_address2}/g, 'value="' + insured_address2.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
