@@ -208,7 +208,7 @@
 						</div>
 					</div>
 
-					<h4>Case Basic Info option</h4>
+					<h4 class="move_down">Case Basic Info option <i class="fa fa-angle-down pull-right"></i></h4>
 					<div class="row" style="display: none;">
 						<div class="form-group col-sm-4">
 						<?php echo form_label('Case Number:', 'case_no', array("class" => 'col-sm-12')); ?>
