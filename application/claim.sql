@@ -1590,3 +1590,13 @@ ALTER TABLE `case` ADD `manager_summary` TEXT NOT NULL AFTER `email`;
 
 SET sql_mode = '';
 UPDATE `case` SET departure_date = '1970-01-01' WHERE departure_date = '0000-00-00';
+ALTER TABLE `eclaim` ROW_FORMAT=DYNAMIC;
+ALTER TABLE `eclaim` MODIFY `exinfo_credit_card_holder` TINYTEXT;
+ALTER TABLE `eclaim` MODIFY `exinfo_spouse_insurance_policy` TINYTEXT;
+ALTER TABLE `eclaim` MODIFY `exinfo_spouse_insurance_name` TINYTEXT;
+ALTER TABLE `eclaim` MODIFY `exinfo_other_insurance_policy` TINYTEXT;
+ALTER TABLE `eclaim` MODIFY `exinfo_other_insurance_name` TINYTEXT;
+ALTER TABLE `eclaim` MODIFY `payees_email` TINYTEXT;
+ALTER TABLE `eclaim` MODIFY `payees_country` TINYTEXT;
+ALTER TABLE `eclaim` MODIFY `payees_province` TINYTEXT;
+ALTER TABLE `eclaim` ADD `lang` char(2) NOT NULL DEFAULT 'en' COMMENT 'en fr zh' AFTER `status`;

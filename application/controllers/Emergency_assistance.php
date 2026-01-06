@@ -398,7 +398,7 @@ class Emergency_assistance extends CI_Controller {
 				}
         if ($this->data['policy']) {
           $expiretm = strtotime($this->data['policy']["expiry_date"]);
-          if ($expiretm < time()) {
+          if ($expiretm < (time() - 86400)) {
             $this->data['show_expiry'] = 1;
           }
         }
@@ -780,7 +780,7 @@ class Emergency_assistance extends CI_Controller {
         $this->data['show_expiry'] = 0;
 				if ($this->data['policy']) {
           $expiretm = strtotime($this->data['policy']["expiry_date"]);
-          if ($expiretm < time()) {
+          if ($expiretm < (time() - 86400)) {
             $this->data['show_expiry'] = 1;
           }
 				}
@@ -1235,7 +1235,7 @@ class Emergency_assistance extends CI_Controller {
 					}
 				}
         $expiretm = strtotime($this->data['policy']["expiry_date"]);
-        if ($expiretm < time()) {
+        if ($expiretm < (time() - 86400)) {
           $this->data['show_expiry'] = 1;
         }
 				if ($pn = $this->policy_model->get_by_no($policies[0]['policy'])) {
