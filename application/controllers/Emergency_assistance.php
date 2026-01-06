@@ -785,7 +785,12 @@ class Emergency_assistance extends CI_Controller {
           }
 				}
 				if ($this->data['policy'] && isset($this->data['policy']['effective_date'])) {
-					$this->data['customer_ages'] = round((strtotime($this->data['policy']['effective_date']) - strtotime($this->data['case_details']["dob"])) / (3600*24*365.25));
+          $start = new DateTime($this->data['case_details']["dob"]);
+          $end = new DateTime($this->data['policy']['effective_date']);
+
+          // Calculate the difference between the two dates
+          $age = $start->diff($end);
+					$this->data['customer_ages'] = $age->y;
 				} else {
 					$this->data['customer_ages'] = -1;
 				}
