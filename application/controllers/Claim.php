@@ -943,7 +943,11 @@ class Claim extends CI_Controller {
 						$this->template->write_view('content', 'claim/create_top_trip', $this->data);
 						break;
 					default:
-						$this->template->write_view('content', 'claim/create_other', $this->data);
+            if ($product_short == "TOPN") {
+              $this->template->write_view('content', 'claim/create_top_medical', $this->data);
+            } else {
+              $this->template->write_view('content', 'claim/create_other', $this->data);
+            }
 						break;
 				}
 				$this->template->render();
@@ -1376,7 +1380,11 @@ class Claim extends CI_Controller {
 						$this->template->write_view('content', 'claim/examine_top_trip', $this->data);
 						break;
 					default:
-						$this->template->write_view('content', 'claim/examine_claim', $this->data);
+            if ($claim['product_short'] == "TOPN") {
+              $this->template->write_view('content', 'claim/examine_top_medical', $this->data);
+            } else {
+              $this->template->write_view('content', 'claim/examine_claim', $this->data);
+            }
 						break;
 				}
 				$this->template->render();
@@ -1788,7 +1796,11 @@ class Claim extends CI_Controller {
 						$this->template->write_view('content', 'claim/claim_top_trip', $this->data);
 						break;
 					default:
-						$this->template->write_view('content', 'claim/claim_detail', $this->data);
+            if ($this->data['claim_details']['product_short'] == "TOPN") {
+              $this->template->write_view('content', 'claim/claim_top_medical', $this->data);
+            } else {
+              $this->template->write_view('content', 'claim/claim_detail', $this->data);
+            }
 						break;
 				}
 				$this->template->render();
