@@ -915,7 +915,10 @@ class Claim extends CI_Controller {
 					$this->data["case_no"] = $case_no;
 				}
 				$product_short = $this->input->get('product_short');
-				if (!empty($product_short)) {
+				if (empty($product_short) && $this->data['policy']) {
+          $product_short = $this->data['policy']['product_short'];
+        }
+        if (!empty($product_short)) {
 					$this->data["product_short"] = $product_short;
 				}
 				
