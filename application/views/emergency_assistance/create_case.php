@@ -32,7 +32,7 @@
 					<!-- search policy filter start -->
 					<?php echo form_open_multipart("", array('class'=>'form-horizontal')); ?>
 					<h4 class="move_down">Assistance Client Info <i class="fa fa-angle-down pull-right"></i></h4>
-					<div class="row" style="margin-bottom: 15px; display: none;">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="form-group col-sm-4">
 						<?php echo form_label('Policy Number:', 'policy_no', array("class" => 'col-sm-12')); ?>
 						<?php echo form_input("policy_no", $case_details["policy_no"], array("class" => "form-control", 'placeholder' => 'Policy Number')); ?>
@@ -209,7 +209,7 @@
 					</div>
 
 					<h4 class="move_down">Case Basic Info option <i class="fa fa-angle-down pull-right"></i></h4>
-					<div class="row" style="display: none;">
+					<div class="row">
 						<div class="form-group col-sm-4">
 						<?php echo form_label('Case Number:', 'case_no', array("class" => 'col-sm-12')); ?>
 							<div class="form-group col-sm-12">#######</div>
