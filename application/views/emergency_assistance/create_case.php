@@ -677,7 +677,13 @@ $(document).ready(function() {
          alert("Please add notes first.")
          return false;
       }
-
+      <?php if (isset($policy['product_short']) && (($policy['product_short'] == 'TOP') || ($policy['product_short'] == 'TOPN'))) { ?>
+      let ddate = $("input[name=departure_date]").val();
+      if (!ddate) {
+        alert("Please input Departure Date.")
+        return false;
+      }
+      <?php } ?>
       // count no of intake forms
       var count = $(".intake-forms").length + 1;
 
