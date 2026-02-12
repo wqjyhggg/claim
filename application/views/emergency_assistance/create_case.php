@@ -105,7 +105,11 @@
 						<?php } else if (($policy['package'] == 'single_medical_plan') || ($policy['package'] == 'optional_plan')) { ?>
 						<?php     if ($policy['package'] == 'single_medical_plan') { ?>
 						<div class="form-group col-sm-4">
+              <?php if (isset($policy['product_short']) && ($policy['product_short'] == 'TOP')) { ?>
+  						<label style="text-transform: capitalize;">Sum Insured: $5,000,000</label>
+  						<?php } else { ?>
 							<label style="text-transform: capitalize;">Sum Insured: $10,000,000</label>
+  						<?php } ?>
 						</div>
 						<?php     } ?>
 						<?php     if ($policy['ad_and_d_ck']) { ?>
