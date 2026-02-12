@@ -304,7 +304,7 @@ class Emergency_assistance extends CI_Controller {
 			} else {
         $this->data['v_errors'] = validation_errors();
 				$case_details = array();
-				$case_details['policy_no'] = '';
+				$case_details['policy_no'] = $this->input->post('policy_no');
 				$case_details['totaldays'] = '';
 				$case_details['agent_id'] = '';
 				$case_details['product_short'] = '';
