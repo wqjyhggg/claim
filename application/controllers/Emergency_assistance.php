@@ -129,6 +129,10 @@ class Emergency_assistance extends CI_Controller {
 			
 			$this->form_validation->set_rules('reserve_amount', 'Reserve Amount', 'numeric|required|callback_positive_number');
 			$this->form_validation->set_rules('priority', 'Priority', 'required');
+      $product_short = $this->input->post('product_short');
+      if (($product_short == 'TOP') || ($product_short == 'TOPN')) {
+        $this->form_validation->set_rules('departure_date', 'Departure Date', 'required');
+      }
 
 			if ($this->form_validation->run() == TRUE) {
 				// prepare post data array
