@@ -36,6 +36,11 @@
 						<div class="form-group col-sm-3">
 							<label>Deductible Amount : </label>$<?php echo number_format($policy['deductible_amount'], 2); ?>
 						</div>
+            <?php if (!empty($policy['monthlypay'])) { ?>
+            <div class="form-group col-sm-3">
+              <label style="text-transform: capitalize;"><span>Monthly Plan: </span><?php echo $policy['monthly_status']; ?></label>
+            </div>
+            <?php } ?>
 						<div class="form-group col-sm-3">
 							<?php if ($policy['stable_condition'] == 1) { ?>
 							<label>&nbsp;</label>Include stable pre-existing condition coverage

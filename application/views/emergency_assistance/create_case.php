@@ -210,6 +210,11 @@
 								<?php echo form_input("departure_date", $case_details["departure_date"], array("class"=>"form-control datepicker", 'placeholder'=>'Departure Date')); ?><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
+            <?php if (!empty($policy['monthlypay'])) { ?>
+            <div class="form-group col-sm-3">
+              <label style="text-transform: capitalize;"><span>Monthly Plan: </span><?php echo $policy['monthly_status']; ?></label>
+            </div>
+            <?php } ?>
 					</div>
 
 					<h4 class="move_down">Case Basic Info option <i class="fa fa-angle-down pull-right"></i></h4>
