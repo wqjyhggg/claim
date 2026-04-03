@@ -497,14 +497,14 @@ class Emergency_assistance extends CI_Controller {
     header('Content-Disposition: attachment; filename="case_'.$case_id.'.csv"');
 
     $output = fopen('php://output', 'w');
-    fputcsv($output, ["Claimant/Insured's Name", $case["first_name"] . " " . $case["last_name"]]);
+    fputcsv($output, ["Claimant/Insured's Name", $plan["firstname"] . " " . $plan["lastname"]]);
     fputcsv($output, ["Date of Birth/Age/Sex", $case["dob"] . "/" . (intval(substr($plan["apply_date"], 0, 4)) - intval(substr($case["dob"], 0, 4))) . "/" . ucfirst($case["gender"])]);
     fputcsv($output, ["Case Number", $case["case_no"]]);
     fputcsv($output, ["Other Claims (related or unrelated)", "No"]);
     fputcsv($output, ["Policy Number", $case["policy_no"]]);
     fputcsv($output, ["Product", $product_name]);
     fputcsv($output, ["Plan Type", empty($plan["isfamilyplan"])?"Individual":"Family"]);
-    fputcsv($output, ["Date of Application/Issue (if applicable)", $case["init_reserve_tm"]]);
+    fputcsv($output, ["Date of Application/Issue (if applicable)", $plan["apply_date"]]);
     fputcsv($output, ["Coverage Period", $plan["effective_date"] . " to " . $plan["expiry_date"]]);
     fputcsv($output, ["Travel Dates", $plan["arrival_date"]]);
     fputcsv($output, ["Travel Destination", $case["city"] . " " . $case["province"]]);
