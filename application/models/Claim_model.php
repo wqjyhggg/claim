@@ -40,7 +40,7 @@ class Claim_model extends CI_Model {
 				'Processing' => self::STATUS_Processing,
 				'Pending' => self::STATUS_Pending,
 				'Processed' => self::STATUS_Processed,
-				'Paid' => self::STATUS_Paid,
+				// 'Paid' => self::STATUS_Paid,
 //				'Closed' => self::STATUS_Closed,
 //				'Recovered' => self::STATUS_Recovered,
 				'Appealed' => self::STATUS_Appealed,
