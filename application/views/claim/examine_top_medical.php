@@ -761,7 +761,7 @@
             <?php echo form_dropdown("denied_reason", 
               array('' => '', 
                     'Exclusions and Limitations' => 'Exclusions and Limitations', 
-                    'Delay in Submitting Claim/Insufficient documents' => 'Delay in Submitting Claim/Insufficient documents', 
+                    'Insufficient documents' => 'Insufficient documents', 
                     'Benefit Not Covered' => 'Benefit Not Covered', 
                     'Failure to Disclose or Misrepresent' => 'Failure to Disclose or Misrepresent', 
                     'Not Meet Eligibility/ Void Policy' => 'Not Meet Eligibility/ Void Policy', 
