@@ -575,9 +575,11 @@
                 <div class="col-sm-4">
                   <?php echo $doc['notes']; ?>
                 </div>
+								<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_MANAGER))) { ?>
                 <div class="col-sm-1">
                   <a href="<?php echo base_url("emergency_assistance/del_doc_upload/".$doc["id"]."/".$case_id) ?>">Remove</a>
                 </div>
+								<?php } ?>
                 <div class="clearfix"></div>
               <?php } ?>
             </div>
