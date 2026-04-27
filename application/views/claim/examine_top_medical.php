@@ -762,6 +762,7 @@
               array('' => '', 
                     'Exclusions and Limitations' => 'Exclusions and Limitations', 
                     'Insufficient documents' => 'Insufficient documents', 
+                    'Delay in Submitting Claim' => 'Delay in Submitting Claim', 
                     'Benefit Not Covered' => 'Benefit Not Covered', 
                     'Failure to Disclose or Misrepresent' => 'Failure to Disclose or Misrepresent', 
                     'Not Meet Eligibility/ Void Policy' => 'Not Meet Eligibility/ Void Policy', 
