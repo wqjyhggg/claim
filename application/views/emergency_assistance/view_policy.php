@@ -351,7 +351,9 @@
 								<div class="form-group col-sm-3">
 									<span class="creates">
 										<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_CLAIMER, Users_model::GROUP_EXAMINER))) { ?>
+										<?php if (empty($policy['monthlypay']) || (($policy["status_id"] != 5) && ($policy["status_id"] != 6))) { ?>
 										<a href="<?php echo $create_claim_url; ?>" class="btn btn-primary">New Claim</a>
+										<?php } ?>
 										<?php } ?>
 										<a href="<?php echo $create_case_url; ?>" class="btn btn-primary">New Case</a>
 									</span>
