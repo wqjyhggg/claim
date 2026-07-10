@@ -494,7 +494,7 @@ class Eclaim extends CI_Controller {
 				// send success message
 				$this->load->model("mymail_model");
 				$to = $data['email'];
-        if ($lang = "fr") {
+        if ($lang == "fr") {
           $subject = "Réclamation en ligne en cours d'examen - " . $data['claim_no'] . " - " . $data['insured_first_name'];
           $body  = "Cher/Chère " . $data['insured_first_name'] . ",\n\n"; 
           $body  .= "La réclamation en ligne que vous avez soumise le ".date("Y-m-d")." a été acceptée et est en cours d'examen. Votre numéro de réclamation est " . $data['claim_no'] . ". Le traitement de votre réclamation prendra environ 5 jours ouvrables. \n\n"; 
