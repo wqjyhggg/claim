@@ -168,7 +168,7 @@ class Blocklist extends CI_Controller {
         return;
       }
 
-      $customer = $this->blocklist_model->get_by_id($block_list_id);
+      $customer = $this->block_list_model->get_by_id($block_list_id);
 
       if (empty($customer)) {
         echo json_encode(array(
@@ -186,7 +186,7 @@ class Blocklist extends CI_Controller {
       } else {
         $notes = $new_line;
       }
-      $updated = $this->blocklist_model->update(
+      $updated = $this->block_list_model->update(
         $block_list_id,
         array(
             'notes' => $notes
