@@ -72,6 +72,12 @@ class Block_list_model extends CI_Model {
 	 * @return int				inserted array ID
 	 */
 	public function save($data) {
+    if (isset($data["firstname"])) {
+      $data["firstname"] = strtolower($data["firstname"]);
+    }
+    if (isset($data["lastname"])) {
+      $data["lastname"] = strtolower($data["lastname"]);
+    }
 		if (isset($data['block_list_id'])) {
 			// Update
 			$block_list_id = $data['block_list_id'];
