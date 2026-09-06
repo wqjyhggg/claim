@@ -23,10 +23,10 @@ class Block_list_model extends CI_Model {
 		$sql = "SELECT SQL_CALC_FOUND_ROWS * FROM block_list";
 		
 		$where = array();
-		if (isset($data["block_list_id"])) {
+		if (!empty($data["block_list_id"])) {
 			$where[] = "block_list_id = '" . (int)$data["block_list_id"] . "'";
 		}
-		if (isset($data["status"])) {
+		if (!empty($data["status"])) {
 			$where[] = "status = '" . (int)$data["status"] . "'";
 		}
 		if (!empty($data["firstname"])) {

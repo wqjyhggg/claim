@@ -58,10 +58,10 @@ if ($result->num_rows > 0) {
         }
 
         if (($claim_amount > 2500) || ($case_amount > 2500)) {
-          $sql3 = "INSERT INTO block_list (status, firstname, lastname, birthday, policies, notes) VALUES (2,'".$firstname."','".$lastname."','".$birthday."','".$policy.";','".json_encode([date("Ymd:His")=>"From Existed Block Policy"])."')";
+          $sql3 = "INSERT INTO block_list (status, firstname, lastname, birthday, policies, notes) VALUES (2,'".$firstname."','".$lastname."','".$birthday."','".$policy.";','From Existed Block Policy -- ".date("Ymd:His")."')";
           $connc->query($sql3);
         } else if (($claim_amount > 0) || ($case_amount > 0)) {
-          $sql3 = "INSERT INTO block_list (status, firstname, lastname, birthday, policies, notes) VALUES (1,'".$firstname."','".$lastname."','".$birthday."','".$policy.";','".json_encode([date("Ymd:His")=>"From Existed Block Policy"])."')";
+          $sql3 = "INSERT INTO block_list (status, firstname, lastname, birthday, policies, notes) VALUES (1,'".$firstname."','".$lastname."','".$birthday."','".$policy.";','From Existed Block Policy -- ".date("Ymd:His")."')";
           $connc->query($sql3);
         }
       }

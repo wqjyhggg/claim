@@ -15,13 +15,16 @@
 					<?php echo form_open("blocklist", array('class'=>'form-horizontal', 'method'=>'get')); ?>
 					<div class="row">
             <div class="form-group col-sm-3">
+              <?php echo form_label ( 'Firstname:', 'firstname', array ("class" => 'col-sm-12') ); ?>
               <?php echo form_input("firstname", $this->input->get("firstname"), array ("class" => "form-control", 'placeholder' => 'First Name')); ?>
             </div>
             <div class="form-group col-sm-3">
+              <?php echo form_label ( 'Lastname:', 'lastname', array ("class" => 'col-sm-12') ); ?>
               <?php echo form_input("lastname", $this->input->get("lastname"), array ("class" => "form-control", 'placeholder' => 'Last Name')); ?>
             </div>
             <div class="form-group col-sm-3">
               <div class="input-group date">
+                <?php echo form_label ( 'Birthday:', 'birthday', array ("class" => 'col-sm-12') ); ?>
                 <?php echo form_input("birthday", $this->input->get("birthday"), array ("class" => "form-control datepicker", 'placeholder' => 'Birthday')); ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
               </div>
@@ -56,7 +59,7 @@
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
-					<?php if(!empty($block_customer)) : ?>
+					<?php if(!empty($block_list)) : ?>
 					<div class="table-responsive">
 						<table class="table table-hover table-bordered">
 							<thead>
@@ -72,7 +75,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach ($block_customer as $user) : ?>
+								<?php foreach ($block_list as $user) : ?>
 								<tr>
 									<td>#<?php echo isset($user['block_list_id'])?htmlspecialchars($user['block_list_id'],ENT_QUOTES,'UTF-8'):"-";?></td>
 									<td><?php echo htmlspecialchars($user['firstname'],ENT_QUOTES,'UTF-8');?></td>
@@ -81,7 +84,8 @@
 									<td><?php echo empty($user['status'])?"-":(($user['status']==1)?"Warning":"Blocked") ?></td>
 									<td>
                     <?php
-                    $notes = isset($user['notes']) ? $user['notes'] : '';
+                    $notes = isset($user['notes']) ? json_decode($user['notes'], true) : [];
+                    
                     $notes_short = mb_strlen($notes, 'UTF-8') > 20
                         ? mb_substr($notes, 0, 20, 'UTF-8') . '...'
                         : $notes;
@@ -90,6 +94,7 @@
                     <a href="javascript:void(0);"
                       class="edit-notes"
                       data-id="<?php echo (int)$user['block_list_id']; ?>"
+                      data-user-id="<?php echo $user_id; ?>"
                       data-notes="<?php echo htmlspecialchars($notes, ENT_QUOTES, 'UTF-8'); ?>"
                       title="Click to edit notes">
                         <?php echo htmlspecialchars($notes_short, ENT_QUOTES, 'UTF-8'); ?>
@@ -142,6 +147,7 @@
             <textarea id="newNote" class="form-control" rows="4" placeholder="Enter note..."></textarea>
           </div>
           <input type="hidden" id="notesBlockListId">
+          <input type="hidden" id="userId">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -157,10 +163,13 @@ $(document).ready(function () {
   $(document).on('click', '.edit-notes', function () {
     var blockListId = $(this).data('id');
     var notes = $(this).attr('data-notes');
+    var user_id = $(this).attr('user_id');
     // Set current notes
     $('#currentNotes').text(notes);
     // Set ID
     $('#notesBlockListId').val(blockListId);
+    // User ID
+    $('#userId').val(user_id);
     // Clear input
     $('#newNote').val('');
     // Show modal
@@ -171,6 +180,7 @@ $(document).ready(function () {
   $('#addNoteButton').on('click', function () {
     var blockListId = $('#notesBlockListId').val();
     var newNote = $('#newNote').val();
+    var userId = $('#userId').val();
     // Remove leading/trailing spaces
     newNote = $.trim(newNote);
     /*
@@ -192,6 +202,7 @@ $(document).ready(function () {
       dataType: 'json',
       data: {
           block_list_id: blockListId,
+          user_id: userId,
           note: newNote
       },
       success: function (response) {
