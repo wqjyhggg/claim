@@ -100,7 +100,7 @@
                     </a>
                   </td>
 									<td><?php echo htmlspecialchars($user['created'],ENT_QUOTES,'UTF-8');?></td>
-									<td><?php echo empty($user['status'])?anchor("blocklist/add?firstname=".htmlspecialchars($user['firstname'],ENT_QUOTES,'UTF-8')."&lastname=".htmlspecialchars($user['lastname'],ENT_QUOTES,'UTF-8')."&birthday=".htmlspecialchars($user['birthday'],ENT_QUOTES,'UTF-8'), 'Add') : (($user['status']==1)?anchor("blocklist/update?status=1&block_list_id=".$user['block_list_id'], 'Block'):anchor("blocklist/update?status=2&block_list_id=".$user['block_list_id'], 'Unblock'));?></td>
+									<td><?php echo empty($user['status'])?anchor("blocklist/add?firstname=".htmlspecialchars($user['firstname'],ENT_QUOTES,'UTF-8')."&lastname=".htmlspecialchars($user['lastname'],ENT_QUOTES,'UTF-8')."&birthday=".htmlspecialchars($user['birthday'],ENT_QUOTES,'UTF-8'), 'Add') : (($user['status']==1)?anchor("blocklist/update?status=2&block_list_id=".$user['block_list_id'], 'Block'):anchor("blocklist/update?status=1&block_list_id=".$user['block_list_id'], 'Unblock'));?></td>
 								</tr>
 								<?php endforeach; ?>
 							</tbody>
