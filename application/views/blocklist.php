@@ -84,8 +84,7 @@
 									<td><?php echo empty($user['status'])?"-":(($user['status']==1)?"Warning":"Blocked") ?></td>
 									<td>
                     <?php
-                    $notes = isset($user['notes']) ? json_decode($user['notes'], true) : [];
-                    
+                    $notes = isset($user['notes']) ? $user['notes'] : "";
                     $notes_short = mb_strlen($notes, 'UTF-8') > 20
                         ? mb_substr($notes, 0, 20, 'UTF-8') . '...'
                         : $notes;
