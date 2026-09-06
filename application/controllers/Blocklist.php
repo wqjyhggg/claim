@@ -103,9 +103,6 @@ class Blocklist extends CI_Controller {
 			// list the users group
 				
 			$get = $this->input->get();
-      if (empty($get["firstname"]) || empty($get["lastname"]) || empty($get["birthday"])) {
-  			return show_error('You can not use add user data.');
-      }
       $para = [];
       if (isset($get["block_list_id"])) {
         $para["block_list_id"] = $get["block_list_id"];
