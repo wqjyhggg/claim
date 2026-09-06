@@ -119,12 +119,12 @@ class Block_list_model extends CI_Model {
 
     $sql = "SELECT SUM(e.amount_claimed) as amount FROM claim c JOIN expenses_claimed e ON (c.id=e.claim_id) WHERE LOWER(c.insured_first_name)=".$this->db->escape($firstname)." AND LOWER(c.insured_last_name)=".$this->db->escape($lastname)." AND c.dob=".$this->db->escape($birthday);
     if ($row = $this->db->query($sql)->row_array()) {
-      $rt["claim_amount"] = $row["amount"];
+      $rt["claim_amount"] = floatval($row["amount"]);
     }
 
     $sql = "SELECT SUM(reserve_amount) as amount FROM `case` WHERE LOWER(insured_firstname)=".$this->db->escape($firstname)." AND LOWER(insured_lastname)=".$this->db->escape($lastname)." AND dob=".$this->db->escape($birthday)." AND claim_no=''";
     if ($row = $this->db->query($sql)->row_array()) {
-      $rt["case_amount"] = $row["amount"];
+      $rt["case_amount"] = floatval($row["amount"]);
     }
 
     return $rt;
