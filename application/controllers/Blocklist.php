@@ -186,10 +186,9 @@ class Blocklist extends CI_Controller {
       } else {
         $notes = $new_line;
       }
-      $updated = $this->block_list_model->update(
-        $block_list_id,
-        array(
-            'notes' => $notes
+      $updated = $this->block_list_model->save(array(
+          'block_list_id' => $block_list_id,
+          'notes' => $notes
         )
       );
       if ($updated) {
