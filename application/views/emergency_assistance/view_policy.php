@@ -356,6 +356,14 @@
 										<?php } ?>
 										<?php } ?>
 										<a href="<?php echo $create_case_url; ?>" class="btn btn-primary">New Case</a>
+										<?php if (isset($block_data) && isset($block_data['inblock']) && isset($block_data['claim_amount']) && isset($block_data['case_amount'])) { ?>
+                      <br />
+                      <span>Claim Sum:<?php echo number_format($block_data['claim_amount'], 2); ?></span>
+                      <span>Case Sum:<?php echo number_format($block_data['case_amount'], 2); ?></span>
+                      <?php if ($block_data['inblock'] != 1) { ?>
+                      <span><a href="<?php echo $create_block_url; ?>" class="btn btn-primary">Add Block</a><span>
+                      <?php } ?>
+										<?php } ?>
 									</span>
 								</div>
 							</div>
@@ -379,6 +387,14 @@
 										<a href="<?php echo $val['create_claim_url']; ?>" class="btn btn-primary">New Claim</a>
 										<?php } ?>
 										<a href="<?php echo $val['create_case_url']; ?>" class="btn btn-primary">New Case</a>
+										<?php if (isset($val['block_data']) && isset($val['block_data']['inblock']) && isset($val['block_data']['claim_amount']) && isset($val['block_data']['case_amount'])) { ?>
+                      <br />
+                      <span>Claim Sum:<?php echo number_format($val['block_data']['claim_amount'], 2); ?></span>
+                      <span>Case Sum:<?php echo number_format($val['block_data']['case_amount'], 2); ?></span>
+                      <?php if ($val['block_data']['inblock'] != 1) { ?>
+                      <span><a href="<?php echo $val['create_block_url']; ?>" class="btn btn-primary">Add Block</a><span>
+                      <?php } ?>
+										<?php } ?>
 									</span>
 								</div>
 							</div>

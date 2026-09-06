@@ -1211,11 +1211,13 @@ class Emergency_assistance extends CI_Controller {
 		} else {
 			$this->data['create_claim_url'] = base_url('claim/create_claim');
 			$this->data['create_case_url'] = base_url('emergency_assistance/create_case');
+      $this->data['create_block_url'] = base_url('blocklist/add');
 			
 			$this->load->model('api_model');
 			$this->load->model('case_model');
 			$this->load->model('claim_model');
 			$this->load->model('policy_model');
+			$this->load->model('block_list_model');
 				
 			$policies = $this->api_model->get_policy(array('policy' => $policy));
 			$this->data['policy_local_note'] = '';
@@ -1230,6 +1232,8 @@ class Emergency_assistance extends CI_Controller {
 				$para['gender'] = $policies[0]['gender'];
 				$this->data['create_claim_url'] .= "?" . http_build_query($para);
 				$this->data['create_case_url'] .= "?" . http_build_query($para);
+				$this->data['create_block_url'] .= "?" . http_build_query($para);
+        $this->data['block_data'] = $this->block_list_model->get_user_status($para['firstname'], $para['lastname'], $para['birthday']);
 				if (!empty($this->data['policy']['family'])) {
 					foreach ( $this->data['policy']['family'] as $key => $val ) {
 						$para = array(
@@ -1241,6 +1245,8 @@ class Emergency_assistance extends CI_Controller {
 						$para['gender'] = $val['gender'];
 						$this->data['policy']['family'][$key]['create_claim_url'] = base_url('claim/create_claim') . "?" . http_build_query($para);
 						$this->data['policy']['family'][$key]['create_case_url'] = base_url('emergency_assistance/create_case') . "?" . http_build_query($para);
+            $this->data['policy']['family'][$key]['create_block_url'] = base_url('blocklist/add')."?" . http_build_query($para);
+            $this->data['policy']['family'][$key]['block_data'] = $this->block_list_model->get_user_status($para['firstname'], $para['lastname'], $para['birthday']);
 					}
 				}
         $expiretm = strtotime($this->data['policy']["expiry_date"]);

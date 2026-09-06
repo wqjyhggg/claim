@@ -4,6 +4,7 @@
 	<?php endif; ?>
 	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) : ?>
 	<li> <?php echo anchor("provider", '<i class="fa fa-briefcase"></i>Provider</a>', array("class"=>'leftmeun')) ?> </li>
+	<li> <?php echo anchor("blocklist", '<i class="fa fa-briefcase"></i>Block List</a>', array("class"=>'leftmeun')) ?> </li>
 	<?php endif; ?>
 	<?php if ($this->ion_auth->in_group(array(Users_model::GROUP_ADMIN, Users_model::GROUP_EAC, Users_model::GROUP_EXAMINER, Users_model::GROUP_MANAGER))) : ?>
 	<li> <?php echo anchor("auth/mytasks/CLAIM", '<i class="fa fa-briefcase"></i>My Claim</a>', array("class"=>'leftmeun')) ?> </li>

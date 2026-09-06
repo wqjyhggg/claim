@@ -992,16 +992,19 @@ ALTER TABLE `users_groups`
   ADD CONSTRAINT `fk_users_groups_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- 2026-08-29
-CREATE TABLE block_customer(
-  block_customer_id int NOT NULL AUTO_INCREMENT,
+DROP TABLE block_list;
+CREATE TABLE block_list(
+  block_list_id int NOT NULL AUTO_INCREMENT,
   `status` TINYINT NOT NULL DEFAULT 0 COMMENT '0:OK, 1:Warrning, 2:Blocked',
   firstname varchar(50) NOT NULL DEFAULT '',
   lastname varchar(50) NOT NULL DEFAULT '',
   birthday date DEFAULT NULL,
   policies TEXT,
   notes TEXT,
-  PRIMARY KEY (block_customer_id) 
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (block_list_id) 
 )ENGINE=MyISAM DEFAULT CHARSET=utf8;
-CREATE INDEX idx_block_customer_firstname ON block_customer (firstname);
-CREATE INDEX idx_block_customer_lastname ON block_customer (lastname);
-CREATE INDEX idx_block_customer_birthday ON block_customer (birthday);
+CREATE INDEX idx_block_list_firstname ON block_list (firstname);
+CREATE INDEX idx_block_list_lastname ON block_list (lastname);
+CREATE INDEX idx_block_list_birthday ON block_list (birthday);

@@ -36,7 +36,7 @@ if ($result->num_rows > 0) {
         $lastname = strtolower($row1["lastname"]);
         $birthday = $row1["birthday"];
         
-        $sql2 = "SELECT * FROM block_customer WHERE firstname='".$firstname."' AND lastname='".$lastname."' AND birthday='".$birthday."'";
+        $sql2 = "SELECT * FROM block_list WHERE firstname='".$firstname."' AND lastname='".$lastname."' AND birthday='".$birthday."'";
         $result2 = $connc->query($sql2);
         if ($row2 = $result2->fetch_assoc()) {
           continue;
@@ -58,10 +58,10 @@ if ($result->num_rows > 0) {
         }
 
         if (($claim_amount > 2500) || ($case_amount > 2500)) {
-          $sql3 = "INSERT INTO block_customer (status, firstname, lastname, birthday, policies, notes) VALUES (2,'".$firstname."','".$lastname."','".$birthday."','".$policy.";','".json_encode([date("Ymd:His")=>"From Existed Block Policy"])."')";
+          $sql3 = "INSERT INTO block_list (status, firstname, lastname, birthday, policies, notes) VALUES (2,'".$firstname."','".$lastname."','".$birthday."','".$policy.";','".json_encode([date("Ymd:His")=>"From Existed Block Policy"])."')";
           $connc->query($sql3);
         } else if (($claim_amount > 0) || ($case_amount > 0)) {
-          $sql3 = "INSERT INTO block_customer (status, firstname, lastname, birthday, policies, notes) VALUES (1,'".$firstname."','".$lastname."','".$birthday."','".$policy.";','".json_encode([date("Ymd:His")=>"From Existed Block Policy"])."')";
+          $sql3 = "INSERT INTO block_list (status, firstname, lastname, birthday, policies, notes) VALUES (1,'".$firstname."','".$lastname."','".$birthday."','".$policy.";','".json_encode([date("Ymd:His")=>"From Existed Block Policy"])."')";
           $connc->query($sql3);
         }
       }
