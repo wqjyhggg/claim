@@ -39,7 +39,7 @@ class Block_list_model extends CI_Model {
 			$where[] = "first_name LIKE " . $this->db->escape('%'.trim($data["first_name"]).'%');
 		}
 		if (!empty($data["birthday"])) {
-			$where[] = "`birthday= " . $this->db->escape($data["birthday"]);
+			$where[] = "birthday= " . $this->db->escape($data["birthday"]);
 		}
 		
 		if (!empty($where)) {

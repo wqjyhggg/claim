@@ -15,30 +15,23 @@
 					<?php echo form_open("blocklist", array('class'=>'form-horizontal', 'method'=>'get')); ?>
 					<div class="row">
             <div class="form-group col-sm-3">
-              <?php echo form_label ( 'Firstname:', 'firstname', array ("class" => 'col-sm-12') ); ?>
               <?php echo form_input("firstname", $this->input->get("firstname"), array ("class" => "form-control", 'placeholder' => 'First Name')); ?>
             </div>
             <div class="form-group col-sm-3">
-              <?php echo form_label ( 'Lastname:', 'lastname', array ("class" => 'col-sm-12') ); ?>
               <?php echo form_input("lastname", $this->input->get("lastname"), array ("class" => "form-control", 'placeholder' => 'Last Name')); ?>
             </div>
             <div class="form-group col-sm-3">
               <div class="input-group date">
-                <?php echo form_label ( 'Birthday:', 'birthday', array ("class" => 'col-sm-12') ); ?>
                 <?php echo form_input("birthday", $this->input->get("birthday"), array ("class" => "form-control datepicker", 'placeholder' => 'Birthday')); ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
               </div>
             </div>
 						<div class="col-sm-3">
-              <?php echo form_label ( 'Status:', 'status', array ("class" => 'col-sm-12') ); ?>
 							<?php echo form_dropdown ( "status", array(0 => "-- Status --", 1 => "Warning", 2 => "Blocked"), $this->input->post_get( "status" ), array ("class" => 'form-control') );?>
 						</div>
-						<div class="col-sm-6">
-							<?php echo form_label('Listed Customer:', 'listed_user', array ("class" => 'col-sm-12')); ?>
-              <span style="margin-left: 1em;">
-              <input type="checkbox" name="listed_user" value="1" <?php if ($this->input->get('listed_user') != 0) { echo "checked"; } ?> /> Listed
+						<div class="col-sm-8">
 						</div>
-						<div class="col-sm-6">
+						<div class="col-sm-4">
 							<?php echo form_submit("Search", "Search", array("class"=>'btn btn-primary', "type"=>'submit'))?>
 						</div>
 					</div>
@@ -156,6 +149,16 @@
     </div>
   </div>
 </div>
+<?php echo link_tag('assets/css/bootstrap-datepicker.css'); ?>
+<script src="<?php echo base_url() ?>/assets/js/bootstrap-datetimepicker.js"></script>
+<script>
+$(document).ready(function() {
+	$(".datepicker").datepicker({
+		format: "yyyy-mm-dd",
+	    endDate: '+0m'
+    });
+});
+</script>
 <script>
 $(document).ready(function () {
   /* Click Notes */

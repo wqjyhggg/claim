@@ -1008,3 +1008,6 @@ CREATE TABLE block_list(
 CREATE INDEX idx_block_list_firstname ON block_list (firstname);
 CREATE INDEX idx_block_list_lastname ON block_list (lastname);
 CREATE INDEX idx_block_list_birthday ON block_list (birthday);
+
+-- 2026-09-06
+ALTER TABLE `template` ADD `isfrench` TINYINT(1) NOT NULL DEFAULT '0';
