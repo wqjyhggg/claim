@@ -39,6 +39,11 @@ class Blocklist extends CI_Controller {
 			$this->data['block_list'] = $this->block_list_model->search($get, $limit, $offset);
       $this->data["user_id"] = $this->ion_auth->get_user_id();
 			$config['total_rows'] = $this->block_list_model->last_rows();
+      $popup_user_id = $this->input->get("popup_user_id");
+      if (!empty($popup_user_id)) {
+        $get["block_list_id"] = $popup_user_id;
+        $this->data["popup_user_id"] = $popup_user_id;
+      }
 				
 			$config['base_url'] = site_url('blocklist');
 			$config['per_page'] = $limit;
@@ -87,7 +92,7 @@ class Blocklist extends CI_Controller {
         $para["created"] = $block_user["created"];
       }
       $id = $this->block_list_model->save($para);
-      redirect('blocklist', 'refresh');
+      redirect('blocklist?popup_user_id='.$id, 'refresh');
     }
 	}
 

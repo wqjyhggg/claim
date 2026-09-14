@@ -86,7 +86,7 @@
                     <a href="javascript:void(0);"
                       class="edit-notes"
                       data-id="<?php echo (int)$user['block_list_id']; ?>"
-                      data-user-id="<?php echo $user_id; ?>"
+                      data-user-id="<?php echo htmlspecialchars($user_id, ENT_QUOTES, 'UTF-8'); ?>"
                       data-notes="<?php echo htmlspecialchars($notes, ENT_QUOTES, 'UTF-8'); ?>"
                       data-button="<?php echo (!empty($user['status']) && ($user['status'] == 2))?'Unblock':'Block'; ?>"
                       title="Click to edit notes">
@@ -166,7 +166,7 @@ $(document).ready(function () {
   $(document).on('click', '.edit-notes', function () {
     var blockListId = $(this).data('id');
     var notes = $(this).attr('data-notes');
-    var user_id = $(this).attr('user_id');
+    var user_id = $(this).attr('data-user-id');
     var data_button = $(this).attr('data-button');
     // Set current notes
     $('#currentNotes').text(notes);
@@ -182,6 +182,23 @@ $(document).ready(function () {
     // Show modal
     $('#notesModal').modal('show');
   });
+
+  /*
+   * Automatically open the notes popup after page load when
+   * $popup_user_id matches a row's block_list_id.
+   */
+  var popupUserId = <?php echo isset($popup_user_id) ? $popup_user_id : null; ?>;
+
+  if (popupUserId !== null && popupUserId !== '') {
+    $('.edit-notes').each(function () {
+      var blockListId = $(this).attr('data-id');
+
+      if (String(blockListId) === String(popupUserId)) {
+        $(this).trigger('click');
+        return false;
+      }
+    });
+  }
 
   /* Add new note */
   $('#addNoteButton').on('click', function () {
