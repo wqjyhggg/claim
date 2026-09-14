@@ -159,6 +159,7 @@
           </div>
           <input type="hidden" id="notesBlockListId">
           <input type="hidden" id="userId">
+          <input type="hidden" id="newStatus">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -186,12 +187,19 @@ $(document).ready(function () {
     var notes = $(this).attr('data-notes');
     var user_id = $(this).attr('data-user-id');
     var data_button = $(this).attr('data-button');
+    var newStatus = 0;
+    if (data_button == 'Block') {
+      newStatus = 2;
+    } else if (data_button == 'Unblock') {
+      newStatus = 1;
+    }
     // Set current notes
     $('#currentNotes').text(notes);
     // Set ID
     $('#notesBlockListId').val(blockListId);
     // User ID
     $('#userId').val(user_id);
+    $('#newStatus').val(newStatus);
     // Clear input
     $('#newNote').val('');
     if (data_button) {
@@ -223,8 +231,7 @@ $(document).ready(function () {
     var blockListId = $('#notesBlockListId').val();
     var newNote = $('#newNote').val();
     var userId = $('#userId').val();
-    var data_button = $(this).attr('data-button');
-    var newStatus = 0;
+    var newStatus = $('#newStatus').val();
     // Remove leading/trailing spaces
     newNote = $.trim(newNote);
     /*
@@ -234,11 +241,6 @@ $(document).ready(function () {
     if (newNote === '') {
       $('#notesModal').modal('hide');
       return;
-    }
-    if (data_button == 'Block') {
-      newStatus = 2;
-    } else if (data_button == 'Unblock') {
-      newStatus = 1;
     }
     /*
      * Disable button to prevent double click
@@ -262,7 +264,7 @@ $(document).ready(function () {
            * Reload page so the latest notes
            * will be displayed.
            */
-          location.reload();
+          window.location.href = window.location.origin + window.location.pathname + "?block_list_id=" + blockListId;
         } else {
           alert(response.message || 'Failed to add note.');
         }
