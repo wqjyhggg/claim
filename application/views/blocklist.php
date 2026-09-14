@@ -94,7 +94,7 @@
                     </a>
                   </td>
 									<td><?php echo htmlspecialchars($user['created'],ENT_QUOTES,'UTF-8');?></td>
-									<td><?php echo ((!empty($user['status']) && ($user['status'] == 2)))?anchor("blocklist/update?status=1&block_list_id=".$user['block_list_id'], 'Unblock'):anchor("blocklist/update?status=2&block_list_id=".$user['block_list_id'], 'Block');?></td>
+									<!-- <td><?php echo ((!empty($user['status']) && ($user['status'] == 2)))?anchor("blocklist/update?status=1&block_list_id=".$user['block_list_id'], 'Unblock'):anchor("blocklist/update?status=2&block_list_id=".$user['block_list_id'], 'Block');?></td> -->
 									<td>
                     <?php
                     $notes = isset($user['notes']) ? $user['notes'] : "";
