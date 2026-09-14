@@ -956,6 +956,7 @@ $(document).ready(function() {
 			payto_address = false;
 			payArr = pay_to.split(":");
 			paytype = payArr[0].trim();
+      if (0) {
 			if (paytype == 'cheque') {
 				$(".doc-desc").each(function () {
 					var str = $(this).html();
@@ -971,6 +972,7 @@ $(document).ready(function() {
 					$(this).html(str);
 				});
 			}
+      }
 			item_provider_name = ptr.attr('item_provider_name');
 			item_provider_addr1 = ptr.attr('item_provider_addr1');
 			item_provider_addr2 = ptr.attr('item_provider_addr2');
