@@ -76,7 +76,7 @@ class Blocklist extends CI_Controller {
         "firstname" => $get["firstname"],
         "lastname" => $get["lastname"],
         "birthday" => $get["birthday"],
-        "notes" => "First Added -- ".date("Ymd:His")." -- ".$this->ion_auth->get_user_id(),
+        "notes" => "First Added -- ".date("Ymd:His")." -- ".$this->ion_auth->get_user_info('email'),
         "status" => 2
       ];
       if (!empty($get["policy"])) {
@@ -176,7 +176,7 @@ class Blocklist extends CI_Controller {
       }
 
       $time = date('Y-m-d H:i:s');
-      $new_line = $new_note . " -- " . $time . " -- " . $user_id;
+      $new_line = $new_note . " -- " . $time . " -- " . $this->ion_auth->get_user_info('email');
       $old_notes = isset($customer['notes']) ? $customer['notes'] : '';
       if ($old_notes !== '') {
         $notes = $old_notes . "\n" . $new_line;

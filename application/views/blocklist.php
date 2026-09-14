@@ -63,7 +63,7 @@
 									<th><?php echo $this->pagination->sort("birthday", "Birthday") ?></th>
 									<th><?php echo $this->pagination->sort("status", "Status") ?></th>
 									<th>Notes</th>
-									<th>Time</th>
+									<th>Create Time</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -88,6 +88,7 @@
                       data-id="<?php echo (int)$user['block_list_id']; ?>"
                       data-user-id="<?php echo $user_id; ?>"
                       data-notes="<?php echo htmlspecialchars($notes, ENT_QUOTES, 'UTF-8'); ?>"
+                      data-button="<?php echo (!empty($user['status']) && ($user['status'] == 2))?'Unblock':'Block'; ?>"
                       title="Click to edit notes">
                         <?php echo htmlspecialchars($notes_short, ENT_QUOTES, 'UTF-8'); ?>
                     </a>
@@ -143,7 +144,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="addNoteButton">Add</button>
+          <button type="button" class="btn btn-primary" id="addNoteButton">Block</button>
         </div>
       </div>
     </div>
@@ -166,6 +167,7 @@ $(document).ready(function () {
     var blockListId = $(this).data('id');
     var notes = $(this).attr('data-notes');
     var user_id = $(this).attr('user_id');
+    var data_button = $(this).attr('data-button');
     // Set current notes
     $('#currentNotes').text(notes);
     // Set ID
@@ -174,6 +176,9 @@ $(document).ready(function () {
     $('#userId').val(user_id);
     // Clear input
     $('#newNote').val('');
+    if (data_button) {
+      $('#addNoteButton').text(data_button);;
+    }
     // Show modal
     $('#notesModal').modal('show');
   });
