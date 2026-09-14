@@ -88,13 +88,31 @@
                       data-id="<?php echo (int)$user['block_list_id']; ?>"
                       data-user-id="<?php echo htmlspecialchars($user_id, ENT_QUOTES, 'UTF-8'); ?>"
                       data-notes="<?php echo htmlspecialchars($notes, ENT_QUOTES, 'UTF-8'); ?>"
-                      data-button="<?php echo (!empty($user['status']) && ($user['status'] == 2))?'Unblock':'Block'; ?>"
+                      data-button="Add"
                       title="Click to edit notes">
                         <?php echo htmlspecialchars($notes_short, ENT_QUOTES, 'UTF-8'); ?>
                     </a>
                   </td>
 									<td><?php echo htmlspecialchars($user['created'],ENT_QUOTES,'UTF-8');?></td>
-									<td><?php echo empty($user['status'])?anchor("blocklist/add?firstname=".htmlspecialchars($user['firstname'],ENT_QUOTES,'UTF-8')."&lastname=".htmlspecialchars($user['lastname'],ENT_QUOTES,'UTF-8')."&birthday=".htmlspecialchars($user['birthday'],ENT_QUOTES,'UTF-8'), 'Add') : (($user['status']==1)?anchor("blocklist/update?status=2&block_list_id=".$user['block_list_id'], 'Block'):anchor("blocklist/update?status=1&block_list_id=".$user['block_list_id'], 'Unblock'));?></td>
+									<td><?php echo ((!empty($user['status']) && ($user['status'] == 2)))?anchor("blocklist/update?status=1&block_list_id=".$user['block_list_id'], 'Unblock'):anchor("blocklist/update?status=2&block_list_id=".$user['block_list_id'], 'Block');?></td>
+									<td>
+                    <?php
+                    $notes = isset($user['notes']) ? $user['notes'] : "";
+                    $notes_short = mb_strlen($notes, 'UTF-8') > 20
+                        ? mb_substr($notes, 0, 20, 'UTF-8') . '...'
+                        : $notes;
+                    ?>
+
+                    <a href="javascript:void(0);"
+                      class="edit-notes"
+                      data-id="<?php echo (int)$user['block_list_id']; ?>"
+                      data-user-id="<?php echo htmlspecialchars($user_id, ENT_QUOTES, 'UTF-8'); ?>"
+                      data-notes="<?php echo htmlspecialchars($notes, ENT_QUOTES, 'UTF-8'); ?>"
+                      data-button="<?php echo (!empty($user['status']) && ($user['status'] == 2))?'Unblock':'Block'; ?>"
+                      title="Add notes">
+                        <?php echo (!empty($user['status']) && ($user['status'] == 2))?'Unblock':'Block'; ?>
+                    </a>
+                  </td>
 								</tr>
 								<?php endforeach; ?>
 							</tbody>
@@ -187,7 +205,7 @@ $(document).ready(function () {
    * Automatically open the notes popup after page load when
    * $popup_user_id matches a row's block_list_id.
    */
-  var popupUserId = <?php echo isset($popup_user_id) ? $popup_user_id : null; ?>;
+  var popupUserId = '<?php echo isset($popup_user_id) ? $popup_user_id : ""; ?>';
 
   if (popupUserId !== null && popupUserId !== '') {
     $('.edit-notes').each(function () {
@@ -205,6 +223,8 @@ $(document).ready(function () {
     var blockListId = $('#notesBlockListId').val();
     var newNote = $('#newNote').val();
     var userId = $('#userId').val();
+    var data_button = $(this).attr('data-button');
+    var newStatus = 0;
     // Remove leading/trailing spaces
     newNote = $.trim(newNote);
     /*
@@ -214,6 +234,11 @@ $(document).ready(function () {
     if (newNote === '') {
       $('#notesModal').modal('hide');
       return;
+    }
+    if (data_button == 'Block') {
+      newStatus = 2;
+    } else if (data_button == 'Unblock') {
+      newStatus = 1;
     }
     /*
      * Disable button to prevent double click
@@ -227,6 +252,7 @@ $(document).ready(function () {
       data: {
           block_list_id: blockListId,
           user_id: userId,
+          status: newStatus,
           note: newNote
       },
       success: function (response) {

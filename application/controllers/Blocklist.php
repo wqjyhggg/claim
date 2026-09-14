@@ -36,20 +36,21 @@ class Blocklist extends CI_Controller {
 			$limit = $this->limit;
 			$offset = $this->uri->segment(3);
 			$get = $this->input->get();
-			$this->data['block_list'] = $this->block_list_model->search($get, $limit, $offset);
-      $this->data["user_id"] = $this->ion_auth->get_user_id();
-			$config['total_rows'] = $this->block_list_model->last_rows();
       $popup_user_id = $this->input->get("popup_user_id");
       if (!empty($popup_user_id)) {
         $get["block_list_id"] = $popup_user_id;
         $this->data["popup_user_id"] = $popup_user_id;
+        unset($get["popup_user_id"]);
       }
+			$this->data['block_list'] = $this->block_list_model->search($get, $limit, $offset);
+      $this->data["user_id"] = $this->ion_auth->get_user_id();
+			$config['total_rows'] = $this->block_list_model->last_rows();
 				
 			$config['base_url'] = site_url('blocklist');
 			$config['per_page'] = $limit;
-			$config['first_url'] = $config ['base_url'] . '?' . http_build_query($this->input->get());
-			if (count($this->input->get()) > 0) {
-				$config ['suffix'] = '?' . http_build_query($this->input->get(), '', "&");
+			$config['first_url'] = $config ['base_url'] . '?' . http_build_query($get);
+			if (count($get) > 0) {
+				$config ['suffix'] = '?' . http_build_query($get, '', "&");
 			}
 
 			$this->pagination->initialize($config); // initiaze pagination config
@@ -151,7 +152,7 @@ class Blocklist extends CI_Controller {
       }
 
       $block_list_id = (int)$this->input->post('block_list_id');
-      $user_id = (int)$this->input->post('user_id');
+      $status = (int)$this->input->post('status');
       $new_note = trim($this->input->post('note', TRUE));
 
       if (empty($block_list_id)) {
@@ -188,8 +189,12 @@ class Blocklist extends CI_Controller {
       } else {
         $notes = $new_line;
       }
+      if (($status != 1) && ($status != 2)) {
+        $status = $customer["status"];
+      }
       $updated = $this->block_list_model->save(array(
           'block_list_id' => $block_list_id,
+          'status' => $status,
           'notes' => $notes
         )
       );
