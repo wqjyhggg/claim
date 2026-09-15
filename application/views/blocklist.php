@@ -88,8 +88,8 @@
                       data-id="<?php echo (int)$user['block_list_id']; ?>"
                       data-user-id="<?php echo htmlspecialchars($user_id, ENT_QUOTES, 'UTF-8'); ?>"
                       data-notes="<?php echo htmlspecialchars($notes, ENT_QUOTES, 'UTF-8'); ?>"
-                      data-button="Add"
-                      title="Click to edit notes">
+                      data-button="Add Block Notes"
+                      title="Add Block Notes">
                         <?php echo htmlspecialchars($notes_short, ENT_QUOTES, 'UTF-8'); ?>
                     </a>
                   </td>

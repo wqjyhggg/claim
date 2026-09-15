@@ -82,7 +82,7 @@ class Blocklist extends CI_Controller {
         "firstname" => $get["firstname"],
         "lastname" => $get["lastname"],
         "birthday" => $get["birthday"],
-        "notes" => "First Added -- ".date("Ymd:His")." -- ".$this->ion_auth->get_user_info('email'),
+        "notes" => $get["policy"] . " -- ".date("Ymd:His")." -- ".$this->ion_auth->get_user_info('email'),
         "status" => 2
       ];
       if (!empty($get["policy"])) {

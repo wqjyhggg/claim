@@ -392,7 +392,7 @@
                       <span>Claim Sum:<?php echo number_format($val['block_data']['claim_amount'], 2); ?></span>
                       <span>Case Sum:<?php echo number_format($val['block_data']['case_amount'], 2); ?></span>
                       <?php if ($val['block_data']['inblock'] != 1) { ?>
-                      <span><a href="<?php echo $val['create_block_url']; ?>" class="btn btn-primary">Add Block</a><span>
+                      <span><a onclick="return confirm('Please confirm to block this user');" href="<?php echo $val['create_block_url']; ?>" class="btn btn-primary">Add Block</a><span>
                       <?php } ?>
 										<?php } ?>
 									</span>
