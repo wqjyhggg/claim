@@ -392,7 +392,7 @@
                       <span>Claim Sum:<?php echo number_format($val['block_data']['claim_amount'], 2); ?></span>
                       <span>Case Sum:<?php echo number_format($val['block_data']['case_amount'], 2); ?></span>
                       <?php if ($val['block_data']['inblock'] != 1) { ?>
-                      <span><a onclick="return confirm('Please confirm to block this user');" href="<?php echo $val['create_block_url']; ?>" class="btn btn-primary">Add Block</a><span>
+                      <span><a href="#" data-url="<?php echo $val['create_block_url']; ?>" class="btn btn-primary block-user-btn">Add Block</a><span>
                       <?php } ?>
 										<?php } ?>
 									</span>
@@ -472,6 +472,16 @@
 	</div>
 </div>
 <script>
+$(document).on('click', '.block-user-btn', function(e) {
+    e.preventDefault(); // Stops the link from following the '#' href right away
+    
+    var blockUrl = $(this).data('url'); // Gets the URL from the data-url attribute
+    
+    if (confirm('Please confirm to block this user')) {
+        window.location.href = blockUrl; // Redirects to the URL if confirmed
+    }
+});
+
 function update_policy_note(policy_no) {
 	var note_txt = $('#policy_note').val();
 	$.ajax({
