@@ -361,7 +361,7 @@
                       <span>Claim Sum:<?php echo number_format($block_data['claim_amount'], 2); ?></span>
                       <span>Case Sum:<?php echo number_format($block_data['case_amount'], 2); ?></span>
                       <?php if ($block_data['inblock'] != 1) { ?>
-                      <span><a href="<?php echo $create_block_url; ?>" class="btn btn-primary">Add Block</a><span>
+                      <span><a href="#" data-url="<?php echo $val['create_block_url']; ?>" class="btn btn-primary block-user-btn">Add Block</a><span>
                       <?php } ?>
 										<?php } ?>
 									</span>
