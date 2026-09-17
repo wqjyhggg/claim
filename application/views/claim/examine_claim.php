@@ -313,7 +313,7 @@
 													<div class='col-sm-12'><input type='number' step='0.01' name='recovery_amt' value="<?php echo $value['recovery_amt']; ?>"></div>
 												</div>
 												<div class="form-group col-sm-3">
-													<label class="col-sm-12">Reason : </label>
+													<label class="col-sm-12">Reason : <?php echo form_checkbox('use_french', 1).' <b>use french</b>'; ?></label>
 													<div class='col-sm-12'>
 														<select name="reason">
 															<option value=""> -- Select Reason -- </option>
