@@ -1011,3 +1011,19 @@ CREATE INDEX idx_block_list_birthday ON block_list (birthday);
 
 -- 2026-09-06
 ALTER TABLE `template` ADD `isfrench` TINYINT(1) NOT NULL DEFAULT '0';
+
+-- 2026-09-17
+ALTER TABLE `reasons` CHANGE `name` `name` TEXT NULL;
+ALTER TABLE `reasons` ADD `isfrench` TINYINT(1) NOT NULL DEFAULT '0';
+INSERT INTO `reasons` (name, isfrench) VALUES ('Les frais de documentation ne sont pas couverts par cette police',1);
+INSERT INTO `reasons` (name, isfrench) VALUES ('Maximum de 30 jours d’approvisionnement par ordonnance',1);
+INSERT INTO `reasons` (name, isfrench) VALUES ('Aucune facture ni aucun reçu officiel fourni',1);
+INSERT INTO `reasons` (name, isfrench) VALUES ('Aucun document original fourni',1);
+INSERT INTO `reasons` (name, isfrench) VALUES ('Ce service n’est pas couvert par cette police',1);
+INSERT INTO `reasons` (name, isfrench) VALUES ('Non considéré comme une urgence',1);
+INSERT INTO `reasons` (name, isfrench) VALUES ('Les soins continus ne sont pas couverts par cette police',1);
+INSERT INTO `reasons` (name, isfrench) VALUES ('Autre',1);
+INSERT INTO `reasons` (name, isfrench) VALUES ('Les symptômes ne sont pas apparus pendant la période de couverture de la police',1);
+INSERT INTO `reasons` (name, isfrench) VALUES ('This dental procedure is not covered by this policy',1);
+INSERT INTO `reasons` (name, isfrench) VALUES ('Le traitement n’a pas été demandé pendant la période de couverture de la police',1);
+INSERT INTO `reasons` (name, isfrench) VALUES ('Affection préexistante instable',1);
