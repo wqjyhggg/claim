@@ -62,9 +62,9 @@
 									<th><?php echo $this->pagination->sort("lastname", "Last Name") ?></th>
 									<th><?php echo $this->pagination->sort("birthday", "Birthday") ?></th>
 									<th><?php echo $this->pagination->sort("status", "Status") ?></th>
-									<th>Notes</th>
 									<th>Create Time</th>
 									<th>Action</th>
+									<th>Notes</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -75,24 +75,6 @@
 									<td><?php echo htmlspecialchars($user['lastname'],ENT_QUOTES,'UTF-8');?></td>
 									<td><?php echo htmlspecialchars($user['birthday'],ENT_QUOTES,'UTF-8');?></td>
 									<td><?php echo empty($user['status'])?"-":(($user['status']==1)?"Warning":"Blocked") ?></td>
-									<td>
-                    <?php
-                    $notes = isset($user['notes']) ? $user['notes'] : "";
-                    $notes_short = mb_strlen($notes, 'UTF-8') > 20
-                        ? mb_substr($notes, 0, 20, 'UTF-8') . '...'
-                        : $notes;
-                    ?>
-
-                    <a href="javascript:void(0);"
-                      class="edit-notes"
-                      data-id="<?php echo (int)$user['block_list_id']; ?>"
-                      data-user-id="<?php echo htmlspecialchars($user_id, ENT_QUOTES, 'UTF-8'); ?>"
-                      data-notes="<?php echo htmlspecialchars($notes, ENT_QUOTES, 'UTF-8'); ?>"
-                      data-button="Add Block Notes"
-                      title="Add Block Notes">
-                        <?php echo htmlspecialchars($notes_short, ENT_QUOTES, 'UTF-8'); ?>
-                    </a>
-                  </td>
 									<td><?php echo htmlspecialchars($user['created'],ENT_QUOTES,'UTF-8');?></td>
 									<!-- <td><?php echo ((!empty($user['status']) && ($user['status'] == 2)))?anchor("blocklist/update?status=1&block_list_id=".$user['block_list_id'], 'Unblock'):anchor("blocklist/update?status=2&block_list_id=".$user['block_list_id'], 'Block');?></td> -->
 									<td>
@@ -106,11 +88,35 @@
                     <a href="javascript:void(0);"
                       class="edit-notes"
                       data-id="<?php echo (int)$user['block_list_id']; ?>"
-                      data-user-id="<?php echo htmlspecialchars($user_id, ENT_QUOTES, 'UTF-8'); ?>"
+                      data-user-id="<?php echo (int)$user['user_id']; ?>"
+                      data-firstname="<?php echo htmlspecialchars($user['firstname'], ENT_QUOTES, 'UTF-8'); ?>"
+                      data-lastname="<?php echo htmlspecialchars($user['lastname'], ENT_QUOTES, 'UTF-8'); ?>"
+                      data-birthday="<?php echo htmlspecialchars($user['birthday'], ENT_QUOTES, 'UTF-8'); ?>"
                       data-notes="<?php echo htmlspecialchars($notes, ENT_QUOTES, 'UTF-8'); ?>"
                       data-button="<?php echo (!empty($user['status']) && ($user['status'] == 2))?'Unblock':'Block'; ?>"
                       title="Add notes">
                         <?php echo (!empty($user['status']) && ($user['status'] == 2))?'Unblock':'Block'; ?>
+                    </a>
+                  </td>
+									<td>
+                    <?php
+                    $notes = isset($user['notes']) ? $user['notes'] : "";
+                    $notes_short = mb_strlen($notes, 'UTF-8') > 20
+                        ? mb_substr($notes, 0, 20, 'UTF-8') . '...'
+                        : $notes;
+                    ?>
+
+                    <a href="javascript:void(0);"
+                      class="edit-notes"
+                      data-id="<?php echo (int)$user['block_list_id']; ?>"
+                      data-user-id="<?php echo (int)$user['user_id']; ?>"
+                      data-firstname="<?php echo htmlspecialchars($user['firstname'], ENT_QUOTES, 'UTF-8'); ?>"
+                      data-lastname="<?php echo htmlspecialchars($user['lastname'], ENT_QUOTES, 'UTF-8'); ?>"
+                      data-birthday="<?php echo htmlspecialchars($user['birthday'], ENT_QUOTES, 'UTF-8'); ?>"
+                      data-notes="<?php echo htmlspecialchars($notes, ENT_QUOTES, 'UTF-8'); ?>"
+                      data-button="Add Block Notes"
+                      title="Add Block Notes">
+                        <?php echo htmlspecialchars($notes_short, ENT_QUOTES, 'UTF-8'); ?>
                     </a>
                   </td>
 								</tr>
@@ -135,7 +141,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title" id="notesModalLabel">Customer Notes</h4>
+          <h4 class="modal-title" id="notesModalLabel">Customer Notes <span id="t-firstname"></span> <span id="t-lastname"></span> <span id="t-birthday"></span></h4>
         </div>
         <div class="modal-body">
           <!-- Current Notes -->
@@ -186,6 +192,9 @@ $(document).ready(function () {
     var blockListId = $(this).data('id');
     var notes = $(this).attr('data-notes');
     var user_id = $(this).attr('data-user-id');
+    var data_firstname = $(this).attr('data-firstname');
+    var data_lastname = $(this).attr('data-lastname');
+    var data_birthday = $(this).attr('data-birthday');
     var data_button = $(this).attr('data-button');
     var newStatus = 0;
     if (data_button == 'Block') {
@@ -199,6 +208,9 @@ $(document).ready(function () {
     $('#notesBlockListId').val(blockListId);
     // User ID
     $('#userId').val(user_id);
+    $('#t-firstname').val(data_firstname);
+    $('#t-lastname').val(data_lastname);
+    $('#t-birthday').val(data_birthday);
     $('#newStatus').val(newStatus);
     // Clear input
     $('#newNote').val('');
