@@ -120,7 +120,7 @@ class Block_list_model extends CI_Model {
 	public function get_user_status($firstname, $lastname, $birthday) {
     $rt = ["inblock" => 0, "claim_amount" => 0, "case_amount" => 0];
     if ($u = $this->check_list_name($firstname, $lastname, $birthday)) {
-      $rt["inblock"] = 1;
+      $rt["inblock"] = $u["status"];
     }
 
     $sql = "SELECT SUM(e.amount_claimed) as amount FROM claim c JOIN expenses_claimed e ON (c.id=e.claim_id) WHERE LOWER(c.insured_first_name)=".$this->db->escape($firstname)." AND LOWER(c.insured_last_name)=".$this->db->escape($lastname)." AND c.dob=".$this->db->escape($birthday);
