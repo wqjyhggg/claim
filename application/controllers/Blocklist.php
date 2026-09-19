@@ -22,7 +22,7 @@ class Blocklist extends CI_Controller {
 	}
 	
 	// redirect if needed, otherwise display the user list
-	public function index() {
+	public function index($offset=0) {
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
@@ -34,7 +34,7 @@ class Blocklist extends CI_Controller {
 			// list the users group
 				
 			$limit = $this->limit;
-			$offset = $this->uri->segment(3);
+			// $offset = $this->uri->segment(3);
 			$get = $this->input->get();
       $popup_user_id = $this->input->get("popup_user_id");
       if (!empty($popup_user_id)) {
