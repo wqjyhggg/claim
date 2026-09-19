@@ -59,3 +59,4 @@ $route['claim_doc_delete/(:any)__(:num)'] = 'claim/delete_doc/$1/$2';
 $route['file_claim/(:any)__(:num)'] = 'claim/file/$1/$2';
 $route['report'] = 'report/report';
 $route['report/cases/(:num)'] = 'report/cases/index/$1';
+$route['blocklist/(:num)'] = 'blocklist/index/$1';
