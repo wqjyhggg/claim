@@ -16,7 +16,7 @@ class Reasons_model extends CI_Model {
 	 */
 	public function get_list() {
 		$this->db->order_by('name');
-		$rt = $this->db->get('reasons')->result_array();
+		$rt = $this->db->order_by('id', 'ASC')->get('reasons')->result_array();
 		$rArr = array();
 		foreach ($rt as $rc) {
 			$rArr[$rc['id']] = $rc;
