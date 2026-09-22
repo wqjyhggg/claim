@@ -107,7 +107,7 @@
                     ?>
 
                     <a href="javascript:void(0);"
-                      class="edit-notes"
+                      class="edit-notes btn btn-primary"
                       data-id="<?php echo (int)$user['block_list_id']; ?>"
                       data-user-id="<?php echo (int)$user_id; ?>"
                       data-firstname="<?php echo htmlspecialchars($user['firstname'], ENT_QUOTES, 'UTF-8'); ?>"
@@ -116,7 +116,7 @@
                       data-notes="<?php echo htmlspecialchars($notes, ENT_QUOTES, 'UTF-8'); ?>"
                       data-button="Add Block Notes"
                       title="Add Block Notes">
-                        <?php echo htmlspecialchars($notes_short, ENT_QUOTES, 'UTF-8'); ?>
+                        View/Add Notes
                     </a>
                   </td>
 								</tr>
@@ -141,7 +141,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title" id="notesModalLabel">Customer Notes <span id="t-firstname"></span> <span id="t-lastname"></span> <span id="t-birthday"></span></h4>
+          <h4 class="modal-title" id="notesModalLabel">Customer Notes -- <span id="tFirstname"></span> <span id="tLastname"></span> <span id="tBirthday"></span></h4>
         </div>
         <div class="modal-body">
           <!-- Current Notes -->
@@ -208,10 +208,10 @@ $(document).ready(function () {
     $('#notesBlockListId').val(blockListId);
     // User ID
     $('#userId').val(user_id);
-    $('#t-firstname').val(data_firstname);
-    $('#t-lastname').val(data_lastname);
-    $('#t-birthday').val(data_birthday);
-    $('#newStatus').val(newStatus);
+    $('#tFirstname').val(data_firstname);
+    $('#tLastname').html(data_lastname);
+    $('#tBirthday').html(data_birthday);
+    $('#newStatus').html(newStatus);
     // Clear input
     $('#newNote').val('');
     if (data_button) {
