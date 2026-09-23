@@ -141,7 +141,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title" id="notesModalLabel">Customer Notes -- <span id="tFirstname"></span> <span id="tLastname"></span> <span id="tBirthday"></span></h4>
+          <h4 class="modal-title" id="notesModalLabel"><span id="tFirstname"></span> <span id="tLastname"></span> <span id="tBirthday"></span></h4>
         </div>
         <div class="modal-body">
           <!-- Current Notes -->
@@ -208,7 +208,7 @@ $(document).ready(function () {
     $('#notesBlockListId').val(blockListId);
     // User ID
     $('#userId').val(user_id);
-    $('#tFirstname').val(data_firstname);
+    $('#tFirstname').html(data_firstname);
     $('#tLastname').html(data_lastname);
     $('#tBirthday').html(data_birthday);
     $('#newStatus').val(newStatus);
