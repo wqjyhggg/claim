@@ -78,6 +78,8 @@
 					<div class="form-group col-sm-3">
   					<?php if (isset($policy['product_short']) && ($policy['product_short'] == 'TOPN')) { ?>
             <label style="text-transform: capitalize;">Sum Insured: $10,000,000</label>
+ 						<?php } else if (isset($policy['product_short']) && ($policy['product_short'] == 'TOPN')) { ?>
+						<label style="text-transform: capitalize;">Sum Insured: $1,000,000</label>
             <?php } else { ?>
             <label style="text-transform: capitalize;">Sum Insured: $5,000,000</label>
             <?php } ?>
