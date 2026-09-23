@@ -211,7 +211,7 @@ $(document).ready(function () {
     $('#tFirstname').val(data_firstname);
     $('#tLastname').html(data_lastname);
     $('#tBirthday').html(data_birthday);
-    $('#newStatus').html(newStatus);
+    $('#newStatus').val(newStatus);
     // Clear input
     $('#newNote').val('');
     if (data_button) {
