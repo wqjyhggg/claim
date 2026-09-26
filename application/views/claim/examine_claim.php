@@ -207,7 +207,27 @@
 									$total_payable += (float)$value['amt_payable'];
 									$total_this_payable += (float)$value['amt_payable'];
 								?>
-									<tr class="row-link claim_items" data-id="<?php echo $value['id']; ?>" item_payee_name="<?php echo $html_model->escapeQuote2($value['item_payee_name']); ?>" item_payee_addr1="<?php echo $html_model->escapeQuote2($value['item_payee_addr1']); ?>" item_payee_addr2="<?php echo $html_model->escapeQuote2($value['item_payee_addr2']); ?>" item_payee_postcode="<?php echo $html_model->escapeQuote2($value['item_payee_postcode']); ?>" item_provider_name="<?php echo $html_model->escapeQuote2($value['item_provider_name']); ?>" item_provider_addr1="<?php echo $html_model->escapeQuote2($value['item_provider_addr1']); ?>" item_provider_addr2="<?php echo $html_model->escapeQuote2($value['item_provider_addr2']); ?>" item_provider_postcode="<?php echo $html_model->escapeQuote2($value['item_provider_postcode']); ?>" item_coverage_code="<?php echo isset($expenses_list[$value['coverage_code']]) ? nl2br($expenses_list[$value['coverage_code']]) : nl2br($value['coverage_code']); ?>" item_service_description="<?php echo $html_model->escapeQuote2(nl2br($value['service_description'])); ?>" item_date_of_service="<?php echo $html_model->escapeQuote2($value['date_of_service']); ?>" item_amount_claimed="<?php echo $value['amount_claimed'] ?>" item_amt_deductible="<?php echo $value['amt_deductible'] ?>" item_amt_payable="<?php echo $value['amt_payable'] ?>" item_pay_to="<?php echo $html_model->escapeQuote2($value['pay_to']); ?>" item_comment="<?php echo $html_model->escapeQuote2(($value['reason']!='Other') ? $value['reason'] : $value['reason_other']) ?>">
+									<tr class="row-link claim_items" 
+                      data-id="<?php echo $value['id']; ?>" 
+                      item_payee_name="<?php echo $html_model->escapeQuote2($value['item_payee_name']); ?>" 
+                      item_payee_addr1="<?php echo $html_model->escapeQuote2($value['item_payee_addr1']); ?>" 
+                      item_payee_addr2="<?php echo $html_model->escapeQuote2($value['item_payee_addr2']); ?>" 
+                      item_payee_postcode="<?php echo $html_model->escapeQuote2($value['item_payee_postcode']); ?>" 
+                      item_provider_name="<?php echo $html_model->escapeQuote2($value['item_provider_name']); ?>" 
+                      item_provider_addr1="<?php echo $html_model->escapeQuote2($value['item_provider_addr1']); ?>" 
+                      item_provider_addr2="<?php echo $html_model->escapeQuote2($value['item_provider_addr2']); ?>" 
+                      item_provider_postcode="<?php echo $html_model->escapeQuote2($value['item_provider_postcode']); ?>" 
+                      item_coverage_code="<?php echo isset($expenses_list[$value['coverage_code']]) ? nl2br($expenses_list[$value['coverage_code']]) : nl2br($value['coverage_code']); ?>" 
+                      item_coverage_code_fr="<?php echo isset($expenses_list[$value['coverage_code']]) ? nl2br($expenses_fr_list[$value['coverage_code']]) : nl2br($value['coverage_code']); ?>" 
+                      item_service_description="<?php echo $html_model->escapeQuote2(nl2br($value['service_description'])); ?>" 
+                      item_date_of_service="<?php echo $html_model->escapeQuote2($value['date_of_service']); ?>" 
+                      item_amount_claimed="<?php echo $value['amount_claimed'] ?>" 
+                      item_amt_deductible="<?php echo $value['amt_deductible'] ?>" 
+                      item_amt_payable="<?php echo $value['amt_payable'] ?>" 
+                      item_pay_to="<?php echo $html_model->escapeQuote2($value['pay_to']); ?>" 
+                      item_comment="<?php echo $html_model->escapeQuote2(($value['reason']!='Other') ? $value['reason'] : $value['reason_other']) ?>"
+                      item_comment_fr="<?php echo $html_model->escapeQuote2(($value['reason']!='Other') ? (isset($reason_to_fr[$value['reason']])?$reason_to_fr[$value['reason']]:$value['reason']) : $value['reason_other']) ?>"
+                  >
 										<td><?php echo form_checkbox("items", $value['id'], FALSE); ?></td>
 										<td><?php echo htmlspecialchars($value['invoice']); ?></td>
 										<td><?php echo htmlspecialchars($value['service_description']); ?></td>
@@ -676,7 +696,7 @@
 						</div>
 					</div>
 					<div class="form-group col-sm-12 docfiles">
-						<?php foreach($docs as $doc): ?>
+						<?php foreach($docs as $doc): ?> <!--------XXXXXXXXXXXXXXXX----->
 						<div class="col-sm-12 doc-description doc-<?php echo $doc['id'] ?>" shortname="<?php echo $doc['sname'] ?>" style="display: none">
 							<!-- div class="col-sm-12 doc_title">
                         		<?php echo heading($doc['name']); ?>
@@ -920,6 +940,10 @@ $(document).ready(function() {
 })
 .on("click", "input[name=items], input[name=selectall]", function(e) {
 	e.stopPropagation();
+  let is_french = false;
+  if ($(".claim-items").is(".claim-items-fr")) {
+    is_french = true;
+  }
 	$(".claim_items").removeClass('active-green');
 	$(".claim_items_form").hide();
 
@@ -944,13 +968,15 @@ $(document).ready(function() {
 
 	$("input[name=items]:checked").each(function () {
 		var ptr = $(this).closest('tr');
-		var coverage_code = ptr.attr('item_coverage_code');
+		var coverage_code = ptr.attr('item_coverage_code'); //XXXXXXXXXXXXXXX
+		var coverage_code_fr = ptr.attr('item_coverage_code_fr'); //XXXXXXXXXXXXXXX
 		var service_description = ptr.attr('item_service_description');
 		var date_of_service = ptr.attr('item_date_of_service');
 		var amount_claimed = ptr.attr('item_amount_claimed');
 		var amt_deductible = ptr.attr('item_amt_deductible');
 		var amt_payable = ptr.attr('item_amt_payable');
 		var comment =  ptr.attr('item_comment');
+		var comment_fr =  ptr.attr('item_comment_fr');    //XXXXXXXXXXXXXXXXXX
 		var pay_to =  ptr.attr('item_pay_to');
 		if (payto_address) {
 			payto_address = false;
@@ -988,13 +1014,21 @@ $(document).ready(function() {
 		total_amt_payable += parseFloat(amt_payable);
 			
 		html += '  <tr>';
-		html += '      <td>' + coverage_code + '</td>';
+    if (is_french) {
+  		html += '      <td>' + coverage_code_fr + '</td>';
+    } else {
+  		html += '      <td>' + coverage_code + '</td>';
+    }
 		// html += '      <td>' + service_description.substring(0,100) + '</td>';
 		html += '      <td>' + date_of_service + '</td>';
 		html += '      <td>$' + parseFloat(amount_claimed).toFixed(2) + '</td>';
 		// html += '      <td>$' + parseFloat(amt_deductible).toFixed(2) + '</td>';
 		html += '      <td>$' + parseFloat(amt_payable).toFixed(2) + '</td>';
-		html += '      <td>' + comment + '</td>';
+    if (is_french) {
+  		html += '      <td>' + comment_fr + '</td>';
+    } else {
+  		html += '      <td>' + comment + '</td>';
+    }
 		html += '  </tr>';
 	});
 	html += '  <tr>';
@@ -1563,7 +1597,7 @@ $outer.each(function(){
    else
       $(this).append("<textarea  style='width:100%' rows='6' value=''>"+ text +"</textarea>");
 });
-$(".claim-items").html($("#claim-items").html())
+$(".claim-items").html($("#claim-items").html()) //XXXXXXXXXXXXXXXXXX
 
 // create word template selection for deny reason
 var $outer = $(".outer_custom_comment");

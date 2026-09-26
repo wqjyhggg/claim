@@ -1328,8 +1328,10 @@ class Claim extends CI_Controller {
 				//$this->data['bprovider_list'] = $this->provider_model->search(array("status" => Provider_model::ACTIVE));
 				//$this->data['eprovider_list'] = $this->claim_model->expenses_provider_search(array("claim_id" => $id, "status" => 1));
 				$this->data['expenses_list'] = $this->expenses_model->get_coverage_code();
-				
+				$this->data['expenses_fr_list'] = $this->expenses_model->get_fr_coverage_code();
+
 				$this->data['reasons'] = $this->reasons_model->get_list();
+        $this->data['reason_to_fr'] = $this->reasons_model->get_fr_list();
 				
 				// get all documents for sending email/print.
 				$this->data['docs'] = $this->data['docs'] = $this->template_model->search(array('type' => Template_model::TEMPLATE_CLAIM));
