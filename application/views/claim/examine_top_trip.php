@@ -1164,10 +1164,6 @@ $(document).ready(function() {
 .on("click", "input[name=items], input[name=selectall]", function(e) {
 	e.stopPropagation();
 
-  let is_french = false;
-  if ($(".claim-items").is(".claim-items-fr")) {
-    is_french = true;
-  }
 	var total_amount_claimed = 0;
 	var total_amt_deductible = 0;
 	var total_amt_payable = 0;
@@ -1185,6 +1181,7 @@ $(document).ready(function() {
 	html += '    </tr>';
 	html += '  </thead>';
 	html += '  <tbody>';
+  var html_fr = html;
 
 	$("input[name=items]:checked").each(function () {
 		var ptr = $(this).closest('tr');
@@ -1232,35 +1229,41 @@ $(document).ready(function() {
 		total_amt_payable += parseFloat(amt_payable);
 			
 		html += '  <tr>';
-    if (is_french) {
-  		html += '      <td>' + coverage_code_fr + '</td>';
-    } else {
-  		html += '      <td>' + coverage_code + '</td>';
-    }
-		// html += '      <td>' + service_description.substring(0,100) + '</td>';
+		html_fr += '  <tr>';
+ 		html += '      <td>' + coverage_code + '</td>';
+ 		html_fr += '      <td>' + coverage_code_fr + '</td>';
 		html += '      <td>' + date_of_service + '</td>';
+		html_fr += '      <td>' + date_of_service + '</td>';
 		html += '      <td>$' + parseFloat(amount_claimed).toFixed(2) + '</td>';
-		// html += '      <td>$' + amt_deductible + '</td>';
+		html_fr += '      <td>$' + parseFloat(amount_claimed).toFixed(2) + '</td>';
 		html += '      <td>$' + parseFloat(amt_payable).toFixed(2) + '</td>';
-    if (is_french) {
-  		html += '      <td>' + comment_fr + '</td>';
-    } else {
-  		html += '      <td>' + comment + '</td>';
-    }
+		html_fr += '      <td>$' + parseFloat(amt_payable).toFixed(2) + '</td>';
+    html += '      <td>' + comment + '</td>';
+    html_fr += '      <td>' + comment_fr + '</td>';
 		html += '  </tr>';
+		html_fr += '  </tr>';
 	});
 	html += '  <tr>';
+	html_fr += '  <tr>';
 	html += '      <td>Total</td>';
+	html_fr += '      <td>Total</td>';
 	html += '      <td>&nbsp;</td>';
+	html_fr += '      <td>&nbsp;</td>';
 	html += '      <td>$' + parseFloat(total_amount_claimed).toFixed(2) + '</td>';
-	// html += '      <td>$' + total_amt_deductible + '</td>';
+	html_fr += '      <td>$' + parseFloat(total_amount_claimed).toFixed(2) + '</td>';
 	html += '      <td>$' + parseFloat(total_amt_payable).toFixed(2) + '</td>';
+	html_fr += '      <td>$' + parseFloat(total_amt_payable).toFixed(2) + '</td>';
 	html += '      <td>&nbsp;</td>';
+	html_fr += '      <td>&nbsp;</td>';
 	html += '  </tr>';
+	html_fr += '  </tr>';
 	html += '  </tbody>';
+	html_fr += '  </tbody>';
 	html += '</table>';
+	html_fr += '</table>';
 
 	$(".claim-items").html(html);
+  $(".claim-items-fr").html(html_fr);
 })
 		
    // show email/print function
