@@ -1992,8 +1992,37 @@ class Claim extends CI_Controller {
 		}
 		$data['id'] = $id;
 		$data['reserve_amount'] = $this->input->post('reserve_amount');
+		$policies = $this->input->post('policy');
 
 		$this->load->model('claim_model');
+		$this->load->model('block_list_model');
+    $claim = $this->claim_model->get_by_id($claim_id);
+    if (empty($claim)) {
+      return show_error('Unknown Claim.');
+    }
+    if (intval($data['reserve_amount']) > 5000) {
+      $bl = $this->block_list_model->check_list_name($claim["insured_first_name"], $claim["insured_last_name"], $claim["dob"]);
+      if ($bl) {
+        if (intval($bl["status"] != 2)) {
+          $dt = [
+            'block_list_id' => $bl["block_list_id"], 
+            'status' => 2,
+            'notes' => "Reserve amount over $5000" . " -- ".date("Ymd:His")." -- ".$this->ion_auth->get_user_info('email')
+          ];
+          $this->block_list_model->save($dt);
+        }
+      } else {
+        $dt = [
+          'status' => 2,
+          'firstname' => $claim["insured_first_name"],
+          'lastname' => $claim["insured_last_name"],
+          'birthday' => $claim["dob"],
+          'policies' => $policies,
+          'notes' => "Reserve amount over $5000" . " -- ".date("Ymd:His")." -- ".$this->ion_auth->get_user_info('email')
+        ];
+        $this->block_list_model->save($dt);
+      }
+    }
 	
 		$this->claim_model->save($data);
 		echo TRUE;

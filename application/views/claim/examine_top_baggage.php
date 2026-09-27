@@ -1056,7 +1056,10 @@ $(document).ready(function() {
   $.ajax({
     url: "<?php echo base_url("claim/reserve_amount/".$claim['id']); ?>",
     method: "post",
-    data:{reserve_amount:$('#reserve_amount_input').val()},
+    data:{
+      reserve_amount:$('#reserve_amount_input').val(),
+      policy:'<?php echo $policy['policy']; ?>',
+    },
     beforeSend: function(){
       // $(".modal-content, .main_container").addClass("csspinner load1");
     },
