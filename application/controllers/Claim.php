@@ -1996,7 +1996,7 @@ class Claim extends CI_Controller {
 
 		$this->load->model('claim_model');
 		$this->load->model('block_list_model');
-    $claim = $this->claim_model->get_by_id($claim_id);
+    $claim = $this->claim_model->get_by_id($id);
     if (empty($claim)) {
       return show_error('Unknown Claim.');
     }
