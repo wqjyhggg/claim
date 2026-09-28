@@ -24,97 +24,103 @@
 				<div class="x_content">
 					<h4 style="margin-top: 25px;">POLICY INFO</h4>
 					<div class="row policy_info">
-						<div class="form-group col-sm-3">
-							<label>Policy : </label><?php echo $policy['policy']; ?><span style="padding-left: 10px;">&nbsp;</span> ( <span style="<?php if (($policy['status_id'] == 2) || ($policy['status_id'] == 5) || ($policy['status_id'] == 6)) { echo "color: rgba(243,76,70,0.88);"; } ?>"><?php echo $policy_status[$policy['status_id']]; ?></span> )
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Beneficiary : </label><?php echo $policy['beneficiary']; ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Sum Insured : </label>$<?php echo number_format($policy['sum_insured'], 2); ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Deductible Amount : </label>$<?php echo number_format($policy['deductible_amount'], 2); ?>
-						</div>
-            <?php if (!empty($policy['monthlypay'])) { ?>
-							<?php if (($policy['monthly_status'] == "Paid Full") || ($policy['monthly_status'] == "Active")) { ?>
+					  <div class="col">
+    					<div class="row">
+                <div class="form-group col-sm-3">
+                  <label>Policy : </label><?php echo $policy['policy']; ?><span style="padding-left: 10px;">&nbsp;</span> ( <span style="<?php if (($policy['status_id'] == 2) || ($policy['status_id'] == 5) || ($policy['status_id'] == 6)) { echo "color: rgba(243,76,70,0.88);"; } ?>"><?php echo $policy_status[$policy['status_id']]; ?></span> )
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Beneficiary : </label><?php echo $policy['beneficiary']; ?>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Sum Insured : </label>$<?php echo number_format($policy['sum_insured'], 2); ?>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Deductible Amount : </label>$<?php echo number_format($policy['deductible_amount'], 2); ?>
+                </div>
+              </div>
+    					<div class="row">
+                <?php if (!empty($policy['monthlypay'])) { ?>
+		  					<?php if (($policy['monthly_status'] == "Paid Full") || ($policy['monthly_status'] == "Active")) { ?>
 								<div class="form-group col-sm-3">
 									<label style="text-transform: capitalize;"><span>Monthly Plan: </span><?php echo $policy['monthly_status']; ?></label>
 								</div>
-							<?php } else { ?>
+			  				<?php } else { ?>
 								<div class="form-group col-sm-3">
 									<label style="text-transform: capitalize; color: red;"><span>Warning: Monthly Payment is </span><?php echo $policy['monthly_status']; ?></label>
 								</div>
-							<?php } ?>
-            <?php } ?>
-						<div class="form-group col-sm-3">
-							<?php if ($policy['stable_condition'] == 1) { ?>
-							<label>&nbsp;</label>Include stable pre-existing condition coverage
-							<?php } else if ($policy['stable_condition'] == 2) { ?>
-							<label>&nbsp;</label>Exclude stable pre-existing condition coverage
-							<?php } else  { ?>
-							<label>&nbsp;</label>&nbsp;
-							<?php } ?>
-						</div>
-						<div class="clearfix"></div>
-	
-						<div class="form-group col-sm-3">
-							<label>First Name : </label><?php echo htmlspecialchars($policy['firstname']); ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Last Name : </label><?php echo htmlspecialchars($policy['lastname']); ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Gender : </label><?php echo htmlspecialchars($policy['gender']); ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Birthday : </label><?php echo htmlspecialchars($policy['birthday']); ?>
-						</div>
-						<div class="clearfix"></div>
-
-						<div class="form-group col-sm-3">
-							<label>Apply Date : </label><?php echo htmlspecialchars($claim['apply_date']); ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Effective Date : </label><?php echo htmlspecialchars($claim['effective_date']); ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Expiry Date : </label><?php echo htmlspecialchars($claim['expiry_date']); ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Arrival Date : </label><?php echo htmlspecialchars($claim['arrival_date_canada']); ?>
-						</div>
-						<div class="clearfix"></div>
-	
-						<div class="form-group col-sm-3">
-							<label>Prefer Language : </label><?php echo empty($policy['contact_language'])? 'English' : htmlspecialchars($policy['contact_language']); ?>
-						</div>
-						<div class="form-group col-sm-3">
-						</div>
-						<div class="form-group col-sm-3">
-						</div>
-						<div class="form-group col-sm-3">
-						</div>
-						<div class="clearfix"></div>
-	
-						<?php if (!empty($policy['family'])) { ?>
-						<?php 	foreach($policy['family'] as $member ) { ?>
-						<div class="form-group col-sm-3">
-							<label>First Name : </label><?php echo htmlspecialchars($member['firstname']); ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Last Name : </label><?php echo htmlspecialchars($member['lastname']); ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Gender : </label><?php echo htmlspecialchars($member['gender']); ?>
-						</div>
-						<div class="form-group col-sm-3">
-							<label>Birthday : </label><?php echo htmlspecialchars($member['birthday']); ?>
-						</div>
-						<div class="clearfix"></div>
-						<?php 	} ?>
-						<?php } ?>
-					</div>
+				  			<?php } ?>
+                <?php } ?>
+						    <div class="form-group col-sm-3">
+							    <?php if ($policy['stable_condition'] == 1) { ?>
+							    <label>&nbsp;</label>Include stable pre-existing condition coverage
+							    <?php } else if ($policy['stable_condition'] == 2) { ?>
+							    <label>&nbsp;</label>Exclude stable pre-existing condition coverage
+							    <?php } else  { ?>
+							    <label>&nbsp;</label>&nbsp;
+							    <?php } ?>
+						    </div>
+              </div>
+    					<div class="row">
+                <div class="form-group col-sm-3">
+                  <label>First Name : </label><?php echo htmlspecialchars($policy['firstname']); ?>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Last Name : </label><?php echo htmlspecialchars($policy['lastname']); ?>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Gender : </label><?php echo htmlspecialchars($policy['gender']); ?>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Birthday : </label><?php echo htmlspecialchars($policy['birthday']); ?>
+                </div>
+              </div>
+    					<div class="row">
+                <div class="form-group col-sm-3">
+                  <label>Apply Date : </label><?php echo htmlspecialchars($claim['apply_date']); ?>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Effective Date : </label><?php echo htmlspecialchars($claim['effective_date']); ?>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Expiry Date : </label><?php echo htmlspecialchars($claim['expiry_date']); ?>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Arrival Date : </label><?php echo htmlspecialchars($claim['arrival_date_canada']); ?>
+                </div>
+              </div>
+    					<div class="row">
+                <div class="form-group col-sm-3">
+                  <label>Prefer Language : </label><?php echo empty($policy['contact_language'])? 'English' : htmlspecialchars($policy['contact_language']); ?>
+                </div>
+                <div class="form-group col-sm-3">
+                </div>
+                <div class="form-group col-sm-3">
+                </div>
+                <div class="form-group col-sm-3">
+                </div>
+						  </div>
+    					<div class="row">
+                <?php if (!empty($policy['family'])) { ?>
+                <?php 	foreach($policy['family'] as $member ) { ?>
+                <div class="form-group col-sm-3">
+                  <label>First Name : </label><?php echo htmlspecialchars($member['firstname']); ?>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Last Name : </label><?php echo htmlspecialchars($member['lastname']); ?>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Gender : </label><?php echo htmlspecialchars($member['gender']); ?>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label>Birthday : </label><?php echo htmlspecialchars($member['birthday']); ?>
+                </div>
+                <div class="clearfix"></div>
+                <?php 	} ?>
+                <?php } ?>
+              </div>
+            </div>
+          </div>
 					<hr />
 	
 					<h4 style="margin-top: 25px;">CLAIM INFO</h4>
