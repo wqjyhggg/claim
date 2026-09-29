@@ -451,7 +451,7 @@
 									</tr>
 									<tr class='claim_items_form trinputform' id='item_form_<?php echo $value['id']; ?>'>
 										<td colspan="12">
-											<div class="row policy_info">
+											<div class="row policy_info" style='max-width:1024px;'>
 											<?php 
 												if (! $is_insurer) { echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal claim_items_submit', 'method'=>'post')); }
 												echo form_hidden("id",  $value['id']);

@@ -251,7 +251,7 @@
 									</tr>
 									<tr class='claim_items_form trinputform' id='item_form_<?php echo $value['id']; ?>'>
 										<td colspan="12">
-											<div class="row policy_info">
+											<div class="row policy_info" style='max-width:1024px;'>
 											<?php 
 												if (! $is_insurer) {
 												echo form_open_multipart("claim/save_item", array('class'=>'form-horizontal claim_items_submit', 'method'=>'post'));
@@ -344,7 +344,7 @@
 														<select name="reason">
 															<option value=""> -- Select Reason -- </option>
 															<?php foreach ($reasons as $rc):?>
-															<option value="<?php echo $rc['name']; ?>" <?php if ($rc['name'] == $value['reason']) { echo "selected"; } ?>><?php echo (empty($rc['isfrench'])?"":"Fr - ").htmlspecialchars($rc['name']); ?></option>
+															<option value="<?php echo $rc; ?>" <?php if ($rc == $value['reason']) { echo "selected"; } ?>><?php echo htmlspecialchars($rc); ?></option>
 															<?php endforeach; ?>
 														</select>
 													</div>
