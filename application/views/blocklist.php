@@ -276,7 +276,7 @@ $(document).ready(function () {
            * Reload page so the latest notes
            * will be displayed.
            */
-          window.location.href = window.location.origin + window.location.pathname + "?block_list_id=" + blockListId;
+          window.location.href = '<?php echo site_url("blocklist/add_note"); ?>' + "?block_list_id=" + blockListId;
         } else {
           alert(response.message || 'Failed to add note.');
         }
