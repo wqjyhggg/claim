@@ -2007,7 +2007,7 @@ class Claim extends CI_Controller {
           $dt = [
             'block_list_id' => $bl["block_list_id"], 
             'status' => 2,
-            'notes' => "Reserve amount over $5000" . " -- ".date("Ymd:His")." -- ".$this->ion_auth->get_user_info('email')
+            'notes' => $bl["notes"] . "\nReserve amount over $5000" . " -- ".date("Ymd:His")." -- ".$this->ion_auth->get_user_info('email')
           ];
           $this->block_list_model->save($dt);
         }
