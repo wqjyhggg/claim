@@ -41,7 +41,7 @@ class Reasons_model extends CI_Model {
 	}
 
 	public function get_fr_list() {
-		return $this->reasonArr;
+		return $this->reasonFrArr;
 	}
 
 	public function get_list2() {
