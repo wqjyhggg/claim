@@ -199,6 +199,31 @@ class Claim extends CI_Controller {
 				}
 				$data['created'] = date('Y-m-d H:i:s');
 				$data['created_by'] = $this->ion_auth->get_user_id();
+
+        if (intval($array['reserve_amount']) > 5000) {
+          $this->load->model('block_list_model');
+          $bl = $this->block_list_model->check_list_name($array["insured_first_name"], $array["insured_last_name"], $array["dob"]);
+          if ($bl) {
+            if (intval($bl["status"] != 2)) {
+              $dt = [
+                'block_list_id' => $bl["block_list_id"], 
+                'status' => 2,
+                'notes' => $bl["notes"] . "\nReserve amount over $5000" . " -- ".date("Ymd:His")." -- ".$this->ion_auth->get_user_info('email')
+              ];
+              $this->block_list_model->save($dt);
+            }
+          } else {
+            $dt = [
+              'status' => 2,
+              'firstname' => $array["insured_first_name"],
+              'lastname' => $array["insured_last_name"],
+              'birthday' => $array["dob"],
+              'policies' => $array['policy_no'],
+              'notes' => "Reserve amount over $5000" . " -- ".date("Ymd:His")." -- ".$this->ion_auth->get_user_info('email')
+            ];
+            $this->block_list_model->save($dt);
+          }
+        }
 				
 				// set default status processing
 				if (! $data['status'])
