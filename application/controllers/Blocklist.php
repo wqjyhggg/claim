@@ -42,8 +42,12 @@ class Blocklist extends CI_Controller {
         $this->data["popup_user_id"] = $popup_user_id;
         unset($get["popup_user_id"]);
       }
-			$this->data['block_list'] = $this->block_list_model->search($get, $limit, $offset);
       $this->data["user_id"] = $this->ion_auth->get_user_id();
+      if (isset($get["Export"]) && ($get["Export"] == "Export")) {
+  			$this->data['block_list'] = $this->block_list_model->search($get, 1000000);
+        return $this->export($this->data);
+      }
+			$this->data['block_list'] = $this->block_list_model->search($get, $limit, $offset);
 			$config['total_rows'] = $this->block_list_model->last_rows();
 				
 			$config['base_url'] = site_url('blocklist');
@@ -61,6 +65,37 @@ class Blocklist extends CI_Controller {
 			$this->template->write_view('content', 'blocklist', $this->data);
 			$this->template->render();
 		}
+	}
+
+  public function export($data) {			
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename=block.csv');
+    
+    // create a file pointer connected to the output stream
+    $output = fopen('php://output', 'w');
+    
+    // output the column headings
+    fputcsv($output, array(
+        'ID', 
+        'First Name', 
+        'Last Name', 
+        'Birthday', 
+        'Status', 
+        'Create Time', 
+        'Notes', 
+    ));
+
+    foreach ($data["block_list"] as $user) {
+      fputcsv($output, array(
+          $user['block_list_id'],
+          $user['firstname'],
+          $user['lastname'],
+          $user['birthday'],
+          empty($user['status'])?"-":(($user['status']==1)?"Unblocked":"Blocked"),
+          $user['created'],
+          $$user['notes'],
+      ));
+    }
 	}
 
 	public function add() {

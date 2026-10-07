@@ -29,9 +29,12 @@
 						<div class="col-sm-3">
 							<?php echo form_dropdown ( "status", array(0 => "-- Status --", 1 => "Unblocked", 2 => "Blocked"), $this->input->post_get( "status" ), array ("class" => 'form-control') );?>
 						</div>
-						<div class="col-sm-8">
+						<div class="col-sm-6">
 						</div>
-						<div class="col-sm-4">
+						<div class="col-sm-3">
+							<?php echo form_submit("Export", "Export", array("class"=>'btn btn-primary', "type"=>'submit'))?>
+						</div>
+						<div class="col-sm-3">
 							<?php echo form_submit("Search", "Search", array("class"=>'btn btn-primary', "type"=>'submit'))?>
 						</div>
 					</div>
