@@ -52,10 +52,10 @@ class Block_list_model extends CI_Model {
 		} else {
 			$sql .= " ORDER BY block_list_id";
 		}
-		if (isset($data["order"]) && ($data["order"] == 'desc')) {
-			$sql .= " DESC";
-		} else {
+		if (isset($data["order"]) && ($data["order"] != 'desc')) {
 			$sql .= " ASC";
+		} else {
+			$sql .= " DESC";
 		}
 		
 		$sql .= " LIMIT " . (int)$offset . ", " . (int)$limit;
