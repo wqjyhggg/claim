@@ -27,7 +27,7 @@
               </div>
             </div>
 						<div class="col-sm-3">
-							<?php echo form_dropdown ( "status", array(0 => "-- Status --", 1 => "Warning", 2 => "Blocked"), $this->input->post_get( "status" ), array ("class" => 'form-control') );?>
+							<?php echo form_dropdown ( "status", array(0 => "-- Status --", 1 => "Unblocked", 2 => "Blocked"), $this->input->post_get( "status" ), array ("class" => 'form-control') );?>
 						</div>
 						<div class="col-sm-8">
 						</div>
@@ -74,7 +74,7 @@
 									<td><?php echo htmlspecialchars($user['firstname'],ENT_QUOTES,'UTF-8');?></td>
 									<td><?php echo htmlspecialchars($user['lastname'],ENT_QUOTES,'UTF-8');?></td>
 									<td><?php echo htmlspecialchars($user['birthday'],ENT_QUOTES,'UTF-8');?></td>
-									<td><?php echo empty($user['status'])?"-":(($user['status']==1)?"Warning":"Blocked") ?></td>
+									<td><?php echo empty($user['status'])?"-":(($user['status']==1)?"Unblocked":"Blocked") ?></td>
 									<td><?php echo htmlspecialchars($user['created'],ENT_QUOTES,'UTF-8');?></td>
 									<!-- <td><?php echo ((!empty($user['status']) && ($user['status'] == 2)))?anchor("blocklist/update?status=1&block_list_id=".$user['block_list_id'], 'Unblock'):anchor("blocklist/update?status=2&block_list_id=".$user['block_list_id'], 'Block');?></td> -->
 									<td>
