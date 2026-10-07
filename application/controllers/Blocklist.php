@@ -93,7 +93,7 @@ class Blocklist extends CI_Controller {
           $user['birthday'],
           empty($user['status'])?"-":(($user['status']==1)?"Unblocked":"Blocked"),
           $user['created'],
-          $$user['notes'],
+          $user['notes'],
       ));
     }
 	}
