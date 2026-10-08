@@ -975,13 +975,13 @@ class Emergency_assistance extends CI_Controller {
 				$sorting['case.created'] = trim($this->input->get("created_sort"));
 				$this->data['created_sort_url'] = base_url('emergency_assistance/case_management') . "?created_sort=" . (($sorting['case.created'] == 'ASC') ? "DESC" : "ASC") . $sortingstr;
 			} else {
-				$this->data['created_sort_url'] = base_url('emergency_assistance/case_management') . "?created_sort=ASC" . $sortingstr;
+				$this->data['created_sort_url'] = base_url('emergency_assistance/case_management') . "?created_sort=DESC" . $sortingstr;
 			}
 			if ($this->input->get("last_update_sort")) {
 				$sorting['case.last_update'] = trim($this->input->get("last_update_sort"));
 				$this->data['last_update_sort_url'] = base_url('emergency_assistance/case_management') . "?last_update_sort=" . (($sorting['case.last_update'] == 'ASC') ? "DESC" : "ASC") . $sortingstr;
 			} else {
-				$this->data['last_update_sort_url'] = base_url('emergency_assistance/case_management') . "?last_update_sort=ASC" . $sortingstr;
+				$this->data['last_update_sort_url'] = base_url('emergency_assistance/case_management') . "?last_update_sort=DESC" . $sortingstr;
 			}
 			if ($this->input->get("priority_sort")) {
 				$sorting['case.priority'] = trim($this->input->get("priority_sort"));
