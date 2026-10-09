@@ -258,6 +258,17 @@ class Claim_report3 extends CI_Controller {
     $this->load->model('claim_model');
 		$this->load->model('province_model');
 
+    $get = [
+      "finalized_start_dt" => "2026-10-01",
+      "finalized_end_dt" => "2026-10-01",
+      "start_dt" => "2026-10-01",
+      "end_dt" => "2026-10-01",
+      "year" => "2026",
+      "status2" => "Reopen",
+      "up_insuer" => "JES Up Insuer Company Inc.",
+      "products" => ["JES","JFR"],
+      "submit" => 1,
+    ];
     $get = array();
     if (empty($get)) {
         die("Ignore");
