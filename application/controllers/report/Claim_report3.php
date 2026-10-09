@@ -253,4 +253,110 @@ class Claim_report3 extends CI_Controller {
       }
 		}
 	}
+
+  public function localexport() {
+    $this->load->model('claim_model');
+		$this->load->model('province_model');
+
+    $get = array();
+    if (empty($get)) {
+        die("Ignore");
+    }
+    $this->data['provinces'] = $this->province_model->get_list(1);
+    $this->data['records'] = $this->claim_model->claim_report3($get);
+
+    // Save to a local CSV file
+    $filename = FCPATH . 'application/logs/local.csv';
+
+    $fp = fopen($filename, 'w');
+
+    if ($fp === false) {
+        show_error('Cannot create local.csv file.');
+        return;
+    }
+
+    // Add UTF-8 BOM for Excel compatibility
+    fwrite($fp, "\xEF\xBB\xBF");
+
+    // CSV header
+    $headers = array(
+        'Insurer',
+        'Product',
+        'Apply Date',
+        'Policy Start date',
+        'Policy End date',
+        'Last Name',
+        'First Name',
+        'Policy Number',
+        'Province',
+        'Claim number',
+        'Claim Start Date',
+        'Claim Close Date',
+        'Claim Status',
+        'Process Status',
+        'Sum Insured',
+        'Total Claimed Amount',
+        'Claim Reserved Amount',
+        'Claim Diminishing Reserved Amount',
+        'Total Amount Paid for Claim',
+        'Benefit',
+        'Claim Item Loss Date',
+        'Claim item Finalized Date',
+        'Claim Item Status',
+        'Claimed Amount for Item',
+        'Amount Paid for item'
+    );
+
+    fputcsv($fp, $headers);
+    if (!empty($this->data['records'])) {
+      foreach ($this->data['records'] as $value) {
+        $diminishing = 0;
+        if (($value['status2'] != 'Closed') && ($value['status2'] != 'Denied')) {
+          $diminishing = $value['reserve_amount'] - $value['paied_amount'];
+        }
+        $province = empty($value['province']) ? '' : $value['province'];
+        if (!empty($this->data['provinces'][$province])) {
+          $province = $this->data['provinces'][$province];
+        }
+        $province = ucfirst(strtolower($province));
+        $apply_date = empty($value['apply_date']) ? '' : substr($value['apply_date'], 0, 10);
+        $effective_date = empty($value['effective_date']) ? '' : substr($value['effective_date'], 0, 10);
+        $expiry_date = empty($value['expiry_date']) ? '' : substr($value['expiry_date'], 0, 10);
+        $created = empty($value['created']) ? '' : substr($value['created'], 0, 10);
+        $last_update = empty($value['last_update']) ? '' : substr($value['last_update'], 0, 10);
+        $date_of_service = empty($value['date_of_service']) ? '' : substr($value['date_of_service'], 0, 10);
+        $finalize_date = empty($value['finalize_date']) ? '' : substr($value['finalize_date'], 0, 10);
+        $row = array(
+          empty($value['up_insuer']) ? '' : $value['up_insuer'],
+          $value['product_short'],
+          $apply_date,
+          $effective_date,
+          $expiry_date,
+          $value['insured_last_name'],
+          $value['insured_first_name'],
+          $value['policy_no'],
+          $province,
+          $value['claim_no'],
+          $created,
+          $last_update,
+          empty($value['status2']) ? '' : $value['status2'],
+          empty($value['status']) ? '' : $value['status'],
+          number_format($value['sum_insured'], 2, '.', ''),
+          number_format($value['claimed_amount'], 2, '.', ''),
+          number_format($value['reserve_amount'], 2, '.', ''),
+          number_format($diminishing, 2, '.', ''),
+          number_format($value['paied_amount'], 2, '.', ''),
+          empty($value['coverage_code']) ? '' : $value['coverage_code'],
+          $date_of_service,
+          $finalize_date,
+          empty($value['e_status']) ? '' : $value['e_status'],
+          number_format($value['amount_claimed'], 2, '.', ''),
+          number_format($value['amt_payable'], 2, '.', '')
+        );
+        fputcsv($fp, $row);
+      }
+      fclose($fp);
+      echo 'CSV file saved successfully: ' . $filename;
+    }
+  }
 }
