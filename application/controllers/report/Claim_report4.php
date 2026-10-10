@@ -34,11 +34,16 @@ class Claim_report4 extends CI_Controller {
       }
 
       if (isset($get["iscsv"])) {
-        if (0) {
+        if (1) {
+          if (ob_get_level() > 0) {
+            ob_end_clean();
+          }
           $filename = "report4_".$this->input->get('start_dt')."_".$this->input->get('end_dt');
           header('Content-Disposition: attachment;filename="'.$filename.'.csv";');
           header('Content-Type: application/csv; charset=UTF-8');
           $fp = fopen("php://output", "w");
+          // UTF-8 BOM for Excel compatibility
+          fwrite($fp, "\xEF\xBB\xBF");
           fputcsv($fp, array( 'Insurer',
                               'Product',
                               'Last Name',
@@ -98,6 +103,8 @@ class Claim_report4 extends CI_Controller {
               ));
             }
           }
+          fclose($fp);
+          exit;
         } else {
           $objPHPExcel = new PHPExcel();
           $objPHPExcel->getDefaultStyle()->getFont()->setName('Arial')->setSize(10);
