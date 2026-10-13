@@ -1151,17 +1151,17 @@ $(document).ready(function() {
 	html += '  </thead>';
 	html += '  <tbody>';
   var html_fr = '<table style="margin-bottom: 14px;" width="100%" border="1">';
-	html += '  <thead>';
-	html += '    <tr>';
-	html += '      <th>Code de couverture</th>';
-	html += '      <th>Date de service</th>';
-	html += '      <th>Montant de la réclamation</th>';
+	html_fr += '  <thead>';
+	html_fr += '    <tr>';
+	html_fr += '      <th>Code de couverture</th>';
+	html_fr += '      <th>Date de service</th>';
+	html_fr += '      <th>Montant de la réclamation</th>';
 	// html += '      <th>Deductible Amount</th>';
-	html += '      <th>Montant payable</th>';
-	html += '      <th>Note relative à la réclamation</th>';
-	html += '    </tr>';
-	html += '  </thead>';
-	html += '  <tbody>';
+	html_fr += '      <th>Montant payable</th>';
+	html_fr += '      <th>Note relative à la réclamation</th>';
+	html_fr += '    </tr>';
+	html_fr += '  </thead>';
+	html_fr += '  <tbody>';
 
 	$("input[name=items]:checked").each(function () {
 		var ptr = $(this).closest('tr');
