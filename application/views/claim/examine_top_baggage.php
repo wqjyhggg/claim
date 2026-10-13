@@ -1096,7 +1096,18 @@ $(document).ready(function() {
 	html += '    </tr>';
 	html += '  </thead>';
 	html += '  <tbody>';
-  var html_fr = html;
+  var html_fr = '<table style="margin-bottom: 14px;" width="100%" border="1">';
+	html += '  <thead>';
+	html += '    <tr>';
+	html += '      <th>Code de couverture</th>';
+	html += '      <th>Date de service</th>';
+	html += '      <th>Montant de la réclamation</th>';
+	// html += '      <th>Deductible Amount</th>';
+	html += '      <th>Montant payable</th>';
+	html += '      <th>Note relative à la réclamation</th>';
+	html += '    </tr>';
+	html += '  </thead>';
+	html += '  <tbody>';
 
 	$("input[name=items]:checked").each(function () {
 		var ptr = $(this).closest('tr');

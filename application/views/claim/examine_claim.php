@@ -968,19 +968,30 @@ $(document).ready(function() {
 	html += '    </tr>';
 	html += '  </thead>';
 	html += '  <tbody>';
-  var html_fr = html;
+  var html_fr = '<table style="margin-bottom: 14px;" width="100%" border="1">';
+	html += '  <thead>';
+	html += '    <tr>';
+	html += '      <th>Code de couverture</th>';
+	html += '      <th>Date de service</th>';
+	html += '      <th>Montant de la réclamation</th>';
+	// html += '      <th>Deductible Amount</th>';
+	html += '      <th>Montant payable</th>';
+	html += '      <th>Note relative à la réclamation</th>';
+	html += '    </tr>';
+	html += '  </thead>';
+	html += '  <tbody>';
 
 	$("input[name=items]:checked").each(function () {
 		var ptr = $(this).closest('tr');
-		var coverage_code = ptr.attr('item_coverage_code'); //XXXXXXXXXXXXXXX
-		var coverage_code_fr = ptr.attr('item_coverage_code_fr'); //XXXXXXXXXXXXXXX
+		var coverage_code = ptr.attr('item_coverage_code');
+		var coverage_code_fr = ptr.attr('item_coverage_code_fr');
 		var service_description = ptr.attr('item_service_description');
 		var date_of_service = ptr.attr('item_date_of_service');
 		var amount_claimed = ptr.attr('item_amount_claimed');
 		var amt_deductible = ptr.attr('item_amt_deductible');
 		var amt_payable = ptr.attr('item_amt_payable');
 		var comment =  ptr.attr('item_comment');
-		var comment_fr =  ptr.attr('item_comment_fr');    //XXXXXXXXXXXXXXXXXX
+		var comment_fr =  ptr.attr('item_comment_fr');
 		var pay_to =  ptr.attr('item_pay_to');
 		if (payto_address) {
 			payto_address = false;
