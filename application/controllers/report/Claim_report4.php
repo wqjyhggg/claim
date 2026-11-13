@@ -73,7 +73,7 @@ class Claim_report4 extends CI_Controller {
               // $policy = json_decode($value["policy_info"], true);
               $diminishing = 0;
               if (($value['status2'] != 'Closed') && ($value['status2'] != 'Denied')) {
-                $diminishing = $value['reserve_amount'] - $value['claimed_amount'];
+                $diminishing = $value['reserve_amount'] - $value['paied_amount'];
               }
               $incurred = $diminishing + $value['paied_amount'];
               $province = empty($value['province'])?"":$value['province'];
@@ -82,7 +82,7 @@ class Claim_report4 extends CI_Controller {
               }
               $province = ucfirst(strtolower($province));
               fputcsv($fp, array(
-                empty($value['up_insuer'])?"":$value['up_insuer'],
+                empty($value['up_insuer'])?" ":$value['up_insuer'],
                 $value['product_short'],
                 $value['insured_last_name'],
                 $value['insured_first_name'],
@@ -91,13 +91,13 @@ class Claim_report4 extends CI_Controller {
                 date("Y-m-d", strtotime(substr($value['effective_date'], 0, 10) . ' 00:00:00 EST')),
                 $province,
                 $value['claim_no'],
-                empty($value['package'])?"":$value['package'],
+                empty($value['package'])?" ":$value['package'],
                 date("Y-m-d", strtotime(substr($value['date_symptoms'], 0, 10) . ' 00:00:00 EST')),
-                empty($value['status2'])?"":$value['status2'],
-                empty($value['status'])?"":$value['status'],
+                empty($value['status2'])?" ":$value['status2'],
+                empty($value['status'])?" ":$value['status'],
                 date("Y-m-d", strtotime(substr($value['created'], 0, 10) . ' 00:00:00 EST')),
                 date("Y-m-d", strtotime(substr($value['last_update'], 0, 10) . ' 00:00:00 EST')),
-                empty($value['opendays'])?"":($value['opendays']+1),
+                empty($value['opendays'])?" ":($value['opendays']+1),
                 (($value['status2'] == 'Closed')||($value['status'] == 'Processing'))?"":$value['denied_reason'],
                 '', // empty($value['notes'])?"":$value['notes'],
                 number_format($value['claimed_amount'], 2),
