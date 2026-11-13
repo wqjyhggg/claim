@@ -76,23 +76,28 @@ class Claim_report4 extends CI_Controller {
                 $diminishing = $value['reserve_amount'] - $value['claimed_amount'];
               }
               $incurred = $diminishing + $value['paied_amount'];
+              $province = empty($value['province'])?"":$value['province'];
+              if (!empty($this->data['provinces'][$province])) {
+                $province = $this->data['provinces'][$province];
+              }
+              $province = ucfirst(strtolower($province));
               fputcsv($fp, array(
                 empty($value['up_insuer'])?"":$value['up_insuer'],
                 $value['product_short'],
-                $value['insured_first_name'],
                 $value['insured_last_name'],
+                $value['insured_first_name'],
                 $value['policy_no'],
                 number_format($value['sum_insured'], 2),
-                empty($value['effective_date'])?"":$value['effective_date'],
-                empty($value['province'])?"":$value['province'],
+                date("Y-m-d", strtotime(substr($value['effective_date'], 0, 10) . ' 00:00:00 EST')),
+                $province,
                 $value['claim_no'],
                 empty($value['package'])?"":$value['package'],
-                $value['date_symptoms'],
+                date("Y-m-d", strtotime(substr($value['date_symptoms'], 0, 10) . ' 00:00:00 EST')),
                 empty($value['status2'])?"":$value['status2'],
                 empty($value['status'])?"":$value['status'],
-                substr($value['created'], 0, 10),
-                substr($value['last_update'], 0, 10),
-                empty($value['opendays'])?"":$value['opendays'],
+                date("Y-m-d", strtotime(substr($value['created'], 0, 10) . ' 00:00:00 EST')),
+                date("Y-m-d", strtotime(substr($value['last_update'], 0, 10) . ' 00:00:00 EST')),
+                empty($value['opendays'])?"":($value['opendays']+1),
                 (($value['status2'] == 'Closed')||($value['status'] == 'Processing'))?"":$value['denied_reason'],
                 '', // empty($value['notes'])?"":$value['notes'],
                 number_format($value['claimed_amount'], 2),
